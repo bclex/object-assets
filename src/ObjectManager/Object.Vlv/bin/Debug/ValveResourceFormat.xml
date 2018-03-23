@@ -1,0 +1,666 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ValveResourceFormat</name>
+    </assembly>
+    <members>
+        <member name="T:ValveResourceFormat.IndentedTextWriter">
+            <summary>
+            The same as <see cref="T:System.CodeDom.Compiler.IndentedTextWriter" /> but works in partial trust.
+            Taken from System.Data.Entity.Migrations.Utilities.IndentedTextWriter
+            </summary>
+        </member>
+        <member name="F:ValveResourceFormat.IndentedTextWriter.TabString">
+            <summary>
+            Specifies the default tab string. This field is constant.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.IndentedTextWriter.Encoding">
+            <summary>
+            Gets the encoding for the text writer to use.
+            </summary>
+            <returns>
+            An <see cref="T:System.Text.Encoding" /> that indicates the encoding for the text writer to use.
+            </returns>
+        </member>
+        <member name="P:ValveResourceFormat.IndentedTextWriter.NewLine">
+            <summary>
+            Gets or sets the new line character to use.
+            </summary>
+            <returns> The new line character to use. </returns>
+        </member>
+        <member name="P:ValveResourceFormat.IndentedTextWriter.Indent">
+            <summary>
+            Gets or sets the number of spaces to indent.
+            </summary>
+            <returns> The number of spaces to indent. </returns>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ValveResourceFormat.IndentedTextWriter"/> class.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Close">
+            <summary>
+            Closes the document being written to.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.OutputTabs">
+            <summary>
+            Outputs the tab string once for each level of indentation according to the
+            <see
+                cref="P:System.CodeDom.Compiler.IndentedTextWriter.Indent" />
+            property.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Write(System.String)">
+            <summary>
+            Writes the specified string to the text stream.
+            </summary>
+            <param name="value"> The string to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Write(System.Boolean)">
+            <summary>
+            Writes the text representation of a Boolean value to the text stream.
+            </summary>
+            <param name="value"> The Boolean value to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Write(System.Char)">
+            <summary>
+            Writes a character to the text stream.
+            </summary>
+            <param name="value"> The character to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Write(System.Char[])">
+            <summary>
+            Writes a character array to the text stream.
+            </summary>
+            <param name="buffer"> The character array to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Write(System.Char[],System.Int32,System.Int32)">
+            <summary>
+            Writes a subarray of characters to the text stream.
+            </summary>
+            <param name="buffer"> The character array to write data from. </param>
+            <param name="index"> Starting index in the buffer. </param>
+            <param name="count"> The number of characters to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Write(System.Double)">
+            <summary>
+            Writes the text representation of a Double to the text stream.
+            </summary>
+            <param name="value"> The double to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Write(System.Single)">
+            <summary>
+            Writes the text representation of a Single to the text stream.
+            </summary>
+            <param name="value"> The single to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Write(System.Int32)">
+            <summary>
+            Writes the text representation of an integer to the text stream.
+            </summary>
+            <param name="value"> The integer to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Write(System.Int64)">
+            <summary>
+            Writes the text representation of an 8-byte integer to the text stream.
+            </summary>
+            <param name="value"> The 8-byte integer to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Write(System.Object)">
+            <summary>
+            Writes the text representation of an object to the text stream.
+            </summary>
+            <param name="value"> The object to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Write(System.String,System.Object)">
+            <summary>
+            Writes out a formatted string, using the same semantics as specified.
+            </summary>
+            <param name="format"> The formatting string. </param>
+            <param name="arg0"> The object to write into the formatted string. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Write(System.String,System.Object,System.Object)">
+            <summary>
+            Writes out a formatted string, using the same semantics as specified.
+            </summary>
+            <param name="format"> The formatting string to use. </param>
+            <param name="arg0"> The first object to write into the formatted string. </param>
+            <param name="arg1"> The second object to write into the formatted string. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.Write(System.String,System.Object[])">
+            <summary>
+            Writes out a formatted string, using the same semantics as specified.
+            </summary>
+            <param name="format"> The formatting string to use. </param>
+            <param name="arg"> The argument array to output. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLineNoTabs(System.String)">
+            <summary>
+            Writes the specified string to a line without tabs.
+            </summary>
+            <param name="value"> The string to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.String)">
+            <summary>
+            Writes the specified string, followed by a line terminator, to the text stream.
+            </summary>
+            <param name="value"> The string to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine">
+            <summary>
+            Writes a line terminator.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.Boolean)">
+            <summary>
+            Writes the text representation of a Boolean, followed by a line terminator, to the text stream.
+            </summary>
+            <param name="value"> The Boolean to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.Char)">
+            <summary>
+            Writes a character, followed by a line terminator, to the text stream.
+            </summary>
+            <param name="value"> The character to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.Char[])">
+            <summary>
+            Writes a character array, followed by a line terminator, to the text stream.
+            </summary>
+            <param name="buffer"> The character array to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.Char[],System.Int32,System.Int32)">
+            <summary>
+            Writes a subarray of characters, followed by a line terminator, to the text stream.
+            </summary>
+            <param name="buffer"> The character array to write data from. </param>
+            <param name="index"> Starting index in the buffer. </param>
+            <param name="count"> The number of characters to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.Double)">
+            <summary>
+            Writes the text representation of a Double, followed by a line terminator, to the text stream.
+            </summary>
+            <param name="value"> The double to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.Single)">
+            <summary>
+            Writes the text representation of a Single, followed by a line terminator, to the text stream.
+            </summary>
+            <param name="value"> The single to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.Int32)">
+            <summary>
+            Writes the text representation of an integer, followed by a line terminator, to the text stream.
+            </summary>
+            <param name="value"> The integer to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.Int64)">
+            <summary>
+            Writes the text representation of an 8-byte integer, followed by a line terminator, to the text stream.
+            </summary>
+            <param name="value"> The 8-byte integer to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.Object)">
+            <summary>
+            Writes the text representation of an object, followed by a line terminator, to the text stream.
+            </summary>
+            <param name="value"> The object to write. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.String,System.Object)">
+            <summary>
+            Writes out a formatted string, followed by a line terminator, using the same semantics as specified.
+            </summary>
+            <param name="format"> The formatting string. </param>
+            <param name="arg0"> The object to write into the formatted string. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.String,System.Object,System.Object)">
+            <summary>
+            Writes out a formatted string, followed by a line terminator, using the same semantics as specified.
+            </summary>
+            <param name="format"> The formatting string to use. </param>
+            <param name="arg0"> The first object to write into the formatted string. </param>
+            <param name="arg1"> The second object to write into the formatted string. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.String,System.Object[])">
+            <summary>
+            Writes out a formatted string, followed by a line terminator, using the same semantics as specified.
+            </summary>
+            <param name="format"> The formatting string to use. </param>
+            <param name="arg"> The argument array to output. </param>
+        </member>
+        <member name="M:ValveResourceFormat.IndentedTextWriter.WriteLine(System.UInt32)">
+            <summary>
+            Writes the text representation of a UInt32, followed by a line terminator, to the text stream.
+            </summary>
+            <param name="value"> A UInt32 to output. </param>
+        </member>
+        <member name="M:ValveResourceFormat.ValveFont.Read(System.String)">
+            <summary>
+            Opens and reads the given filename.
+            The file is held open until the object is disposed.
+            </summary>
+            <param name="filename">The file to open and read.</param>
+        </member>
+        <member name="M:ValveResourceFormat.ValveFont.Read(System.IO.Stream)">
+            <summary>
+            Reads the given <see cref="T:System.IO.Stream"/>.
+            </summary>
+            <param name="input">The input <see cref="T:System.IO.Stream"/> to read from.</param>
+        </member>
+        <member name="T:ValveResourceFormat.KeyValues.KVValue">
+            <summary>
+            Class to hold type + value
+            </summary>
+        </member>
+        <member name="T:ValveResourceFormat.Block">
+            <summary>
+            Represents a block within the resource file.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.Block.Offset">
+            <summary>
+            Gets or sets the offset to the data.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.Block.Size">
+            <summary>
+            Gets or sets the data size.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.Block.ToString">
+            <summary>
+            Returns a string that represents the current object.
+            </summary>
+            <returns>A string that represents the current object.</returns>
+        </member>
+        <member name="M:ValveResourceFormat.Block.WriteText(ValveResourceFormat.IndentedTextWriter)">
+            <summary>
+            Writers the correct object to IndentedTextWriter.
+            </summary>
+            <param name="writer">IndentedTextWriter.</param>
+        </member>
+        <member name="T:ValveResourceFormat.DXGI_FORMAT">
+            <summary>
+            Microsoft DirectX Graphics Infrastructure formats.
+            See https://msdn.microsoft.com/en-us/library/windows/desktop/bb173059(v=vs.85).aspx
+            </summary>
+        </member>
+        <member name="T:ValveResourceFormat.ResourceTypes.NTROSerialization.CTransform">
+            <summary>
+            Represents a transformation matrix.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.NTROSerialization.CTransform.Values">
+            <summary>
+            Gets the matrix values.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.ResourceTypes.NTROSerialization.CTransform.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ValveResourceFormat.ResourceTypes.NTROSerialization.CTransform"/> class.
+            </summary>
+            <param name="field0">First item of the matrix.</param>
+            <param name="field1">Second item of the matrix.</param>
+            <param name="field2">Third item of the matrix.</param>
+            <param name="field3">Fourth item of the matrix.</param>
+            <param name="field4">Fifth item of the matrix.</param>
+            <param name="field5">Sixth item of the matrix.</param>
+            <param name="field6">Seventh item of the matrix.</param>
+            <param name="field7">Eighth item of the matrix.</param>
+        </member>
+        <member name="T:ValveResourceFormat.ResourceTypes.NTROSerialization.Matrix3x4">
+            <summary>
+            Represents a 3x4 matrix.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.NTROSerialization.Matrix3x4.Values">
+            <summary>
+            Gets the matrix values.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.ResourceTypes.NTROSerialization.Matrix3x4.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ValveResourceFormat.ResourceTypes.NTROSerialization.Matrix3x4"/> class.
+            </summary>
+            <param name="field0">First item of the matrix.</param>
+            <param name="field1">Second item of the matrix.</param>
+            <param name="field2">Third item of the matrix.</param>
+            <param name="field3">Fourth item of the matrix.</param>
+            <param name="field4">Fifth item of the matrix.</param>
+            <param name="field5">Sixth item of the matrix.</param>
+            <param name="field6">Seventh item of the matrix.</param>
+            <param name="field7">Eighth item of the matrix.</param>
+            <param name="field8">Nineth item of the matrix.</param>
+            <param name="field9">Tenth item of the matrix.</param>
+            <param name="field10">Eleventh item of the matrix.</param>
+            <param name="field11">Twelfth item of the matrix.</param>
+        </member>
+        <member name="T:ValveResourceFormat.ResourceTypes.NTROSerialization.Vector4">
+            <summary>
+            Represents a 4D vector.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.NTROSerialization.Vector4.X">
+            <summary>
+            Gets the X component of the Vector4.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.NTROSerialization.Vector4.Y">
+            <summary>
+            Gets the Y component of the Vector4.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.NTROSerialization.Vector4.Z">
+            <summary>
+            Gets the Z component of the Vector4.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.NTROSerialization.Vector4.W">
+            <summary>
+            Gets the W component of the Vector4.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.ResourceTypes.NTROSerialization.Vector4.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ValveResourceFormat.ResourceTypes.NTROSerialization.Vector4"/> class.
+            </summary>
+            <param name="x">The x component of the Vector4.</param>
+            <param name="y">The y component of the Vector4.</param>
+            <param name="z">The z component of the Vector4.</param>
+            <param name="w">The w component of the Vector4.</param>
+        </member>
+        <member name="T:ValveResourceFormat.ResourceTypes.NTROSerialization.Vector3">
+            <summary>
+            Represents a 3D vector.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.NTROSerialization.Vector3.X">
+            <summary>
+            Gets the X component of the Vector3.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.NTROSerialization.Vector3.Y">
+            <summary>
+            Gets the Y component of the Vector3.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.NTROSerialization.Vector3.Z">
+            <summary>
+            Gets the Z component of the Vector3.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.ResourceTypes.NTROSerialization.Vector3.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ValveResourceFormat.ResourceTypes.NTROSerialization.Vector3"/> class.
+            </summary>
+            <param name="x">The x component of the Vector3.</param>
+            <param name="y">The y component of the Vector3.</param>
+            <param name="z">The z component of the Vector3.</param>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.Sound.Type">
+            <summary>
+            Gets the audio file type.
+            </summary>
+            <value>The file type.</value>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.Sound.SampleRate">
+            <summary>
+            Gets the samples per second.
+            </summary>
+            <value>The sample rate.</value>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.Sound.Bits">
+            <summary>
+            Gets the bit size.
+            </summary>
+            <value>The bit size.</value>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.Sound.Channels">
+            <summary>
+            Gets the number of channels. 1 for mono, 2 for stereo.
+            </summary>
+            <value>The number of channels.</value>
+        </member>
+        <member name="P:ValveResourceFormat.ResourceTypes.Sound.AudioFormat">
+            <summary>
+            Gets the bitstream encoding format.
+            </summary>
+            <value>The audio format.</value>
+        </member>
+        <member name="M:ValveResourceFormat.ResourceTypes.Sound.GetSound">
+            <summary>
+            Returns a fully playable sound data.
+            In case of WAV files, header is automatically generated as Valve removes it when compiling.
+            </summary>
+            <returns>Byte array containing sound data.</returns>
+        </member>
+        <member name="M:ValveResourceFormat.ResourceTypes.Sound.GetSoundStream">
+            <summary>
+            Returns a fully playable sound data.
+            In case of WAV files, header is automatically generated as Valve removes it when compiling.
+            </summary>
+            <returns>Memory stream containing sound data.</returns>
+        </member>
+        <member name="T:ValveResourceFormat.Resource">
+            <summary>
+            Represents a Valve resource.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.Resource.Reader">
+            <summary>
+            Gets the binary reader. USE AT YOUR OWN RISK!
+            It is exposed publicly to ease of reading the same file.
+            </summary>
+            <value>The binary reader.</value>
+        </member>
+        <member name="P:ValveResourceFormat.Resource.FileSize">
+            <summary>
+            Gets the resource size.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.Resource.HeaderVersion">
+            <summary>
+            Gets the version of this resource, should be 12.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.Resource.Version">
+            <summary>
+            Gets the file type version.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.Resource.Blocks">
+            <summary>
+            Gets the list of blocks this resource contains.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.Resource.ResourceType">
+            <summary>
+            Gets or sets the type of the resource.
+            </summary>
+            <value>The type of the resource.</value>
+        </member>
+        <member name="P:ValveResourceFormat.Resource.ExternalReferences">
+            <summary>
+            Gets the ResourceExtRefList block.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.Resource.EditInfo">
+            <summary>
+            Gets the ResourceEditInfo block.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.Resource.IntrospectionManifest">
+            <summary>
+            Gets the ResourceIntrospectionManifest block.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.Resource.VBIB">
+            <summary>
+            Gets the Vertex and Index Buffer block.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.Resource.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ValveResourceFormat.Resource"/> class.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.Resource.Dispose">
+            <summary>
+            Releases binary reader.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.Resource.Read(System.String)">
+            <summary>
+            Opens and reads the given filename.
+            The file is held open until the object is disposed.
+            </summary>
+            <param name="filename">The file to open and read.</param>
+        </member>
+        <member name="M:ValveResourceFormat.Resource.Read(System.IO.Stream)">
+            <summary>
+            Reads the given <see cref="T:System.IO.Stream"/>.
+            </summary>
+            <param name="input">The input <see cref="T:System.IO.Stream"/> to read from.</param>
+        </member>
+        <member name="T:ValveResourceFormat.Blocks.ResourceData">
+            <summary>
+            Resource data.
+            </summary>
+        </member>
+        <member name="T:ValveResourceFormat.Blocks.ResourceEditInfo">
+            <summary>
+            "REDI" block. ResourceEditInfoBlock_t
+            </summary>
+        </member>
+        <member name="T:ValveResourceFormat.Blocks.ResourceEditInfo.REDIStruct">
+            <summary>
+            This is not a real Valve enum, it's just the order they appear in.
+            </summary>
+        </member>
+        <member name="T:ValveResourceFormat.Blocks.ResourceExtRefList">
+            <summary>
+            "RERL" block. ResourceExtRefList_t
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.Blocks.ResourceExtRefList.ResourceReferenceInfo.Id">
+            <summary>
+            Gets or sets the resource id.
+            </summary>
+        </member>
+        <member name="P:ValveResourceFormat.Blocks.ResourceExtRefList.ResourceReferenceInfo.Name">
+            <summary>
+            Gets or sets the resource name.
+            </summary>
+        </member>
+        <member name="T:ValveResourceFormat.Blocks.ResourceIntrospectionManifest">
+            <summary>
+            "NTRO" block. CResourceIntrospectionManifest
+            </summary>
+        </member>
+        <member name="T:ValveResourceFormat.Blocks.VBIB">
+            <summary>
+            "VBIB" block.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.StreamHelpers.ReadNullTermString(System.IO.BinaryReader,System.Text.Encoding)">
+            <summary>
+            Reads a null terminated string.
+            </summary>
+            <returns>String.</returns>
+            <param name="stream">Stream.</param>
+            <param name="encoding">Encoding.</param>
+        </member>
+        <member name="M:ValveResourceFormat.StreamHelpers.ReadOffsetString(System.IO.BinaryReader,System.Text.Encoding)">
+            <summary>
+            Reads a string at a given uint offset.
+            </summary>
+            <returns>String.</returns>
+            <param name="stream">Stream.</param>
+            <param name="encoding">Encoding.</param>
+        </member>
+        <member name="T:ValveResourceFormat.Crc32">
+            <summary>
+            A utility class to compute CRC32.
+            </summary>
+        </member>
+        <member name="F:ValveResourceFormat.Crc32.Table">
+            <summary>
+            CRC polynomial 0xEDB88320.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.Crc32.Compute(System.Byte[])">
+            <summary>
+            Compute a checksum for a given array of bytes.
+            </summary>
+            <param name="buffer">The array of bytes to compute the checksum for.</param>
+            <returns>The computed checksum.</returns>
+        </member>
+        <member name="M:ValveResourceFormat.CompiledShader.Dispose">
+            <summary>
+            Releases binary reader.
+            </summary>
+        </member>
+        <member name="M:ValveResourceFormat.CompiledShader.Read(System.String)">
+            <summary>
+            Opens and reads the given filename.
+            The file is held open until the object is disposed.
+            </summary>
+            <param name="filename">The file to open and read.</param>
+        </member>
+        <member name="M:ValveResourceFormat.CompiledShader.Read(System.String,System.IO.Stream)">
+            <summary>
+            Reads the given <see cref="T:System.IO.Stream"/>.
+            </summary>
+            <param name="filename">The filename <see cref="T:System.String"/>.</param>
+            <param name="input">The input <see cref="T:System.IO.Stream"/> to read from.</param>
+        </member>
+        <member name="T:SevenZip.DataErrorException">
+            <summary>
+            The exception that is thrown when an error in input stream occurs during decoding.
+            </summary>
+        </member>
+        <member name="T:SevenZip.InvalidParamException">
+            <summary>
+            The exception that is thrown when the value of an argument is outside the allowable range.
+            </summary>
+        </member>
+        <member name="M:SevenZip.ICodeProgress.SetProgress(System.Int64,System.Int64)">
+            <summary>
+            Callback progress.
+            </summary>
+            <param name="inSize">
+            input size. -1 if unknown.
+            </param>
+            <param name="outSize">
+            output size. -1 if unknown.
+            </param>
+        </member>
+        <member name="M:SevenZip.ICoder.Code(System.IO.Stream,System.IO.Stream,System.Int64,System.Int64,SevenZip.ICodeProgress)">
+            <summary>
+            Codes streams.
+            </summary>
+            <param name="inStream">
+            input Stream.
+            </param>
+            <param name="outStream">
+            output Stream.
+            </param>
+            <param name="inSize">
+            input Size. -1 if unknown.
+            </param>
+            <param name="outSize">
+            output Size. -1 if unknown.
+            </param>
+            <param name="progress">
+            callback progress reference.
+            </param>
+            <exception cref="T:SevenZip.DataErrorException">
+            if input stream is not valid
+            </exception>
+        </member>
+    </members>
+</doc>
