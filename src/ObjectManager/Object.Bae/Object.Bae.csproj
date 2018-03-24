@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CEF70BD8-ECF0-46CF-AB58-4105B9273351}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Object.Bae</RootNamespace>
+    <AssemblyName>Object.Bae</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\Program Files\Unity 2018.1.0b9\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaeSettings.cs" />
+    <Compile Include="BSAFile.cs" />
+    <Compile Include="CellManager.cs" />
+    <Compile Include="Components\DayNightCycle.cs" />
+    <Compile Include="Components\Records\ActivatorComponent.cs" />
+    <Compile Include="Components\Records\AlchemyApparatusComponent.cs" />
+    <Compile Include="Components\Records\AlchemyComponent.cs" />
+    <Compile Include="Components\Records\ArmorComponent.cs" />
+    <Compile Include="Components\Records\ClothComponent.cs" />
+    <Compile Include="Components\Records\ContainerComponent.cs" />
+    <Compile Include="Components\Records\CreatureComponent.cs" />
+    <Compile Include="Components\Records\DoorComponent.cs" />
+    <Compile Include="Components\Records\GenericObjectComponent.cs" />
+    <Compile Include="Components\Records\IngredientComponent.cs" />
+    <Compile Include="Components\Records\LightComponent.cs" />
+    <Compile Include="Components\Records\LockComponent.cs" />
+    <Compile Include="Components\Records\MiscObjectComponent.cs" />
+    <Compile Include="Components\Records\NpcComponent.cs" />
+    <Compile Include="Components\Records\ProbComponent.cs" />
+    <Compile Include="Components\Records\RepaireComponent.cs" />
+    <Compile Include="Components\Records\WeaponComponent.cs" />
+    <Compile Include="Convert.cs" />
+    <Compile Include="Esm\EsmFile.cs" />
+    <Compile Include="Esm\Records.cs" />
+    <Compile Include="MaterialManager.cs" />
+    <Compile Include="Materials\MWBaseMaterial.cs" />
+    <Compile Include="Materials\MWBumpedDiffuseMaterial.cs" />
+    <Compile Include="Materials\MWDefaultMaterial.cs" />
+    <Compile Include="Materials\MWStandardMaterial.cs" />
+    <Compile Include="Materials\MWUnlitMaterial.cs" />
+    <Compile Include="MorrowindDataReader.cs" />
+    <Compile Include="Formats\NifManager.cs" />
+    <Compile Include="Formats\NifObjectBuilder.cs" />
+    <Compile Include="Formats\NifParserGenerator.cs" />
+    <Compile Include="Formats\NifReader.cs" />
+    <Compile Include="Formats\NifUtils.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextureManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Object.Core\Object.Core.csproj">
+      <Project>{f0f8a97b-f6ea-4fc9-8b8e-ca7087553586}</Project>
+      <Name>Object.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
