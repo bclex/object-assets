@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using OA.Core;
+using UnityEngine;
 
-namespace OA.Core
+namespace OA.Components
 {
     public class OneShotAudioStreamComponent : MonoBehaviour
     {
@@ -19,7 +20,7 @@ namespace OA.Core
     {
         if (audioStream != null && audioStream.isDoneStreaming)
         {
-            Debug.Log(audioStream.streamedSampleFrameCount * audioStream.channelCount);
+            Utils.Log(audioStream.streamedSampleFrameCount * audioStream.channelCount);
             audioStream = null;
             audioSource.loop = false;
         }

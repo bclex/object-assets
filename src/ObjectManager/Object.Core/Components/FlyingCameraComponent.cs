@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using OA.Core;
+using UnityEngine;
 
-namespace OA.Core
+namespace OA.Components
 {
     public class FlyingCameraComponent : MonoBehaviour
     {

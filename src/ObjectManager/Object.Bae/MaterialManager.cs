@@ -6,12 +6,12 @@ namespace OA.Bae
 {
     public enum MatTestMode { Always, Less, LEqual, Equal, GEqual, Greater, NotEqual, Never }
 
-    public enum MWMaterialType
+    public enum MaterialType
     {
         Default, Standard, BumpedDiffuse, Unlit
     }
 
-    public struct MWMaterialTextures
+    public struct MaterialTextures
     {
         public string mainFilePath;
         public string darkFilePath;
@@ -21,9 +21,9 @@ namespace OA.Bae
         public string bumpFilePath;
     }
 
-    public struct MWMaterialProps
+    public struct MaterialProps
     {
-        public MWMaterialTextures textures;
+        public MaterialTextures textures;
         public bool alphaBlended;
         public ur.BlendMode srcBlendMode;
         public ur.BlendMode dstBlendMode;
@@ -37,8 +37,8 @@ namespace OA.Bae
     /// </summary>
     public class MaterialManager
     {
-        private MWBaseMaterial _mwMaterial;
-        private TextureManager _textureManager;
+        BaseMaterial _material;
+        TextureManager _textureManager;
 
         public TextureManager TextureManager
         {
@@ -50,31 +50,31 @@ namespace OA.Bae
             _textureManager = textureManager;
             switch (BaeSettings.materialType)
             {
-                case MWMaterialType.Default: _mwMaterial = new MWDefaultMaterial(textureManager); break;
-                case MWMaterialType.Standard: _mwMaterial = new MWStandardMaterial(textureManager); break;
-                case MWMaterialType.Unlit: _mwMaterial = new MWUnliteMaterial(textureManager); break;
-                default: _mwMaterial = new MWBumpedDiffuseMaterial(textureManager); break;
+                case MaterialType.Default: _material = new DefaultMaterial(textureManager); break;
+                case MaterialType.Standard: _material = new StandardMaterial(textureManager); break;
+                case MaterialType.Unlit: _material = new UnliteMaterial(textureManager); break;
+                default: _material = new BumpedDiffuseMaterial(textureManager); break;
             }
         }
 
-        public Material BuildMaterialFromProperties(MWMaterialProps mp)
+        public Material BuildMaterialFromProperties(MaterialProps mp)
         {
-            return _mwMaterial.BuildMaterialFromProperties(mp);
+            return _material.BuildMaterialFromProperties(mp);
         }
 
         private Material BuildMaterial()
         {
-            return _mwMaterial.BuildMaterial();
+            return _material.BuildMaterial();
         }
 
         private Material BuildMaterialBlended(ur.BlendMode sourceBlendMode, ur.BlendMode destinationBlendMode)
         {
-            return _mwMaterial.BuildMaterialBlended(sourceBlendMode, destinationBlendMode);
+            return _material.BuildMaterialBlended(sourceBlendMode, destinationBlendMode);
         }
 
         private Material BuildMaterialTested(float cutoff = 0.5f)
         {
-            return _mwMaterial.BuildMaterialTested(cutoff);
+            return _material.BuildMaterialTested(cutoff);
         }
     }
 }

@@ -9,9 +9,9 @@ namespace OA.Core
     /// </summary>
     public struct ArrayRange<T> : IEnumerable<T>
     {
-        private T[] _array;
-        private int _offset;
-        private int _length;
+        T[] _array;
+        int _offset;
+        int _length;
 
         #region Enumerator
 
@@ -59,7 +59,6 @@ namespace OA.Core
         public ArrayRange(T[] array)
         {
             Debug.Assert(array != null);
-
             _array = array;
             _offset = 0;
             _length = array.Length;
@@ -75,7 +74,6 @@ namespace OA.Core
         {
             Debug.Assert(array != null);
             Debug.Assert((offset >= 0) && (length >= 0) && ((offset + length) <= array.Length));
-
             _array = array;
             _offset = offset;
             _length = length;

@@ -11,7 +11,7 @@
         //public Water.WaterMode waterQuality = Water.WaterMode.Simple;
 
         //[Header("Rendering")]
-        public static MWMaterialType materialType = MWMaterialType.BumpedDiffuse;
+        public static MaterialType materialType = MaterialType.BumpedDiffuse;
         //public RenderingPath renderPath = RenderingPath.Forward;
         //public float cameraFarClip = 500.0f;
 

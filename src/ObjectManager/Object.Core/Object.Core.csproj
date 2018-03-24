@@ -53,11 +53,11 @@
     <Compile Include="Formats\DdsReader.cs" />
     <Compile Include="XR\Editor\XRInputLoader.cs" />
     <Compile Include="_BCL\FileFormatException.cs" />
-    <Compile Include="Core\FlyingCameraComponent.cs" />
+    <Compile Include="Components\FlyingCameraComponent.cs" />
     <Compile Include="Core\GameObjectUtils.cs" />
     <Compile Include="Core\InputManager.cs" />
     <Compile Include="Core\MusicPlayer.cs" />
-    <Compile Include="Core\OneShotAudioStreamComponent.cs" />
+    <Compile Include="Components\OneShotAudioStreamComponent.cs" />
     <Compile Include="XR\XRInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\StringUtils.cs" />
@@ -67,7 +67,7 @@
     <Compile Include="Core\UnityBinaryReader.cs" />
     <Compile Include="Core\Utils.cs" />
     <Compile Include="Core\Vector2i.cs" />
-    <Compile Include="Core\VirtualFileSystem.cs" />
+    <Compile Include="VirtualFileSystem.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

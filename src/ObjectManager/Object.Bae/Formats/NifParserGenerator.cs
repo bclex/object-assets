@@ -167,7 +167,7 @@ namespace OA.Bae.Formats
 			var versionNumberStrings = versionString.Split('.');
 			uint versionInt = 0;
 
-			Debug.Assert((versionNumberStrings.Length >= 1) && (versionNumberStrings.Length <= 4));
+			Debug.Assert(versionNumberStrings.Length >= 1 && versionNumberStrings.Length <= 4);
 
 			for(int i = 0; i < versionNumberStrings.Length; i++)
 			{

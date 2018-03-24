@@ -126,7 +126,7 @@ namespace OA.Bae.Formats
             else if (StringUtils.Equals(nodeTypeBytes, "NiPosData")) { var data = new NiPosData(); data.Deserialize(r); return data; }
             else if (StringUtils.Equals(nodeTypeBytes, "NiBillboardNode")) { var data = new NiBillboardNode(); data.Deserialize(r); return data; }
             else if (StringUtils.Equals(nodeTypeBytes, "NiShadeProperty")) { var property = new NiShadeProperty(); property.Deserialize(r); return property; }
-            else { Debug.Log("Tried to read an unsupported NiObject type (" + System.Text.Encoding.ASCII.GetString(nodeTypeBytes) + ")."); return null; }
+            else { Utils.Log("Tried to read an unsupported NiObject type (" + System.Text.Encoding.ASCII.GetString(nodeTypeBytes) + ")."); return null; }
         }
 
         public static Matrix4x4 Read3x3RotationMatrix(UnityBinaryReader r)

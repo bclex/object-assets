@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using MP3Sharp;
+using OA.Components;
 
 namespace OA.Core
 {

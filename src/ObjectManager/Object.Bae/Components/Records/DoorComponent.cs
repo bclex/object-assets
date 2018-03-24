@@ -35,8 +35,8 @@ namespace OA.Bae.Components.Records
             var DOOR = record as DOORRecord;
             if (DOOR.FNAM != null)
                 doorData.doorName = DOOR.FNAM.value;
-            doorData.leadsToAnotherCell = (refObjDataGroup.DNAM != null) || (refObjDataGroup.DODT != null);
-            doorData.leadsToInteriorCell = (refObjDataGroup.DNAM != null);
+            doorData.leadsToAnotherCell = refObjDataGroup.DNAM != null || refObjDataGroup.DODT != null;
+            doorData.leadsToInteriorCell = refObjDataGroup.DNAM != null;
             if (doorData.leadsToInteriorCell)
                 doorData.doorExitName = refObjDataGroup.DNAM.value;
             if (doorData.leadsToAnotherCell && !doorData.leadsToInteriorCell)

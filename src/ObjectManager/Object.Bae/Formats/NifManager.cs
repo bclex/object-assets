@@ -10,10 +10,18 @@ namespace OA.Bae.Formats
     /// </summary>
     public class NifManager
     {
-        public NifManager(MorrowindDataReader r, MaterialManager materialManager)
+        readonly MorrowindDataReader r;
+        readonly MaterialManager materialManager;
+        GameObject prefabContainerObj;
+        readonly Dictionary<string, Task<NiFile>> nifFilePreloadTasks = new Dictionary<string, Task<NiFile>>();
+        readonly Dictionary<string, GameObject> nifPrefabs = new Dictionary<string, GameObject>();
+        readonly int markerLayer;
+
+        public NifManager(MorrowindDataReader r, MaterialManager materialManager, int markerLayer)
         {
             this.r = r;
             this.materialManager = materialManager;
+            this.markerLayer = markerLayer;
         }
 
         /// <summary>
@@ -47,13 +55,6 @@ namespace OA.Bae.Formats
             }
         }
 
-        private MorrowindDataReader r;
-        private MaterialManager materialManager;
-        private GameObject prefabContainerObj;
-
-        private Dictionary<string, Task<NiFile>> nifFilePreloadTasks = new Dictionary<string, Task<NiFile>>();
-        private Dictionary<string, GameObject> nifPrefabs = new Dictionary<string, GameObject>();
-
         private void EnsurePrefabContainerObjectExists()
         {
             if (prefabContainerObj == null)
@@ -77,7 +78,7 @@ namespace OA.Bae.Formats
                     if (anNiSourceTexture.fileName != null && anNiSourceTexture.fileName != "")
                         materialManager.TextureManager.PreloadTextureFileAsync(anNiSourceTexture.fileName);
                 }
-            var objBuilder = new NifObjectBuilder(file, materialManager);
+            var objBuilder = new NifObjectBuilder(file, materialManager, markerLayer);
             var prefab = objBuilder.BuildObject();
             prefab.transform.parent = prefabContainerObj.transform;
             // Add LOD support to the prefab.

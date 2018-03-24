@@ -6,11 +6,11 @@ namespace OA.Bae.Materials
     /// <summary>
     /// A material that uses the legacy Bumped Diffuse Shader.
     /// </summary>
-    public class MWBumpedDiffuseMaterial : MWBaseMaterial
+    public class BumpedDiffuseMaterial : BaseMaterial
     {
-        public MWBumpedDiffuseMaterial(TextureManager textureManager) : base(textureManager) { }
+        public BumpedDiffuseMaterial(TextureManager textureManager) : base(textureManager) { }
 
-        public override Material BuildMaterialFromProperties(MWMaterialProps mp)
+        public override Material BuildMaterialFromProperties(MaterialProps mp)
         {
             Material material;
             //check if the material is already cached

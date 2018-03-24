@@ -6,11 +6,11 @@ namespace OA.Bae.Materials
     /// <summary>
     /// A material that uses the default shader created for TESUnity.
     /// </summary>
-    public class MWDefaultMaterial : MWBaseMaterial
+    public class DefaultMaterial : BaseMaterial
     {
-        public MWDefaultMaterial(TextureManager textureManager) : base(textureManager) { }
+        public DefaultMaterial(TextureManager textureManager) : base(textureManager) { }
 
-        public override Material BuildMaterialFromProperties(MWMaterialProps mp)
+        public override Material BuildMaterialFromProperties(MaterialProps mp)
         {
             Material material;
             //check if the material is already cached

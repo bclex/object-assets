@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace OA.Bae.Esm
+namespace OA.Bae.FilePacks
 {
     public class RecordHeader
     {

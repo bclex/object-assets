@@ -1,4 +1,4 @@
-﻿using OA.Bae.Esm;
+﻿using OA.Bae.FilePacks;
 using OA.Bae.Formats;
 using OA.Core;
 using OA.Formats;
@@ -11,21 +11,13 @@ namespace OA.Bae
 {
     public class MorrowindDataReader : IDisposable
     {
-        public ESMFile MorrowindESMFile;
-        public BSAFile MorrowindBSAFile;
-        public ESMFile BloodmoonESMFile;
-        public BSAFile BloodmoonBSAFile;
-        public ESMFile TribunalESMFile;
-        public BSAFile TribunalBSAFile;
+        public EsmFile ESMFile;
+        public BsaFile BSAFile;
 
-        public MorrowindDataReader(string MorrowindFilePath)
+        public MorrowindDataReader(string dataPath, string name)
         {
-            MorrowindESMFile = new ESMFile(MorrowindFilePath + "/Morrowind.esm");
-            MorrowindBSAFile = new BSAFile(MorrowindFilePath + "/Morrowind.bsa");
-            /*BloodmoonESMFile = new ESMFile(MorrowindFilePath + "/Bloodmoon.esm");
-			BloodmoonBSAFile = new BSAFile(MorrowindFilePath + "/Bloodmoon.bsa");
-			TribunalESMFile = new ESMFile(MorrowindFilePath + "/Tribunal.esm");
-			TribunalBSAFile = new BSAFile(MorrowindFilePath + "/Tribunal.bsa");*/
+            ESMFile = new EsmFile(dataPath + "/" + name + ".esm", GameId.Fallout4);
+            BSAFile = new BsaFile(dataPath + "/" + name + ".bsa");
         }
 
         void IDisposable.Dispose()
@@ -40,12 +32,8 @@ namespace OA.Bae
 
         public void Close()
         {
-            /*TribunalBSAFile.Close();
-			TribunalESMFile.Close();
-			BloodmoonBSAFile.Close();
-			BloodmoonESMFile.Close();*/
-            MorrowindBSAFile.Close();
-            MorrowindESMFile.Close();
+            BSAFile.Close();
+            ESMFile.Close();
         }
 
         public Task<Texture2DInfo> LoadTextureAsync(string texturePath)
@@ -53,7 +41,7 @@ namespace OA.Bae
             var filePath = FindTexture(texturePath);
             if (filePath != null)
             {
-                var fileData = MorrowindBSAFile.LoadFileData(filePath);
+                var fileData = BSAFile.LoadFileData(filePath);
                 return Task.Run(() =>
                 {
                     var fileExtension = Path.GetExtension(filePath);
@@ -63,14 +51,14 @@ namespace OA.Bae
             }
             else
             {
-                Debug.LogWarning("Could not find file \"" + texturePath + "\" in a BSA file.");
+                Utils.LogWarning("Could not find file \"" + texturePath + "\" in a BSA file.");
                 return Task.FromResult<Texture2DInfo>(null);
             }
         }
 
         public Task<NiFile> LoadNifAsync(string filePath)
         {
-            var fileData = MorrowindBSAFile.LoadFileData(filePath);
+            var fileData = BSAFile.LoadFileData(filePath);
             return Task.Run(() =>
             {
                 var file = new NiFile(Path.GetFileNameWithoutExtension(filePath));
@@ -81,7 +69,7 @@ namespace OA.Bae
 
         public LTEXRecord FindLTEXRecord(int index)
         {
-            var records = MorrowindESMFile.GetRecordsOfType<LTEXRecord>();
+            var records = ESMFile.GetRecordsOfType<LTEXRecord>();
             LTEXRecord ltex = null;
             for (int i = 0, l = records.Count; i < l; i++)
             {
@@ -95,20 +83,20 @@ namespace OA.Bae
         public LANDRecord FindLANDRecord(Vector2i cellIndices)
         {
             LANDRecord land;
-            MorrowindESMFile.LANDRecordsByIndices.TryGetValue(cellIndices, out land);
+            ESMFile.LANDRecordsByIndices.TryGetValue(cellIndices, out land);
             return land;
         }
 
         public CELLRecord FindExteriorCellRecord(Vector2i cellIndices)
         {
             CELLRecord cell;
-            MorrowindESMFile.exteriorCELLRecordsByIndices.TryGetValue(cellIndices, out cell);
+            ESMFile.exteriorCELLRecordsByIndices.TryGetValue(cellIndices, out cell);
             return cell;
         }
 
         public CELLRecord FindInteriorCellRecord(string cellName)
         {
-            var records = MorrowindESMFile.GetRecordsOfType<CELLRecord>();
+            var records = ESMFile.GetRecordsOfType<CELLRecord>();
             CELLRecord cell = null;
             for (int i = 0, l = records.Count; i < l; i++)
             {
@@ -121,7 +109,7 @@ namespace OA.Bae
 
         public CELLRecord FindInteriorCellRecord(Vector2i gridCoords)
         {
-            var records = MorrowindESMFile.GetRecordsOfType<CELLRecord>();
+            var records = ESMFile.GetRecordsOfType<CELLRecord>();
             CELLRecord cell = null;
             for (int i = 0, l = records.Count; i < l; i++)
             {
@@ -140,17 +128,17 @@ namespace OA.Bae
             var textureName = Path.GetFileNameWithoutExtension(texturePath);
             var textureNameInTexturesDir = "textures/" + textureName;
             var filePath = textureNameInTexturesDir + ".dds";
-            if (MorrowindBSAFile.ContainsFile(filePath))
+            if (BSAFile.ContainsFile(filePath))
                 return filePath;
             filePath = textureNameInTexturesDir + ".tga";
-            if (MorrowindBSAFile.ContainsFile(filePath))
+            if (BSAFile.ContainsFile(filePath))
                 return filePath;
             var texturePathWithoutExtension = Path.GetDirectoryName(texturePath) + '/' + textureName;
             filePath = texturePathWithoutExtension + ".dds";
-            if (MorrowindBSAFile.ContainsFile(filePath))
+            if (BSAFile.ContainsFile(filePath))
                 return filePath;
             filePath = texturePathWithoutExtension + ".tga";
-            if (MorrowindBSAFile.ContainsFile(filePath))
+            if (BSAFile.ContainsFile(filePath))
                 return filePath;
             // Could not find the file.
             return null;

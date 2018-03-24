@@ -1,5 +1,4 @@
-﻿using OA.Bae.Components.Records;
-using OA.Bae.Esm;
+﻿using OA.Bae.FilePacks;
 using OA.Bae.Formats;
 using OA.Core;
 using System.Collections;
@@ -44,9 +43,9 @@ namespace OA.Bae
         TemporalLoadBalancer temporalLoadBalancer;
         Dictionary<Vector2i, InRangeCellInfo> cellObjects = new Dictionary<Vector2i, InRangeCellInfo>();
 
-        public CellManager(MorrowindDataReader dataReader, TextureManager textureManager, NifManager nifManager, TemporalLoadBalancer temporalLoadBalancer)
+        public CellManager(MorrowindDataReader r, TextureManager textureManager, NifManager nifManager, TemporalLoadBalancer temporalLoadBalancer)
         {
-            this.r = dataReader;
+            this.r = r;
             this.textureManager = textureManager;
             this.nifManager = nifManager;
             this.temporalLoadBalancer = temporalLoadBalancer;
@@ -231,7 +230,7 @@ namespace OA.Bae
                 var refObjInfo = new RefCellObjInfo();
                 refObjInfo.refObjDataGroup = cell.refObjDataGroups[i];
                 // Get the record the RefObjDataGroup references.
-                r.MorrowindESMFile.objectsByIDString.TryGetValue(refObjInfo.refObjDataGroup.NAME.value, out refObjInfo.referencedRecord);
+                r.ESMFile.objectsByIDString.TryGetValue(refObjInfo.refObjDataGroup.NAME.value, out refObjInfo.referencedRecord);
                 if (refObjInfo.referencedRecord != null)
                 {
                     var modelFileName = RecordUtils.GetModelFileName(refObjInfo.referencedRecord);
@@ -293,7 +292,7 @@ namespace OA.Bae
                     }
                 }
             }
-            else Debug.Log("Unknown Object: " + refCellObjInfo.refObjDataGroup.NAME.value);
+            else Utils.Log("Unknown Object: " + refCellObjInfo.refObjDataGroup.NAME.value);
         }
 
         private GameObject InstantiateLight(LIGHRecord LIGH, bool indoors)
@@ -352,10 +351,10 @@ namespace OA.Bae
             {
                 var obj = GameObjectUtils.FindTopLevelObject(gameObject);
                 if (obj == null) { return; }
-                var component = GenericObjectComponent.Create(obj, record, tag);
-                //only door records need access to the cell object data group so far
-                if (record is DOORRecord)
-                    ((DoorComponent)component).refObjDataGroup = info.refObjDataGroup;
+                //var component = GenericObjectComponent.Create(obj, record, tag);
+                ////only door records need access to the cell object data group so far
+                //if (record is DOORRecord)
+                //    ((DoorComponent)component).refObjDataGroup = info.refObjDataGroup;
             }
         }
 
@@ -489,7 +488,7 @@ namespace OA.Bae
                 Object.Destroy(cellInfo.gameObject);
                 cellObjects.Remove(indices);
             }
-            else Debug.LogError("Tried to destroy a cell that isn't created.");
+            else Utils.LogError("Tried to destroy a cell that isn't created.");
         }
     }
 }

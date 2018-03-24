@@ -6,11 +6,11 @@ namespace OA.Bae.Materials
     /// <summary>
     /// A material that uses the Unlit Shader.
     /// </summary>
-    public class MWUnliteMaterial : MWBaseMaterial
+    public class UnliteMaterial : BaseMaterial
     {
-        public MWUnliteMaterial(TextureManager textureManager) : base(textureManager) { }
+        public UnliteMaterial(TextureManager textureManager) : base(textureManager) { }
 
-        public override Material BuildMaterialFromProperties(MWMaterialProps mp)
+        public override Material BuildMaterialFromProperties(MaterialProps mp)
         {
             Material material;
             //check if the material is already cached

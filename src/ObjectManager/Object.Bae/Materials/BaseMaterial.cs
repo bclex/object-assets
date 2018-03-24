@@ -7,18 +7,18 @@ namespace OA.Bae.Materials
     /// <summary>
     /// An abstract class to describe a material.
     /// </summary>
-    public abstract class MWBaseMaterial
+    public abstract class BaseMaterial
     {
-        protected Dictionary<MWMaterialProps, Material> _existingMaterials;
+        protected Dictionary<MaterialProps, Material> _existingMaterials;
         protected TextureManager _textureManager;
 
-        public MWBaseMaterial(TextureManager textureManager)
+        public BaseMaterial(TextureManager textureManager)
         {
             _textureManager = textureManager;
-            _existingMaterials = new Dictionary<MWMaterialProps, Material>();
+            _existingMaterials = new Dictionary<MaterialProps, Material>();
         }
 
-        public abstract Material BuildMaterialFromProperties(MWMaterialProps mp);
+        public abstract Material BuildMaterialFromProperties(MaterialProps mp);
         public abstract Material BuildMaterial();
         public abstract Material BuildMaterialBlended(BlendMode sourceBlendMode, BlendMode destinationBlendMode);
         public abstract Material BuildMaterialTested(float cutoff = 0.5f);

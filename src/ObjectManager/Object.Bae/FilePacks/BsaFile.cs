@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace OA.Bae
+namespace OA.Bae.FilePacks
 {
-    public class BSAFile : IDisposable
+    public class BsaFile : IDisposable
     {
         UnityBinaryReader r;
 
@@ -36,14 +36,14 @@ namespace OA.Bae
 
         public Dictionary<FileNameHash, FileMetadata> fileMetadataHashTable;
 
-        public Core.VirtualFileSystem.Directory rootDir;
+        public VirtualFileSystem.Directory rootDir;
 
         public bool isAtEOF
         {
             get { return r.BaseStream.Position >= r.BaseStream.Length; }
         }
 
-        public BSAFile(string filePath)
+        public BsaFile(string filePath)
         {
             r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             ReadMetadata();
@@ -54,7 +54,7 @@ namespace OA.Bae
             Close();
         }
 
-        ~BSAFile()
+        ~BsaFile()
         {
             Close();
         }
@@ -94,7 +94,6 @@ namespace OA.Bae
         public byte[] LoadFileData(FileMetadata fileMetadata)
         {
             r.BaseStream.Position = fileDataSectionPostion + fileMetadata.offsetInDataSection;
-
             return r.ReadBytes((int)fileMetadata.size);
         }
 
@@ -104,30 +103,24 @@ namespace OA.Bae
             version = r.ReadBytes(4);
             var hashTableOffsetFromEndOfHeader = r.ReadLEUInt32(); // minus header size (12 bytes)
             var fileCount = r.ReadLEUInt32();
-
             // Calculate some useful values.
             var headerSize = r.BaseStream.Position;
             hashTablePosition = headerSize + hashTableOffsetFromEndOfHeader;
             fileDataSectionPostion = hashTablePosition + (8 * fileCount);
-
             // Create file metadatas.
             fileMetadatas = new FileMetadata[fileCount];
-
             for (var i = 0; i < fileCount; i++)
                 fileMetadatas[i] = new FileMetadata();
-
             // Read file sizes/offsets.
             for (var i = 0; i < fileCount; i++)
             {
                 fileMetadatas[i].size = r.ReadLEUInt32();
                 fileMetadatas[i].offsetInDataSection = r.ReadLEUInt32();
             }
-
             // Read filename offsets.
             var filenameOffsets = new uint[fileCount]; // relative offset in filenames section
             for (var i = 0; i < fileCount; i++)
                 filenameOffsets[i] = r.ReadLEUInt32();
-
             // Read filenames.
             var filenamesSectionStartPos = r.BaseStream.Position;
             var filenameBuffer = new List<byte>(64);
@@ -140,7 +133,6 @@ namespace OA.Bae
                     filenameBuffer.Add(curCharAsByte);
                 fileMetadatas[i].path = System.Text.Encoding.ASCII.GetString(filenameBuffer.ToArray());
             }
-
             // Read filename hashes.
             r.BaseStream.Position = hashTablePosition;
             for (int i = 0; i < fileCount; i++)
@@ -148,17 +140,14 @@ namespace OA.Bae
                 fileMetadatas[i].pathHash.value1 = r.ReadLEUInt32();
                 fileMetadatas[i].pathHash.value2 = r.ReadLEUInt32();
             }
-
             // Create the file metadata hash table.
             fileMetadataHashTable = new Dictionary<FileNameHash, FileMetadata>();
             for (var i = 0; i < fileCount; i++)
                 fileMetadataHashTable[fileMetadatas[i].pathHash] = fileMetadatas[i];
-
             // Create a virtual directory tree.
-            rootDir = new Core.VirtualFileSystem.Directory();
+            rootDir = new VirtualFileSystem.Directory();
             foreach (var fileMetadata in fileMetadatas)
                 rootDir.CreateDescendantFile(fileMetadata.path);
-
             // Skip to the file data section.
             r.BaseStream.Position = fileDataSectionPostion;
         }

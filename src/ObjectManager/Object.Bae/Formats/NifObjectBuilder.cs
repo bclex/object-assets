@@ -8,10 +8,15 @@ namespace OA.Bae.Formats
     // TODO: Investigate merging collision nodes with visual nodes.
     public class NifObjectBuilder
     {
-        public NifObjectBuilder(NiFile file, MaterialManager materialManager)
+        readonly NiFile file;
+        readonly MaterialManager materialManager;
+        readonly int markerLayer;
+
+        public NifObjectBuilder(NiFile file, MaterialManager materialManager, int markerLayer)
         {
             this.file = file;
             this.materialManager = materialManager;
+            this.markerLayer = markerLayer;
         }
 
         public GameObject BuildObject()
@@ -28,7 +33,7 @@ namespace OA.Bae.Formats
                 // If the file doesn't contain any NiObjects we are looking for, return an empty GameObject.
                 if (gameObject == null)
                 {
-                    Debug.Log(file.name + " resulted in a null GameObject when instantiated.");
+                    Utils.Log(file.name + " resulted in a null GameObject when instantiated.");
                     gameObject = new GameObject(file.name);
                 }
                 // If gameObject != null and the root NiObject is an NiNode, discard any transformations (Morrowind apparently does).
@@ -42,7 +47,7 @@ namespace OA.Bae.Formats
             }
             else
             {
-                Debug.Log(file.name + " has multiple roots.");
+                Utils.Log(file.name + " has multiple roots.");
                 var gameObject = new GameObject(file.name);
                 foreach (var rootRef in file.footer.roots)
                 {
@@ -53,9 +58,6 @@ namespace OA.Bae.Formats
                 return gameObject;
             }
         }
-
-        private NiFile file;
-        private MaterialManager materialManager;
 
         private GameObject InstantiateRootNiObject(NiObject obj)
         {
@@ -71,7 +73,7 @@ namespace OA.Bae.Formats
             if (shouldAddMissingColliders && gameObject.GetComponentInChildren<Collider>() == null)
                 GameObjectUtils.AddMissingMeshCollidersRecursively(gameObject);
             if (isMarker)
-                GameObjectUtils.SetLayerRecursively(gameObject, MorrowindEngine.markerLayer);
+                GameObjectUtils.SetLayerRecursively(gameObject, markerLayer);
             return gameObject;
         }
 
@@ -228,7 +230,7 @@ namespace OA.Bae.Formats
             return mesh;
         }
 
-        private MWMaterialProps NiAVObjectPropertiesToMWMaterialProperties(NiAVObject obj)
+        private MaterialProps NiAVObjectPropertiesToMWMaterialProperties(NiAVObject obj)
         {
             // Find relevant properties.
             NiTexturingProperty texturingProperty = null;
@@ -242,7 +244,7 @@ namespace OA.Bae.Formats
                 else if (prop is NiAlphaProperty) alphaProperty = (NiAlphaProperty)prop;
             }
             // Create the material properties.
-            var mp = new MWMaterialProps();
+            var mp = new MaterialProps();
 
             #region AlphaProperty Cheat Sheet
             /*
@@ -316,9 +318,9 @@ namespace OA.Bae.Formats
             return mp;
         }
 
-        private MWMaterialTextures ConfigureTextureProperties(NiTexturingProperty ntp)
+        private MaterialTextures ConfigureTextureProperties(NiTexturingProperty ntp)
         {
-            var tp = new MWMaterialTextures();
+            var tp = new MaterialTextures();
             if (ntp.textureCount < 1) return tp;
             if (ntp.hasBaseTexture) { var src = (NiSourceTexture)file.blocks[ntp.baseTexture.source.value]; tp.mainFilePath = src.fileName; }
             if (ntp.hasDarkTexture) { var src = (NiSourceTexture)file.blocks[ntp.darkTexture.source.value]; tp.darkFilePath = src.fileName; }
@@ -343,7 +345,7 @@ namespace OA.Bae.Formats
         {
             if (anNiObject.GetType() == typeof(NiTriShape)) { var colliderObj = InstantiateNiTriShape((NiTriShape)anNiObject, false, true); colliderObj.transform.SetParent(gameObject.transform, false); }
             else if (anNiObject.GetType() == typeof(AvoidNode)) { }
-            else Debug.Log("Unsupported collider NiObject: " + anNiObject.GetType().Name);
+            else Utils.Log("Unsupported collider NiObject: " + anNiObject.GetType().Name);
         }
 
         private bool IsMarkerFileName(string name)

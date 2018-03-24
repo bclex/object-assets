@@ -6,19 +6,19 @@ namespace OA.Bae.Materials
     /// <summary>
     /// A material that uses the new Standard Shader.
     /// </summary>
-    public class MWStandardMaterial : MWBaseMaterial
+    public class StandardMaterial : BaseMaterial
     {
         Material _standardMaterial;
         Material _standardCutoutMaterial;
 
-        public MWStandardMaterial(TextureManager textureManager)
+        public StandardMaterial(TextureManager textureManager)
             : base(textureManager)
         {
             _standardMaterial = new Material(Shader.Find("Standard"));
             _standardCutoutMaterial = Resources.Load<Material>("Materials/StandardCutout");
         }
 
-        public override Material BuildMaterialFromProperties(MWMaterialProps mp)
+        public override Material BuildMaterialFromProperties(MaterialProps mp)
         {
             Material material;
             //check if the material is already cached

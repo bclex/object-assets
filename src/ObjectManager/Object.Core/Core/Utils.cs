@@ -5,6 +5,29 @@ namespace OA.Core
 {
     public static class Utils
     {
+        //public static void Assert(bool condition)
+        //{
+        //    Debug.Assert(condition);
+        //}
+
+        public static void Log(string msg)
+        {
+            Console.WriteLine(msg);
+            //Debug.Log(msg);
+        }
+
+        public static void LogWarning(string msg)
+        {
+            Console.WriteLine($"WARNING: {msg}");
+            //Debug.LogWarning(msg);
+        }
+
+        public static void LogError(string msg)
+        {
+            Console.WriteLine($"ERROR: {msg}");
+            //Debug.LogError(msg);
+        }
+
         public static void Swap<T>(ref T a, ref T b)
         {
             var tmp = a;
@@ -32,7 +55,7 @@ namespace OA.Core
         /// <returns>A ulong containing the right-shifted extracted bits.</returns>
         public static ulong GetBits(uint bitOffset, uint bitCount, byte[] bytes)
         {
-            Debug.Assert((bitCount <= 64) && ((bitOffset + bitCount) <= (8 * bytes.Length)));
+            Debug.Assert(bitCount <= 64 && (bitOffset + bitCount) <= (8 * bytes.Length));
             ulong bits = 0;
             var remainingBitCount = bitCount;
             var byteIndex = bitOffset / 8;
@@ -69,7 +92,7 @@ namespace OA.Core
         /// </summary>
         public static float ChangeRange(float x, float min0, float max0, float min1, float max1)
         {
-            Debug.Assert((min0 <= max0) && (min1 <= max1) && (x >= min0) && (x <= max0));
+            Debug.Assert(min0 <= max0 && min1 <= max1 && x >= min0 && x <= max0);
             var range0 = max0 - min0;
             var range1 = max1 - min1;
             var xPct = (x - min0) / range0;
