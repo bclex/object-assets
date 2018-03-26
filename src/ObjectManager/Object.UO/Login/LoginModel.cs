@@ -1,39 +1,51 @@
-﻿namespace OA.Ultima.Login
+﻿using OA.Core;
+using OA.Ultima.Core;
+using OA.Ultima.Core.Patterns.MVC;
+using OA.Ultima.Login.Accounts;
+using OA.Ultima.Login.Data;
+using OA.Ultima.Network.Client;
+using OA.Ultima.Network.Server;
+using OA.Ultima.Resources;
+
+namespace OA.Ultima.Login
 {
-    class LoginModel : AModel {
-        UserInterfaceService m_UserInterface;
+    class LoginModel : AModel
+    {
+        UserInterfaceService _userInterface;
 
-        public LoginClient Client {
-            get;
-            private set;
-        }
+        public LoginClient Client { get; private set; }
 
-        public LoginModel() {
+        public LoginModel()
+        {
             Service.Add(this);
             Client = new LoginClient();
         }
 
-        protected override AView CreateView() {
+        protected override AView CreateView()
+        {
             return new LoginView(this);
         }
 
-        protected override void OnInitialize() {
+        protected override void OnInitialize()
+        {
             Service.Get<UltimaGame>().SetupWindowForLogin();
-            m_UserInterface = Service.Get<UserInterfaceService>();
-            m_UserInterface.Cursor = new UltimaCursor();
+            _userInterface = Service.Get<UserInterfaceService>();
+            _userInterface.Cursor = new UltimaCursor();
             Service.Get<AudioService>().PlayMusic(0);
             ResetToLogin();
         }
 
-        protected override void OnDispose() {
+        protected override void OnDispose()
+        {
             Service.Get<AudioService>().StopMusic();
             Service.Remove<LoginModel>();
             Client.Dispose();
             Client = null;
-            m_UserInterface.Reset();
+            _userInterface.Reset();
         }
 
-        public override void Update(double totalTime, double frameTime) {
+        public override void Update(double totalTime, double frameTime)
+        {
             // nothing needs to be updated.
         }
 
@@ -44,22 +56,25 @@
         public Gump CurrentGump { get; private set; }
         ServerListEntry[] m_Servers;
 
-        void ResetToLogin() {
+        void ResetToLogin()
+        {
             Client.Disconnect();
-            m_UserInterface.Reset();
-            CurrentGump = m_UserInterface.AddControl(new LoginGump(OnLogin), 0, 0) as Gump;
+            _userInterface.Reset();
+            CurrentGump = _userInterface.AddControl(new LoginGump(OnLogin), 0, 0) as Gump;
         }
 
-        void OnLogin(string server, int port, string account, SecureString password) {
+        void OnLogin(string server, int port, string account, SecureString password)
+        {
             CurrentGump.Dispose();
-            CurrentGump = m_UserInterface.AddControl(new LoginStatusGump(OnCancelLogin), 0, 0) as Gump;
+            CurrentGump = _userInterface.AddControl(new LoginStatusGump(OnCancelLogin), 0, 0) as Gump;
             if (Client.Connect(Settings.Login.ServerAddress, Settings.Login.ServerPort, account, password))
                 (CurrentGump as LoginStatusGump).Page = LoginStatusGump.PageCouldntConnect;
             else
                 (CurrentGump as LoginStatusGump).Page = LoginStatusGump.PageVerifyingAccount;
         }
 
-        void OnCancelLogin() {
+        void OnCancelLogin()
+        {
             ResetToLogin();
         }
 
@@ -67,8 +82,10 @@
         // Logging in Screen
         // ============================================================================================================
 
-        public void ShowLoginRejection(LoginRejectionReasons rejection) {
-            switch (rejection) {
+        public void ShowLoginRejection(LoginRejectionReasons rejection)
+        {
+            switch (rejection)
+            {
                 case LoginRejectionReasons.InvalidAccountPassword:
                     (CurrentGump as LoginStatusGump).ActivePage = LoginStatusGump.PageIncorrectUsernamePassword;
                     break;
@@ -94,24 +111,28 @@
         // Server list
         // ============================================================================================================
 
-        public void ShowServerList(ServerListEntry[] servers) {
+        public void ShowServerList(ServerListEntry[] servers)
+        {
             m_Servers = servers;
             CurrentGump.Dispose();
-            CurrentGump = m_UserInterface.AddControl(new SelectServerGump(servers, OnBackToLoginScreen, OnSelectLastServer, OnSelectServer), 0, 0) as Gump;
+            CurrentGump = _userInterface.AddControl(new SelectServerGump(servers, OnBackToLoginScreen, OnSelectLastServer, OnSelectServer), 0, 0) as Gump;
             // Auto select first server if only one exists.
             if (m_Servers.Length == 1)
                 OnSelectServer(m_Servers[0].Index);
         }
 
-        void OnBackToLoginScreen() {
+        void OnBackToLoginScreen()
+        {
             ResetToLogin();
         }
 
-        void OnSelectLastServer() {
+        void OnSelectLastServer()
+        {
             // select the last server.
         }
 
-        void OnSelectServer(int index) {
+        void OnSelectServer(int index)
+        {
             (CurrentGump as SelectServerGump).ActivePage = 2;
             Client.SelectShard(index);
         }
@@ -120,20 +141,19 @@
         // Character list
         // ============================================================================================================
 
-        public void ShowCharacterList() {
+        public void ShowCharacterList()
+        {
             CurrentGump.Dispose();
-            CurrentGump = m_UserInterface.AddControl(new CharacterListGump(
+            CurrentGump = _userInterface.AddControl(new CharacterListGump(
                 OnBackToSelectServer, OnLoginWithCharacter, OnDeleteCharacter, OnNewCharacter), 0, 0) as Gump;
-            if (Settings.Login.AutoSelectLastCharacter && !string.IsNullOrWhiteSpace(Settings.Login.LastCharacterName)) {
-                for (int i = 0; i < Characters.List.Length; i++) {
-                    if (Characters.List[i].Name == Settings.Login.LastCharacterName) {
+            if (Settings.Login.AutoSelectLastCharacter && !string.IsNullOrWhiteSpace(Settings.Login.LastCharacterName))
+                for (var i = 0; i < Characters.List.Length; i++)
+                    if (Characters.List[i].Name == Settings.Login.LastCharacterName)
                         OnLoginWithCharacter(i);
-                    }
-                }
-            }
         }
 
-        void OnBackToSelectServer() {
+        void OnBackToSelectServer()
+        {
             // !!! This SHOULD take us back to the 'logging in' screen,
             // which automatically logs in again. But we can't do that,
             // since I have UltimaClient clear your account/password data
@@ -141,18 +161,21 @@
             ResetToLogin();
         }
 
-        void OnLoginWithCharacter(int index) {
+        void OnLoginWithCharacter(int index)
+        {
             if (index < 0 || index >= Characters.List.Length)
                 return;
             (CurrentGump as CharacterListGump).ActivePage = 2;
             Client.LoginWithCharacter(index);
         }
 
-        void OnDeleteCharacter(int index) {
+        void OnDeleteCharacter(int index)
+        {
             Client.DeleteCharacter(index);
         }
 
-        void OnNewCharacter() {
+        void OnNewCharacter()
+        {
             ShowCreateCharacter();
         }
 
@@ -160,85 +183,99 @@
         // Create Character
         // ============================================================================================================
 
-        CreateCharacterData m_Data;
+        CreateCharacterData _data;
 
-        public void ShowCreateCharacter() {
-            m_Data = new CreateCharacterData();
-            m_Data.ShirtColor = Utility.RandomValue(600, 900);
-            m_Data.PantsColor = Utility.RandomValue(600, 900);
+        public void ShowCreateCharacter()
+        {
+            _data = new CreateCharacterData();
+            _data.ShirtColor = Utility.RandomValue(600, 900);
+            _data.PantsColor = Utility.RandomValue(600, 900);
             openSkillsGump();
         }
 
-        void openSkillsGump() {
+        void openSkillsGump()
+        {
             CurrentGump.Dispose();
-            CurrentGump = m_UserInterface.AddControl(new CreateCharSkillsGump(OnForwardSkills, OnBackwardSkills), 0, 0) as Gump;
-            if (m_Data.HasSkillData)
-                (CurrentGump as CreateCharSkillsGump).RestoreData(m_Data);
+            CurrentGump = _userInterface.AddControl(new CreateCharSkillsGump(OnForwardSkills, OnBackwardSkills), 0, 0) as Gump;
+            if (_data.HasSkillData)
+                (CurrentGump as CreateCharSkillsGump).RestoreData(_data);
         }
 
-        void openAppearanceGump() {
+        void openAppearanceGump()
+        {
             CurrentGump.Dispose();
-            CurrentGump = m_UserInterface.AddControl(new CreateCharAppearanceGump(OnForwardAppearance, OnBackwardAppearance), 0, 0) as Gump;
-            if (m_Data.HasAppearanceData)
-                (CurrentGump as CreateCharAppearanceGump).RestoreData(m_Data);
+            CurrentGump = _userInterface.AddControl(new CreateCharAppearanceGump(OnForwardAppearance, OnBackwardAppearance), 0, 0) as Gump;
+            if (_data.HasAppearanceData)
+                (CurrentGump as CreateCharAppearanceGump).RestoreData(_data);
         }
 
-        bool validateSkills() {
-            CreateCharSkillsGump gump = CurrentGump as CreateCharSkillsGump;
+        bool validateSkills()
+        {
+            var gump = CurrentGump as CreateCharSkillsGump;
             // we need to make sure that the stats add up to 80, skills add up to 100, and 3 unique skills are selected.
             // if not, pop up an appropriate error message.
-            if (gump.Strength + gump.Dexterity + gump.Intelligence != 80) {
+            if (gump.Strength + gump.Dexterity + gump.Intelligence != 80)
+            {
                 MsgBoxGump.Show("Error: your stat values did not add up to 80. Please logout and try to make another character.", MsgBoxTypes.OkOnly);
                 return false;
             }
-            if (gump.SkillPoints0 + gump.SkillPoints1 + gump.SkillPoints2 != 100) {
+            if (gump.SkillPoints0 + gump.SkillPoints1 + gump.SkillPoints2 != 100)
+            {
                 MsgBoxGump.Show("Error: your skill values did not add up to 100. Please logout and try to make another character.", MsgBoxTypes.OkOnly);
                 return false;
             }
             if (gump.SkillIndex0 == -1 || gump.SkillIndex1 == -1 || gump.SkillIndex2 == -1 ||
                 (gump.SkillIndex0 == gump.SkillIndex1) ||
                 (gump.SkillIndex1 == gump.SkillIndex2) ||
-                (gump.SkillIndex0 == gump.SkillIndex2)) {
+                (gump.SkillIndex0 == gump.SkillIndex2))
+            {
                 MsgBoxGump.Show("You must have three unique skills chosen!", MsgBoxTypes.OkOnly);
                 return false;
             }
-            (CurrentGump as CreateCharSkillsGump).SaveData(m_Data);
+            (CurrentGump as CreateCharSkillsGump).SaveData(_data);
             return true;
         }
 
-        bool validateAppearance() {
+        bool validateAppearance()
+        {
             // get the resource provider
-            IResourceProvider provider = Service.Get<IResourceProvider>();
+            var provider = Service.Get<IResourceProvider>();
             // save the values
-            (CurrentGump as CreateCharAppearanceGump).SaveData(m_Data);
-            if (m_Data.Name.Length < 2) {
+            (CurrentGump as CreateCharAppearanceGump).SaveData(_data);
+            if (_data.Name.Length < 2)
+            {
                 MsgBoxGump.Show(provider.GetString(1075458), MsgBoxTypes.OkOnly); // 1075458: Your character name is too short.
                 return false;
             }
-            if (m_Data.Name[m_Data.Name.Length - 1] == '.') {
+            if (_data.Name[_data.Name.Length - 1] == '.')
+            {
                 MsgBoxGump.Show(provider.GetString(1075457), MsgBoxTypes.OkOnly); // 1075457: Your character name cannot end with a period('.').
                 return false;
             }
             return true;
         }
 
-        void OnBackwardSkills() {
+        void OnBackwardSkills()
+        {
             ShowCharacterList();
         }
 
-        void OnForwardSkills() {
-            if (validateSkills()) {
+        void OnForwardSkills()
+        {
+            if (validateSkills())
                 openAppearanceGump();
-            }
         }
 
-        void OnBackwardAppearance() {
+        void OnBackwardAppearance()
+        {
             openSkillsGump();
         }
 
-        void OnForwardAppearance() {
-            if (validateAppearance()) {
-                Client.CreateCharacter(new CreateCharacterPacket(m_Data, 0, (short)Characters.FirstEmptySlot, Utility.IPAddress));
+        void OnForwardAppearance()
+        {
+            if (validateAppearance())
+            {
+                Client.CreateCharacter(new CreateCharacterPacket(_data, 0, (short)Characters.FirstEmptySlot, Utility.IPAddress));
             }
         }
     }

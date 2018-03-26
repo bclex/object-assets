@@ -1,59 +1,40 @@
-﻿/***************************************************************************
- *   SkillData.cs
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 3 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
-#region usings
+﻿using OA.Ultima.Resources;
 using System;
 using System.Collections.Generic;
-using UltimaXNA.Ultima.Resources;
-#endregion
 
-namespace UltimaXNA.Ultima.Player
+namespace OA.Ultima.Player
 {
     public class SkillData
     {
         public Action<SkillEntry> OnSkillChanged;
 
-        private readonly Dictionary<int, SkillEntry> m_Skills = new Dictionary<int, SkillEntry>();
-        private bool m_SkillsLoaded;
+        private readonly Dictionary<int, SkillEntry> _skills = new Dictionary<int, SkillEntry>();
+        private bool _skillsLoaded;
 
         public Dictionary<int, SkillEntry> List
         {
             get
             {
-                if (!m_SkillsLoaded)
+                if (!_skillsLoaded)
                 {
-                    m_SkillsLoaded = true;
-                    foreach (Skill skill in SkillsData.List)
-                        if (skill.Index == -1)
-                        {
-                            // do nothing.
-                        }
-                        else
-                        {
-                            m_Skills.Add(skill.ID, new SkillEntry(this, skill.ID, skill.Index, skill.UseButton, skill.Name, 0.0f, 0.0f, 0, 0.0f));
-                        }
+                    _skillsLoaded = true;
+                    foreach (var skill in SkillsData.List)
+                        if (skill.Index == -1) { } // do nothing.
+                        else _skills.Add(skill.ID, new SkillEntry(this, skill.ID, skill.Index, skill.UseButton, skill.Name, 0.0f, 0.0f, 0, 0.0f));
                 }
-                return m_Skills;
+                return _skills;
             }
         }
 
         public SkillEntry SkillEntry(int skillID)
         {
-            if (List.Count > skillID)
-                return List[skillID];
-            else
-                return null;
+            if (List.Count > skillID) return List[skillID];
+            else return null;
         }
 
         public SkillEntry SkillEntryByIndex(int index)
         {
-            foreach (SkillEntry skill in m_Skills.Values)
+            foreach (var skill in _skills.Values)
                 if (skill.Index == index)
                     return skill;
             return null;
@@ -62,77 +43,77 @@ namespace UltimaXNA.Ultima.Player
 
     public class SkillEntry
     {
-        private readonly SkillData m_DataParent;
+        readonly SkillData _dataParent;
 
-        private int m_id;
-        private int m_index;
-        private bool m_hasUseButton;
-        private string m_name;
-        private float m_value;
-        private float m_valueUnmodified;
-        private byte m_lockType;
-        private float m_cap;
+        int _id;
+        int _index;
+        bool _hasUseButton;
+        string _name;
+        float _value;
+        float _valueUnmodified;
+        byte _lockType;
+        float _cap;
 
         public int ID
         {
-            get { return m_id; }
-            set { m_id = value; }
+            get { return _id; }
+            set { _id = value; }
         }
         public int Index
         {
-            get { return m_index; }
-            set { m_index = value; }
+            get { return _index; }
+            set { _index = value; }
         }
         public bool HasUseButton
         {
-            get { return m_hasUseButton; }
-            set { m_hasUseButton = value; }
+            get { return _hasUseButton; }
+            set { _hasUseButton = value; }
         }
         public string Name
         {
-            get { return m_name; }
-            set { m_name = value; }
+            get { return _name; }
+            set { _name = value; }
         }
         public float Value
         {
-            get { return m_value; }
+            get { return _value; }
             set
             {
-                m_value = value;
-                m_DataParent.OnSkillChanged?.Invoke(this);
+                _value = value;
+                _dataParent.OnSkillChanged?.Invoke(this);
             }
         }
         public float ValueUnmodified
         {
-            get { return m_valueUnmodified; }
+            get { return _valueUnmodified; }
             set
             {
-                m_valueUnmodified = value;
-                m_DataParent.OnSkillChanged?.Invoke(this);
+                _valueUnmodified = value;
+                _dataParent.OnSkillChanged?.Invoke(this);
             }
         }
         public byte LockType
         {
-            get { return m_lockType; }
+            get { return _lockType; }
             set
             {
-                m_lockType = value;
-                m_DataParent.OnSkillChanged?.Invoke(this);
+                _lockType = value;
+                _dataParent.OnSkillChanged?.Invoke(this);
             }
         }
         public float Cap
         {
-            get { return m_cap; }
+            get { return _cap; }
             set
             {
-                m_cap = value;
-                m_DataParent.OnSkillChanged?.Invoke(this);
+                _cap = value;
+                _dataParent.OnSkillChanged?.Invoke(this);
             }
         }
 
         public SkillEntry(SkillData dataParent, int id, int index, bool useButton, string name, float value, float unmodified, byte locktype, float cap)
         {
-            m_DataParent = dataParent;
+            _dataParent = dataParent;
             ID = id;
             Index = index;
             HasUseButton = useButton;

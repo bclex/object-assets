@@ -1,4 +1,4 @@
-namespace UltimaXNA.Ultima.Player
+namespace OA.Ultima.Player
 {
     public class Quest
     {

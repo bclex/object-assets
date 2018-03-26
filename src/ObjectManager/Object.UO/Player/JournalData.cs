@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace UltimaXNA.Ultima.Player
+namespace OA.Ultima.Player
 {
     public class JournalData
     {
-        private readonly List<JournalEntry> m_JournalEntries = new List<JournalEntry>();
+        readonly List<JournalEntry> _journalEntries = new List<JournalEntry>();
         public List<JournalEntry> JournalEntries
         {
-            get { return m_JournalEntries; }
+            get { return _journalEntries; }
         }
 
         public event Action<JournalEntry> OnJournalEntryAdded;
 
         public void AddEntry(string text, int font, ushort hue, string speakerName, bool asUnicode)
         {
-            while (m_JournalEntries.Count > 99)
-                m_JournalEntries.RemoveAt(0);
-            m_JournalEntries.Add(new JournalEntry(text, font, hue, speakerName, asUnicode));
-            OnJournalEntryAdded?.Invoke(m_JournalEntries[m_JournalEntries.Count - 1]);
+            while (_journalEntries.Count > 99)
+                _journalEntries.RemoveAt(0);
+            _journalEntries.Add(new JournalEntry(text, font, hue, speakerName, asUnicode));
+            OnJournalEntryAdded?.Invoke(_journalEntries[_journalEntries.Count - 1]);
         }
     }
 

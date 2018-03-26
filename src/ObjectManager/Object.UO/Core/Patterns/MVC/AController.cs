@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using UltimaXNA.Core.Input;
+﻿using OA.Core.Input;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace OA.Ultima.Core.Patterns.MVC

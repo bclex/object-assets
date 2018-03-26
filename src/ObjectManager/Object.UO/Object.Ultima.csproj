@@ -45,9 +45,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Audio\AudioService.cs" />
-    <Compile Include="Audio\UOMusic.cs" />
-    <Compile Include="Audio\UOSound.cs" />
     <Compile Include="Configuration\AudioSettings.cs" />
     <Compile Include="Configuration\DebugSettings.cs" />
     <Compile Include="Configuration\EngineSettings.cs" />
@@ -58,9 +55,6 @@
     <Compile Include="Configuration\Properties\SavedGumpProperty.cs" />
     <Compile Include="Configuration\UltimaOnlineSettings.cs" />
     <Compile Include="Configuration\UserInterfaceSettings.cs" />
-    <Compile Include="Core\Audio\ASound.cs" />
-    <Compile Include="Core\Audio\AudioEffects.cs" />
-    <Compile Include="Core\Audio\VolumeState.cs" />
     <Compile Include="Core\ComponentModel\EqualityHelper.cs" />
     <Compile Include="Core\ComponentModel\NotifyPropertyChangedBase.cs" />
     <Compile Include="Core\Configuration\ASettingsSection.cs" />
@@ -69,18 +63,14 @@
     <Compile Include="Core\ConsoleManager.cs" />
     <Compile Include="Core\CoreGame.cs" />
     <Compile Include="Core\DelayedAction.cs" />
+    <Compile Include="Core\Extensions\ColorExtensions.cs" />
+    <Compile Include="Core\Extensions\MouseStateExtensions.cs" />
+    <Compile Include="Core\Extensions\PointExtensions.cs" />
+    <Compile Include="Core\Extensions\StringExtensions.cs" />
     <Compile Include="Core\Graphics\SpriteBatch3D.cs" />
     <Compile Include="Core\Graphics\SpriteBatchUI.cs" />
     <Compile Include="Core\Graphics\Techniques.cs" />
     <Compile Include="Core\Graphics\VertexPositionNormalTextureHue.cs" />
-    <Compile Include="Core\Input\IInputService.cs" />
-    <Compile Include="Core\Input\InputEvent.cs" />
-    <Compile Include="Core\Input\InputEventKeyboard.cs" />
-    <Compile Include="Core\Input\InputEventMouse.cs" />
-    <Compile Include="Core\Input\InputService.cs" />
-    <Compile Include="Core\Input\KeyboardEvent.cs" />
-    <Compile Include="Core\Input\MouseButton.cs" />
-    <Compile Include="Core\Input\MouseEvent.cs" />
     <Compile Include="Core\IO\AsyncWriter.cs" />
     <Compile Include="Core\IO\BinaryFileReader.cs" />
     <Compile Include="Core\IO\BinaryFileWriter.cs" />
@@ -110,12 +100,19 @@
     <Compile Include="Core\Patterns\MVC\ModelManager.cs" />
     <Compile Include="Core\PluginManager.cs" />
     <Compile Include="Core\Resolutions.cs" />
+    <Compile Include="Core\UI\AControl.cs" />
+    <Compile Include="Core\UI\ControlMetaData.cs" />
     <Compile Include="Core\UI\Fonts\ACharacter.cs" />
     <Compile Include="Core\UI\Fonts\AFont.cs" />
+    <Compile Include="Core\UI\HuedTexture.cs" />
     <Compile Include="Core\UI\ICharacter.cs" />
     <Compile Include="Core\UI\ICursor.cs" />
     <Compile Include="Core\UI\IFont.cs" />
     <Compile Include="Core\UI\IScrollBar.cs" />
+    <Compile Include="Core\UI\RenderedText.cs" />
+    <Compile Include="Core\UI\RenderedTextList.cs" />
+    <Compile Include="Core\UI\UILayer.cs" />
+    <Compile Include="Core\UI\UserInterfaceService.cs" />
     <Compile Include="Core\Utility.cs" />
     <Compile Include="Data\AssistantFeatures.cs" />
     <Compile Include="Data\Body.cs" />
@@ -318,7 +315,7 @@
     <Compile Include="Player\PlayerState.cs" />
     <Compile Include="Player\Quest.cs" />
     <Compile Include="Player\SkillData.cs" />
-    <Compile Include="Player\SpellDAta.cs" />
+    <Compile Include="Player\SpellData.cs" />
     <Compile Include="Player\StatLockData.cs" />
     <Compile Include="ResourceProvider.cs" />
     <Compile Include="Resources\AnimationFrame.cs" />
@@ -433,6 +430,9 @@
       <Name>Object.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Audio\" />
+    <Folder Include="Core\Audio\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
