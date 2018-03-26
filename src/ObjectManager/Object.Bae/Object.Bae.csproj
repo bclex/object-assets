@@ -45,6 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaeSettings.cs" />
+    <Compile Include="Core\GameObjectUtils.cs" />
+    <Compile Include="Core\MusicPlayer.cs" />
+    <Compile Include="Core\Vector2i.cs" />
     <Compile Include="FilePacks\Records\AMMO^ - Ammo.cs" />
     <Compile Include="FilePacks\Records\BSGN^ - Birthsign.cs" />
     <Compile Include="FilePacks\Records\ACRE^ - Placed creature.cs" />

@@ -51,7 +51,7 @@ namespace OA.Bae
             }
             else
             {
-                Utils.LogWarning("Could not find file \"" + texturePath + "\" in a BSA file.");
+                Utils.Warning("Could not find file \"" + texturePath + "\" in a BSA file.");
                 return Task.FromResult<Texture2DInfo>(null);
             }
         }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace OA.VirtualFileSystem
+namespace OA.Core.VirtualFileSystem
 {
     public class Entry
     {

@@ -78,7 +78,7 @@ namespace OA.Bae.FilePacks
                 case "LEVC":
                 case "BSGN":
                 case "FACT": r = null; break;
-                default: Utils.LogWarning("Unsupported ESM record type: " + type); r = null; break;
+                default: Utils.Warning("Unsupported ESM record type: " + type); r = null; break;
             }
             if (r != null)
                 r.header = this;

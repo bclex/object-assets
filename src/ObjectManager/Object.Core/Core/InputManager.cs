@@ -19,11 +19,21 @@ namespace OA.Core
             }
         }
 
-        static Dictionary<string, XRButtonMapping> _XRMapping = null;
+        static Dictionary<string, XRButtonMapping> _XRMapping = new Dictionary<string, XRButtonMapping>()
+            {
+                { "Jump", new XRButtonMapping(XRButton.Thumbstick, true) },
+                { "Light", new XRButtonMapping(XRButton.Thumbstick, false) },
+                { "Run", new XRButtonMapping(XRButton.Grip, true) },
+                { "Slow", new XRButtonMapping(XRButton.Grip, false) },
+                { "Attack", new XRButtonMapping(XRButton.Trigger, false) },
+                { "Recenter", new XRButtonMapping(XRButton.Menu, false) },
+                { "Use", new XRButtonMapping(XRButton.Trigger, true) },
+                { "Menu", new XRButtonMapping(XRButton.Menu, true) }
+            };
 
         public static float GetAxis(string axis)
         {
-            var result = Input.GetAxis(axis);
+            var result = UnityEngine.Input.GetAxis(axis);
             if (XRSettings.enabled)
             {
                 var input = XRInput.Instance;
@@ -40,12 +50,10 @@ namespace OA.Core
 
         public static bool GetButton(string button)
         {
-            var result = Input.GetButtonDown(button);
+            var result = UnityEngine.Input.GetButtonDown(button);
             if (XRSettings.enabled)
             {
                 var input = XRInput.Instance;
-                if (_XRMapping == null)
-                    InitializeMapping();
                 if (_XRMapping.ContainsKey(button))
                 {
                     var mapping = _XRMapping[button];
@@ -57,12 +65,10 @@ namespace OA.Core
 
         public static bool GetButtonUp(string button)
         {
-            var result = Input.GetButtonUp(button);
+            var result = UnityEngine.Input.GetButtonUp(button);
             if (XRSettings.enabled)
             {
                 var input = XRInput.Instance;
-                if (_XRMapping == null)
-                    InitializeMapping();
                 if (_XRMapping.ContainsKey(button))
                 {
                     var mapping = _XRMapping[button];
@@ -74,12 +80,10 @@ namespace OA.Core
 
         public static bool GetButtonDown(string button)
         {
-            var result = Input.GetButtonDown(button);
+            var result = UnityEngine.Input.GetButtonDown(button);
             if (XRSettings.enabled)
             {
                 var input = XRInput.Instance;
-                if (_XRMapping == null)
-                    InitializeMapping();
                 if (_XRMapping.ContainsKey(button))
                 {
                     var mapping = _XRMapping[button];
@@ -87,21 +91,6 @@ namespace OA.Core
                 }
             }
             return result;
-        }
-
-        private static void InitializeMapping()
-        {
-            _XRMapping = new Dictionary<string, XRButtonMapping>()
-            {
-                { "Jump", new XRButtonMapping(XRButton.Thumbstick, true) },
-                { "Light", new XRButtonMapping(XRButton.Thumbstick, false) },
-                { "Run", new XRButtonMapping(XRButton.Grip, true) },
-                { "Slow", new XRButtonMapping(XRButton.Grip, false) },
-                { "Attack", new XRButtonMapping(XRButton.Trigger, false) },
-                { "Recenter", new XRButtonMapping(XRButton.Menu, false) },
-                { "Use", new XRButtonMapping(XRButton.Trigger, true) },
-                { "Menu", new XRButtonMapping(XRButton.Menu, true) }
-            };
         }
     }
 }

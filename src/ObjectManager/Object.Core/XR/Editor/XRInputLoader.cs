@@ -44,7 +44,7 @@ namespace OA.XR.Editor
                 BindButton("Button 18", "joystick button 18");
                 BindButton("Button 19", "joystick button 19");
             }
-            catch { Utils.LogError("Failed to apply VR Input manager bindings"); }
+            catch { Utils.Error("Failed to apply VR Input manager bindings"); }
         }
 
         [MenuItem("Demonixis/VR/Reset Input Binding", false, 100000)]

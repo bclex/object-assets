@@ -36,7 +36,7 @@ namespace OA.Bae.FilePacks
 
         public Dictionary<FileNameHash, FileMetadata> fileMetadataHashTable;
 
-        public VirtualFileSystem.Directory rootDir;
+        public Core.VirtualFileSystem.Directory rootDir;
 
         public bool isAtEOF
         {
@@ -145,7 +145,7 @@ namespace OA.Bae.FilePacks
             for (var i = 0; i < fileCount; i++)
                 fileMetadataHashTable[fileMetadatas[i].pathHash] = fileMetadatas[i];
             // Create a virtual directory tree.
-            rootDir = new VirtualFileSystem.Directory();
+            rootDir = new Core.VirtualFileSystem.Directory();
             foreach (var fileMetadata in fileMetadatas)
                 rootDir.CreateDescendantFile(fileMetadata.path);
             // Skip to the file data section.

@@ -488,7 +488,7 @@ namespace OA.Bae
                 Object.Destroy(cellInfo.gameObject);
                 cellObjects.Remove(indices);
             }
-            else Utils.LogError("Tried to destroy a cell that isn't created.");
+            else Utils.Error("Tried to destroy a cell that isn't created.");
         }
     }
 }

@@ -10,22 +10,37 @@ namespace OA.Core
         //    Debug.Assert(condition);
         //}
 
+        public static void Debug(string msg)
+        {
+            Console.WriteLine(msg);
+        }
+
         public static void Log(string msg)
         {
             Console.WriteLine(msg);
             //Debug.Log(msg);
         }
 
-        public static void LogWarning(string msg)
+        public static void Info(string msg)
+        {
+            Console.WriteLine($"INFO: {msg}");
+        }
+
+        public static void Warning(string msg)
         {
             Console.WriteLine($"WARNING: {msg}");
             //Debug.LogWarning(msg);
         }
 
-        public static void LogError(string msg)
+        public static void Error(string msg)
         {
             Console.WriteLine($"ERROR: {msg}");
             //Debug.LogError(msg);
+        }
+
+        public static void Critical(string msg)
+        {
+            Console.WriteLine($"CRITICAL: {msg}");
         }
 
         public static void Swap<T>(ref T a, ref T b)
@@ -46,6 +61,16 @@ namespace OA.Core
             return (bitString & allBitFlags) == allBitFlags;
         }
 
+        public static void Info(string v, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Error(Exception e)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Extracts a range of bits from a byte array.
         /// </summary>
@@ -55,7 +80,7 @@ namespace OA.Core
         /// <returns>A ulong containing the right-shifted extracted bits.</returns>
         public static ulong GetBits(uint bitOffset, uint bitCount, byte[] bytes)
         {
-            Debug.Assert(bitCount <= 64 && (bitOffset + bitCount) <= (8 * bytes.Length));
+            UnityEngine.Debug.Assert(bitCount <= 64 && (bitOffset + bitCount) <= (8 * bytes.Length));
             ulong bits = 0;
             var remainingBitCount = bitCount;
             var byteIndex = bitOffset / 8;
@@ -92,7 +117,7 @@ namespace OA.Core
         /// </summary>
         public static float ChangeRange(float x, float min0, float max0, float min1, float max1)
         {
-            Debug.Assert(min0 <= max0 && min1 <= max1 && x >= min0 && x <= max0);
+            UnityEngine.Debug.Assert(min0 <= max0 && min1 <= max1 && x >= min0 && x <= max0);
             var range0 = max0 - min0;
             var range1 = max1 - min1;
             var xPct = (x - min0) / range0;

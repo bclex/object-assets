@@ -36,6 +36,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="UnityEditor">
       <HintPath>..\..\..\..\..\Program Files\Unity 2018.1.0b9\Editor\Data\Managed\UnityEditor.dll</HintPath>
     </Reference>
@@ -50,24 +51,45 @@
     <Compile Include="Core\ArrayUtils.cs" />
     <Compile Include="Core\AudioUtils.cs" />
     <Compile Include="Core\ColorUtils.cs" />
-    <Compile Include="Formats\DdsReader.cs" />
-    <Compile Include="XR\Editor\XRInputLoader.cs" />
-    <Compile Include="_BCL\FileFormatException.cs" />
-    <Compile Include="Components\FlyingCameraComponent.cs" />
-    <Compile Include="Core\GameObjectUtils.cs" />
+    <Compile Include="Core\Data\Pair.cs" />
+    <Compile Include="Core\Diagnostics\Guard.cs" />
+    <Compile Include="Core\Diagnostics\Metrics.cs" />
+    <Compile Include="Core\DpiManager.cs" />
     <Compile Include="Core\InputManager.cs" />
-    <Compile Include="Core\MusicPlayer.cs" />
-    <Compile Include="Components\OneShotAudioStreamComponent.cs" />
-    <Compile Include="XR\XRInput.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Core\Input\IInputService.cs" />
+    <Compile Include="Core\Input\InputEvent.cs" />
+    <Compile Include="Core\Input\InputEventKeyboard.cs" />
+    <Compile Include="Core\Input\InputEventMouse.cs" />
+    <Compile Include="Core\Input\UnityInputService.cs" />
+    <Compile Include="Core\Input\WndProcInputService.cs" />
+    <Compile Include="Core\Input\KeyboardEvent.cs" />
+    <Compile Include="Core\Input\MouseState.cs" />
+    <Compile Include="Core\Input\MouseButton.cs" />
+    <Compile Include="Core\Input\ButtonState.cs" />
+    <Compile Include="Core\Input\MouseEvent.cs" />
+    <Compile Include="Core\Service.cs" />
     <Compile Include="Core\StringUtils.cs" />
     <Compile Include="Core\TemporalLoadBalancer.cs" />
     <Compile Include="Core\Texture2DInfo.cs" />
     <Compile Include="Core\TextureUtils.cs" />
     <Compile Include="Core\UnityBinaryReader.cs" />
     <Compile Include="Core\Utils.cs" />
-    <Compile Include="Core\Vector2i.cs" />
-    <Compile Include="VirtualFileSystem.cs" />
+    <Compile Include="Core\Windows\CultureHandler.cs" />
+    <Compile Include="Core\Windows\Message.cs" />
+    <Compile Include="Core\Windows\MessageHook.cs" />
+    <Compile Include="Core\Windows\NativeConstants.cs" />
+    <Compile Include="Core\Windows\NativeMethods.cs" />
+    <Compile Include="Core\Windows\WinKeys.cs" />
+    <Compile Include="Core\Windows\WinMouseButtons.cs" />
+    <Compile Include="Core\Windows\WndProc.cs" />
+    <Compile Include="XR\Editor\XRInputLoader.cs" />
+    <Compile Include="XR\XRInput.cs" />
+    <Compile Include="Formats\DdsReader.cs" />
+    <Compile Include="_BCL\FileFormatException.cs" />
+    <Compile Include="Components\FlyingCameraComponent.cs" />
+    <Compile Include="Components\OneShotAudioStreamComponent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Core\VirtualFileSystem.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
