@@ -5,13 +5,19 @@ VisualStudioVersion = 15.0.27428.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectManager", "ObjectManager\ObjectManager.csproj", "{D752B5ED-4ACD-473E-80C2-439DA37E466F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Vlv", "Object.Vlv\Object.Vlv.csproj", "{D90B62C6-BDE0-4D0E-AF15-9E263B03F5D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Valve", "Object.Valve\Object.Valve.csproj", "{D90B62C6-BDE0-4D0E-AF15-9E263B03F5D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Bae", "Object.Bae\Object.Bae.csproj", "{CEF70BD8-ECF0-46CF-AB58-4105B9273351}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Tes", "Object.Tes\Object.Tes.csproj", "{CEF70BD8-ECF0-46CF-AB58-4105B9273351}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Core", "Object.Core\Object.Core.csproj", "{F0F8A97B-F6EA-4FC9-8B8E-CA7087553586}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Common", "Object.Common\Object.Common.csproj", "{F0F8A97B-F6EA-4FC9-8B8E-CA7087553586}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Ultima", "Object.UO\Object.Ultima.csproj", "{2E0F5143-916D-4606-B645-690A962C6AF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Ultima", "Object.Ultima\Object.Ultima.csproj", "{2E0F5143-916D-4606-B645-690A962C6AF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Other", "Other\Other.csproj", "{6CC3AD98-3BA0-4F00-A281-88A145579799}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Tes.Game", "Object.Tes.Game\Object.Tes.Game.csproj", "{D2517487-9532-4C02-89CD-0F3B03B0A0F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Ultima.Game", "Object.Ultima.Game\Object.Ultima.Game.csproj", "{99B43C32-5788-4C67-A353-D173030DDD4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +45,18 @@ Global
 		{2E0F5143-916D-4606-B645-690A962C6AF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E0F5143-916D-4606-B645-690A962C6AF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E0F5143-916D-4606-B645-690A962C6AF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CC3AD98-3BA0-4F00-A281-88A145579799}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CC3AD98-3BA0-4F00-A281-88A145579799}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CC3AD98-3BA0-4F00-A281-88A145579799}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CC3AD98-3BA0-4F00-A281-88A145579799}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2517487-9532-4C02-89CD-0F3B03B0A0F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2517487-9532-4C02-89CD-0F3B03B0A0F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2517487-9532-4C02-89CD-0F3B03B0A0F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2517487-9532-4C02-89CD-0F3B03B0A0F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99B43C32-5788-4C67-A353-D173030DDD4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99B43C32-5788-4C67-A353-D173030DDD4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99B43C32-5788-4C67-A353-D173030DDD4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99B43C32-5788-4C67-A353-D173030DDD4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

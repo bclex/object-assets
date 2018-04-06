@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CEF70BD8-ECF0-46CF-AB58-4105B9273351}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Object.Bae</RootNamespace>
+    <AssemblyName>Object.Bae</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\Program Files\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CellManager.cs" />
+    <Compile Include="Configuration\TesRenderSettings.cs" />
+    <Compile Include="Convert.cs" />
+    <Compile Include="Core\GameObjectUtils.cs" />
+    <Compile Include="Core\Vector2i.cs" />
+    <Compile Include="FilePacks\Tes4\ACHR^ - Placed NPC.cs" />
+    <Compile Include="FilePacks\Tes4\ACRE^ - Placed creature.cs" />
+    <Compile Include="FilePacks\Tes4\ACTI - Activator.cs" />
+    <Compile Include="FilePacks\Tes4\ALCH - Potion.cs" />
+    <Compile Include="FilePacks\Tes4\AMMO^ - Ammo.cs" />
+    <Compile Include="FilePacks\Tes4\APPA - Alchem Apparatus.cs" />
+    <Compile Include="FilePacks\Tes4\ARMO - Armor.cs" />
+    <Compile Include="FilePacks\Tes4\BODYRecord.cs" />
+    <Compile Include="FilePacks\Tes4\BOOK - Book.cs" />
+    <Compile Include="FilePacks\Tes4\BSGN^ - Birthsign.cs" />
+    <Compile Include="FilePacks\Tes4\CELL - Cell.cs" />
+    <Compile Include="FilePacks\Tes4\CLOT - Clothing.cs" />
+    <Compile Include="FilePacks\Tes4\CONTRecord.cs" />
+    <Compile Include="FilePacks\Tes4\CREARecord.cs" />
+    <Compile Include="FilePacks\Tes4\DOORRecord.cs" />
+    <Compile Include="FilePacks\Tes4\GLOBRecord.cs" />
+    <Compile Include="FilePacks\Tes4\GMSTRecord.cs" />
+    <Compile Include="FilePacks\Tes4\INGRRecord.cs" />
+    <Compile Include="FilePacks\Tes4\LANDRecord.cs" />
+    <Compile Include="FilePacks\Tes4\LEVCRecord.cs" />
+    <Compile Include="FilePacks\Tes4\LIGHRecord.cs" />
+    <Compile Include="FilePacks\Tes4\LOCKRecord.cs" />
+    <Compile Include="FilePacks\Tes4\LTEXRecord.cs" />
+    <Compile Include="FilePacks\Tes4\MISCRecord.cs" />
+    <Compile Include="FilePacks\Tes4\NPC_Record.cs" />
+    <Compile Include="FilePacks\Tes4\PROBRecord.cs" />
+    <Compile Include="FilePacks\Tes4\REGNRecord.cs" />
+    <Compile Include="FilePacks\Tes4\REPARecord.cs" />
+    <Compile Include="FilePacks\Tes4\SOUNRecord.cs" />
+    <Compile Include="FilePacks\Tes4\STATRecord.cs" />
+    <Compile Include="FilePacks\Tes4\TES4Record.cs" />
+    <Compile Include="FilePacks\Tes4\WEAPRecord.cs" />
+    <Compile Include="FilePacks\Tes3\CLOT - Clothing.cs" />
+    <Compile Include="FilePacks\Tes3\CELL - Cell.cs" />
+    <Compile Include="FilePacks\Tes3\REPARecord.cs" />
+    <Compile Include="FilePacks\Tes3\ACTI - Activator.cs" />
+    <Compile Include="FilePacks\Tes3\APPA - Alchem Apparatus.cs" />
+    <Compile Include="FilePacks\Tes3\LOCKRecord.cs" />
+    <Compile Include="FilePacks\Tes3\PROBRecord.cs" />
+    <Compile Include="FilePacks\Tes3\INGRRecord.cs" />
+    <Compile Include="FilePacks\Tes3\BOOK - Book.cs" />
+    <Compile Include="FilePacks\Tes3\ALCH - Potion.cs" />
+    <Compile Include="FilePacks\Tes3\TES3Record.cs" />
+    <Compile Include="FilePacks\Tes3\GMSTRecord.cs" />
+    <Compile Include="FilePacks\Tes3\GLOBRecord.cs" />
+    <Compile Include="FilePacks\Tes3\SOUNRecord.cs" />
+    <Compile Include="FilePacks\Tes3\REGNRecord.cs" />
+    <Compile Include="FilePacks\Tes3\LTEXRecord.cs" />
+    <Compile Include="FilePacks\Tes3\STATRecord.cs" />
+    <Compile Include="FilePacks\Tes3\DOORRecord.cs" />
+    <Compile Include="FilePacks\Tes3\MISCRecord.cs" />
+    <Compile Include="FilePacks\Tes3\WEAPRecord.cs" />
+    <Compile Include="FilePacks\Tes3\CREARecord.cs" />
+    <Compile Include="FilePacks\Tes3\CONTRecord.cs" />
+    <Compile Include="FilePacks\Tes3\BODYRecord.cs" />
+    <Compile Include="FilePacks\Tes3\LIGHRecord.cs" />
+    <Compile Include="FilePacks\Tes3\NPC_Record.cs" />
+    <Compile Include="FilePacks\Tes3\ARMO - Armor.cs" />
+    <Compile Include="FilePacks\Tes3\LEVCRecord.cs" />
+    <Compile Include="FilePacks\Tes3\LANDRecord.cs" />
+    <Compile Include="MaterialManager.cs" />
+    <Compile Include="Materials\BaseMaterial.cs" />
+    <Compile Include="Materials\BumpedDiffuseMaterial.cs" />
+    <Compile Include="Materials\DefaultMaterial.cs" />
+    <Compile Include="Materials\StandardMaterial.cs" />
+    <Compile Include="Materials\UnlitMaterial.cs" />
+    <Compile Include="MorrowindDataReader.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="FilePacks\BsaFile.cs" />
+    <Compile Include="FilePacks\EsmFile.cs" />
+    <Compile Include="FilePacks\EsmRecords.cs" />
+    <Compile Include="Formats\NifManager.cs" />
+    <Compile Include="Formats\NifObjectBuilder.cs" />
+    <Compile Include="Formats\NifParserGenerator.cs" />
+    <Compile Include="Formats\NifReader.cs" />
+    <Compile Include="Formats\NifUtils.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextureManager.cs" />
+    <Compile Include="TesSettings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Object.Common\Object.Common.csproj">
+      <Project>{f0f8a97b-f6ea-4fc9-8b8e-ca7087553586}</Project>
+      <Name>Object.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ObjectManager\ObjectManager.csproj">
+      <Project>{d752b5ed-4acd-473e-80c2-439da37e466f}</Project>
+      <Name>ObjectManager</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
