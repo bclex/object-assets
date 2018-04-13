@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OA.Tes.FilePacks;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -10,14 +11,14 @@ namespace OA.Tes.Formats
     /// </summary>
     public class NifManager
     {
-        readonly MorrowindDataReader r;
+        readonly BsaFile r;
         readonly MaterialManager materialManager;
         GameObject prefabContainerObj;
         readonly Dictionary<string, Task<NiFile>> nifFilePreloadTasks = new Dictionary<string, Task<NiFile>>();
         readonly Dictionary<string, GameObject> nifPrefabs = new Dictionary<string, GameObject>();
         readonly int markerLayer;
 
-        public NifManager(MorrowindDataReader r, MaterialManager materialManager, int markerLayer)
+        public NifManager(BsaFile r, MaterialManager materialManager, int markerLayer)
         {
             this.r = r;
             this.materialManager = materialManager;

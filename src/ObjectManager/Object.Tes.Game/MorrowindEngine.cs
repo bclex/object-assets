@@ -4,7 +4,7 @@ using OA.Core;
 using System;
 using System.IO;
 using UnityEngine;
-using OA.Tes.FilePacks.Tes3;
+using OA.Tes.FilePacks.Records;
 
 namespace OA.Tes
 {
@@ -26,7 +26,7 @@ namespace OA.Tes
         //private Color32 defaultAmbientColor = new Color32(137, 140, 160, 255);
         //private RaycastHit[] interactRaycastHitBuffer = new RaycastHit[32];
 
-        public MorrowindDataReader dataReader;
+        public EsmFile r;
         public TextureManager textureManager;
         public MaterialManager materialManager;
         public NifManager nifManager;
@@ -38,18 +38,19 @@ namespace OA.Tes
             get { return _currentCell; }
         }
 
-        public MorrowindEngine(MorrowindDataReader mwDataReader)
+        public MorrowindEngine(EsmFile esmFile, BsaFile bsaFile, bool inUnity = true)
         {
             Debug.Assert(instance == null);
             instance = this;
-            dataReader = mwDataReader;
-            textureManager = new TextureManager(dataReader);
+            r = esmFile;
+            textureManager = new TextureManager(bsaFile);
             materialManager = new MaterialManager(textureManager);
             var markerLayer = 0; // LayerMask.NameToLayer("Marker")
-            nifManager = new NifManager(dataReader, materialManager, markerLayer);
+            nifManager = new NifManager(bsaFile, materialManager, markerLayer);
             temporalLoadBalancer = new TemporalLoadBalancer();
-            cellManager = new CellManager(dataReader, textureManager, nifManager, temporalLoadBalancer);
-            //Cursor.SetCursor(textureManager.LoadTexture("tx_cursor", true), Vector2.zero, CursorMode.Auto);
+            cellManager = new CellManager(esmFile, textureManager, nifManager, temporalLoadBalancer);
+            if (inUnity)
+                Cursor.SetCursor(textureManager.LoadTexture("tx_cursor", true), Vector2.zero, CursorMode.Auto);
         }
 
         public void Update()
@@ -62,8 +63,8 @@ namespace OA.Tes
 
         public void TestAllCells(string resultsFilePath)
         {
-            using (StreamWriter w = new StreamWriter(resultsFilePath))
-                foreach (var record in dataReader.ESMFile.GetRecordsOfType<CELLRecord>())
+            using (var w = new StreamWriter(resultsFilePath))
+                foreach (var record in r.GetRecordsOfType<CELLRecord>())
                 {
                     var CELL = (CELLRecord)record;
                     try

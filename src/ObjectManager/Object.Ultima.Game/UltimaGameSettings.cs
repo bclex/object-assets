@@ -5,6 +5,7 @@ namespace OA.Ultima
 {
     public class UltimaGameSettings : BaseSettings
     {
+        static readonly UltimaGameSettings _instance = new UltimaGameSettings();
         readonly EngineSettings _engine;
         readonly GumpSettings _gumps;
         readonly UserInterfaceSettings _ui;

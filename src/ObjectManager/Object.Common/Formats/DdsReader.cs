@@ -132,24 +132,19 @@ namespace OA.Common.Formats
         /// </summary>
         public static Texture2DInfo LoadDDSTexture(Stream inputStream, bool flipVertically = false)
         {
-            using (var reader = new UnityBinaryReader(inputStream))
+            using (var r = new UnityBinaryReader(inputStream))
             {
                 // Check the magic string.
-                var magicString = reader.ReadBytes(4);
+                var magicString = r.ReadBytes(4);
                 if (!StringUtils.Equals(magicString, "DDS "))
                     throw new FileFormatException("Invalid DDS file magic string: \"" + System.Text.Encoding.ASCII.GetString(magicString) + "\".");
                 // Deserialize the DDS file header.
                 var header = new DDSHeader();
-                header.Deserialize(reader);
+                header.Deserialize(r);
                 // Figure out the texture format and load the texture data.
-                bool hasMipmaps;
-                uint DDSMipmapLevelCount;
-                TextureFormat textureFormat;
-                int bytesPerPixel;
-                byte[] textureData;
-                ExtractDDSTextureFormatAndData(header, reader, out hasMipmaps, out DDSMipmapLevelCount, out textureFormat, out bytesPerPixel, out textureData);
+                ExtractDDSTextureFormatAndData(header, r, out bool hasMipmaps, out uint ddsMipmapLevelCount, out TextureFormat textureFormat, out int bytesPerPixel, out byte[] textureData);
                 // Post-process the texture to generate missing mipmaps and possibly flip it vertically.
-                PostProcessDDSTexture((int)header.dwWidth, (int)header.dwHeight, bytesPerPixel, hasMipmaps, (int)DDSMipmapLevelCount, textureData, flipVertically);
+                PostProcessDDSTexture((int)header.dwWidth, (int)header.dwHeight, bytesPerPixel, hasMipmaps, (int)ddsMipmapLevelCount, textureData, flipVertically);
                 return new Texture2DInfo((int)header.dwWidth, (int)header.dwHeight, textureFormat, hasMipmaps, textureData);
             }
         }
@@ -179,7 +174,7 @@ namespace OA.Common.Formats
             }
             // Calculate pixel colors.
             var colors = new Color32[16];
-            for (int i = 0; i < 16; i++)
+            for (var i = 0; i < 16; i++)
                 colors[i] = colorTable[colorIndices[i]];
             return colors;
         }
@@ -219,7 +214,7 @@ namespace OA.Common.Formats
             for (var rowIndex = 0; rowIndex < 4; rowIndex++)
             {
                 var compressedAlphaRow = reader.ReadLEUInt16();
-                for (int columnIndex = 0; columnIndex < 4; columnIndex++)
+                for (var columnIndex = 0; columnIndex < 4; columnIndex++)
                     // Each compressed alpha is 4 bits.
                     compressedAlphas[(4 * rowIndex) + columnIndex] = (byte)((compressedAlphaRow >> (columnIndex * 4)) & 0xF);
             }

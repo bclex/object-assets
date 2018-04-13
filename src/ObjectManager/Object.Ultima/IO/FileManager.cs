@@ -10,7 +10,7 @@ namespace OA.Ultima.IO
     public class FileManager
     {
         static bool _isDataPresent;
-        static public bool IsUODataPresent => _isDataPresent;
+        static public bool IsDataPresent => _isDataPresent;
 
         static readonly string[] _knownRegkeys = {
                 @"Origin Worlds Online\Ultima Online\KR Legacy Beta",
@@ -42,7 +42,7 @@ namespace OA.Ultima.IO
         static FileManager()
         {
             var ultimaOnline = UltimaSettings.UltimaOnline;
-            Utils.Debug($"Initializing UOData. Is64Bit = {Is64Bit}");
+            Utils.Debug($"Initializing UO Data. Is64Bit = {Is64Bit}");
             Utils.Debug("Looking for UO Installation:");
             if (ultimaOnline.DataDirectory != null && Directory.Exists(ultimaOnline.DataDirectory))
             {

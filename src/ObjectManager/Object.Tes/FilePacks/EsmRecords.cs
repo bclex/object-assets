@@ -1,4 +1,4 @@
-﻿using OA.Tes.FilePacks.Tes3;
+﻿using OA.Tes.FilePacks.Records;
 using OA.Core;
 using System;
 using UnityEngine;
@@ -37,7 +37,7 @@ namespace OA.Tes.FilePacks
             switch (type)
             {
                 case "TES3": r = new TES3Record(); break;
-                //case "TES4": r = new TES4Record(); break;
+                case "TES4": r = new TES4Record(); break;
                 case "GMST": r = new GMSTRecord(); break;
                 case "GLOB": r = new GLOBRecord(); break;
                 case "SOUN": r = new SOUNRecord(); break;
@@ -111,6 +111,12 @@ namespace OA.Tes.FilePacks
         /// <returns>Return an uninitialized subrecord to deserialize, or null to skip.</returns>
         public abstract SubRecord CreateUninitializedSubRecord(string subRecordName);
 
+        /// <summary>
+        /// Return an uninitialized subrecord to deserialize, or null to skip.
+        /// </summary>
+        /// <returns>Return an uninitialized subrecord to deserialize, or null to skip.</returns>
+        public abstract SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId);
+
         public void DeserializeData(UnityBinaryReader r, GameId gameId)
         {
             var dataEndPos = r.BaseStream.Position + header.dataSize;
@@ -118,7 +124,7 @@ namespace OA.Tes.FilePacks
             {
                 var subRecordStartStreamPosition = r.BaseStream.Position;
                 var subRecordHeader = new SubRecordHeader(r, gameId);
-                var subRecord = CreateUninitializedSubRecord(subRecordHeader.type);
+                var subRecord = gameId != GameId.Oblivion ? CreateUninitializedSubRecord(subRecordHeader.type, gameId) : CreateUninitializedSubRecord(subRecordHeader.type);
                 // Read or skip the record.
                 if (subRecord != null)
                 {

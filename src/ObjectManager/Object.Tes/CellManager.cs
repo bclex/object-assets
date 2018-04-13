@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using OA.Tes.Core;
-using OA.Tes.FilePacks.Tes3;
+using OA.Tes.FilePacks.Records;
 
 namespace OA.Tes
 {
@@ -39,13 +39,13 @@ namespace OA.Tes
         const int detailRadius = 3;
         const string defaultLandTextureFilePath = "textures/_land_default.dds";
 
-        MorrowindDataReader r;
+        EsmFile r;
         TextureManager textureManager;
         NifManager nifManager;
         TemporalLoadBalancer temporalLoadBalancer;
         Dictionary<Vector2i, InRangeCellInfo> cellObjects = new Dictionary<Vector2i, InRangeCellInfo>();
 
-        public CellManager(MorrowindDataReader r, TextureManager textureManager, NifManager nifManager, TemporalLoadBalancer temporalLoadBalancer)
+        public CellManager(EsmFile r, TextureManager textureManager, NifManager nifManager, TemporalLoadBalancer temporalLoadBalancer)
         {
             this.r = r;
             this.textureManager = textureManager;
@@ -232,7 +232,7 @@ namespace OA.Tes
                 var refObjInfo = new RefCellObjInfo();
                 refObjInfo.refObjDataGroup = cell.refObjDataGroups[i];
                 // Get the record the RefObjDataGroup references.
-                r.ESMFile.objectsByIDString.TryGetValue(refObjInfo.refObjDataGroup.NAME.value, out refObjInfo.referencedRecord);
+                r.objectsByIDString.TryGetValue(refObjInfo.refObjDataGroup.NAME.value, out refObjInfo.referencedRecord);
                 if (refObjInfo.referencedRecord != null)
                 {
                     var modelFileName = RecordUtils.GetModelFileName(refObjInfo.referencedRecord);

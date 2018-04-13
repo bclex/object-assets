@@ -5,6 +5,7 @@ namespace OA.Tes.Configuration
     public sealed class TesRenderSettings : ASettingsSection
     {
         string _dataDirectory;
+        string _gameId;
         MaterialType _materialType;
         bool _kinematicRigidbodies;
         bool _creaturesEnabled;
@@ -29,6 +30,12 @@ namespace OA.Tes.Configuration
         {
             get { return _dataDirectory; }
             set { SetProperty(ref _dataDirectory, value); }
+        }
+
+        public string GameId
+        {
+            get { return _gameId; }
+            set { SetProperty(ref _gameId, value); }
         }
 
         public MaterialType MaterialType

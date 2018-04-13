@@ -13,8 +13,8 @@ namespace OA.Configuration
 
         public static DebugSettings Debug => _instance._debug;
 
-        protected static readonly BaseSettings _instance;
-        protected static readonly SettingsFile _file;
+        static readonly BaseSettings _instance;
+        static readonly SettingsFile _file;
 
         static BaseSettings()
         {

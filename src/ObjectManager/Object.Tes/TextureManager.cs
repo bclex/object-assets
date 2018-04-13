@@ -1,4 +1,5 @@
 ﻿using OA.Core;
+using OA.Tes.FilePacks;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -7,13 +8,13 @@ namespace OA.Tes
 {
     public class TextureManager
     {
-        readonly MorrowindDataReader dataReader;
+        readonly BsaFile r;
         readonly Dictionary<string, Task<Texture2DInfo>> textureFilePreloadTasks = new Dictionary<string, Task<Texture2DInfo>>();
         readonly Dictionary<string, Texture2D> cachedTextures = new Dictionary<string, Texture2D>();
 
-        public TextureManager(MorrowindDataReader dataReader)
+        public TextureManager(BsaFile r)
         {
-            this.dataReader = dataReader;
+            this.r = r;
         }
 
         public Texture2D LoadTexture(string texturePath, bool flipVertically = false)
@@ -38,7 +39,7 @@ namespace OA.Tes
             // Start loading the texture file asynchronously if we haven't already started.
             if (!textureFilePreloadTasks.TryGetValue(texturePath, out textureFileLoadingTask))
             {
-                textureFileLoadingTask = dataReader.LoadTextureAsync(texturePath);
+                textureFileLoadingTask = r.LoadTextureAsync(texturePath);
                 textureFilePreloadTasks[texturePath] = textureFileLoadingTask;
             }
         }

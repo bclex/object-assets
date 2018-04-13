@@ -1,4 +1,4 @@
-﻿using OA.Tes.FilePacks.Tes3;
+﻿using OA.Tes.FilePacks.Records;
 using OA.Core;
 using System;
 using System.Collections.Generic;
@@ -10,17 +10,6 @@ using OA.Tes.Core;
 // http://en.uesp.net/wiki/Tes4Mod:Mod_File_Format/Vs_Morrowind
 namespace OA.Tes.FilePacks
 {
-    public enum GameId
-    {
-        Oblivion,
-        Skyrim,
-        Fallout3,
-        FalloutNV,
-        Morrowind,
-        Fallout4,
-        SkyrimSE,
-    }
-
     public static class RecordUtils
     {
         public static string GetModelFileName(Record record)
@@ -47,7 +36,7 @@ namespace OA.Tes.FilePacks
         }
     }
 
-    public class EsmFile : IDisposable
+    public partial class EsmFile : IDisposable
     {
         const int recordHeaderSizeInBytes = 16;
         public Record[] records;

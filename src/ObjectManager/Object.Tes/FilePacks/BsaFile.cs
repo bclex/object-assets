@@ -5,7 +5,7 @@ using System.IO;
 
 namespace OA.Tes.FilePacks
 {
-    public class BsaFile : IDisposable
+    public partial class BsaFile : IDisposable
     {
         UnityBinaryReader r;
 
@@ -38,7 +38,7 @@ namespace OA.Tes.FilePacks
 
         public VirtualFileSystem.Directory rootDir;
 
-        public bool isAtEOF
+        public bool IsAtEof
         {
             get { return r.BaseStream.Position >= r.BaseStream.Length; }
         }
