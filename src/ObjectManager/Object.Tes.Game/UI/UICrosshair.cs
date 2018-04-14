@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace OA.UI
+namespace OA.Tes.UI
 {
     [RequireComponent(typeof(Image))]
     public class UICrosshair : MonoBehaviour
     {
-        private Image _crosshair = null;
+        Image _crosshair = null;
 
         public bool Enabled
         {

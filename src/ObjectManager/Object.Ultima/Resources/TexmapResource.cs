@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace OA.Ultima.Resources
 {
-    class TexmapResource
+    public class TexmapResource
     {
         Texture2D[] _cache = new Texture2D[0x4000];
         readonly AFileIndex _index = FileManager.CreateFileIndex("texidx.mul", "texmaps.mul", 0x4000, -1); // !!! must find patch file reference for texmap.

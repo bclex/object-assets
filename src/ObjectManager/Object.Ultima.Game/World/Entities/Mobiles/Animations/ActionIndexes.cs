@@ -1,4 +1,6 @@
-﻿namespace OA.Ultima.World.Entities.Mobiles.Animations
+﻿using OA.Ultima.Resources;
+
+namespace OA.Ultima.World.Entities.Mobiles.Animations
 {
     public enum MobileAction
     {

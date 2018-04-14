@@ -1,7 +1,18 @@
 ﻿using OA.Core;
+using OA.Core.Input;
+using OA.Core.UI;
+using OA.Ultima.Audio;
 using OA.Ultima.Core;
+using OA.Ultima.Core.Network;
 using OA.Ultima.Data;
+using OA.Ultima.Network.Client;
+using OA.Ultima.Network.Server;
+using OA.Ultima.Network.Server.GeneralInfo;
+using OA.Ultima.Player;
+using OA.Ultima.Player.Partying;
 using OA.Ultima.Resources;
+using OA.Ultima.UI;
+using OA.Ultima.UI.WorldGumps;
 using OA.Ultima.World.Data;
 using OA.Ultima.World.Entities;
 using OA.Ultima.World.Entities.Items;
@@ -11,6 +22,7 @@ using OA.Ultima.World.Entities.Multis;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Timers;
 using UnityEngine;
 
@@ -42,7 +54,7 @@ namespace OA.Ultima.World
             Register<MoveAcknowledgePacket>(0x22, 3, ReceiveMoveAck);
             Register<DragEffectPacket>(0x23, 26, ReceiveDragItem);
             Register<OpenContainerPacket>(0x24, 7, ReceiveContainer);
-            Register<AddSingleItemToContainerPacket>(0x25, ClientVersion.HasExtendedAddItemPacket(Settings.UltimaOnline.PatchVersion) ? 21 : 20, ReceiveAddSingleItemToContainer);
+            Register<AddSingleItemToContainerPacket>(0x25, ClientVersion.HasExtendedAddItemPacket(UltimaGameSettings.UltimaOnline.PatchVersion) ? 21 : 20, ReceiveAddSingleItemToContainer);
             Register<LiftRejectionPacket>(0x27, 2, ReceiveRejectMoveItemRequest);
             Register<ResurrectionMenuPacket>(0x2C, 2, ReceiveResurrectionMenu);
             Register<MobileAttributesPacket>(0x2D, 17, ReceiveMobileAttributes);
@@ -84,7 +96,7 @@ namespace OA.Ultima.World
             Register<DeathAnimationPacket>(0xAF, 13, ReceiveDeathAnimation);
             Register<DisplayGumpFastPacket>(0xB0, -1, ReceiveDisplayGumpFast);
             Register<ObjectHelpResponsePacket>(0xB7, -1, ReceiveObjectHelpResponse);
-            Register<SupportedFeaturesPacket>(0xB9, ClientVersion.HasExtendedFeatures(Settings.UltimaOnline.PatchVersion) ? 5 : 3, ReceiveEnableFeatures);
+            Register<SupportedFeaturesPacket>(0xB9, ClientVersion.HasExtendedFeatures(UltimaGameSettings.UltimaOnline.PatchVersion) ? 5 : 3, ReceiveEnableFeatures);
             Register<QuestArrowPacket>(0xBA, 6, ReceiveQuestArrow);
             Register<SeasonChangePacket>(0xBC, 3, ReceiveSeasonalInformation);
             Register<GeneralInfoPacket>(0xBF, -1, ReceiveGeneralInfo);
@@ -183,10 +195,10 @@ namespace OA.Ultima.World
         /// </summary>
         public void SendClientVersion()
         {
-            if (Settings.UltimaOnline.PatchVersion.Length != 4)
+            if (UltimaSettings.UltimaOnline.PatchVersion.Length != 4)
                 Utils.Warning("Cannot send seed packet: Version array is incorrectly sized.");
             else
-                _network.Send(new ClientVersionPacket(Settings.UltimaOnline.PatchVersion));
+                _network.Send(new ClientVersionPacket(UltimaSettings.UltimaOnline.PatchVersion));
         }
 
         public void GetMySkills()
@@ -907,7 +919,7 @@ namespace OA.Ultima.World
 
         void AnnounceUnhandledPacket(IRecvPacket p)
         {
-            Utils.Warn($"Client: Unhandled {p.GetType().Name} [ID:{p.Id}]");
+            Utils.Warning($"Client: Unhandled {p.GetType().Name} [ID:{p.Id}]");
         }
 
         void ReceiveExtended0x78(Extended0x78Packet p)
@@ -940,7 +952,7 @@ namespace OA.Ultima.World
                             PartyMessageInfo msg = partyInfo.Info as PartyMessageInfo;
                             PartyMember member = PlayerState.Partying.GetMember(msg.Source);
                             // note: msx752 identified hue 50 for "targeted to : " and 34 for "Help me.. I'm stunned !!"
-                            var hue = (ushort)(msg.IsPrivate ? Settings.UserInterface.PartyPrivateMsgColor : Settings.UserInterface.PartyMsgColor);
+                            var hue = (ushort)(msg.IsPrivate ? UltimaGameSettings.UserInterface.PartyPrivateMsgColor : UltimaGameSettings.UserInterface.PartyMsgColor);
                             ReceiveTextMessage(MessageTypes.PartyDisplayOnly, msg.Message, 3, hue, 0xFFFFFFF, member.Name, true);
                             break;
                         case PartyInfo.CommandInvitation:
@@ -962,7 +974,7 @@ namespace OA.Ultima.World
                 case GeneralInfoPacket.ContextMenu:
                     var menuInfo = p.Info as ContextMenuInfo;
                     var input = Service.Get<IInputService>();
-                    _userInterface.AddControl(new ContextMenuGump(menuInfo.Menu), input.MousePosition.X - 10, input.MousePosition.Y - 20);
+                    _userInterface.AddControl(new ContextMenuGump(menuInfo.Menu), input.MousePosition.x - 10, input.MousePosition.y - 20);
                     break;
                 case GeneralInfoPacket.MapDiff:
                     TileMatrixDataPatch.EnableMapDiffs(p.Info as MapDiffInfo);

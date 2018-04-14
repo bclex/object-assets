@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace OA.Ultima.Resources
 {
-    class SpeechEntry
+    public class SpeechEntry
     {
         readonly int _index;
         readonly List<string> _strings;
@@ -24,7 +24,7 @@ namespace OA.Ultima.Resources
         }
     }
 
-    class SpeechEntrySorter : IComparer<SpeechEntry>
+    public class SpeechEntrySorter : IComparer<SpeechEntry>
     {
         public int Compare(SpeechEntry x, SpeechEntry y)
         {
@@ -32,7 +32,7 @@ namespace OA.Ultima.Resources
         }
     }
 
-    class SpeechData
+    public class SpeechData
     {
         static List<Dictionary<int, SpeechEntry>> _table;
 

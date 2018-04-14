@@ -1,25 +1,25 @@
 ﻿using UnityEngine;
 
-namespace OA.UI
+namespace OA.Tes.UI
 {
     [RequireComponent(typeof(Canvas))]
     public class UIManager : MonoBehaviour
     {
-        private Canvas _canvas = null;
-        private Transform _hudTransform = null;
-        private Transform _uiTransform = null;
+        Canvas _canvas = null;
+        Transform _hudTransform = null;
+        Transform _uiTransform = null;
 
         [Header("HUD Elements")]
         [SerializeField]
-        private UICrosshair _crosshair = null;
+        UICrosshair _crosshair = null;
         [SerializeField]
-        private UIInteractiveText _interactiveText = null;
+        UIInteractiveText _interactiveText = null;
 
         [Header("UI Elements")]
         [SerializeField]
-        private UIBook _book = null;
+        UIBook _book = null;
         [SerializeField]
-        private UIScroll _scroll = null;
+        UIScroll _scroll = null;
 
         #region Public Fields
 

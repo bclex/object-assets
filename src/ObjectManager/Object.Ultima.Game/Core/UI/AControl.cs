@@ -605,7 +605,7 @@ namespace OA.Core.UI
                     doubleClick = true;
                 }
             }
-            else _maxTimeForDoubleClick = totalMS + Settings.UserInterface.Mouse.DoubleClickMS;
+            else _maxTimeForDoubleClick = totalMS + UltimaGameSettings.UserInterface.Mouse.DoubleClickMS;
             if (button == MouseButton.Right && !IsUncloseableWithRMB)
             {
                 CloseWithRightMouseButton();
@@ -642,7 +642,7 @@ namespace OA.Core.UI
         public AControl[] HitTest(Vector2Int position, bool alwaysHandleMouseInput)
         {
             var focusedControls = new List<AControl>();
-            var inBounds = _area.Contains((int)position.x - ParentX, (int)position.y - ParentY);
+            var inBounds = _area.Contains(new Vector2Int((int)position.x - ParentX, (int)position.y - ParentY));
             if (inBounds)
                 if (IsPointWithinControl((int)position.x - X - ParentX, (int)position.y - Y - ParentY))
                 {
@@ -752,10 +752,10 @@ namespace OA.Core.UI
                 //_boundsTexture.SetData(new Color[] { Color.white });
             }
             var drawArea = new RectInt(ScreenX, ScreenY, Width, Height);
-            spriteBatch.Draw2D(_boundsTexture, new RectInt(position.X, position.Y, Width, 1), Vector3.zero);
-            spriteBatch.Draw2D(_boundsTexture, new RectInt(position.X, position.Y + Height - 1, Width, 1), Vector3.zero);
-            spriteBatch.Draw2D(_boundsTexture, new RectInt(position.X, position.Y, 1, Height), Vector3.zero);
-            spriteBatch.Draw2D(_boundsTexture, new RectInt(position.X + Width - 1, position.Y, 1, Height), Vector3.zero);
+            spriteBatch.Draw2D(_boundsTexture, new RectInt(position.x, position.y, Width, 1), Vector3.zero);
+            spriteBatch.Draw2D(_boundsTexture, new RectInt(position.x, position.y + Height - 1, Width, 1), Vector3.zero);
+            spriteBatch.Draw2D(_boundsTexture, new RectInt(position.x, position.y, 1, Height), Vector3.zero);
+            spriteBatch.Draw2D(_boundsTexture, new RectInt(position.x + Width - 1, position.y, 1, Height), Vector3.zero);
         }
 
         #endregion

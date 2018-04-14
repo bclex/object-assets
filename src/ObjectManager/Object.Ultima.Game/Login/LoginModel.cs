@@ -1,4 +1,5 @@
 ﻿using OA.Core;
+using OA.Core.UI;
 using OA.Ultima.Core;
 using OA.Ultima.Core.Patterns.MVC;
 using OA.Ultima.Login.Accounts;
@@ -6,6 +7,9 @@ using OA.Ultima.Login.Data;
 using OA.Ultima.Network.Client;
 using OA.Ultima.Network.Server;
 using OA.Ultima.Resources;
+using OA.Ultima.UI;
+using OA.Ultima.UI.LoginGumps;
+using System.Security;
 
 namespace OA.Ultima.Login
 {
@@ -67,10 +71,9 @@ namespace OA.Ultima.Login
         {
             CurrentGump.Dispose();
             CurrentGump = _userInterface.AddControl(new LoginStatusGump(OnCancelLogin), 0, 0) as Gump;
-            if (Client.Connect(Settings.Login.ServerAddress, Settings.Login.ServerPort, account, password))
+            if (Client.Connect(UltimaGameSettings.Login.ServerAddress, UltimaGameSettings.Login.ServerPort, account, password))
                 (CurrentGump as LoginStatusGump).Page = LoginStatusGump.PageCouldntConnect;
-            else
-                (CurrentGump as LoginStatusGump).Page = LoginStatusGump.PageVerifyingAccount;
+            else (CurrentGump as LoginStatusGump).Page = LoginStatusGump.PageVerifyingAccount;
         }
 
         void OnCancelLogin()
@@ -146,9 +149,9 @@ namespace OA.Ultima.Login
             CurrentGump.Dispose();
             CurrentGump = _userInterface.AddControl(new CharacterListGump(
                 OnBackToSelectServer, OnLoginWithCharacter, OnDeleteCharacter, OnNewCharacter), 0, 0) as Gump;
-            if (Settings.Login.AutoSelectLastCharacter && !string.IsNullOrWhiteSpace(Settings.Login.LastCharacterName))
+            if (UltimaGameSettings.Login.AutoSelectLastCharacter && !string.IsNullOrWhiteSpace(UltimaGameSettings.Login.LastCharacterName))
                 for (var i = 0; i < Characters.List.Length; i++)
-                    if (Characters.List[i].Name == Settings.Login.LastCharacterName)
+                    if (Characters.List[i].Name == UltimaGameSettings.Login.LastCharacterName)
                         OnLoginWithCharacter(i);
         }
 

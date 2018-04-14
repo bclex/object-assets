@@ -32,7 +32,7 @@ namespace OA.Ultima.World.WorldViews
 
         public IsometricLighting Lighting { get; private set; }
 
-        RenderTarget2D _renderTargetSprites;
+        Texture2D _renderTargetSprites;
         SpriteBatch3D _spriteBatch;
         bool _drawTerrain = true;
         bool _underSurface;
@@ -47,20 +47,20 @@ namespace OA.Ultima.World.WorldViews
 
         public void Update(Map map, Position3D center, MousePicking mousePick)
         {
-            var pixelScale = Settings.UserInterface.PlayWindowPixelDoubling ? 2 : 1;
-            if (_renderTargetSprites == null || _renderTargetSprites.width != Settings.UserInterface.PlayWindowGumpResolution.Width / pixelScale || _renderTargetSprites.height != Settings.UserInterface.PlayWindowGumpResolution.Height / pixelScale)
+            var pixelScale = UltimaGameSettings.UserInterface.PlayWindowPixelDoubling ? 2 : 1;
+            if (_renderTargetSprites == null || _renderTargetSprites.width != UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Width / pixelScale || _renderTargetSprites.height != UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Height / pixelScale)
             {
                 if (_renderTargetSprites != null)
                     _renderTargetSprites.Dispose();
-                _renderTargetSprites = new RenderTarget2D(
-                    _spriteBatch.GraphicsDevice,
-                    Settings.UserInterface.PlayWindowGumpResolution.Width / pixelScale,
-                    Settings.UserInterface.PlayWindowGumpResolution.Height / pixelScale,
-                    false,
-                    SurfaceFormat.Color,
-                    DepthFormat.Depth24Stencil8,
-                    0,
-                    RenderTargetUsage.DiscardContents);
+                //_renderTargetSprites = new RenderTarget2D(
+                //    _spriteBatch.GraphicsDevice,
+                //    UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Width / pixelScale,
+                //    UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Height / pixelScale,
+                //    false,
+                //    SurfaceFormat.Color,
+                //    DepthFormat.Depth24Stencil8,
+                //    0,
+                //    RenderTargetUsage.DiscardContents);
             }
             DetermineIfClientIsUnderEntity(map, center);
             DrawEntities(map, center, mousePick, out _drawOffset);
@@ -100,7 +100,7 @@ namespace OA.Ultima.World.WorldViews
                         // If we are under a roof tile, do not make roofs transparent if we are on an edge.
                         if (underObject is Item && ((Item)underObject).ItemData.IsRoof)
                         {
-                            bool isRoofSouthEast = true;
+                            var isRoofSouthEast = true;
                             if ((tile = map.GetMapTile(center.X + 1, center.Y)) != null)
                             {
                                 tile.IsZUnderEntityOrGround(center.Z, out underObject, out underTerrain);
@@ -143,7 +143,7 @@ namespace OA.Ultima.World.WorldViews
                 drawPosition.x = (firstTile.x - firstTile.y + (y % 2)) * TILE_SIZE_FLOAT_HALF + renderOffset.x;
                 drawPosition.y = (firstTile.x + firstTile.y + y) * TILE_SIZE_FLOAT_HALF + renderOffset.y;
                 var firstTileInRow = new Vector2Int(firstTile.x + ((y + 1) / 2), firstTile.y + (y / 2));
-                for (var x = 0; x < renderDimensions.X + 1; x++)
+                for (var x = 0; x < renderDimensions.x + 1; x++)
                 {
                     var tile = map.GetMapTile(firstTileInRow.x - x, firstTileInRow.y + x);
                     if (tile == null)
@@ -180,17 +180,18 @@ namespace OA.Ultima.World.WorldViews
             // Update the MouseOver objects
             mousePicking.UpdateOverEntities(overList, mousePicking.Position);
             // Draw the objects we just send to the spritebatch.
-            _spriteBatch.GraphicsDevice.SetRenderTarget(_renderTargetSprites);
-            _spriteBatch.GraphicsDevice.Clear(Color.black);
+            //_spriteBatch.GraphicsDevice.SetRenderTarget(_renderTargetSprites);
+            //_spriteBatch.GraphicsDevice.Clear(Color.black);
             _spriteBatch.FlushSprites(true);
-            _spriteBatch.GraphicsDevice.SetRenderTarget(null);
+            //_spriteBatch.GraphicsDevice.SetRenderTarget(null);
         }
 
         private void CalculateViewport(Position3D center, int overDrawTilesOnSides, int overDrawTilesOnTopAndBottom, out Vector2Int firstTile, out Vector2 renderOffset, out Vector2Int renderDimensions)
         {
-            var pixelScale = (Settings.UserInterface.PlayWindowPixelDoubling) ? 2 : 1;
-            renderDimensions.y = Settings.UserInterface.PlayWindowGumpResolution.Height / pixelScale / TILE_SIZE_INTEGER + overDrawTilesOnTopAndBottom; // the number of tiles that are drawn for half the screen (doubled to fill the entire screen).
-            renderDimensions.x = Settings.UserInterface.PlayWindowGumpResolution.Width / pixelScale / TILE_SIZE_INTEGER + overDrawTilesOnSides; // the number of tiles that are drawn in the x-direction ( + renderExtraColumnsAtSides * 2 ).
+            var pixelScale = (UltimaGameSettings.UserInterface.PlayWindowPixelDoubling) ? 2 : 1;
+            renderDimensions = new Vector2Int();
+            renderDimensions.y = UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Height / pixelScale / TILE_SIZE_INTEGER + overDrawTilesOnTopAndBottom; // the number of tiles that are drawn for half the screen (doubled to fill the entire screen).
+            renderDimensions.x = UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Width / pixelScale / TILE_SIZE_INTEGER + overDrawTilesOnSides; // the number of tiles that are drawn in the x-direction ( + renderExtraColumnsAtSides * 2 ).
             var renderDimensionsDiff = Math.Abs(renderDimensions.x - renderDimensions.y);
             renderDimensionsDiff -= renderDimensionsDiff % 2; // make sure this is an even number...
             // when the player entity is at a higher z altitude in the world, we must offset the first row drawn so that tiles at lower altitudes are drawn.
@@ -198,7 +199,7 @@ namespace OA.Ultima.World.WorldViews
             // Note: The value of this variable MUST be a multiple of 2 and MUST be positive.
             var firstZOffset = center.Z > 0 ? (int)Math.Abs(((center.Z + center.Z_offset) / 11)) : 0;
             // this is used to draw tall objects that would otherwise not be visible until their ground tile was on screen. This may still skip VERY tall objects (those weird jungle trees?)
-            firstTile = new Vector2Int(center.X - firstZOffset, center.Y - renderDimensions.Y - firstZOffset);
+            firstTile = new Vector2Int(center.X - firstZOffset, center.Y - renderDimensions.y - firstZOffset);
             if (renderDimensions.y > renderDimensions.x)
             {
                 firstTile.x -= renderDimensionsDiff / 2;
@@ -209,11 +210,11 @@ namespace OA.Ultima.World.WorldViews
                 firstTile.x += renderDimensionsDiff / 2;
                 firstTile.y -= renderDimensionsDiff / 2;
             }
-            renderOffset.x = (((Settings.UserInterface.PlayWindowGumpResolution.Width / pixelScale) + ((renderDimensions.y) * TILE_SIZE_INTEGER)) / 2) - TILE_SIZE_FLOAT_HALF;
+            renderOffset.x = (((UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Width / pixelScale) + ((renderDimensions.y) * TILE_SIZE_INTEGER)) / 2) - TILE_SIZE_FLOAT_HALF;
             renderOffset.x -= (int)((center.X_offset - center.Y_offset) * TILE_SIZE_FLOAT_HALF);
             renderOffset.x -= (firstTile.x - firstTile.y) * TILE_SIZE_FLOAT_HALF;
             renderOffset.x += renderDimensionsDiff * TILE_SIZE_FLOAT_HALF;
-            renderOffset.y = ((Settings.UserInterface.PlayWindowGumpResolution.Height / pixelScale) / 2 - (renderDimensions.y * TILE_SIZE_INTEGER / 2));
+            renderOffset.y = ((UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Height / pixelScale) / 2 - (renderDimensions.y * TILE_SIZE_INTEGER / 2));
             renderOffset.y += ((center.Z + center.Z_offset) * 4);
             renderOffset.y -= (int)((center.X_offset + center.Y_offset) * TILE_SIZE_FLOAT_HALF);
             renderOffset.y -= (firstTile.x + firstTile.y) * TILE_SIZE_FLOAT_HALF;

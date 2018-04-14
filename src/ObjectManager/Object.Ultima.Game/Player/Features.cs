@@ -1,4 +1,6 @@
-﻿namespace OA.Ultima.Data
+﻿using OA.Ultima.Data;
+
+namespace OA.Ultima.Player
 {
     public class Features
     {

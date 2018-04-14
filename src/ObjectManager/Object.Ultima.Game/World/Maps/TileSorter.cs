@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using OA.Ultima.World.Entities;
+using OA.Ultima.World.Entities.Effects;
+using OA.Ultima.World.Entities.Items;
+using OA.Ultima.World.Entities.Mobiles;
+using System.Collections.Generic;
 
 namespace OA.Ultima.World.Maps
 {
@@ -14,7 +18,7 @@ namespace OA.Ultima.World.Maps
                     var result = Compare(items[j - 1], items[j]);
                     if (result > 0)
                     {
-                        AEntity temp = items[j - 1];
+                        var temp = items[j - 1];
                         items[j - 1] = items[j];
                         items[j] = temp;
                     }
@@ -25,10 +29,8 @@ namespace OA.Ultima.World.Maps
 
         public static int Compare(AEntity x, AEntity y)
         {
-            int xZ, xType, xThreshold, xTiebreaker;
-            int yZ, yType, yThreshold, yTiebreaker;
-            GetSortValues(x, out xZ, out xType, out xThreshold, out xTiebreaker);
-            GetSortValues(y, out yZ, out yType, out yThreshold, out yTiebreaker);
+            GetSortValues(x, out int xZ, out int xType, out int xThreshold, out int xTiebreaker);
+            GetSortValues(y, out int yZ, out int yType, out int yThreshold, out int yTiebreaker);
             xZ += xThreshold;
             yZ += yThreshold;
             var comparison = xZ - yZ;

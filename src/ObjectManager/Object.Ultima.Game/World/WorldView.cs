@@ -1,5 +1,8 @@
 ﻿using OA.Core;
+using OA.Core.UI;
 using OA.Ultima.Core.Graphics;
+using OA.Ultima.Core.Patterns.MVC;
+using OA.Ultima.UI.WorldGumps;
 using OA.Ultima.World.Entities.Mobiles;
 using OA.Ultima.World.EntityViews;
 using OA.Ultima.World.WorldViews;

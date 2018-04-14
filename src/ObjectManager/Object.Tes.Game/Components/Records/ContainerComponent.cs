@@ -1,6 +1,6 @@
-﻿using OA.Bae.Esm;
+﻿using OA.Tes.FilePacks.Records;
 
-namespace OA.Bae.Components.Records
+namespace OA.Tes.Components.Records
 {
     public class ContainerComponent : GenericObjectComponent
     {

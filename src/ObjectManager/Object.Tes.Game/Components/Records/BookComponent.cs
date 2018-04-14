@@ -1,6 +1,7 @@
-﻿using OA.Bae.Esm;
+﻿using OA.Tes.FilePacks.Records;
+using OA.Tes.UI;
 
-namespace OA.Bae.Components.Records
+namespace OA.Tes.Components.Records
 {
     public class BookComponent : GenericObjectComponent
     {

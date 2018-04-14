@@ -1,12 +1,14 @@
-﻿//namespace OA.Core.Extensions
-//{
-//    public static class PointExtensions
-//    {
-//        public static Point DivideBy(this Point value, int divisor)
-//        {
-//            value.X /= divisor;
-//            value.Y /= divisor;
-//            return value;
-//        }
-//    }
-//}
+﻿using UnityEngine;
+
+namespace OA.Core.Extensions
+{
+    public static class PointExtensions
+    {
+        public static Vector2Int DivideBy(this Vector2Int value, int divisor)
+        {
+            value.x /= divisor;
+            value.y /= divisor;
+            return value;
+        }
+    }
+}

@@ -1,5 +1,5 @@
 ﻿using OA.Core;
-using OA.Ultima.Core.Audio;
+using OA.Core.Audio;
 using OA.Ultima.Resources;
 using System.Collections.Generic;
 
@@ -7,9 +7,9 @@ namespace OA.Ultima.Audio
 {
     public class AudioService
     {
-        private readonly Dictionary<int, ASound> _sounds = new Dictionary<int, ASound>();
-        private readonly Dictionary<int, ASound> _music = new Dictionary<int, ASound>();
-        private UOMusic _musicCurrentlyPlaying;
+        readonly Dictionary<int, ASound> _sounds = new Dictionary<int, ASound>();
+        readonly Dictionary<int, ASound> _music = new Dictionary<int, ASound>();
+        UOMusic _musicCurrentlyPlaying;
 
         public void Update()
         {
@@ -21,7 +21,7 @@ namespace OA.Ultima.Audio
         {
             if (volume < 0.01f)
                 return;
-            if (Settings.Audio.SoundOn)
+            if (UltimaGameSettings.Audio.SoundOn)
             {
                 ASound sound;
                 if (_sounds.TryGetValue(soundIndex, out sound))
@@ -42,7 +42,7 @@ namespace OA.Ultima.Audio
 
         public void PlayMusic(int id)
         {
-            if (Settings.Audio.MusicOn)
+            if (UltimaGameSettings.Audio.MusicOn)
             {
                 if (id < 0) // not a valid id, used to stop music.
                 {

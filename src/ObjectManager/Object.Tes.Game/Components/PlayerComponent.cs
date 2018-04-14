@@ -1,18 +1,19 @@
 ﻿using OA.Core;
+using OA.Tes.UI;
 using UnityEngine;
 
-namespace OA.Bae.Components
+namespace OA.Tes.Components
 {
     public class PlayerComponent : MonoBehaviour
     {
-        private Transform _camTransform;
-        private Transform _transform;
-        private CapsuleCollider _capsuleCollider;
-        private Rigidbody _rigidbody;
-        private UICrosshair _crosshair;
-        private bool _paused = false;
-        private bool _isGrounded = false;
-        private bool _isFlying = false;
+        Transform _camTransform;
+        Transform _transform;
+        CapsuleCollider _capsuleCollider;
+        Rigidbody _rigidbody;
+        UICrosshair _crosshair;
+        bool _paused = false;
+        bool _isGrounded = false;
+        bool _isFlying = false;
 
         #region Editor Fields
 

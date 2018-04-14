@@ -2,28 +2,28 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace OA.UI
+namespace OA.Tes.UI
 {
     public class UIInteractiveText : MonoBehaviour
     {
-        private const int WidgetWidth = 200;
-        private const int WidgetHeight = 100;
+        const int WidgetWidth = 200;
+        const int WidgetHeight = 100;
 
-        private bool _opened;
-
-        [SerializeField]
-        private GameObject _container = null;
-        [SerializeField]
-        private Image _icon = null;
-        [SerializeField]
-        private Text _title = null;
+        bool _opened;
 
         [SerializeField]
-        private GameObject _inventoryInfos = null;
+        GameObject _container = null;
         [SerializeField]
-        private Text _weight = null;
+        Image _icon = null;
         [SerializeField]
-        private Text _value = null;
+        Text _title = null;
+
+        [SerializeField]
+        GameObject _inventoryInfos = null;
+        [SerializeField]
+        Text _weight = null;
+        [SerializeField]
+        Text _value = null;
 
         void Start()
         {

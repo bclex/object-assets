@@ -1,37 +1,38 @@
-﻿using OA.Bae.Esm;
+﻿using OA.Core;
+using OA.Tes.FilePacks.Records;
 using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace OA.UI
+namespace OA.Tes.UI
 {
     public class UIBook : MonoBehaviour
     {
-        private int _numberOfPages;
-        private int _cursor;
-        private string[] _pages;
-        private BOOKRecord _bookRecord;
+        int _numberOfPages;
+        int _cursor;
+        string[] _pages;
+        BOOKRecord _bookRecord;
 
         [SerializeField]
-        private int _numCharPerPage = 565;
+        int _numCharPerPage = 565;
 
         [SerializeField]
-        private GameObject _container = null;
+        GameObject _container = null;
         [SerializeField]
-        private Image _background = null;
+        Image _background = null;
         [SerializeField]
-        private Text _page1 = null;
+        Text _page1 = null;
         [SerializeField]
-        private Text _page2 = null;
+        Text _page2 = null;
         [SerializeField]
-        private Text _numPage1 = null;
+        Text _numPage1 = null;
         [SerializeField]
-        private Text _numPage2 = null;
+        Text _numPage2 = null;
         [SerializeField]
-        private Button _nextButton = null;
+        Button _nextButton = null;
         [SerializeField]
-        private Button _previousButton = null;
+        Button _previousButton = null;
 
         public event Action<BOOKRecord> OnTake = null;
         public event Action<BOOKRecord> OnClosed = null;

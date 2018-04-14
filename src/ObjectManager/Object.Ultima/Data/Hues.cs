@@ -1,6 +1,6 @@
 ﻿namespace OA.Ultima.Data
 {
-    static class Hues
+    public static class Hues
     {
         public static int[] SkinTones
         {

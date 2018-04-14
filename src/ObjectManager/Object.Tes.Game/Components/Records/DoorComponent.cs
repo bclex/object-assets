@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
-using OA.Bae.Esm;
-using OA.Bae.Formats;
+using OA.Tes.FilePacks.Records;
+using OA.Tes.Formats;
 
-namespace OA.Bae.Components.Records
+namespace OA.Tes.Components.Records
 {
     public class DoorComponent : GenericObjectComponent
     {

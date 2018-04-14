@@ -1,8 +1,15 @@
 ﻿using OA.Core;
+using OA.Core.UI;
+using OA.Ultima.Core.Network;
 using OA.Ultima.Data;
+using OA.Ultima.Network.Client;
+using OA.Ultima.Player;
+using OA.Ultima.UI;
+using OA.Ultima.UI.WorldGumps;
 using OA.Ultima.World.Entities;
 using OA.Ultima.World.Entities.Items;
 using OA.Ultima.World.Entities.Items.Containers;
+using OA.Ultima.World.Entities.Mobiles;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -62,7 +69,7 @@ namespace OA.Ultima.World
             else if (mobile.Notoriety == 0x1 || mobile.Notoriety == 0x3 || mobile.Notoriety == 0x4 || mobile.Notoriety == 0x5 || mobile.Notoriety == 0x6)
                 _network.Send(new AttackRequestPacket(mobile.Serial));
             // CrimeQuery is enabled, ask before attacking others
-            else if (Settings.UserInterface.CrimeQuery)
+            else if (UltimaGameSettings.UserInterface.CrimeQuery)
                 _userInterface.AddControl(new CrimeQueryGump(mobile), 0, 0);
             // CrimeQuery is disabled, so attack without asking
             else _network.Send(new AttackRequestPacket(mobile.Serial));
@@ -112,7 +119,7 @@ namespace OA.Ultima.World
 
         public Gump OpenContainerGump(AEntity entity) // used by ultimaclient.
         {
-            var gump;
+            Gump gump;
             if ((gump = (Gump)_userInterface.GetControl(entity.Serial)) != null)
                 gump.Dispose();
             else

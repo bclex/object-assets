@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace OA.Ultima.Resources
 {
-    class ArtMulResource
+    public class ArtMulResource
     {
         readonly object _graphics;
         readonly AFileIndex _fileIndex;

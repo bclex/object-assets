@@ -1,42 +1,38 @@
-﻿using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
-using UnityEngine.XR;
+﻿//using UnityEngine;
+//using UnityEngine.Rendering.PostProcessing;
+//using UnityEngine.XR;
 
-namespace Demonixis.Toolbox.XR
-{
-    public sealed class XRVignetteOverlay : MonoBehaviour
-    {
-        private Vignette m_Vignette = null;
-        private Rigidbody m_Rigidbody = null;
+//namespace OA.XR
+//{
+//    public sealed class XRVignetteOverlay : MonoBehaviour
+//    {
+//        Vignette _vignette = null;
+//        Rigidbody _rigidbody = null;
 
-        [SerializeField]
-        private float m_Threshold = 0.5f;
+//        [SerializeField]
+//        float _threshold = 0.5f;
 
-        private void Start()
-        {
-            if (!XRSettings.enabled)
-                Destroy(this);
+//        private void Start()
+//        {
+//            if (!XRSettings.enabled)
+//                Destroy(this);
+//            var volume = FindObjectOfType<PostProcessVolume>();
+//            var profile = volume.profile;
+//            profile.TryGetSettings(out _vignette);
+//            if (_vignette == null)
+//                Destroy(this);
+//            _vignette.enabled.value = false;
+//            _vignette.intensity.value = 1.5f;
+//            _rigidbody = GetComponent<Rigidbody>();
+//        }
 
-            var volume = FindObjectOfType<PostProcessVolume>();
-            var profile = volume.profile;
-            profile.TryGetSettings(out m_Vignette);
-
-            if (m_Vignette == null)
-                Destroy(this);
-
-            m_Vignette.enabled.value = false;
-            m_Vignette.intensity.value = 1.5f;
-
-            m_Rigidbody = GetComponent<Rigidbody>();
-        }
-
-        private void Update()
-        {
-            var show = m_Rigidbody.velocity.sqrMagnitude > m_Threshold || m_Rigidbody.angularVelocity.sqrMagnitude > m_Threshold;
-            if (show && !m_Vignette.enabled.value)
-                m_Vignette.enabled.value = true;
-            else if (!show && m_Vignette.enabled.value)
-                m_Vignette.enabled.value = false;
-        }
-    }
-}
+//        private void Update()
+//        {
+//            var show = _rigidbody.velocity.sqrMagnitude > _threshold || _rigidbody.angularVelocity.sqrMagnitude > _threshold;
+//            if (show && !_vignette.enabled.value)
+//                _vignette.enabled.value = true;
+//            else if (!show && _vignette.enabled.value)
+//                _vignette.enabled.value = false;
+//        }
+//    }
+//}

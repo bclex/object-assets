@@ -44,13 +44,20 @@
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\Program Files\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\Program Files\Unity\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Audio\ASound.cs" />
+    <Compile Include="Core\Audio\AudioEffects.cs" />
+    <Compile Include="Core\Audio\VolumeState.cs" />
     <Compile Include="ComponentModel\EqualityHelper.cs" />
     <Compile Include="ComponentModel\NotifyPropertyChangedBase.cs" />
     <Compile Include="Components\Editor\ScreenshotCapturerEditor.cs" />
     <Compile Include="Components\FlyingCameraComponent.cs" />
     <Compile Include="Components\OneShotAudioStreamComponent.cs" />
+    <Compile Include="Components\PostProcessManager.cs" />
     <Compile Include="Components\ScreenshotCapturer.cs" />
     <Compile Include="Configuration\ASettingsSection.cs" />
     <Compile Include="Configuration\DebugSettings.cs" />
@@ -64,6 +71,7 @@
     <Compile Include="Core\Data\Pair.cs" />
     <Compile Include="Core\Diagnostics\Guard.cs" />
     <Compile Include="Core\Diagnostics\Metrics.cs" />
+    <Compile Include="Core\GUIUtils.cs" />
     <Compile Include="Core\InputManager.cs" />
     <Compile Include="Core\MusicPlayer.cs" />
     <Compile Include="Core\Service.cs" />
@@ -73,10 +81,13 @@
     <Compile Include="Core\TextureUtils.cs" />
     <Compile Include="Core\UnityBinaryReader.cs" />
     <Compile Include="Core\Utils.cs" />
+    <Compile Include="Core\Vector2i.cs" />
+    <Compile Include="Formats\DdsReader.cs" />
     <Compile Include="VirtualFileSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XR\Editor\XRInputLoader.cs" />
     <Compile Include="XR\XRInput.cs" />
+    <Compile Include="XR\XRVignetteOverlay.cs" />
     <Compile Include="_BCL\FileFormatException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

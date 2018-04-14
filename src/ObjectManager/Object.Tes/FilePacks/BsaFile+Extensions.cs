@@ -1,5 +1,5 @@
-﻿using OA.Common.Formats;
-using OA.Core;
+﻿using OA.Core;
+using OA.Formats;
 using OA.Tes.Formats;
 using System;
 using System.IO;

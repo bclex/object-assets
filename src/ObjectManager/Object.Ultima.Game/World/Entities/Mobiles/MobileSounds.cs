@@ -1,20 +1,24 @@
-﻿namespace OA.Ultima.World.Entities.Mobiles
+﻿using OA.Core;
+using OA.Core.Audio;
+using OA.Ultima.Audio;
+using OA.Ultima.Core;
+using System.Collections.Generic;
+
+namespace OA.Ultima.World.Entities.Mobiles
 {
     public static class MobileSounds
     {
-        private static AudioService m_Audio = Service.Get<AudioService>();
+        static AudioService _audio = Service.Get<AudioService>();
 
-        private static Dictionary<Serial, MobileSoundData> m_Data = new Dictionary<Serial,MobileSoundData>();
+        static Dictionary<Serial, MobileSoundData> _data = new Dictionary<Serial,MobileSoundData>();
 
-        private static int[] m_StepSFX = { 0x12B, 0x12C };
-        private static int[] m_StepMountedSFX = { 0x129, 0x12A };
+        static int[] _stepSFX = { 0x12B, 0x12C };
+        static int[] _stepMountedSFX = { 0x129, 0x12A };
 
         public static void ResetFootstepSounds(Mobile mobile)
         {
-            if (m_Data.ContainsKey(mobile.Serial))
-            {
-                m_Data[mobile.Serial].LastFrame = 1.0f;
-            }
+            if (_data.ContainsKey(mobile.Serial))
+                _data[mobile.Serial].LastFrame = 1.0f;
         }
 
         public static void DoFootstepSounds(Mobile mobile, double frame)
@@ -23,10 +27,10 @@
                 return;
 
             MobileSoundData data;
-            if (!m_Data.TryGetValue(mobile.Serial, out data))
+            if (!_data.TryGetValue(mobile.Serial, out data))
             {
                 data = new MobileSoundData(mobile);
-                m_Data.Add(mobile.Serial, data);
+                _data.Add(mobile.Serial, data);
             }
 
             bool play = (data.LastFrame < 0.5d && frame >= 0.5d) || (data.LastFrame > 0.5d && frame < 0.5d);
@@ -43,13 +47,13 @@
 
                 if (mobile.IsMounted && mobile.IsRunning)
                 {
-                    int sfx = Utility.RandomValue(0, m_StepMountedSFX.Length - 1);
-                    m_Audio.PlaySound(m_StepMountedSFX[sfx], Core.Audio.AudioEffects.PitchVariation, volume);
+                    int sfx = Utility.RandomValue(0, _stepMountedSFX.Length - 1);
+                    _audio.PlaySound(_stepMountedSFX[sfx], AudioEffects.PitchVariation, volume);
                 }
                 else
                 {
-                    int sfx = Utility.RandomValue(0, m_StepSFX.Length - 1);
-                    m_Audio.PlaySound(m_StepSFX[sfx], Core.Audio.AudioEffects.PitchVariation, volume);
+                    int sfx = Utility.RandomValue(0, _stepSFX.Length - 1);
+                    _audio.PlaySound(_stepSFX[sfx], AudioEffects.PitchVariation, volume);
                 }
             }
             data.LastFrame = frame;

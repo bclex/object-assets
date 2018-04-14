@@ -1,6 +1,7 @@
-﻿using OA.Bae.Esm;
+﻿
+using OA.Tes.FilePacks.Records;
 
-namespace OA.Bae.Components.Records
+namespace OA.Tes.Components.Records
 {
     public class MiscObjectComponent : GenericObjectComponent
     {
@@ -14,8 +15,6 @@ namespace OA.Bae.Components.Records
             objData.interactionPrefix = "Take ";
         }
 
-        public override void Interact()
-        {
-        }
+        public override void Interact() { }
     }
 }

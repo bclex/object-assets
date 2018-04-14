@@ -4,7 +4,7 @@ using System.IO;
 
 namespace OA.Ultima.Resources
 {
-    class AnimationResource
+    public class AnimationResource
     {
         public const int HUMANOID_STAND_INDEX = 0x04;
         public const int HUMANOID_MOUNT_INDEX = 0x19;

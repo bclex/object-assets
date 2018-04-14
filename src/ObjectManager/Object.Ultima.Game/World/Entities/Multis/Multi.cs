@@ -1,4 +1,5 @@
 ﻿using OA.Ultima.Resources;
+using OA.Ultima.World.Data;
 using OA.Ultima.World.Entities.Items;
 using OA.Ultima.World.Maps;
 using System.Collections.Generic;
@@ -101,7 +102,7 @@ namespace OA.Ultima.World.Entities.Multis
             {
                 var x = px + item.OffsetX;
                 var y = py + item.OffsetY;
-                if (bounds.Contains(x, y))
+                if (bounds.Contains(new Vector2Int(x, y)))
                 {
                     // would it be faster to get the tile from the chunk?
                     var tile = Map.GetMapTile(x, y);

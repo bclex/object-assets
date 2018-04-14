@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace OA.Core.Input
 {
-    interface IInputService
+    public interface IInputService
     {
         bool IsCtrlDown { get; }
         bool IsShiftDown { get; }

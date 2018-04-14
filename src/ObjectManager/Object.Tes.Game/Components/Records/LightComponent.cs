@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
-using OA.Bae.Esm;
+using OA.Tes.FilePacks.Records;
 using OA.Core;
+using OA.Tes.Effects;
 
-namespace OA.Bae.Components.Records
+namespace OA.Tes.Components.Records
 {
     public class LightComponent : GenericObjectComponent
     {
@@ -43,7 +44,7 @@ namespace OA.Bae.Components.Records
                 if (Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.CanCarry))
                 {
                     gameObject.AddComponent<BoxCollider>().size *= 0.5f; //very weak-- adding a box collider to light objects so we can interact with them
-                    if (BaeSettings.useKinematicRigidbodies)
+                    if (TesSettings.TesRender.KinematicRigidbodies)
                         gameObject.AddComponent<Rigidbody>().isKinematic = true;
                 }
                 StartCoroutine(ConfigureLightComponent());
@@ -71,7 +72,7 @@ namespace OA.Bae.Components.Records
                 var pulseSlow = Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.PulseSlow);
                 var fire = Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.Fire);
                 var animated = flicker || flickerSlow || pulse || pulseSlow || fire;
-                if (animated && BaeSettings.animateLights)
+                if (animated && TesSettings.TesRender.AnimateLights)
                 {
                     var lightAnim = lightData.lightComponent.gameObject.AddComponent<LightAnim>();
                     if (flicker) lightAnim.mode = LightAnimMode.Flicker;

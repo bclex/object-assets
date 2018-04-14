@@ -1,4 +1,6 @@
-﻿namespace OA.Ultima.Network.Server.GeneralInfo
+﻿using OA.Ultima.Core.Network;
+
+namespace OA.Ultima.Network.Server.GeneralInfo
 {
     /// <summary>
     /// Subcommand 0x08: The index of the map the player is located within.

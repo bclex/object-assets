@@ -1,4 +1,4 @@
-﻿using OA.Ultima.Core.Audio;
+﻿using OA.Core.Audio;
 using System;
 
 namespace OA.Ultima.Audio
@@ -22,5 +22,5 @@ namespace OA.Ultima.Audio
         {
             return _waveBuffer;
         }
-    };
+    }
 }

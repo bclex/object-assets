@@ -1,4 +1,7 @@
-﻿namespace OA.Ultima.World.Entities.Mobiles.Animations
+﻿using OA.Core;
+using OA.Ultima.Resources;
+
+namespace OA.Ultima.World.Entities.Mobiles.Animations
 {
     /// <summary>
     /// Maintains and updates a mobile's animations. Receives animations from server, and when moving, updates the movement animation.
@@ -6,19 +9,19 @@
     /// </summary>
     public class MobileAnimation
     {
-        private Mobile Parent;
-        private MobileAction m_action;
-        private bool m_actionCanBeInteruptedByStand;
+        Mobile Parent;
+        MobileAction _action;
+        bool _actionCanBeInteruptedByStand;
         
-        private int m_actionIndex;
+        int _actionIndex;
         public int ActionIndex
         {
             get
             {
                 if (Parent.Body == 5 || Parent.Body == 6) // birds have weird action indexes. not sure if this is correct.
-                    if (m_actionIndex > 8)
-                        return m_actionIndex + 8;
-                return m_actionIndex;
+                    if (_actionIndex > 8)
+                        return _actionIndex + 8;
+                return _actionIndex;
             }
         }
 
@@ -26,11 +29,11 @@
         {
             get
             {
-                if ((!m_actionCanBeInteruptedByStand) &&
-                    (m_action == MobileAction.None ||
-                    m_action == MobileAction.Stand || 
-                    m_action == MobileAction.Walk || 
-                    m_action == MobileAction.Run))
+                if (!_actionCanBeInteruptedByStand &&
+                    (_action == MobileAction.None ||
+                    _action == MobileAction.Stand || 
+                    _action == MobileAction.Walk || 
+                    _action == MobileAction.Run))
                     return false;
                 return true;
             }
@@ -38,36 +41,29 @@
 
         public bool IsStanding
         {
-            get
-            {
-                return (m_action == MobileAction.Stand);
-            }
+            get { return _action == MobileAction.Stand; }
         }
 
-        private float m_animationFrame;
+        float _animationFrame;
         public float AnimationFrame
         {
             get
             {
-                if (m_animationFrame >= m_FrameCount)
-                    return m_FrameCount - 0.1f;
-                else
-                    return m_animationFrame;
+                if (_animationFrame >= _frameCount) return _frameCount - 0.1f;
+                else return _animationFrame;
             }
         }
 
         // We use these variables to 'hold' the last frame of an animation before 
         // switching to Stand Action.
-        private bool m_IsAnimatationPaused;
-        private int m_AnimationPausedMS;
+        bool _isAnimatationPaused;
+        int _animationPausedMS;
         private int PauseAnimationMS
         {
             get
             {
-                if (Parent.IsClientEntity)
-                    return 100;
-                else
-                    return 350;
+                if (Parent.IsClientEntity) return 100;
+                else return 350;
             }
         }
 
@@ -79,75 +75,68 @@
         public void Update(double frameMS)
         {
             // create a local copy of ms since last update.
-            int msSinceLastUpdate = (int)frameMS;
+            var msSinceLastUpdate = (int)frameMS;
 
             // If we are holding the current animation, then we should wait until our hold time is over
             // before switching to the queued Stand animation.
-            if (m_IsAnimatationPaused)
+            if (_isAnimatationPaused)
             {
-                m_AnimationPausedMS -= msSinceLastUpdate;
-                if (m_AnimationPausedMS >= 0)
-                {
+                _animationPausedMS -= msSinceLastUpdate;
+                if (_animationPausedMS >= 0)
                     // we are still holding. Do not update the current Animation frame.
                     return;
-                }
                 else
                 {
                     // hold time is over, continue to Stand animation.
                     UnPauseAnimation();
-                    m_action = MobileAction.Stand;
-                    m_actionIndex = ActionTranslator.GetActionIndex(Parent, MobileAction.Stand);
-                    m_animationFrame = 0f;
-                    m_FrameCount = 1;
-                    m_FrameDelay = 0;
+                    _action = MobileAction.Stand;
+                    _actionIndex = ActionTranslator.GetActionIndex(Parent, MobileAction.Stand);
+                    _animationFrame = 0f;
+                    _frameCount = 1;
+                    _frameDelay = 0;
                 }
             }
 
-            if (m_action != MobileAction.None)
+            if (_action != MobileAction.None)
             {
-                float msPerFrame = ((900f * (m_FrameDelay + 1)) / m_FrameCount);
+                var msPerFrame = ((900f * (_frameDelay + 1)) / _frameCount);
                 // Mounted movement is ~2x normal frame rate
-                if (Parent.IsMounted && ((m_action == MobileAction.Walk) || (m_action == MobileAction.Run)))
+                if (Parent.IsMounted && ((_action == MobileAction.Walk) || (_action == MobileAction.Run)))
                     msPerFrame /= 2.272727f;
-
                 if (msPerFrame < 0)
                     return;
-
-                m_animationFrame += (float)(frameMS / msPerFrame);
-
-                if (Settings.Audio.FootStepSoundOn)
+                _animationFrame += (float)(frameMS / msPerFrame);
+                if (UltimaGameSettings.Audio.FootStepSoundOn)
                 {
-                    if (m_action == MobileAction.Walk || m_action == MobileAction.Run)
-                        MobileSounds.DoFootstepSounds(Parent as Mobile, m_animationFrame / m_FrameCount);
+                    if (_action == MobileAction.Walk || _action == MobileAction.Run)
+                        MobileSounds.DoFootstepSounds(Parent as Mobile, _animationFrame / _frameCount);
                     else
                         MobileSounds.ResetFootstepSounds(Parent as Mobile);
                 }
 
                 // When animations reach their last frame, if we are queueing to stand, then
                 // hold the animation on the last frame.
-                if (m_animationFrame >= m_FrameCount)
+                if (_animationFrame >= _frameCount)
                 {
-                    if (m_repeatCount > 0)
+                    if (_repeatCount > 0)
                     {
-                        m_animationFrame -= m_FrameCount;
-                        m_repeatCount--;
+                        _animationFrame -= _frameCount;
+                        _repeatCount--;
                     }
                     else
                     {
                         // any requested actions are ended.
-                        m_actionCanBeInteruptedByStand = false;
+                        _actionCanBeInteruptedByStand = false;
                         // Hold the last frame of the current action if animation is not Stand.
-                        if (m_action == MobileAction.Stand)
-                        {
-                            m_animationFrame = 0;
-                        }
+                        if (_action == MobileAction.Stand)
+                            _animationFrame = 0;
                         else
                         {
                             // for most animations, hold the last frame. For Move animations, cycle through.
-                            if (m_action == MobileAction.Run || m_action == MobileAction.Walk)
-                                m_animationFrame -= m_FrameCount;
+                            if (_action == MobileAction.Run || _action == MobileAction.Walk)
+                                _animationFrame -= _frameCount;
                             else
-                                m_animationFrame = m_FrameCount - 0.001f;
+                                _animationFrame = _frameCount - 0.001f;
                             PauseAnimation();
                         }
                             
@@ -161,77 +150,71 @@
         /// </summary>
         public void Clear()
         {
-            m_action = MobileAction.Stand;
-            m_animationFrame = 0;
-            m_FrameCount = 1;
-            m_FrameDelay = 0;
-            m_IsAnimatationPaused = true;
-            m_repeatCount = 0;
-            m_actionIndex = ActionTranslator.GetActionIndex(Parent, MobileAction.Stand);
+            _action = MobileAction.Stand;
+            _animationFrame = 0;
+            _frameCount = 1;
+            _frameDelay = 0;
+            _isAnimatationPaused = true;
+            _repeatCount = 0;
+            _actionIndex = ActionTranslator.GetActionIndex(Parent, MobileAction.Stand);
         }
 
         public void UpdateAnimation()
         {
-            animate(m_action, m_actionIndex, 0, false, false, 0, false);
+            animate(_action, _actionIndex, 0, false, false, 0, false);
         }
 
         public void Animate(MobileAction action)
         {
-            int actionIndex = ActionTranslator.GetActionIndex(Parent, action);
+            var actionIndex = ActionTranslator.GetActionIndex(Parent, action);
             animate(action, actionIndex, 0, false, false, 0, false);
         }
 
         public void Animate(int requestedIndex, int frameCount, int repeatCount, bool reverse, bool repeat, int delay)
         {
             // note that frameCount is NOT used. Not sure if this counts as a bug.
-            MobileAction action = ActionTranslator.GetActionFromIndex(Parent.Body, requestedIndex);
-            int actionIndex = ActionTranslator.GetActionIndex(Parent, action, requestedIndex);
+            var action = ActionTranslator.GetActionFromIndex(Parent.Body, requestedIndex);
+            var actionIndex = ActionTranslator.GetActionIndex(Parent, action, requestedIndex);
             animate(action, actionIndex, repeatCount, reverse, repeat, delay, true);
         }
 
-        private int m_FrameCount, m_FrameDelay, m_repeatCount;
+        int _frameCount, _frameDelay, _repeatCount;
         private void animate(MobileAction action, int actionIndex, int repeatCount, bool reverse, bool repeat, int delay, bool isRequestedAction)
         {
-            if (m_action == action)
-            {
-                if (m_IsAnimatationPaused)
-                {
+            if (_action == action)
+                if (_isAnimatationPaused)
                     UnPauseAnimation();
-                }
-            }
 
             if (isRequestedAction)
-                m_actionCanBeInteruptedByStand = true;
+                _actionCanBeInteruptedByStand = true;
 
-            if ((m_action != action) || (m_actionIndex != actionIndex))
+            if (_action != action || _actionIndex != actionIndex)
             {
                 // If we are switching from any action to a stand action, then hold the last frame of the 
                 // current animation for a moment. Only Stand actions are held; thus when any hold ends,
                 // then we know we were holding for a Stand action.
-                if (!(m_action == MobileAction.None) && (action == MobileAction.Stand && m_action != MobileAction.Stand))
+                if (!(_action == MobileAction.None) && (action == MobileAction.Stand && _action != MobileAction.Stand))
                 {
-                    if (m_action != MobileAction.None)
+                    if (_action != MobileAction.None)
                         PauseAnimation();
                 }
                 else
                 {
-                    m_action = action;
+                    _action = action;
                     UnPauseAnimation();
-                    m_actionIndex = actionIndex;
-                    m_animationFrame = 0f;
+                    _actionIndex = actionIndex;
+                    _animationFrame = 0f;
 
                     // get the frames of the base body - we need to count the number of frames in this animation.
-                    IResourceProvider provider = Service.Get<IResourceProvider>();
+                    var provider = Service.Get<IResourceProvider>();
                     int body = Parent.Body, hue = 0;
-                    AAnimationFrame[] frames = provider.GetAnimation(body, ref hue, actionIndex, (int)Parent.DrawFacing);
+                    var frames = provider.GetAnimation(body, ref hue, actionIndex, (int)Parent.DrawFacing);
                     if (frames != null)
                     {
-                        m_FrameCount = frames.Length;
-                        m_FrameDelay = delay;
-                        if (repeat == false)
-                            m_repeatCount = 0;
-                        else
-                            m_repeatCount = repeatCount;
+                        _frameCount = frames.Length;
+                        _frameDelay = delay;
+                        if (repeat == false) _repeatCount = 0;
+                        else _repeatCount = repeatCount;
                     }
                 }
             }
@@ -239,16 +222,16 @@
 
         private void PauseAnimation()
         {
-            if (!m_IsAnimatationPaused)
+            if (!_isAnimatationPaused)
             {
-                m_IsAnimatationPaused = true;
-                m_AnimationPausedMS = PauseAnimationMS;
+                _isAnimatationPaused = true;
+                _animationPausedMS = PauseAnimationMS;
             }
         }
 
         private void UnPauseAnimation()
         {
-            m_IsAnimatationPaused = false;
+            _isAnimatationPaused = false;
         }
     }
 }

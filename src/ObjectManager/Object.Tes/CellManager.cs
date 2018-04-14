@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using OA.Tes.Core;
 using OA.Tes.FilePacks.Records;
 
 namespace OA.Tes

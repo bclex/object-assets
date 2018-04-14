@@ -1,4 +1,5 @@
-﻿using OA.Ultima.World.Entities;
+﻿using OA.Ultima.Core.Graphics;
+using OA.Ultima.World.Entities;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -55,40 +56,40 @@ namespace OA.Ultima.World.Input
             float high = -50000, low = 50000;
             for (var i = 0; i < 4; i++)
             {
-                if (v[i].Position.Y > high)
-                    high = v[i].Position.Y;
-                if (v[i].Position.Y < low)
-                    low = v[i].Position.Y;
+                if (v[i].Position.y > high)
+                    high = v[i].Position.y;
+                if (v[i].Position.y < low)
+                    low = v[i].Position.y;
             }
             if (high < MousePosition.y)
                 return false;
             if (low > MousePosition.y)
                 return false;
-            if (v[1].Position.X < MousePosition.x)
+            if (v[1].Position.x < MousePosition.x)
                 return false;
-            if (v[2].Position.X > MousePosition.x)
+            if (v[2].Position.x > MousePosition.x)
                 return false;
-            float minX = v[0].Position.X, maxX = v[0].Position.X;
-            float minY = v[0].Position.Y, maxY = v[0].Position.Y;
+            float minX = v[0].Position.x, maxX = v[0].Position.x;
+            float minY = v[0].Position.y, maxY = v[0].Position.y;
             for (var i = 1; i < v.Length; i++)
             {
-                if (v[i].Position.X < minX)
-                    minX = v[i].Position.X;
-                if (v[i].Position.X > maxX)
-                    maxX = v[i].Position.X;
-                if (v[i].Position.Y < minY)
-                    minY = v[i].Position.Y;
-                if (v[i].Position.Y > maxY)
-                    maxY = v[i].Position.Y;
+                if (v[i].Position.x < minX)
+                    minX = v[i].Position.x;
+                if (v[i].Position.x > maxX)
+                    maxX = v[i].Position.x;
+                if (v[i].Position.y < minY)
+                    minY = v[i].Position.y;
+                if (v[i].Position.y > maxY)
+                    maxY = v[i].Position.y;
             }
             var iBoundingBox = new BoundingBox(new Vector3(minX, minY, 0), new Vector3(maxX, maxY, 10));
             if (iBoundingBox.Contains(new Vector3(MousePosition.x, MousePosition.y, 1)) == ContainmentType.Contains)
             {
                 var p = new Vector2Int[4];
-                p[0] = new Vector2Int((int)v[0].Position.X, (int)v[0].Position.Y);
-                p[1] = new Vector2Int((int)v[1].Position.X, (int)v[1].Position.Y);
-                p[2] = new Vector2Int((int)v[3].Position.X, (int)v[3].Position.Y);
-                p[3] = new Vector2Int((int)v[2].Position.X, (int)v[2].Position.Y);
+                p[0] = new Vector2Int((int)v[0].Position.x, (int)v[0].Position.y);
+                p[1] = new Vector2Int((int)v[1].Position.x, (int)v[1].Position.y);
+                p[2] = new Vector2Int((int)v[3].Position.x, (int)v[3].Position.y);
+                p[3] = new Vector2Int((int)v[2].Position.x, (int)v[2].Position.y);
                 if (PointInPolygon(new Vector2Int((int)MousePosition.x, (int)MousePosition.y), p))
                     return true;
             }

@@ -2,16 +2,9 @@ namespace OA.Configuration
 {
     public sealed class DebugSettings : ASettingsSection
     {
-        bool _isConsoleEnabled;
-        bool _showFps;
-        bool _logPackets;
-
-        public DebugSettings()
-        {
-            LogPackets = false;
-            IsConsoleEnabled = true;
-            ShowFps = true;
-        }
+        bool _isConsoleEnabled = true;
+        bool _showFps = true;
+        bool _logPackets = false;
 
         /// <summary>
         /// If true, all received packets will be logged to Tracer.Debug, and any active Tracer listeners (console, debug.txt file logger)

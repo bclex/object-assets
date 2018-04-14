@@ -2,7 +2,7 @@
 
 namespace OA.Ultima.Resources
 {
-    class PixelPicking
+    public class PixelPicking
     {
         const int InitialDataCount = 0x40000; // 256kb
 

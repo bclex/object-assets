@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using OA.Tes.Core;
 
 // https://github.com/WrinklyNinja/esplugin/tree/master/src
 // http://en.uesp.net/wiki/Tes4Mod:Mod_File_Format/Vs_Morrowind

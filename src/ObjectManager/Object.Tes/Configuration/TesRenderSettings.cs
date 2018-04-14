@@ -6,23 +6,16 @@ namespace OA.Tes.Configuration
     {
         string _dataDirectory;
         string _gameId;
-        MaterialType _materialType;
-        bool _kinematicRigidbodies;
+        MaterialType _materialType = MaterialType.BumpedDiffuse;
+        bool _kinematicRigidbodies = true;
         bool _creaturesEnabled;
         bool _npcsEnabled;
-        bool _generateNormalMap;
-        float _normalGeneratorIntensity;
+        bool _generateNormalMap = true;
+        float _normalGeneratorIntensity = 0.75f;
         bool _renderLightShadows;
         bool _renderExteriorCellLights;
+        bool _animateLights;
 
-        public TesRenderSettings()
-        {
-            _kinematicRigidbodies = true;
-            _generateNormalMap = true;
-            _normalGeneratorIntensity = 0.75f;
-            _materialType = MaterialType.BumpedDiffuse;
-        }
-        
         /// <summary>
         /// The directory where the Ultima Online resource files and executable are located.
         /// </summary>
@@ -84,6 +77,12 @@ namespace OA.Tes.Configuration
         {
             get { return _renderExteriorCellLights; }
             set { SetProperty(ref _renderExteriorCellLights, value); }
+        }
+
+        public bool AnimateLights
+        {
+            get { return _animateLights; }
+            set { SetProperty(ref _animateLights, value); }
         }
     }
 }

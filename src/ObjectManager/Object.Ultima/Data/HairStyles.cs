@@ -3,7 +3,7 @@ using OA.Ultima.Resources;
 
 namespace OA.Ultima.Data
 {
-    class HairStyles
+    public class HairStyles
     {
         static readonly int[] _maleStyles = { 3000340, 3000341, 3000342, 3000343, 3000344, 3000345, 3000346, 3000347, 3000348, 3000349 };
         static string[] _male;

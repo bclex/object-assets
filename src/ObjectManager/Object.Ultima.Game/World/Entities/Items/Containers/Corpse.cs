@@ -1,5 +1,6 @@
 ﻿using OA.Ultima.Core;
 using OA.Ultima.Data;
+using OA.Ultima.World.Entities.Mobiles;
 using OA.Ultima.World.EntityViews;
 using OA.Ultima.World.Maps;
 

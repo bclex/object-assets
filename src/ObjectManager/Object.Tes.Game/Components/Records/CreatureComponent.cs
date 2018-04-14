@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace OA.Bae.Components.Records
+namespace OA.Tes.Components.Records
 {
     public class CreatureComponent : GenericObjectComponent
     {

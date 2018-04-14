@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Valve", "Object.Valv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Tes", "Object.Tes\Object.Tes.csproj", "{CEF70BD8-ECF0-46CF-AB58-4105B9273351}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Common", "Object.Common\Object.Common.csproj", "{F0F8A97B-F6EA-4FC9-8B8E-CA7087553586}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Ultima", "Object.Ultima\Object.Ultima.csproj", "{2E0F5143-916D-4606-B645-690A962C6AF4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Other", "Other\Other.csproj", "{6CC3AD98-3BA0-4F00-A281-88A145579799}"
@@ -37,10 +35,6 @@ Global
 		{CEF70BD8-ECF0-46CF-AB58-4105B9273351}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEF70BD8-ECF0-46CF-AB58-4105B9273351}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEF70BD8-ECF0-46CF-AB58-4105B9273351}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F0F8A97B-F6EA-4FC9-8B8E-CA7087553586}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F0F8A97B-F6EA-4FC9-8B8E-CA7087553586}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F0F8A97B-F6EA-4FC9-8B8E-CA7087553586}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F0F8A97B-F6EA-4FC9-8B8E-CA7087553586}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2E0F5143-916D-4606-B645-690A962C6AF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2E0F5143-916D-4606-B645-690A962C6AF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E0F5143-916D-4606-B645-690A962C6AF4}.Release|Any CPU.ActiveCfg = Release|Any CPU

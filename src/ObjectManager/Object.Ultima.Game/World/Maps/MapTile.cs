@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using OA.Ultima.Resources;
+using OA.Ultima.World.Entities;
+using OA.Ultima.World.Entities.Items;
+using System.Collections.Generic;
 
 namespace OA.Ultima.World.Maps
 {

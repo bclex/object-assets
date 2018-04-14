@@ -1,4 +1,4 @@
-﻿using OA.Ultima.Core.UI.Fonts;
+﻿using OA.Ultima.Core.UI;
 using System.IO;
 
 namespace OA.Ultima.Resources.Fonts

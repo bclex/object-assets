@@ -1,10 +1,14 @@
 ﻿using OA.Core;
+using OA.Core.UI;
 using OA.Ultima.Core;
 using OA.Ultima.Core.Network;
 using OA.Ultima.Data;
+using OA.Ultima.Input;
 using OA.Ultima.Login.Accounts;
 using OA.Ultima.Network.Client;
 using OA.Ultima.Network.Server;
+using OA.Ultima.Player;
+using OA.Ultima.UI;
 using OA.Ultima.World;
 using OA.Ultima.World.Entities.Mobiles;
 using System;
@@ -74,7 +78,7 @@ namespace OA.Ultima.Login
             {
                 _userName = account;
                 _password = password;
-                _network.Send(new SeedPacket(0x1337BEEF, Settings.UltimaOnline.PatchVersion));
+                _network.Send(new SeedPacket(0x1337BEEF, UltimaGameSettings.UltimaOnline.PatchVersion));
                 Login(_userName, _password);
                 return true;
             }
@@ -129,13 +133,13 @@ namespace OA.Ultima.Login
 
         public void SendClientVersion()
         {
-            if (ClientVersion.HasExtendedFeatures(Settings.UltimaOnline.PatchVersion))
+            if (ClientVersion.HasExtendedFeatures(UltimaGameSettings.UltimaOnline.PatchVersion))
             {
                 Utils.Info("Client version is greater than 6.0.14.2, enabling extended 0xB9 packet.");
                 Unregister(0xB9);
                 Register<SupportedFeaturesPacket>(0xB9, 5, ReceiveEnableFeatures);
             }
-            _network.Send(new ClientVersionPacket(Settings.UltimaOnline.PatchVersion));
+            _network.Send(new ClientVersionPacket(UltimaGameSettings.UltimaOnline.PatchVersion));
         }
 
         void ReceiveDeleteCharacterResponse(DeleteResultPacket packet)

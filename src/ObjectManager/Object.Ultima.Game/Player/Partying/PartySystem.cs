@@ -1,8 +1,11 @@
 ﻿using OA.Core;
+using OA.Core.UI;
 using OA.Ultima.Core.Network;
 using OA.Ultima.Network.Client;
 using OA.Ultima.Network.Client.Partying;
 using OA.Ultima.Network.Server.GeneralInfo;
+using OA.Ultima.UI;
+using OA.Ultima.UI.WorldGumps;
 using OA.Ultima.World;
 using System.Collections.Generic;
 
@@ -159,9 +162,9 @@ namespace OA.Ultima.Player.Partying
             {
                 var network = Service.Get<INetworkClient>();
                 network.Send(new PartyPrivateMessagePacket(serial, text));
-                world.Interaction.ChatMessage($"To {recipient.Name}: {text}", 3, Settings.UserInterface.PartyPrivateMsgColor, false);
+                world.Interaction.ChatMessage($"To {recipient.Name}: {text}", 3, UltimaGameSettings.UserInterface.PartyPrivateMsgColor, false);
             }
-            else world.Interaction.ChatMessage("They are no longer in your party.", 3, Settings.UserInterface.PartyPrivateMsgColor, false);
+            else world.Interaction.ChatMessage("They are no longer in your party.", 3, UltimaGameSettings.UserInterface.PartyPrivateMsgColor, false);
         }
 
         internal void RequestAddPartyMemberTarget()

@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 //using UnityEngine.Experimental.UIElements;
 
 public static class GUIUtils
@@ -16,40 +18,47 @@ public static class GUIUtils
         }
     }
 
-    //public static Sprite backgroundImg
-    //{
-    //    get { return TESUnity.TESUnity.instance.UIBackgroundImg; }
-    //}
+    private static Sprite backgroundImg
+    {
+        get { return null; }
+        //get { return TESUnity.TESUnity.instance.UIBackgroundImg; }
+    }
 
-    //public static Sprite checkmarkImg
-    //{
-    //    get { return TESUnity.TESUnity.instance.UICheckmarkImg; }
-    //}
+    private static Sprite checkmarkImg
+    {
+        get { return null; }
+        //get { return TESUnity.TESUnity.instance.UICheckmarkImg; }
+    }
 
-    //public static Sprite dropdownArrowImg
-    //{
-    //    get { return TESUnity.TESUnity.instance.UIDropdownArrowImg; }
-    //}
+    private static Sprite dropdownArrowImg
+    {
+        get { return null; }
+        //get { return TESUnity.TESUnity.instance.UIDropdownArrowImg; }
+    }
 
-    //public static Sprite inputFieldBackgroundImg
-    //{
-    //    get { return TESUnity.TESUnity.instance.UIInputFieldBackgroundImg; }
-    //}
+    private static Sprite inputFieldBackgroundImg
+    {
+        get { return null; }
+        //get { return TESUnity.TESUnity.instance.UIInputFieldBackgroundImg; }
+    }
 
-    //public static Sprite knobImg
-    //{
-    //    get { return TESUnity.TESUnity.instance.UIKnobImg; }
-    //}
+    private static Sprite knobImg
+    {
+        get { return null; }
+        //get { return TESUnity.TESUnity.instance.UIKnobImg; }
+    }
 
-    //public static Sprite maskImg
-    //{
-    //    get { return TESUnity.TESUnity.instance.UIMaskImg; }
-    //}
+    private static Sprite maskImg
+    {
+        get { return null; }
+        //get { return TESUnity.TESUnity.instance.UIMaskImg; }
+    }
 
-    //public static Sprite spriteImg
-    //{
-    //    get { return TESUnity.TESUnity.instance.UISpriteImg; }
-    //}
+    private static Sprite spriteImg
+    {
+        get { return null; }
+        //get { return TESUnity.TESUnity.instance.UISpriteImg; }
+    }
 
     public static GameObject MainCanvas
     {

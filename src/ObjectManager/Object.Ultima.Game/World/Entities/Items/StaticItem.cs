@@ -1,4 +1,6 @@
-﻿namespace OA.Ultima.World.Entities.Items
+﻿using OA.Ultima.World.Maps;
+
+namespace OA.Ultima.World.Entities.Items
 {
     public class StaticItem : Item
     {

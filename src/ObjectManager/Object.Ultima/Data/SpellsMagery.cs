@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace OA.Ultima.Data
 {
-    static class SpellsMagery
+    public static class SpellsMagery
     {
         static Dictionary<int, SpellDefinition> _spells;
         static ReadOnlyCollection<SpellDefinition> _readOnlySpells;

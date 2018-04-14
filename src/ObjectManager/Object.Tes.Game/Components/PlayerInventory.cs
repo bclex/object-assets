@@ -1,8 +1,9 @@
-﻿using OA.Bae.Esm;
+﻿using OA.Tes.Components.Records;
+using OA.Tes.FilePacks;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace OA.Bae.Components
+namespace OA.Tes.Components
 {
     public class PlayerInventory : MonoBehaviour
     {

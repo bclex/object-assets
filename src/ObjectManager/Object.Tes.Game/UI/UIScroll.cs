@@ -1,21 +1,22 @@
-﻿using OA.Bae.Esm;
+﻿using OA.Core;
+using OA.Tes.FilePacks.Records;
 using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace OA.UI
+namespace OA.Tes.UI
 {
     public class UIScroll : MonoBehaviour
     {
-        private BOOKRecord _bookRecord;
+        BOOKRecord _bookRecord;
 
         [SerializeField]
-        private GameObject _container = null;
+        GameObject _container = null;
         [SerializeField]
-        private Image _background = null;
+        Image _background = null;
         [SerializeField]
-        private Text _content = null;
+        Text _content = null;
 
         public event Action<BOOKRecord> OnTake = null;
         public event Action<BOOKRecord> OnClosed = null;
@@ -24,7 +25,6 @@ namespace OA.UI
         {
             var texture = TESUnity.instance.TextureManager.LoadTexture("scroll", true);
             _background.sprite = GUIUtils.CreateSprite(texture);
-
             // If the book is already opened, don't change its transform.
             if (_bookRecord == null)
                 Close();

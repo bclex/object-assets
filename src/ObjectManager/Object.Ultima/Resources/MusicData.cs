@@ -5,7 +5,7 @@ using System.IO;
 
 namespace OA.Ultima.Resources
 {
-    class MusicData
+    public class MusicData
     {
         const string _configFilePath = @"Music/Digital/Config.txt";
         static char[] _configFileDelimiters = { ' ', ',', '\t' };

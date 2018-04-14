@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace OA.Bae.Components
+namespace OA.Tes.Components
 {
     public class DayNightCycle : MonoBehaviour
     {

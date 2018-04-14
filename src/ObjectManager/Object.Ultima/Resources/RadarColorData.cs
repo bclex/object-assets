@@ -4,7 +4,7 @@ using System.IO;
 
 namespace OA.Ultima.Resources
 {
-    class RadarColorData
+    public class RadarColorData
     {
         public static uint[] Colors = new uint[0x20000];
 

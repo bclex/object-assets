@@ -1,9 +1,9 @@
-﻿using OA.Bae.Esm;
-using OA.Core;
+﻿using OA.Core;
+using OA.Tes.FilePacks.Records;
 using System.Collections;
 using UnityEngine;
 
-namespace OA.Bae.Components.Records
+namespace OA.Tes.Components.Records
 {
     public class WeaponComponent : GenericObjectComponent
     {

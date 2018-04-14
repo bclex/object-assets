@@ -105,41 +105,39 @@ namespace OA.Core.UI
 
         public void Draw(SpriteBatchUI sb, Vector2Int position, Vector3? hueVector = null)
         {
-            Draw(sb, new RectInt(position.X, position.Y, Width, Height), 0, 0, hueVector);
+            Draw(sb, new RectInt(position.x, position.y, Width, Height), 0, 0, hueVector);
         }
 
         public void Draw(SpriteBatchUI sb, RectInt destRectangle, int xScroll, int yScroll, Vector3? hueVector = null)
         {
             if (string.IsNullOrEmpty(Text))
                 return;
-            RectInt sourceRectangle;
+            var sourceRectangle = new RectInt();
             if (xScroll > Width || xScroll < -MaxWidth || yScroll > Height || yScroll < -Height)
                 return;
-            sourceRectangle.X = xScroll;
-            sourceRectangle.Y = yScroll;
-            var maxX = sourceRectangle.X + destRectangle.Width;
+            sourceRectangle.x = xScroll;
+            sourceRectangle.y = yScroll;
+            var maxX = sourceRectangle.x + destRectangle.width;
             if (maxX <= Width)
-                sourceRectangle.Width = destRectangle.Width;
+                sourceRectangle.width = destRectangle.width;
             else
             {
-                sourceRectangle.Width = Width - sourceRectangle.X;
-                destRectangle.Width = sourceRectangle.Width;
+                sourceRectangle.width = Width - sourceRectangle.x;
+                destRectangle.width = sourceRectangle.width;
             }
-            var maxY = sourceRectangle.Y + destRectangle.Height;
+            var maxY = sourceRectangle.y + destRectangle.height;
             if (maxY <= Height)
-                sourceRectangle.Height = destRectangle.Height;
+                sourceRectangle.height = destRectangle.height;
             else
             {
-                sourceRectangle.Height = Height - sourceRectangle.Y;
-                destRectangle.Height = sourceRectangle.Height;
+                sourceRectangle.height = Height - sourceRectangle.y;
+                destRectangle.height = sourceRectangle.height;
             }
-            sb.Draw2D(Texture, destRectangle, sourceRectangle, hueVector.HasValue ? hueVector.Value : Vector3.Zero);
+            sb.Draw2D(Texture, destRectangle, sourceRectangle, hueVector.HasValue ? hueVector.Value : Vector3.zero);
             for (var i = 0; i < _document.Links.Count; i++)
             {
                 var link = _document.Links[i];
-                Vector2Int pos;
-                RectInt srcRect;
-                if (ClipRectangle(new Vector2Int(xScroll, yScroll), link.Area, destRectangle, out pos, out srcRect))
+                if (ClipRectangle(new Vector2Int(xScroll, yScroll), link.Area, destRectangle, out Vector2Int pos, out RectInt srcRect))
                     // only draw the font in a different color if this is a HREF region.
                     // otherwise it is a dummy region used to notify images that they are
                     // being mouse overed.
@@ -152,17 +150,15 @@ namespace OA.Core.UI
                             else linkHue = link.Style.HoverColorHue;
                         }
                         else linkHue = link.Style.ColorHue;
-                        sb.Draw2D(Texture, new Vector3(pos.X, pos.Y, 0), srcRect, Utility.GetHueVector(linkHue));
+                        sb.Draw2D(Texture, new Vector3(pos.x, pos.y, 0), srcRect, Utility.GetHueVector(linkHue));
                     }
             }
             for (var i = 0; i < _document.Images.Count; i++)
             {
                 var img = _document.Images[i];
-                Vector2Int position;
-                RectInt srcRect;
-                if (ClipRectangle(new Vector2Int(xScroll, yScroll), img.Area, destRectangle, out position, out srcRect))
+                if (ClipRectangle(new Vector2Int(xScroll, yScroll), img.Area, destRectangle, out Vector2Int position, out RectInt srcRect))
                 {
-                    var srcImage = new RectInt(srcRect.X - img.Area.X, srcRect.Y - img.Area.Y, srcRect.Width, srcRect.Height);
+                    var srcImage = new RectInt(srcRect.x - img.Area.X, srcRect.y - img.Area.Y, srcRect.width, srcRect.height);
                     Texture2D texture = null;
                     // is the mouse over this image?
                     if (img.LinkIndex != -1 && img.LinkIndex == MouseOverRegionID)
@@ -176,46 +172,46 @@ namespace OA.Core.UI
                     }
                     if (texture == null)
                         texture = img.Texture;
-                    if (srcImage.Width > texture.Width)
-                        srcImage.Width = texture.Width;
-                    if (srcImage.Height > texture.Height)
-                        srcImage.Height = texture.Height;
-                    sb.Draw2D(texture, new Vector3(position.X, position.Y, 0), srcImage, Utility.GetHueVector(0, false, false, true));
+                    if (srcImage.width > texture.width)
+                        srcImage.width = texture.width;
+                    if (srcImage.height > texture.height)
+                        srcImage.height = texture.height;
+                    sb.Draw2D(texture, new Vector3(position.x, position.y, 0), srcImage, Utility.GetHueVector(0, false, false, true));
                 }
             }
         }
 
         bool ClipRectangle(Vector2Int offset, RectInt srcRect, RectInt clipTo, out Vector2Int posClipped, out RectInt srcClipped)
         {
-            posClipped = new Vector2Int(clipTo.X + srcRect.X - offset.X, clipTo.Y + srcRect.Y - offset.Y);
+            posClipped = new Vector2Int(clipTo.x + srcRect.x - offset.x, clipTo.y + srcRect.y - offset.y);
             srcClipped = srcRect;
-            RectInt dstClipped = srcRect;
-            dstClipped.X += clipTo.X - offset.X;
-            dstClipped.Y += clipTo.Y - offset.Y;
-            if (dstClipped.Bottom < clipTo.Top)
+            var dstClipped = srcRect;
+            dstClipped.x += clipTo.x - offset.x;
+            dstClipped.y += clipTo.y - offset.y;
+            if (dstClipped.yMax < clipTo.y)
                 return false;
-            if (dstClipped.Top < clipTo.Top)
+            if (dstClipped.y < clipTo.y)
             {
-                srcClipped.Y += (clipTo.Top - dstClipped.Top);
-                srcClipped.Height -= (clipTo.Top - dstClipped.Top);
-                posClipped.Y += (clipTo.Top - dstClipped.Top);
+                srcClipped.y += (clipTo.y - dstClipped.y);
+                srcClipped.height -= (clipTo.y - dstClipped.y);
+                posClipped.y += (clipTo.y - dstClipped.y);
             }
-            if (dstClipped.Top > clipTo.Bottom)
+            if (dstClipped.y > clipTo.yMax)
                 return false;
-            if (dstClipped.Bottom > clipTo.Bottom)
-                srcClipped.Height += (clipTo.Bottom - dstClipped.Bottom);
-            if (dstClipped.Right < clipTo.Left)
+            if (dstClipped.yMax > clipTo.yMax)
+                srcClipped.height += (clipTo.yMax - dstClipped.yMax);
+            if (dstClipped.xMax < clipTo.x)
                 return false;
-            if (dstClipped.Left < clipTo.Left)
+            if (dstClipped.x < clipTo.x)
             {
-                srcClipped.X += (clipTo.Left - dstClipped.Left);
-                srcClipped.Width -= (clipTo.Left - dstClipped.Left);
-                posClipped.X += (clipTo.Left - dstClipped.Left);
+                srcClipped.x += (clipTo.x - dstClipped.x);
+                srcClipped.width -= (clipTo.x - dstClipped.x);
+                posClipped.x += (clipTo.x - dstClipped.x);
             }
-            if (dstClipped.Left > clipTo.Right)
+            if (dstClipped.x > clipTo.xMax)
                 return false;
-            if (dstClipped.Right > clipTo.Right)
-                srcClipped.Width += (clipTo.Right - dstClipped.Right);
+            if (dstClipped.xMax > clipTo.xMax)
+                srcClipped.width += (clipTo.xMax - dstClipped.xMax);
             return true;
         }
     }

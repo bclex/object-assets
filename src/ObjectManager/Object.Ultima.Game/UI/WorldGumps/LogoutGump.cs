@@ -1,0 +1,43 @@
+﻿using OA.Core;
+using OA.Ultima.UI.Controls;
+using OA.Ultima.World;
+
+namespace OA.Ultima.UI.WorldGumps
+{
+    class LogoutGump : Gump
+    {
+        public LogoutGump()
+            : base(0, 0)
+        {
+            AddControl(new GumpPic(this, 0, 0, 0x0816, 0));
+            AddControl(new TextLabelAscii(this, 40, 30, 1, 118, "Quit\nUltima Online?"));
+            ((TextLabelAscii)LastControl).Hue = 997;
+            AddControl(new Button(this, 40, 77, 0x817, 0x818, ButtonTypes.Activate, 0, 0));
+            AddControl(new Button(this, 100, 77, 0x81A, 0x81B, ButtonTypes.Activate, 1, 1));
+
+            IsMoveable = false;
+            MetaData.IsModal = true;
+        }
+
+        public override void Update(double totalMS, double frameMS)
+        {
+            base.Update(totalMS, frameMS);
+            CenterThisControlOnScreen();
+        }
+
+        public override void OnButtonClick(int buttonID)
+        {
+            switch (buttonID)
+            {
+                case 0:
+                    Dispose();
+                    break;
+                case 1:
+                    var world = Service.Get<WorldModel>();
+                    world.Disconnect();
+                    Dispose();
+                    break;
+            }
+        }
+    }
+}

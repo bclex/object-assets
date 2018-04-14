@@ -1,6 +1,6 @@
 ﻿namespace OA.Ultima.Core.Patterns.MVC
 {
-    class ModelManager
+    public class ModelManager
     {
         AModel _model;
         AModel _queuedModel;

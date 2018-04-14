@@ -1,6 +1,6 @@
 ﻿using MP3Sharp;
 using OA.Core;
-using OA.Ultima.Core.Audio;
+using OA.Core.Audio;
 using OA.Ultima.IO;
 using System;
 
@@ -56,34 +56,32 @@ namespace OA.Ultima.Audio
 
         protected override void OnBufferNeeded(object sender, EventArgs e)
         {
-            if (_playing)
-            {
-                while (_thisInstance.PendingBufferCount < 3)
-                {
-                    var buffer = GetBuffer();
-                    if (_thisInstance.IsDisposed)
-                        return;
-                    _thisInstance.SubmitBuffer(buffer);
-                }
-            }
+            //if (_playing)
+            //    while (_thisInstance.PendingBufferCount < 3)
+            //    {
+            //        var buffer = GetBuffer();
+            //        if (_thisInstance.IsDisposed)
+            //            return;
+            //        _thisInstance.SubmitBuffer(buffer);
+            //    }
         }
 
         protected override void BeforePlay()
         {
-            if (_playing)
-                Stop();
-            try
-            {
-                _stream = new MP3Stream(Path, NUMBER_OF_PCM_BYTES_TO_READ_PER_CHUNK);
-                Frequency = _stream.Frequency;
-                _playing = true;
-            }
-            catch (Exception e)
-            {
-                // file in use or access denied.
-                Utils.Error(e);
-                _playing = false;
-            }
+            //if (_playing)
+            //    Stop();
+            //try
+            //{
+            //    _stream = new MP3Stream(Path, NUMBER_OF_PCM_BYTES_TO_READ_PER_CHUNK);
+            //    Frequency = _stream.Frequency;
+            //    _playing = true;
+            //}
+            //catch (Exception e)
+            //{
+            //    // file in use or access denied.
+            //    Utils.Error(e);
+            //    _playing = false;
+            //}
         }
 
         protected override void AfterStop()

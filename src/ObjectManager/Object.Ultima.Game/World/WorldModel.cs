@@ -1,4 +1,13 @@
 ﻿using OA.Core;
+using OA.Core.UI;
+using OA.Ultima.Configuration.Properties;
+using OA.Ultima.Core;
+using OA.Ultima.Core.Network;
+using OA.Ultima.Core.Patterns.MVC;
+using OA.Ultima.Login;
+using OA.Ultima.UI;
+using OA.Ultima.UI.WorldGumps;
+using OA.Ultima.World.Input;
 using OA.Ultima.World.Managers;
 using OA.Ultima.World.Maps;
 using System;
@@ -8,18 +17,12 @@ namespace OA.Ultima.World
 {
     class WorldModel : AModel
     {
-        // ============================================================================================================
-        // Private variables
-        // ============================================================================================================
         Map _map;
         WorldCursor _cursor;
         readonly INetworkClient _network;
         readonly UserInterfaceService _userInterface;
         readonly UltimaGame _engine;
 
-        // ============================================================================================================
-        // Public Static Properties
-        // ============================================================================================================
         public static Serial PlayerSerial { get; set; }
 
         public static EntityManager Entities { get; private set; }
@@ -28,9 +31,6 @@ namespace OA.Ultima.World
 
         public static StaticManager Statics { get; private set; }
 
-        // ============================================================================================================
-        // Public Properties
-        // ============================================================================================================
         public WorldClient Client { get; private set; }
 
         public WorldInput Input { get; private set; }
@@ -157,7 +157,7 @@ namespace OA.Ultima.World
         public void LoginToWorld()
         {
             _userInterface.AddControl(new WorldViewGump(), 0, 0); // world gump will restore its position on load.
-            if (!Settings.UserInterface.MenuBarDisabled)
+            if (!UltimaGameSettings.UserInterface.MenuBarDisabled)
                 _userInterface.AddControl(new TopMenuGump(), 0, 0); // by default at the top of the screen.
             Client.SendWorldLoginPackets();
             IsInWorld = true;
@@ -188,20 +188,17 @@ namespace OA.Ultima.World
 
         void SaveOpenGumps()
         {
-            Settings.Gumps.SavedGumps.Clear();
+            UltimaGameSettings.Gumps.SavedGumps.Clear();
             foreach (var gump in _userInterface.OpenControls)
                 if (gump is Gump)
                     if ((gump as Gump).SaveOnWorldStop)
-                    {
-                        Dictionary<string, object> data;
-                        if ((gump as Gump).SaveGump(out data))
-                            Settings.Gumps.SavedGumps.Add(new SavedGumpProperty(gump.GetType(), data));
-                    }
+                        if ((gump as Gump).SaveGump(out Dictionary<string, object> data))
+                            UltimaGameSettings.Gumps.SavedGumps.Add(new SavedGumpProperty(gump.GetType(), data));
         }
 
         void RestoreSavedGumps()
         {
-            foreach (var savedGump in Settings.Gumps.SavedGumps)
+            foreach (var savedGump in UltimaGameSettings.Gumps.SavedGumps)
             {
                 try
                 {
@@ -217,7 +214,7 @@ namespace OA.Ultima.World
                 }
                 catch { Utils.Error($"Unable to restore saved gump with type {savedGump.GumpType}: Type cannot be Instanced."); }
             }
-            Settings.Gumps.SavedGumps.Clear();
+            UltimaGameSettings.Gumps.SavedGumps.Clear();
         }
     }
 }

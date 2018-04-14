@@ -52,10 +52,8 @@
     <Compile Include="Core\IO\BufferPool.cs" />
     <Compile Include="Core\IO\GenericReader.cs" />
     <Compile Include="Core\IO\GenericWriter.cs" />
-    <Compile Include="Core\UI\Fonts\ACharacter.cs" />
-    <Compile Include="Core\UI\Fonts\AFont.cs" />
-    <Compile Include="Core\UI\ICharacter.cs" />
-    <Compile Include="Core\UI\IFont.cs" />
+    <Compile Include="Core\UI\ACharacter.cs" />
+    <Compile Include="Core\UI\AFont.cs" />
     <Compile Include="Core\Utility.cs" />
     <Compile Include="Data\AssistantFeatures.cs" />
     <Compile Include="Data\Body.cs" />
@@ -130,10 +128,6 @@
     <Compile Include="UltimaSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Object.Common\Object.Common.csproj">
-      <Project>{f0f8a97b-f6ea-4fc9-8b8e-ca7087553586}</Project>
-      <Name>Object.Common.Asset</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ObjectManager\ObjectManager.csproj">
       <Project>{d752b5ed-4acd-473e-80c2-439da37e466f}</Project>
       <Name>ObjectManager</Name>

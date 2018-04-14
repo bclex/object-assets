@@ -42,13 +42,18 @@
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\Program Files\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.SpatialTracking">
+      <HintPath>..\..\..\..\..\Program Files\Unity\Editor\Data\UnityExtensions\Unity\UnitySpatialTracking\Runtime\UnityEngine.SpatialTracking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\Program Files\Unity\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CellManager.cs" />
     <Compile Include="Configuration\TesRenderSettings.cs" />
+    <Compile Include="Configuration\XRSettings.cs" />
     <Compile Include="Convert.cs" />
-    <Compile Include="Core\GameObjectUtils.cs" />
-    <Compile Include="Core\Vector2i.cs" />
     <Compile Include="FilePacks\EsmFile+Extensions.cs" />
     <Compile Include="FilePacks\BsaFile+Extensions.cs" />
     <Compile Include="FilePacks\Records\TES3.cs" />
@@ -84,6 +89,7 @@
     <Compile Include="FilePacks\Records\STAT.Static.cs" />
     <Compile Include="FilePacks\Records\TES4.cs" />
     <Compile Include="FilePacks\Records\WEAP.Weapon.cs" />
+    <Compile Include="GameObjectUtils.cs" />
     <Compile Include="IO\FileManager.cs" />
     <Compile Include="MaterialManager.cs" />
     <Compile Include="Materials\BaseMaterial.cs" />
@@ -91,7 +97,6 @@
     <Compile Include="Materials\DefaultMaterial.cs" />
     <Compile Include="Materials\StandardMaterial.cs" />
     <Compile Include="Materials\UnlitMaterial.cs" />
-    <Compile Include="MorrowindDataReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="FilePacks\BsaFile.cs" />
     <Compile Include="FilePacks\EsmFile.cs" />
@@ -106,10 +111,6 @@
     <Compile Include="TesSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Object.Common\Object.Common.csproj">
-      <Project>{f0f8a97b-f6ea-4fc9-8b8e-ca7087553586}</Project>
-      <Name>Object.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ObjectManager\ObjectManager.csproj">
       <Project>{d752b5ed-4acd-473e-80c2-439da37e466f}</Project>
       <Name>ObjectManager</Name>

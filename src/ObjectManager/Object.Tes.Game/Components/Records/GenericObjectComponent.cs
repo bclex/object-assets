@@ -1,7 +1,8 @@
-﻿using OA.Bae.Esm;
+﻿using OA.Tes.FilePacks;
+using OA.Tes.FilePacks.Records;
 using UnityEngine;
 
-namespace OA.Bae.Components.Records
+namespace OA.Tes.Components.Records
 {
     public interface IUsableComponent
     {

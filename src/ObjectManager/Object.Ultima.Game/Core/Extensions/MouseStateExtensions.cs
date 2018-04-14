@@ -7,9 +7,9 @@
 //    {
 //        public static MouseState CreateWithDPI(this MouseState value, Vector2 dpi)
 //        {
-//            int x = (int)(value.X / dpi.X);
-//            int y = (int)(value.Y / dpi.Y);
-//            MouseState state = new MouseState(x, y, value.ScrollWheelValue, 
+//            var x = (int)(value.X / dpi.X);
+//            var y = (int)(value.Y / dpi.Y);
+//            var state = new MouseState(x, y, value.ScrollWheelValue, 
 //                value.LeftButton, value.MiddleButton, value.RightButton, 
 //                value.XButton1, value.XButton2);
 //            return state;

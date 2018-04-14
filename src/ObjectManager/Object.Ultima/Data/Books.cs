@@ -2,7 +2,7 @@
 
 namespace OA.Ultima.Data
 {
-    class Books
+    public class Books
     {
         ushort[] _gumpBaseIDs =
         {

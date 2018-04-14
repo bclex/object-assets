@@ -1,4 +1,8 @@
-﻿namespace OA.Ultima.World.Entities.Mobiles.Animations
+﻿using OA.Core;
+using OA.Ultima.Data;
+using OA.Ultima.World.Entities.Items.Containers;
+
+namespace OA.Ultima.World.Entities.Mobiles.Animations
 {
     static class ActionTranslator
     {
@@ -11,8 +15,7 @@
         {
             Body body = 0;
             bool isMounted = false, isWarMode = false, isSitting = false, dieForwards = false;
-            int lightSourceBodyID = 0;
-
+            var lightSourceBodyID = 0;
             if (entity is Corpse)
             {
                 body = (entity as Corpse).Body;
@@ -20,18 +23,14 @@
             }
             else if (entity is Mobile)
             {
-                Mobile mobile = entity as Mobile;
+                var mobile = entity as Mobile;
                 body = mobile.Body;
                 isMounted = mobile.IsMounted;
                 isWarMode = mobile.Flags.IsWarMode;
                 isSitting = mobile.IsSitting;
                 lightSourceBodyID = mobile.LightSourceBodyID;
             }
-            else
-            {
-                Tracer.Critical("Entity of type {0} cannot get an action index.", entity.ToString());
-            }
-
+            else Utils.Critical($"Entity of type {entity} cannot get an action index.");
             if (body.IsHumanoid)
             {
                 switch (action)
@@ -42,8 +41,7 @@
                     case MobileAction.Walk:
                         if (isMounted)
                             return (int)ActionIndexHumanoid.Mounted_RideSlow;
-                        else
-                            if (isWarMode)
+                        else if (isWarMode)
                             return (int)ActionIndexHumanoid.Walk_Warmode;
                         else
                         {
@@ -59,7 +57,7 @@
                         else
                         {
                             // if carrying a light source, return Run_Armed.
-                            if (lightSourceBodyID!= 0)
+                            if (lightSourceBodyID != 0)
                                 return (int)ActionIndexHumanoid.Run_Armed;
                             else
                                 return (int)ActionIndexHumanoid.Run;
@@ -71,19 +69,9 @@
                         }
                         else
                         {
-                            if (isSitting)
-                            {
-                                return (int)ActionIndexHumanoid.Sit;
-                            }
-                            else if (isWarMode)
-                            {
-                                // TODO: Also check if weapon type is 2h. Can be 1H or 2H
-                                return (int)ActionIndexHumanoid.Stand_Warmode1H;
-                            }
-                            else
-                            {
-                                return (int)ActionIndexHumanoid.Stand;
-                            }
+                            if (isSitting) return (int)ActionIndexHumanoid.Sit;
+                            else if (isWarMode) return (int)ActionIndexHumanoid.Stand_Warmode1H; // TODO: Also check if weapon type is 2h. Can be 1H or 2H
+                            else return (int)ActionIndexHumanoid.Stand;
                         }
                     case MobileAction.Death:
                         if (dieForwards)
@@ -278,7 +266,7 @@
                 if (index >= 200)
                     return MobileAction.Cast_Directed;
 
-                Tracer.Warn("Unknown action index {0}", index);
+                Utils.Warning($"Unknown action index {index}");
                 return MobileAction.None;
             }
             else if (body.IsAnimal)

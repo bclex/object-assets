@@ -43,8 +43,14 @@
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\Program Files\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\Games\3DNesVR\3DNesVR_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\AudioService.cs" />
+    <Compile Include="Audio\UOMusic.cs" />
+    <Compile Include="Audio\UOSound.cs" />
     <Compile Include="Configuration\AudioSettings.cs" />
     <Compile Include="Configuration\EngineSettings.cs" />
     <Compile Include="Configuration\GumpSettings.cs" />
@@ -96,6 +102,15 @@
     <Compile Include="Core\UI\RenderedTextList.cs" />
     <Compile Include="Core\UI\UILayer.cs" />
     <Compile Include="Core\UI\UserInterfaceService.cs" />
+    <Compile Include="Input\Action.cs" />
+    <Compile Include="Input\Macro.cs" />
+    <Compile Include="Input\MacroArmDisarm.cs" />
+    <Compile Include="Input\MacroDefinition.cs" />
+    <Compile Include="Input\MacroDisplay.cs" />
+    <Compile Include="Input\MacroEngine.cs" />
+    <Compile Include="Input\Macros.cs" />
+    <Compile Include="Input\MacroType.cs" />
+    <Compile Include="Input\PlayerMacros.cs" />
     <Compile Include="Login\Accounts\CharacterListEntry.cs" />
     <Compile Include="Login\Accounts\Characters.cs" />
     <Compile Include="Login\Data\CreateCharacterData.cs" />
@@ -269,6 +284,78 @@
     <Compile Include="Player\SpellData.cs" />
     <Compile Include="Player\StatLockData.cs" />
     <Compile Include="ResourceProvider.cs" />
+    <Compile Include="UI\Controls\AGumpPic.cs" />
+    <Compile Include="UI\Controls\Button.cs" />
+    <Compile Include="UI\Controls\ButtonResizable.cs" />
+    <Compile Include="UI\Controls\CheckBox.cs" />
+    <Compile Include="UI\Controls\CheckerTrans.cs" />
+    <Compile Include="UI\Controls\ColorPicker.cs" />
+    <Compile Include="UI\Controls\ColorPickerBox.cs" />
+    <Compile Include="UI\Controls\CroppedText.cs" />
+    <Compile Include="UI\Controls\DropDownList.cs" />
+    <Compile Include="UI\Controls\EquipmentSlot.cs" />
+    <Compile Include="UI\Controls\ExpandableScroll.cs" />
+    <Compile Include="UI\Controls\GumpPic.cs" />
+    <Compile Include="UI\Controls\GumpPicBackpack.cs" />
+    <Compile Include="UI\Controls\GumpPicContainer.cs" />
+    <Compile Include="UI\Controls\GumpPicTiled.cs" />
+    <Compile Include="UI\Controls\GumpPicWithWidth.cs" />
+    <Compile Include="UI\Controls\HSliderBar.cs" />
+    <Compile Include="UI\Controls\HtmlGumpling.cs" />
+    <Compile Include="UI\Controls\ItemGumpling.cs" />
+    <Compile Include="UI\Controls\ItemGumplingPaperdoll.cs" />
+    <Compile Include="UI\Controls\KeyPressControl.cs" />
+    <Compile Include="UI\Controls\MacroDropDownList.cs" />
+    <Compile Include="UI\Controls\PaperdollInteractable.cs" />
+    <Compile Include="UI\Controls\PaperdollLargeUninteractable.cs" />
+    <Compile Include="UI\Controls\RadioButton.cs" />
+    <Compile Include="UI\Controls\ResizePic.cs" />
+    <Compile Include="UI\Controls\ScrollBar.cs" />
+    <Compile Include="UI\Controls\ScrollFlag.cs" />
+    <Compile Include="UI\Controls\TextEntry.cs" />
+    <Compile Include="UI\Controls\TextEntryPage.cs" />
+    <Compile Include="UI\Controls\TextLabel.cs" />
+    <Compile Include="UI\Controls\TextLabelAscii.cs" />
+    <Compile Include="UI\Controls\TextLabelAsciiCropped.cs" />
+    <Compile Include="UI\Controls\TilePic.cs" />
+    <Compile Include="UI\Controls\WorldViewport.cs" />
+    <Compile Include="UI\Gump.cs" />
+    <Compile Include="UI\GumpBuilder.cs" />
+    <Compile Include="UI\LoginGumps\CharacterListGump.cs" />
+    <Compile Include="UI\LoginGumps\CreateCharAppearanceGump.cs" />
+    <Compile Include="UI\LoginGumps\CreateCharSkillsGump.cs" />
+    <Compile Include="UI\LoginGumps\CreditsGump.cs" />
+    <Compile Include="UI\LoginGumps\LoginGump.cs" />
+    <Compile Include="UI\LoginGumps\LoginStatusGump.cs" />
+    <Compile Include="UI\LoginGumps\SelectServerGump.cs" />
+    <Compile Include="UI\MsgBoxGump.cs" />
+    <Compile Include="UI\Tooltip.cs" />
+    <Compile Include="UI\UltimaCursor.cs" />
+    <Compile Include="UI\WorldGumps\BookGump.cs" />
+    <Compile Include="UI\WorldGumps\ChatControl.cs" />
+    <Compile Include="UI\WorldGumps\ContainerGump.cs" />
+    <Compile Include="UI\WorldGumps\ContextMenuGump.cs" />
+    <Compile Include="UI\WorldGumps\CrimeQueryGump.cs" />
+    <Compile Include="UI\WorldGumps\DebugGump.cs" />
+    <Compile Include="UI\WorldGumps\JournalGump.cs" />
+    <Compile Include="UI\WorldGumps\LogoutGump.cs" />
+    <Compile Include="UI\WorldGumps\MiniMapGump.cs" />
+    <Compile Include="UI\WorldGumps\MobileHealthTrackerGump.cs" />
+    <Compile Include="UI\WorldGumps\OptionsGump.cs" />
+    <Compile Include="UI\WorldGumps\PaperDollGump.cs" />
+    <Compile Include="UI\WorldGumps\PartyGump.cs" />
+    <Compile Include="UI\WorldGumps\PartyHealthTrackerGump.cs" />
+    <Compile Include="UI\WorldGumps\SkillsGump.cs" />
+    <Compile Include="UI\WorldGumps\SpellbookGump.cs" />
+    <Compile Include="UI\WorldGumps\SplitItemStackGump.cs" />
+    <Compile Include="UI\WorldGumps\StatusGump.cs" />
+    <Compile Include="UI\WorldGumps\TopMenuGump.cs" />
+    <Compile Include="UI\WorldGumps\UseSkillButtonGump.cs" />
+    <Compile Include="UI\WorldGumps\UseSpellButtonGump.cs" />
+    <Compile Include="UI\WorldGumps\VendorBuyGump.cs" />
+    <Compile Include="UI\WorldGumps\VendorSellGump.cs" />
+    <Compile Include="UI\WorldGumps\WorldViewGump.cs" />
+    <Compile Include="UI\WorldGumps\YouAreDeadGump.cs" />
     <Compile Include="UltimaGameSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -357,7 +444,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Audio\" />
     <Folder Include="Core\Audio\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

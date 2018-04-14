@@ -1,4 +1,6 @@
 ﻿
+using OA.Ultima.Resources;
+
 namespace OA.Ultima.World.Maps
 {
     public class MapChunk

@@ -6,7 +6,7 @@ using System.IO;
 
 namespace OA.Ultima.Resources
 {
-    class GumpDefTranslator
+    public class GumpDefTranslator
     {
         static readonly Dictionary<int, Tuple<int, int>> _translations;
 
