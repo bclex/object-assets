@@ -13,7 +13,7 @@ using OA.Ultima.World;
 using OA.Ultima.World.Entities.Mobiles;
 using System;
 using System.Security;
-using System.Timers;
+using System.Threading;
 
 namespace OA.Ultima.Login
 {

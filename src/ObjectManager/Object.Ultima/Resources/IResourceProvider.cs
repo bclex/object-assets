@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using OA.Ultima.Core.UI;
+using UnityEngine;
 
 namespace OA.Ultima.Resources
 {
@@ -15,8 +16,8 @@ namespace OA.Ultima.Resources
         void GetItemDimensions(int textureID, out int width, out int height);
 
         ushort GetWebSafeHue(Color color);
-        //IFont GetUnicodeFont(int fontIndex);
-        //IFont GetAsciiFont(int fontIndex);
+        IFont GetUnicodeFont(int fontIndex);
+        IFont GetAsciiFont(int fontIndex);
         string GetString(int strIndex);
 
         void RegisterResource<T>(IResource<T> resource);

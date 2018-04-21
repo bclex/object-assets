@@ -40,6 +40,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\Program Files\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
@@ -95,6 +96,31 @@
     <Compile Include="Core\Resolutions.cs" />
     <Compile Include="Core\UI\AControl.cs" />
     <Compile Include="Core\UI\ControlMetaData.cs" />
+    <Compile Include="Core\UI\Html\Elements\AElement.cs" />
+    <Compile Include="Core\UI\Html\Elements\BlockElement.cs" />
+    <Compile Include="Core\UI\Html\Elements\CharacterElement.cs" />
+    <Compile Include="Core\UI\Html\Elements\ImageElement.cs" />
+    <Compile Include="Core\UI\Html\Elements\InternalHyphenBreakElement.cs" />
+    <Compile Include="Core\UI\Html\Elements\InternalLineBreakElement.cs" />
+    <Compile Include="Core\UI\Html\EscapeCharacters.cs" />
+    <Compile Include="Core\UI\Html\HtmlDocument.cs" />
+    <Compile Include="Core\UI\Html\HtmlImage.cs" />
+    <Compile Include="Core\UI\Html\HtmlImageList.cs" />
+    <Compile Include="Core\UI\Html\HtmlLink.cs" />
+    <Compile Include="Core\UI\Html\HtmlLinkList.cs" />
+    <Compile Include="Core\UI\Html\HtmlRenderer.cs" />
+    <Compile Include="Core\UI\Html\Parsing\DynaString.cs" />
+    <Compile Include="Core\UI\Html\Parsing\FastHash.cs" />
+    <Compile Include="Core\UI\Html\Parsing\HTMLchunk.cs" />
+    <Compile Include="Core\UI\Html\Parsing\HTMLentities.cs" />
+    <Compile Include="Core\UI\Html\Parsing\HTMLheuristics.cs" />
+    <Compile Include="Core\UI\Html\Parsing\HTMLParser.cs" />
+    <Compile Include="Core\UI\Html\Parsing\TagParser.cs" />
+    <Compile Include="Core\UI\Html\Styles\Enums.cs" />
+    <Compile Include="Core\UI\Html\Styles\OpenTag.cs" />
+    <Compile Include="Core\UI\Html\Styles\StyleParser.cs" />
+    <Compile Include="Core\UI\Html\Styles\StyleState.cs" />
+    <Compile Include="Core\UI\Html\Styles\StyleValue.cs" />
     <Compile Include="Core\UI\HuedTexture.cs" />
     <Compile Include="Core\UI\ICursor.cs" />
     <Compile Include="Core\UI\IScrollBar.cs" />
