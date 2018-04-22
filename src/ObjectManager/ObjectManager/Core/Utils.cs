@@ -7,11 +7,10 @@ namespace OA.Core
     {
         public static bool InUnity = false;
 
-        //public static void Assert(bool condition)
-        //{
-        //    Debug.Assert(condition);
-        //}
-
+        public static void Assert(bool condition)
+        {
+            if (InUnity) Debug.Assert(condition);
+        }
 
         public static void Log(string msg)
         {
@@ -61,15 +60,7 @@ namespace OA.Core
             return (bitString & allBitFlags) == allBitFlags;
         }
 
-        public static void Info(string v, string name)
-        {
-            throw new NotImplementedException();
-        }
 
-        public static void Error(Exception e)
-        {
-            throw new NotImplementedException();
-        }
 
         /// <summary>
         /// Extracts a range of bits from a byte array.

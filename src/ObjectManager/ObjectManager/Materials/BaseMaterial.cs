@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace OA.Tes.Materials
+namespace OA.Materials
 {
     /// <summary>
     /// An abstract class to describe a material.

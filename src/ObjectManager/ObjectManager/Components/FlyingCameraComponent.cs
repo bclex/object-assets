@@ -17,25 +17,25 @@ namespace OA.Components
 
         new Rigidbody rigidbody;
 
-        private void Start()
+        void Start()
         {
             rigidbody = GetComponent<Rigidbody>();
         }
 
-        private void Update()
+        void Update()
         {
             Rotate();
             if (rigidbody == null)
                 Translate();
         }
 
-        private void FixedUpdate()
+        void FixedUpdate()
         {
             if (rigidbody != null)
                 UpdateVelocity();
         }
 
-        private void Rotate()
+        void Rotate()
         {
             var eulerAngles = transform.eulerAngles;
             eulerAngles.z = 0;
@@ -51,17 +51,17 @@ namespace OA.Components
             transform.eulerAngles = eulerAngles;
         }
 
-        private void Translate()
+        void Translate()
         {
             transform.Translate(Time.deltaTime * CalculateLocalVelocity());
         }
 
-        private void UpdateVelocity()
+        void UpdateVelocity()
         {
             rigidbody.velocity = transform.TransformVector(CalculateLocalVelocity());
         }
 
-        private Vector3 CalculateLocalMovementDirection()
+        Vector3 CalculateLocalMovementDirection()
         {
             // Calculate the local movement direction.
             var direction = Vector3.zero;
@@ -74,19 +74,19 @@ namespace OA.Components
             return direction.normalized;
         }
 
-        private float CalculateSpeed()
+        float CalculateSpeed()
         {
             if (Input.GetKey(KeyCode.LeftShift)) return fastSpeed;
             else if (Input.GetKey(KeyCode.LeftControl)) return slowSpeed;
             else return normalSpeed;
         }
 
-        private Vector3 CalculateLocalVelocity()
+        Vector3 CalculateLocalVelocity()
         {
             return CalculateSpeed() * CalculateLocalMovementDirection();
         }
 
-        private Vector2 CalculateArrowKeysDirection()
+        Vector2 CalculateArrowKeysDirection()
         {
             var arrowKeysDirection = Vector2.zero;
             if (Input.GetKey(KeyCode.UpArrow)) arrowKeysDirection += Vector2.up;

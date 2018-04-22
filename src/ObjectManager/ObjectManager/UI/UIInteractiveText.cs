@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace OA.Tes.UI
+namespace OA.UI
 {
     public class UIInteractiveText : MonoBehaviour
     {

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace OA.Tes.FilePacks.Records
 {
     // TODO: add support for strange INTV before object data?
-    public class CELLRecord : Record
+    public class CELLRecord : Record, ICellRecord
     {
         public class CELLDATASubRecord : SubRecord
         {
@@ -93,12 +93,12 @@ namespace OA.Tes.FilePacks.Records
             public DATASubRecord DATA;
         }
 
-        public bool isInterior
+        public bool IsInterior
         {
             get { return Utils.ContainsBitFlags(DATA.flags, 0x01); }
         }
 
-        public Vector2i gridCoords
+        public Vector2i GridCoords
         {
             get { return new Vector2i(DATA.gridX, DATA.gridY); }
         }

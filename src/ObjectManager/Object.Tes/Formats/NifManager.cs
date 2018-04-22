@@ -14,7 +14,7 @@ namespace OA.Tes.Formats
         readonly BsaMultiFile r;
         readonly MaterialManager materialManager;
         GameObject prefabContainerObj;
-        readonly Dictionary<string, Task<NiFile>> nifFilePreloadTasks = new Dictionary<string, Task<NiFile>>();
+        readonly Dictionary<string, Task<object>> nifFilePreloadTasks = new Dictionary<string, Task<object>>();
         readonly Dictionary<string, GameObject> nifPrefabs = new Dictionary<string, GameObject>();
         readonly int markerLayer;
 
@@ -47,11 +47,11 @@ namespace OA.Tes.Formats
         {
             // If the NIF prefab has already been created we don't have to load the file again.
             if (nifPrefabs.ContainsKey(filePath)) { return; }
-            Task<NiFile> nifFileLoadingTask;
+            Task<object> nifFileLoadingTask;
             // Start loading the NIF asynchronously if we haven't already started.
             if (!nifFilePreloadTasks.TryGetValue(filePath, out nifFileLoadingTask))
             {
-                nifFileLoadingTask = r.LoadNifAsync(filePath);
+                nifFileLoadingTask = r.LoadObjectInfoAsync(filePath);
                 nifFilePreloadTasks[filePath] = nifFileLoadingTask;
             }
         }
@@ -69,7 +69,7 @@ namespace OA.Tes.Formats
         {
             Debug.Assert(!nifPrefabs.ContainsKey(filePath));
             PreloadNifFileAsync(filePath);
-            var file = nifFilePreloadTasks[filePath].Result;
+            var file = (NiFile)nifFilePreloadTasks[filePath].Result;
             nifFilePreloadTasks.Remove(filePath);
             // Start pre-loading all the NIF's textures.
             foreach (var anNiObject in file.blocks)

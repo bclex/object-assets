@@ -2,7 +2,7 @@
 using System.Collections;
 using OA.Tes.FilePacks.Records;
 using OA.Core;
-using OA.Tes.Effects;
+using OA.Effects;
 
 namespace OA.Tes.Components.Records
 {
@@ -44,7 +44,7 @@ namespace OA.Tes.Components.Records
                 if (Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.CanCarry))
                 {
                     gameObject.AddComponent<BoxCollider>().size *= 0.5f; //very weak-- adding a box collider to light objects so we can interact with them
-                    if (TesSettings.TesRender.KinematicRigidbodies)
+                    if (TesSettings.Game.KinematicRigidbodies)
                         gameObject.AddComponent<Rigidbody>().isKinematic = true;
                 }
                 StartCoroutine(ConfigureLightComponent());
@@ -72,7 +72,7 @@ namespace OA.Tes.Components.Records
                 var pulseSlow = Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.PulseSlow);
                 var fire = Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.Fire);
                 var animated = flicker || flickerSlow || pulse || pulseSlow || fire;
-                if (animated && TesSettings.TesRender.AnimateLights)
+                if (animated && TesSettings.Game.AnimateLights)
                 {
                     var lightAnim = lightData.lightComponent.gameObject.AddComponent<LightAnim>();
                     if (flicker) lightAnim.mode = LightAnimMode.Flicker;

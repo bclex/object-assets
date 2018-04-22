@@ -22,7 +22,7 @@ namespace OA.Tes
             using (var bsaFile = new BsaMultiFile(dataPath2))
             {
                 Console.WriteLine("Loaded");
-                var text = bsaFile.LoadTextureAsync("tx_cursor").Result;
+                var text = bsaFile.LoadTextureInfoAsync("tx_cursor").Result;
             }
         }
     }

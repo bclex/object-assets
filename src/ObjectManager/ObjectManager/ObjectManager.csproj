@@ -44,12 +44,21 @@
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\Program Files\Unity\Hub\Editor\2018.2.0b1\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.SpatialTracking">
+      <HintPath>..\..\..\..\..\Program Files\Unity\Hub\Editor\2018.2.0b1\Editor\Data\UnityExtensions\Unity\UnitySpatialTracking\Runtime\UnityEngine.SpatialTracking.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>..\..\..\..\..\Program Files\Unity\Hub\Editor\2018.2.0b1\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CellManager.cs" />
+    <Compile Include="Components\DayNightCycle.cs" />
+    <Compile Include="Components\PlayerComponent.cs" />
+    <Compile Include="Components\XR\PlayerXR.cs" />
+    <Compile Include="Components\XR\XRGazeUI.cs" />
+    <Compile Include="Configuration\GameSettings.cs" />
+    <Compile Include="Configuration\XRSettings.cs" />
     <Compile Include="Core\Audio\ASound.cs" />
     <Compile Include="Core\Audio\AudioEffects.cs" />
     <Compile Include="Core\Audio\VolumeState.cs" />
@@ -83,10 +92,25 @@
     <Compile Include="Core\UnityBinaryReader.cs" />
     <Compile Include="Core\Utils.cs" />
     <Compile Include="Core\Vector2i.cs" />
+    <Compile Include="Effects\LightAnim.cs" />
+    <Compile Include="Effects\UnderwaterEffect.cs" />
     <Compile Include="Formats\DdsReader.cs" />
     <Compile Include="AssetManager.cs" />
     <Compile Include="EngineId.cs" />
+    <Compile Include="GameObjectUtils.cs" />
     <Compile Include="HttpCache\HttpCacheManager.cs" />
+    <Compile Include="MaterialManager.cs" />
+    <Compile Include="Materials\BaseMaterial.cs" />
+    <Compile Include="Materials\BumpedDiffuseMaterial.cs" />
+    <Compile Include="Materials\DefaultMaterial.cs" />
+    <Compile Include="Materials\StandardMaterial.cs" />
+    <Compile Include="Materials\UnlitMaterial.cs" />
+    <Compile Include="ObjectTest.cs" />
+    <Compile Include="BaseEngine.cs" />
+    <Compile Include="TextureManager.cs" />
+    <Compile Include="UI\UICrosshair.cs" />
+    <Compile Include="UI\UIInteractiveText.cs" />
+    <Compile Include="UI\UIManager.cs" />
     <Compile Include="VirtualFileSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XR\Editor\XRInputLoader.cs" />
@@ -94,9 +118,7 @@
     <Compile Include="XR\XRVignetteOverlay.cs" />
     <Compile Include="_BCL\FileFormatException.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Sqlite\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\..\src.unity\ObjectManager\Assets\Plugins\"</PostBuildEvent>

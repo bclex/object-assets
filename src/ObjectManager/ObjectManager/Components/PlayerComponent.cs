@@ -1,8 +1,9 @@
-﻿using OA.Core;
-using OA.Tes.UI;
+﻿using OA.Configuration;
+using OA.Core;
+using OA.UI;
 using UnityEngine;
 
-namespace OA.Tes.Components
+namespace OA.Components
 {
     public class PlayerComponent : MonoBehaviour
     {
@@ -13,7 +14,7 @@ namespace OA.Tes.Components
         UICrosshair _crosshair;
         bool _paused = false;
         bool _isGrounded = false;
-        bool _isFlying = false;
+        bool _isFlying = true;
 
         [Header("Movement Settings")]
         public float slowSpeed = 3;
@@ -53,10 +54,10 @@ namespace OA.Tes.Components
             _capsuleCollider = GetComponent<CapsuleCollider>();
             _rigidbody = GetComponent<Rigidbody>();
             // Setup the camera
-            var tesRender = TesSettings.TesRender;
+            var game = BaseSettings.Game;
             var camera = Camera.main;
-            camera.renderingPath = tesRender.RenderPath;
-            camera.farClipPlane = tesRender.CameraFarClip;
+            camera.renderingPath = game.RenderPath;
+            camera.farClipPlane = game.CameraFarClip;
             _crosshair = FindObjectOfType<UICrosshair>();
         }
 

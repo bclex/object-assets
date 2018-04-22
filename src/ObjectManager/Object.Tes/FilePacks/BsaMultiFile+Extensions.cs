@@ -4,13 +4,12 @@ using OA.Tes.Formats;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace OA.Tes.FilePacks
 {
     partial class BsaMultiFile
     {
-        public Task<Texture2DInfo> LoadTextureAsync(string texturePath)
+        public Task<Texture2DInfo> LoadTextureInfoAsync(string texturePath)
         {
             var filePath = FindTexture(texturePath);
             if (filePath != null)
@@ -30,14 +29,14 @@ namespace OA.Tes.FilePacks
             }
         }
 
-        public Task<NiFile> LoadNifAsync(string filePath)
+        public Task<object> LoadObjectInfoAsync(string filePath)
         {
             var fileData = LoadFileData(filePath);
             return Task.Run(() =>
             {
                 var file = new NiFile(Path.GetFileNameWithoutExtension(filePath));
                 file.Deserialize(new UnityBinaryReader(new MemoryStream(fileData)));
-                return file;
+                return (object)file;
             });
         }
 

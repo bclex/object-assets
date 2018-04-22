@@ -1,6 +1,7 @@
 ﻿using OA.Tes.FilePacks;
 using OA.Tes.Formats;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace OA.Tes.FilePacks
@@ -25,24 +26,24 @@ namespace OA.Tes.FilePacks
             _nifManager = new NifManager(this, _materialManager, markerLayer);
         }
 
-        public Texture2D LoadTexture(string path, bool flipVertically = false)
+        public Texture2D LoadTexture(string texturePath, bool flipVertically = false)
         {
-            return _textureManager.LoadTexture(path, flipVertically);
+            return _textureManager.LoadTexture(texturePath, flipVertically);
         }
 
-        public void PreloadTextureAsync(string path)
+        public void PreloadTextureAsync(string texturePath)
         {
-            _textureManager.PreloadTextureFileAsync(path);
+            _textureManager.PreloadTextureFileAsync(texturePath);
         }
 
-        public GameObject CreateObject(string path)
+        public GameObject CreateObject(string filePath)
         {
-            return _nifManager.InstantiateNif(path);
+            return _nifManager.InstantiateNif(filePath);
         }
 
-        public void PreloadObjectAsync(string path)
+        public void PreloadObjectAsync(string filePath)
         {
-            _nifManager.PreloadNifFileAsync(path);
+            _nifManager.PreloadNifFileAsync(filePath);
         }
 
         public override bool ContainsFile(string filePath)

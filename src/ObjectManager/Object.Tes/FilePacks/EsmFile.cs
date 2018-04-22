@@ -154,8 +154,8 @@ namespace OA.Tes.FilePacks
                 if (record is CELLRecord)
                 {
                     var cell = (CELLRecord)record;
-                    if (!cell.isInterior)
-                        exteriorCELLRecordsByIndices[cell.gridCoords] = cell;
+                    if (!cell.IsInterior)
+                        exteriorCELLRecordsByIndices[cell.GridCoords] = cell;
                 }
                 // Add the record to LANDRecordsByIndices if applicable.
                 if (record is LANDRecord)

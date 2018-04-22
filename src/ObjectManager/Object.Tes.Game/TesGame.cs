@@ -13,13 +13,13 @@ namespace OA.Tes
 
         bool _playMusic;
         GameId _gameId;
-        TesAssetPack _assetPack;
-        TesDataPack _dataPack;
+        TesAssetPack _asset;
+        TesDataPack _data;
         TesEngine _engine;
         MusicPlayer _musicPlayer;
 
         [Header("UI")]
-        public UIManager UIManager;
+        public TesUIManager UIManager;
         public Sprite UIBackgroundImg;
         public Sprite UICheckmarkImg;
         public Sprite UIDropdownArrowImg;
@@ -34,9 +34,9 @@ namespace OA.Tes
 
         private void Awake()
         {
-            var tesRender = TesSettings.TesRender;
-            Debug.unityLogger.logEnabled = tesRender.EnableLog;
-            _playMusic = tesRender.PlayMusic;
+            var game = TesSettings.Game;
+            Debug.unityLogger.logEnabled = game.EnableLog;
+            _playMusic = game.PlayMusic;
             _gameId = GameId.Morrowind;
             instance = this;
         }
@@ -44,9 +44,9 @@ namespace OA.Tes
         private void Start()
         {
             var dataPath = FileManager.GetFilePath(".", _gameId);
-            _assetPack = new TesAssetPack(dataPath, null);
-            _dataPack = new TesDataPack(dataPath, null, _gameId);
-            _engine = new TesEngine(_assetPack, _dataPack, UIManager);
+            _asset = new TesAssetPack(dataPath, null);
+            _data = new TesDataPack(dataPath, null, _gameId);
+            _engine = new TesEngine(_asset, _data, UIManager);
             if (_playMusic)
             {
                 // Start the music.
@@ -64,15 +64,15 @@ namespace OA.Tes
 
         private void OnDestroy()
         {
-            if (_assetPack != null)
+            if (_asset != null)
             {
-                _assetPack.Close();
-                _assetPack = null;
+                _asset.Close();
+                _asset = null;
             }
-            if (_dataPack != null)
+            if (_data != null)
             {
-                _dataPack.Close();
-                _dataPack = null;
+                _data.Close();
+                _data = null;
             }
         }
 

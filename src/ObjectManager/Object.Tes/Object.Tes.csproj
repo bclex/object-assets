@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="CellManager.cs" />
     <Compile Include="Configuration\TesRenderSettings.cs" />
-    <Compile Include="Configuration\XRSettings.cs" />
     <Compile Include="Convert.cs" />
     <Compile Include="FilePacks\BsaMultiFile.cs" />
     <Compile Include="FilePacks\EsmFile+Extensions.cs" />
@@ -91,14 +90,7 @@
     <Compile Include="FilePacks\Records\STAT.Static.cs" />
     <Compile Include="FilePacks\Records\TES4.cs" />
     <Compile Include="FilePacks\Records\WEAP.Weapon.cs" />
-    <Compile Include="GameObjectUtils.cs" />
     <Compile Include="IO\FileManager.cs" />
-    <Compile Include="MaterialManager.cs" />
-    <Compile Include="Materials\BaseMaterial.cs" />
-    <Compile Include="Materials\BumpedDiffuseMaterial.cs" />
-    <Compile Include="Materials\DefaultMaterial.cs" />
-    <Compile Include="Materials\StandardMaterial.cs" />
-    <Compile Include="Materials\UnlitMaterial.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="FilePacks\BsaFile.cs" />
     <Compile Include="FilePacks\EsmFile.cs" />
@@ -110,7 +102,6 @@
     <Compile Include="Formats\NifUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FilePacks\TesAssetPack.cs" />
-    <Compile Include="TextureManager.cs" />
     <Compile Include="TesSettings.cs" />
     <Compile Include="TesAssetManager.cs" />
   </ItemGroup>

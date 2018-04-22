@@ -29,14 +29,14 @@ namespace OA.Tes.IO
 
         static FileManager()
         {
-            var tesRender = TesSettings.TesRender;
+            var game = TesSettings.Game;
             Utils.Log($"Initializing TES Data. Is64Bit = {Is64Bit}");
             Utils.Log("Looking for TES Installation(s):");
-            if (tesRender.DataDirectory != null && Directory.Exists(tesRender.DataDirectory))
+            if (game.DataDirectory != null && Directory.Exists(game.DataDirectory))
             {
-                Utils.Log($"Settings: {tesRender.DataDirectory}");
-                var gameId = (GameId)Enum.Parse(typeof(GameId), tesRender.GameId);
-                _fileDirectories.Add(gameId, tesRender.DataDirectory);
+                Utils.Log($"Settings: {game.DataDirectory}");
+                var gameId = (GameId)Enum.Parse(typeof(GameId), game.GameId);
+                _fileDirectories.Add(gameId, game.DataDirectory);
                 _isDataPresent = true;
             }
             else

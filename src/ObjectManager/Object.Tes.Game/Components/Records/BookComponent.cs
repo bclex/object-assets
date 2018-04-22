@@ -1,12 +1,14 @@
-﻿using OA.Tes.FilePacks.Records;
+﻿using OA.Components;
+using OA.Tes.FilePacks.Records;
 using OA.Tes.UI;
+using OA.UI;
 
 namespace OA.Tes.Components.Records
 {
     public class BookComponent : GenericObjectComponent
     {
         static PlayerComponent _player = null;
-        static UIManager _uiManager = null;
+        static TesUIManager _uiManager = null;
 
         public static PlayerComponent Player
         {
@@ -18,12 +20,12 @@ namespace OA.Tes.Components.Records
             }
         }
 
-        public static UIManager UIManager
+        public static TesUIManager UIManager
         {
             get
             {
                 if (_uiManager == null)
-                    _uiManager = FindObjectOfType<UIManager>();
+                    _uiManager = FindObjectOfType<TesUIManager>();
                 return _uiManager;
             }
         }

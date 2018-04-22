@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace OA.Tes.Effects
+namespace OA.Effects
 {
     public enum LightAnimMode { None, Flicker, FlickerSlow, Pulse, PulseSlow, Fire }//None is included as courtesy
 

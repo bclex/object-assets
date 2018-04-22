@@ -1,8 +1,9 @@
-using OA.Tes.Materials;
+using OA.Configuration;
+using OA.Materials;
 using UnityEngine;
-using ur = UnityEngine.Rendering;
+using UnityEngine.Rendering;
 
-namespace OA.Tes
+namespace OA
 {
     public enum MatTestMode { Always, Less, LEqual, Equal, GEqual, Greater, NotEqual, Never }
 
@@ -25,8 +26,8 @@ namespace OA.Tes
     {
         public MaterialTextures textures;
         public bool alphaBlended;
-        public ur.BlendMode srcBlendMode;
-        public ur.BlendMode dstBlendMode;
+        public BlendMode srcBlendMode;
+        public BlendMode dstBlendMode;
         public bool alphaTest;
         public float alphaCutoff;
         public bool zWrite;
@@ -38,18 +39,14 @@ namespace OA.Tes
     public class MaterialManager
     {
         BaseMaterial _material;
-        TextureManager _textureManager;
 
-        public TextureManager TextureManager
-        {
-            get { return _textureManager; }
-        }
+        public TextureManager TextureManager { get; }
 
         public MaterialManager(TextureManager textureManager)
         {
-            var tesRender = TesSettings.TesRender;
-            _textureManager = textureManager;
-            switch (tesRender.MaterialType)
+            var game = BaseSettings.Game;
+            TextureManager = textureManager;
+            switch (game.MaterialType)
             {
                 case MaterialType.Default: _material = new DefaultMaterial(textureManager); break;
                 case MaterialType.Standard: _material = new StandardMaterial(textureManager); break;
@@ -68,7 +65,7 @@ namespace OA.Tes
             return _material.BuildMaterial();
         }
 
-        private Material BuildMaterialBlended(ur.BlendMode sourceBlendMode, ur.BlendMode destinationBlendMode)
+        private Material BuildMaterialBlended(BlendMode sourceBlendMode, BlendMode destinationBlendMode)
         {
             return _material.BuildMaterialBlended(sourceBlendMode, destinationBlendMode);
         }

@@ -9,29 +9,6 @@ using OA.Tes.FilePacks.Records;
 
 namespace OA.Tes
 {
-    //public class InRangeCellInfo
-    //{
-    //    public GameObject gameObject;
-    //    public GameObject objectsContainerGameObject;
-    //    public CELLRecord cellRecord;
-    //    public IEnumerator objectsCreationCoroutine;
-
-    //    public InRangeCellInfo(GameObject gameObject, GameObject objectsContainerGameObject, CELLRecord cellRecord, IEnumerator objectsCreationCoroutine)
-    //    {
-    //        this.gameObject = gameObject;
-    //        this.objectsContainerGameObject = objectsContainerGameObject;
-    //        this.cellRecord = cellRecord;
-    //        this.objectsCreationCoroutine = objectsCreationCoroutine;
-    //    }
-    //}
-
-    //public class RefCellObjInfo
-    //{
-    //    public CELLRecord.RefObjDataGroup refObjDataGroup;
-    //    public Record referencedRecord;
-    //    public string modelFilePath;
-    //}
-
     public class CellManager : ICellManager
     {
         const int _cellRadius = 4;
@@ -154,10 +131,10 @@ namespace OA.Tes
             Debug.Assert(cell != null);
             string cellObjName = null;
             LANDRecord land = null;
-            if (!cell.isInterior)
+            if (!cell.IsInterior)
             {
-                cellObjName = "cell " + cell.gridCoords.ToString();
-                land = _dataPack.FindLANDRecord(cell.gridCoords);
+                cellObjName = "cell " + cell.GridCoords.ToString();
+                land = _dataPack.FindLANDRecord(cell.GridCoords);
             }
             else cellObjName = cell.NAME.value;
             var cellObj = new GameObject(cellObjName);
@@ -260,7 +237,7 @@ namespace OA.Tes
                 // If the object has a light, instantiate it.
                 if (refCellObjInfo.referencedRecord is LIGHRecord)
                 {
-                    var lightObj = InstantiateLight((LIGHRecord)refCellObjInfo.referencedRecord, cell.isInterior);
+                    var lightObj = InstantiateLight((LIGHRecord)refCellObjInfo.referencedRecord, cell.IsInterior);
                     // If the object also has a model, parent the model to the light.
                     if (modelObj != null)
                     {
@@ -296,7 +273,7 @@ namespace OA.Tes
 
         private GameObject InstantiateLight(LIGHRecord LIGH, bool indoors)
         {
-            var tesRender = TesSettings.TesRender;
+            var game = TesSettings.Game;
             var lightObj = new GameObject("Light");
             lightObj.isStatic = true;
             var lightComponent = lightObj.AddComponent<Light>();
@@ -304,8 +281,8 @@ namespace OA.Tes
             lightComponent.color = new Color32(LIGH.LHDT.red, LIGH.LHDT.green, LIGH.LHDT.blue, 255);
             lightComponent.intensity = 1.5f;
             lightComponent.bounceIntensity = 0f;
-            lightComponent.shadows = tesRender.RenderLightShadows ? LightShadows.Soft : LightShadows.None;
-            if (!indoors && !tesRender.RenderExteriorCellLights) // disabling exterior cell lights because there is no day/night cycle
+            lightComponent.shadows = game.RenderLightShadows ? LightShadows.Soft : LightShadows.None;
+            if (!indoors && !game.RenderExteriorCellLights) // disabling exterior cell lights because there is no day/night cycle
                 lightComponent.enabled = false;
             return lightObj;
         }

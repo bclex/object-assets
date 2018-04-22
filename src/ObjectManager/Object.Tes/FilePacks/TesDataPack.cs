@@ -13,17 +13,17 @@ namespace OA.Tes.FilePacks
             _webPath = webPath;
         }
 
-        IRecord IDataPack.FindExteriorCellRecord(Vector2i cellIndices)
+        ICellRecord IDataPack.FindExteriorCellRecord(Vector2i cellIndices)
         {
             return FindExteriorCellRecord(cellIndices);
         }
 
-        IRecord IDataPack.FindInteriorCellRecord(string cellName)
+        ICellRecord IDataPack.FindInteriorCellRecord(string cellName)
         {
             return FindInteriorCellRecord(cellName);
         }
 
-        IRecord IDataPack.FindInteriorCellRecord(Vector2i gridCoords)
+        ICellRecord IDataPack.FindInteriorCellRecord(Vector2i gridCoords)
         {
             return FindInteriorCellRecord(gridCoords);
         }

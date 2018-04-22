@@ -275,9 +275,6 @@
     <Reference Include="ObjectManager">
       <HintPath>C:/_GITHUB/object-assets/src.unity/ObjectManager/Assets/Plugins/ObjectManager.dll</HintPath>
     </Reference>
-    <Reference Include="ObjectTest">
-      <HintPath>C:/_GITHUB/object-assets/src.unity/ObjectManager/Assets/Plugins/ObjectTest.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.Advertisements">
       <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.4/UnityEngine.Advertisements.dll</HintPath>
     </Reference>

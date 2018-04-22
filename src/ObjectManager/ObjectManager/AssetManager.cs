@@ -13,22 +13,19 @@ namespace OA
 
     public interface IAssetPack : IDisposable
     {
+        Task<Texture2DInfo> LoadTextureInfoAsync(string texturePath);
         Texture2D LoadTexture(string texturePath, bool flipVertically = false);
-        void PreloadTextureAsync(string path);
-        GameObject CreateObject(string path);
-        void PreloadObjectAsync(string path);
+        void PreloadTextureAsync(string texturePath);
+        Task<object> LoadObjectInfoAsync(string filePath);
+        GameObject CreateObject(string filePath);
+        void PreloadObjectAsync(string filePath);
     }
 
     public interface IDataPack : IDisposable
     {
-        IRecord FindExteriorCellRecord(Vector2i cellIndices);
-        IRecord FindInteriorCellRecord(string cellName);
-        IRecord FindInteriorCellRecord(Vector2i gridCoords);
-    }
-
-    public interface ICellManager
-    {
-        InRangeCellInfo StartCreatingExteriorCell(Vector2i cellIndices);
+        ICellRecord FindExteriorCellRecord(Vector2i cellIndices);
+        ICellRecord FindInteriorCellRecord(string cellName);
+        ICellRecord FindInteriorCellRecord(Vector2i gridCoords);
     }
 
     public interface IGameAssetManager
@@ -82,14 +79,24 @@ namespace OA
 
     public static class AssetManager
     {
-        public static TemporalLoadBalancer TemporalLoadBalancer = new TemporalLoadBalancer();
+        private static TemporalLoadBalancer TemporalLoadBalancer = new TemporalLoadBalancer();
 
-        public static async Task<IAssetPack> GetAssetPack(EngineId engineId, string uri) { return await GetAssetPack(engineId, new Uri(uri)); }
+        public static void RunTasks(float desiredWorkTime)
+        {
+            TemporalLoadBalancer.RunTasks(desiredWorkTime);
+        }
 
         public static void WaitForTask(IEnumerator taskCoroutine)
         {
             TemporalLoadBalancer.WaitForTask(taskCoroutine);
         }
+
+        public static void WaitForAllTasks()
+        {
+            TemporalLoadBalancer.WaitForAllTasks();
+        }
+
+        public static async Task<IAssetPack> GetAssetPack(EngineId engineId, string uri) { return await GetAssetPack(engineId, new Uri(uri)); }
 
         public static Task<IAssetPack> GetAssetPack(EngineId engineId, Uri uri)
         {

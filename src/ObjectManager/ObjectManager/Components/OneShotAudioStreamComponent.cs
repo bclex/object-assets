@@ -10,13 +10,13 @@ namespace OA.Components
 #if false
     AudioSource audioSource;
 
-    private void Awake()
+    void Awake()
     {
         audioSource = GetComponent<AudioSource>();
         audioSource.Play();
     }
 
-    private void Update()
+    void Update()
     {
         if (audioStream != null && audioStream.isDoneStreaming)
         {
@@ -35,13 +35,13 @@ namespace OA.Components
         PCMAudioBuffer streamBuffer;
         int UnitySampleRate = -1;
 
-        private void Start()
+        void Start()
         {
             streamBuffer = new PCMAudioBuffer(audioStream.channelCount, audioStream.bitDepth, audioStream.samplingRate, 8192);
             UnitySampleRate = AudioSettings.outputSampleRate;
         }
 
-        private void Update()
+        void Update()
         {
             if (audioStream.isDoneStreaming)
             {
@@ -50,7 +50,7 @@ namespace OA.Components
             }
         }
 
-        private void OnAudioFilterRead(float[] samples, int channelCount)
+        void OnAudioFilterRead(float[] samples, int channelCount)
         {
             if (UnitySampleRate > 0)
             {

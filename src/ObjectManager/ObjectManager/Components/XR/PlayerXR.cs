@@ -1,13 +1,13 @@
 ﻿using OA.Configuration;
 using OA.Core;
-using OA.Tes.UI;
+using OA.UI;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SpatialTracking;
 using UnityEngine.XR;
 using XRSettings = UnityEngine.XR.XRSettings;
 
-namespace OA.Tes.Components.XR
+namespace OA.Components.XR
 {
     /// <summary>
     /// This component is responsible to enable the VR feature and deal with VR SDKs.
@@ -33,9 +33,9 @@ namespace OA.Tes.Components.XR
         /// - The HUD canvas is not recommanded, it's usefull for small informations
         /// - The UI is for all other UIs: Menu, Life, etc.
         /// </summary>
-        private void Start()
+        void Start()
         {
-            var xr = TesSettings.XR;
+            var xr = BaseSettings.XR;
             if (!XRSettings.enabled)
             {
                 var trackedPoseDrivers = GetComponentsInChildren<TrackedPoseDriver>(true);
@@ -53,10 +53,8 @@ namespace OA.Tes.Components.XR
                 XRSettings.eyeTextureResolutionScale = renderScale;
 
             var uiManager = FindObjectOfType<UIManager>();
-
             if (_mainCanvas == null)
                 _mainCanvas = uiManager.GetComponent<Canvas>();
-
             if (_mainCanvas == null)
                 throw new UnityException("The Main Canvas Is Null");
 
@@ -99,7 +97,6 @@ namespace OA.Tes.Components.XR
             {
                 var list = new List<XRNodeState>();
                 InputTracking.GetNodeStates(list);
-
                 foreach (var item in list)
                     if (item.nodeType == XRNode.LeftHand || item.nodeType == XRNode.RightHand)
                         controllers++;
@@ -122,9 +119,9 @@ namespace OA.Tes.Components.XR
             RecenterOrientationAndPosition();
         }
 
-        private void Update()
+        void Update()
         {
-            var xr = TesSettings.XR;
+            var xr = BaseSettings.XR;
             // At any time, the user might want to reset the orientation and position.
             if (InputManager.GetButtonDown("Recenter"))
                 RecenterOrientationAndPosition();
@@ -187,7 +184,7 @@ namespace OA.Tes.Components.XR
         /// Sent by the PlayerComponent when the pause method is called.
         /// </summary>
         /// <param name="paused">Boolean: Indicates if the player is paused.</param>
-        private void OnPlayerPause(bool paused)
+        void OnPlayerPause(bool paused)
         {
             if (paused)
                 RecenterUI();

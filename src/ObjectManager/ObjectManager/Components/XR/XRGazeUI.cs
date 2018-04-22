@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace OA.Tes.Components.XR
+namespace OA.Components.XR
 {
     /// <summary>
     /// Display a crosshair in a world space canvas and use it to interact with the UI.
     /// </summary>
     [RequireComponent(typeof(Image))]
-    public sealed class XRGazeUI : MonoBehaviour
+    public class XRGazeUI : MonoBehaviour
     {
         public delegate bool IsActionPressedDelegate();
 
@@ -62,7 +62,7 @@ namespace OA.Tes.Components.XR
             gameObject.SetActive(isActive);
         }
 
-        private void Click(GameObject selected)
+        void Click(GameObject selected)
         {
             var uiElement = selected.GetComponent<IPointerClickHandler>();
             var clicked = uiElement != null;
@@ -82,7 +82,7 @@ namespace OA.Tes.Components.XR
                 SelectGameObject(null);
         }
 
-        private RectTransform GetFirstValidUI()
+        RectTransform GetFirstValidUI()
         {
             IPointerClickHandler pointer = null;
             for (int i = 0, l = _raycasts.Count; i < l; i++)
@@ -97,7 +97,7 @@ namespace OA.Tes.Components.XR
             return null;
         }
 
-        private void SelectGameObject(GameObject go)
+        void SelectGameObject(GameObject go)
         {
             _eventSystem.SetSelectedGameObject(go);
             var targetScale = go == null ? 1.0f : 1.5f;

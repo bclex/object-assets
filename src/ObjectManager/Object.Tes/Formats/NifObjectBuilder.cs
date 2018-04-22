@@ -140,7 +140,7 @@ namespace OA.Tes.Formats
 
         private GameObject InstantiateNiTriShape(NiTriShape triShape, bool visual, bool collidable)
         {
-            var tesRender = TesSettings.TesRender;
+            var game = TesSettings.Game;
             Debug.Assert(visual || collidable);
             var mesh = NiTriShapeDataToMesh((NiTriShapeData)file.blocks[triShape.data.value]);
             var obj = new GameObject(triShape.name);
@@ -157,7 +157,7 @@ namespace OA.Tes.Formats
             if (collidable)
             {
                 obj.AddComponent<MeshCollider>().sharedMesh = mesh;
-                if (tesRender.KinematicRigidbodies)
+                if (game.KinematicRigidbodies)
                     obj.AddComponent<Rigidbody>().isKinematic = true;
             }
             ApplyNiAVObject(triShape, obj);

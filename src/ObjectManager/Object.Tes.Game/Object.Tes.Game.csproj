@@ -51,8 +51,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\DayNightCycle.cs" />
-    <Compile Include="Components\PlayerComponent.cs" />
     <Compile Include="Components\PlayerInventory.cs" />
     <Compile Include="Components\Records\ActivatorComponent.cs" />
     <Compile Include="Components\Records\AlchemyApparatusComponent.cs" />
@@ -73,10 +71,6 @@
     <Compile Include="Components\Records\RepaireComponent.cs" />
     <Compile Include="Components\Records\WeaponComponent.cs" />
     <Compile Include="TesGame.cs" />
-    <Compile Include="Components\XR\PlayerXR.cs" />
-    <Compile Include="Components\XR\XRGazeUI.cs" />
-    <Compile Include="Effects\LightAnim.cs" />
-    <Compile Include="Effects\UnderwaterEffect.cs" />
     <Compile Include="_\MorrowindDataReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="_\MorrowindEngine.cs" />
@@ -84,9 +78,7 @@
     <Compile Include="TesEngine.cs" />
     <Compile Include="_\TESUnity.cs" />
     <Compile Include="UI\UIBook.cs" />
-    <Compile Include="UI\UICrosshair.cs" />
-    <Compile Include="UI\UIInteractiveText.cs" />
-    <Compile Include="UI\UIManager.cs" />
+    <Compile Include="UI\TesUIManager.cs" />
     <Compile Include="UI\UIScroll.cs" />
   </ItemGroup>
   <ItemGroup>

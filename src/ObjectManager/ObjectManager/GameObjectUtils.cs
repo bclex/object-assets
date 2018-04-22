@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace OA.Tes
+namespace OA
 {
     public static class GameObjectUtils
     {
@@ -166,7 +166,7 @@ namespace OA.Tes
                     return gameObject;
                 // Go up one level in the object hierarchy.
                 var parentTransform = gameObject.transform.parent;
-                gameObject = (parentTransform != null) ? parentTransform.gameObject : null;
+                gameObject = parentTransform != null ? parentTransform.gameObject : null;
             }
             return null;
         }

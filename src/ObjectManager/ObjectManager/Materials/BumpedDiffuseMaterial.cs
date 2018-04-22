@@ -1,7 +1,8 @@
+using OA.Configuration;
 using UnityEngine;
 using ur = UnityEngine.Rendering;
 
-namespace OA.Tes.Materials
+namespace OA.Materials
 {
     /// <summary>
     /// A material that uses the legacy Bumped Diffuse Shader.
@@ -12,7 +13,7 @@ namespace OA.Tes.Materials
 
         public override Material BuildMaterialFromProperties(MaterialProps mp)
         {
-            var tesRender = TesSettings.TesRender;
+            var game = BaseSettings.Game;
             Material material;
             //check if the material is already cached
             if (!_existingMaterials.TryGetValue(mp, out material))
@@ -24,7 +25,7 @@ namespace OA.Tes.Materials
                 if (mp.textures.mainFilePath != null)
                 {
                     material.mainTexture = _textureManager.LoadTexture(mp.textures.mainFilePath);
-                    if (tesRender.GenerateNormalMap) material.SetTexture("_BumpMap", GenerateNormalMap((Texture2D)material.mainTexture, tesRender.NormalGeneratorIntensity));
+                    if (game.GenerateNormalMap) material.SetTexture("_BumpMap", GenerateNormalMap((Texture2D)material.mainTexture, game.NormalGeneratorIntensity));
                 }
                 if (mp.textures.bumpFilePath != null) material.SetTexture("_BumpMap", _textureManager.LoadTexture(mp.textures.bumpFilePath));
                 _existingMaterials[mp] = material;

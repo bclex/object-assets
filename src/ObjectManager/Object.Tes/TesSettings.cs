@@ -6,16 +6,13 @@ namespace OA.Tes
     public class TesSettings : BaseSettings
     {
         static readonly TesSettings _instance = new TesSettings();
-        readonly TesRenderSettings _tesRender;
-        readonly XRSettings _xr;
+        readonly TesGameSettings _tesGame;
 
         TesSettings()
         {
-            _tesRender = CreateOrOpenSection<TesRenderSettings>();
-            _xr = CreateOrOpenSection<XRSettings>();
+            _tesGame = CreateOrOpenSection<TesGameSettings>();
         }
 
-        public static TesRenderSettings TesRender => _instance._tesRender;
-        public static XRSettings XR => _instance._xr;
+        public static TesGameSettings TesGame => _instance._tesGame;
     }
 }

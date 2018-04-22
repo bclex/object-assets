@@ -1,7 +1,8 @@
-﻿using OA.Core;
+﻿using OA.Components;
+using OA.Configuration;
+using OA.Core;
 using OA.Tes.Components;
 using OA.Tes.Components.Records;
-using OA.Tes.Effects;
 using OA.Tes.FilePacks;
 using OA.Tes.FilePacks.Records;
 using OA.Tes.UI;
@@ -20,12 +21,12 @@ namespace OA.Tes
 
         internal TesAssetPack _asset;
         internal TesDataPack _data;
-        UIManager _uiManager;
+        TesUIManager _uiManager;
         internal CellManager _cellManager;
         TemporalLoadBalancer _temporalLoadBalancer;
         GameObject _sunObj;
 
-        public TesEngine(TesAssetPack asset, TesDataPack data, UIManager uiManager)
+        public TesEngine(TesAssetPack asset, TesDataPack data, TesUIManager uiManager)
         {
             _asset = asset;
             _data = data;
@@ -33,17 +34,17 @@ namespace OA.Tes
             _uiManager.Active = true;
             _temporalLoadBalancer = new TemporalLoadBalancer();
             _cellManager = new CellManager(asset, data, _temporalLoadBalancer);
-            var tesRender = TesSettings.TesRender;
+            var game = BaseSettings.Game;
 
             // ambient
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-            RenderSettings.ambientIntensity = tesRender.AmbientIntensity;
+            RenderSettings.ambientIntensity = game.AmbientIntensity;
 
             // sun
             _sunObj = GameObjectUtils.CreateDirectionalLight(Vector3.zero, Quaternion.Euler(new Vector3(50, 330, 0)));
-            _sunObj.GetComponent<Light>().shadows = tesRender.RenderSunShadows ? LightShadows.Soft : LightShadows.None;
+            _sunObj.GetComponent<Light>().shadows = game.RenderSunShadows ? LightShadows.Soft : LightShadows.None;
             _sunObj.SetActive(false);
-            if (tesRender.DayNightCycle)
+            if (game.DayNightCycle)
                 _sunObj.AddComponent<DayNightCycle>();
 
             //// water
@@ -190,7 +191,7 @@ namespace OA.Tes
         public void Update()
         {
             // The current cell can be null if the player is outside of the defined game world.
-            if (_currentCell == null || !_currentCell.isInterior)
+            if (_currentCell == null || !_currentCell.IsInterior)
                 _cellManager.UpdateExteriorCells(_playerCameraObj.transform.position);
             _temporalLoadBalancer.RunTasks(DesiredWorkTimePerFrame);
             CastInteractRay();
@@ -286,8 +287,8 @@ namespace OA.Tes
                         w.Write("Pass: ");
                     }
                     catch (Exception e) { w.Write($"Fail: {e.Message}"); }
-                    if (!CELL.isInterior)
-                        w.WriteLine(CELL.gridCoords.ToString());
+                    if (!CELL.IsInterior)
+                        w.WriteLine(CELL.GridCoords.ToString());
                     else w.WriteLine(CELL.NAME.value);
                     w.Flush();
                 }

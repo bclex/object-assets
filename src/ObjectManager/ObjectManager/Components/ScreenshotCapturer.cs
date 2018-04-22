@@ -4,20 +4,20 @@ using UnityEngine;
 
 namespace OA.Components
 {
-    public sealed class ScreenshotCapturer : MonoBehaviour
+    public class ScreenshotCapturer : MonoBehaviour
     {
         [SerializeField]
-        private KeyCode _screenshotKey = KeyCode.F1;
+        KeyCode _screenshotKey = KeyCode.F1;
         [SerializeField]
-        private int _screenshotSuperSampling = 1;
+        int _screenshotSuperSampling = 1;
 
-        private void Update()
+        void Update()
         {
             if (Input.GetKeyDown(_screenshotKey))
                 CaptureScreenshot();
         }
 
-        private string GetSavePath(string folder)
+        string GetSavePath(string folder)
         {
             var path = string.Format("{0}/..", Application.dataPath);
             if (folder != string.Empty)

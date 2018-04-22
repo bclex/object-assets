@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using ur = UnityEngine.Rendering;
 
-namespace OA.Tes.Materials
+namespace OA.Materials
 {
     /// <summary>
     /// A material that uses the Unlit Shader.

@@ -1,7 +1,8 @@
+using OA.Configuration;
 using UnityEngine;
 using ur = UnityEngine.Rendering;
 
-namespace OA.Tes.Materials
+namespace OA.Materials
 {
     /// <summary>
     /// A material that uses the new Standard Shader.
@@ -20,7 +21,7 @@ namespace OA.Tes.Materials
 
         public override Material BuildMaterialFromProperties(MaterialProps mp)
         {
-            var tesRender = TesSettings.TesRender;
+            var game = BaseSettings.Game;
             Material material;
             //check if the material is already cached
             if (!_existingMaterials.TryGetValue(mp, out material))
@@ -33,10 +34,10 @@ namespace OA.Tes.Materials
                 if (mp.textures.mainFilePath != null)
                 {
                     material.mainTexture = _textureManager.LoadTexture(mp.textures.mainFilePath);
-                    if (tesRender.GenerateNormalMap)
+                    if (game.GenerateNormalMap)
                     {
                         material.EnableKeyword("_NORMALMAP");
-                        material.SetTexture("_BumpMap", GenerateNormalMap((Texture2D)material.mainTexture, tesRender.NormalGeneratorIntensity));
+                        material.SetTexture("_BumpMap", GenerateNormalMap((Texture2D)material.mainTexture, game.NormalGeneratorIntensity));
                     }
                 }
                 else material.DisableKeyword("_NORMALMAP");

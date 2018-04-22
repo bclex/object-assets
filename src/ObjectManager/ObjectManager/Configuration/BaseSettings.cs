@@ -5,13 +5,19 @@ namespace OA.Configuration
     public class BaseSettings
     {
         readonly DebugSettings _debug;
+        readonly GameSettings _game;
+        readonly XRSettings _xr;
 
         protected BaseSettings()
         {
             _debug = CreateOrOpenSection<DebugSettings>();
+            _game = CreateOrOpenSection<GameSettings>();
+            _xr = CreateOrOpenSection<XRSettings>();
         }
 
         public static DebugSettings Debug => _instance._debug;
+        public static GameSettings Game => _instance._game;
+        public static XRSettings XR => _instance._xr;
 
         static readonly BaseSettings _instance;
         static readonly SettingsFile _file;

@@ -32,7 +32,7 @@ namespace OA.Tes.FilePacks
 
         public Record CreateUninitializedRecord()
         {
-            var tesRender = TesSettings.TesRender;
+            var game = TesSettings.Game;
             Record r;
             switch (type)
             {
@@ -61,8 +61,8 @@ namespace OA.Tes.FilePacks
                 case "ALCH": r = new ALCHRecord(); break;
                 case "CELL": r = new CELLRecord(); break;
                 case "LAND": r = new LANDRecord(); break;
-                case "CREA": r = tesRender.CreaturesEnabled ? new CREARecord() : null; break;
-                case "NPC_": r = tesRender.NpcsEnabled ? new NPC_Record() : null; break;
+                case "CREA": r = game.CreaturesEnabled ? new CREARecord() : null; break;
+                case "NPC_": r = game.NpcsEnabled ? new NPC_Record() : null; break;
                 //
                 case "CLAS":
                 case "SPEL":

@@ -52,7 +52,7 @@ namespace OA.Tes.FilePacks
             for (int i = 0, l = records.Count; i < l; i++)
             {
                 cell = (CELLRecord)records[i];
-                if (cell.gridCoords.x == gridCoords.x && cell.gridCoords.y == gridCoords.y)
+                if (cell.GridCoords.x == gridCoords.x && cell.GridCoords.y == gridCoords.y)
                     return cell;
             }
             return null;

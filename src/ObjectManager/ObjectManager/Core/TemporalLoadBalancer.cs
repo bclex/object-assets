@@ -9,51 +9,51 @@ namespace OA.Core
     /// </summary>
     public class TemporalLoadBalancer
     {
-        List<IEnumerator> tasks = new List<IEnumerator>();
-        Stopwatch stopwatch = new Stopwatch();
+        List<IEnumerator> _tasks = new List<IEnumerator>();
+        Stopwatch _stopwatch = new Stopwatch();
 
         /// <summary>
         /// Adds a task coroutine and returns it.
         /// </summary>
         public IEnumerator AddTask(IEnumerator taskCoroutine)
         {
-            tasks.Add(taskCoroutine);
+            _tasks.Add(taskCoroutine);
             return taskCoroutine;
         }
 
         public void CancelTask(IEnumerator taskCoroutine)
         {
-            tasks.Remove(taskCoroutine);
+            _tasks.Remove(taskCoroutine);
         }
 
         public void RunTasks(float desiredWorkTime)
         {
             Debug.Assert(desiredWorkTime >= 0);
-            if (tasks.Count == 0)
+            if (_tasks.Count == 0)
                 return;
-            stopwatch.Reset();
-            stopwatch.Start();
+            _stopwatch.Reset();
+            _stopwatch.Start();
             // Run the tasks.
             do
             {
-                if (!tasks[0].MoveNext()) // Try to execute an iteration of a task. Remove the task if it's execution has completed.
-                    tasks.RemoveAt(0);
-            } while ((tasks.Count > 0) && (stopwatch.Elapsed.TotalSeconds < desiredWorkTime));
-            stopwatch.Stop();
+                if (!_tasks[0].MoveNext()) // Try to execute an iteration of a task. Remove the task if it's execution has completed.
+                    _tasks.RemoveAt(0);
+            } while ((_tasks.Count > 0) && (_stopwatch.Elapsed.TotalSeconds < desiredWorkTime));
+            _stopwatch.Stop();
         }
 
         public void WaitForTask(IEnumerator taskCoroutine)
         {
-            Debug.Assert(tasks.Contains(taskCoroutine));
+            Debug.Assert(_tasks.Contains(taskCoroutine));
             while (taskCoroutine.MoveNext()) { }
-            tasks.Remove(taskCoroutine);
+            _tasks.Remove(taskCoroutine);
         }
 
         public void WaitForAllTasks()
         {
-            foreach (var task in tasks)
+            foreach (var task in _tasks)
                 while (task.MoveNext()) { }
-            tasks.Clear();
+            _tasks.Clear();
         }
     }
 }

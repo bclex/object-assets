@@ -41,7 +41,7 @@ namespace OA.Configuration
                     serializer.Serialize(_sectionCache);
                 }
             }
-            catch (Exception e) { Utils.Error(e); }
+            catch (Exception e) { Utils.Exception(e); }
         }
 
         internal void InvalidateDirty()
@@ -70,14 +70,14 @@ namespace OA.Configuration
                         if (File.Exists(_filename + ".bak"))
                         {
                             Utils.Error("Unable to read settings file.  Trying backup file");
-                            if (LoadFromFile(_filename + ".bak")) Utils.Log("Read settings from backup settings file.");
+                            if (LoadFromFile(_filename + ".bak")) Utils.Warning("Read settings from backup settings file.");
                             else Utils.Error("Unable to read backup settings file. All settings are set to default values.");
                         }
                         else Utils.Error("Unable to read settings file. All settings are set to default values.");
                     }
                 }
             }
-            catch (Exception e) { Utils.Error(e); }
+            catch (Exception e) { Utils.Exception(e); }
             _saveTimer.Enabled = true;
         }
 
@@ -93,7 +93,7 @@ namespace OA.Configuration
             }
             catch (Exception e)
             {
-                Utils.Error(e);
+                Utils.Exception(e);
                 return false;
             }
         }
