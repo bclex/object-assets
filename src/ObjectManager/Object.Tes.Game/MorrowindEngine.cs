@@ -45,7 +45,7 @@ namespace OA.Tes
             r = esmFile;
             textureManager = new TextureManager(bsaFile);
             materialManager = new MaterialManager(textureManager);
-            var markerLayer = 0; // LayerMask.NameToLayer("Marker")
+            var markerLayer = 0; // LayerMask.NameToLayer("Marker");
             nifManager = new NifManager(bsaFile, materialManager, markerLayer);
             temporalLoadBalancer = new TemporalLoadBalancer();
             cellManager = new CellManager(esmFile, textureManager, nifManager, temporalLoadBalancer);

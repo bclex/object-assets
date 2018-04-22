@@ -74,7 +74,7 @@
     <Compile Include="Data\Reagents.cs" />
     <Compile Include="Data\Seasons.cs" />
     <Compile Include="Data\SpellbookData.cs" />
-    <Compile Include="Data\SpellBookTypes.cs" />
+    <Compile Include="Data\SpellbookTypes.cs" />
     <Compile Include="Data\SpellDefinition.cs" />
     <Compile Include="Data\SpellsMagery.cs" />
     <Compile Include="Data\StatLocks.cs" />

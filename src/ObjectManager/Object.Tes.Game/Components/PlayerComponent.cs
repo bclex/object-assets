@@ -61,10 +61,10 @@ namespace OA.Tes.Components
             _capsuleCollider = GetComponent<CapsuleCollider>();
             _rigidbody = GetComponent<Rigidbody>();
             // Setup the camera
-            var tes = TESUnity.instance;
+            var tesRender = TesSettings.TesRender;
             var camera = Camera.main;
-            camera.renderingPath = tes.renderPath;
-            camera.farClipPlane = tes.cameraFarClip;
+            camera.renderingPath = tesRender.RrenderPath;
+            camera.farClipPlane = tesRender.CameraFarClip;
             _crosshair = FindObjectOfType<UICrosshair>();
         }
 

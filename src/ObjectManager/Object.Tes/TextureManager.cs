@@ -19,12 +19,11 @@ namespace OA.Tes
 
         public Texture2D LoadTexture(string texturePath, bool flipVertically = false)
         {
-            Texture2D texture;
-            if (!cachedTextures.TryGetValue(texturePath, out texture))
+            if (!cachedTextures.TryGetValue(texturePath, out Texture2D texture))
             {
                 // Load & cache the texture.
                 var textureInfo = LoadTextureInfo(texturePath);
-                texture = (textureInfo != null) ? textureInfo.ToTexture2D() : new Texture2D(1, 1);
+                texture = textureInfo != null ? textureInfo.ToTexture2D() : new Texture2D(1, 1);
                 if (flipVertically) { TextureUtils.FlipTexture2DVertically(texture); }
                 cachedTextures[texturePath] = texture;
             }
@@ -34,10 +33,9 @@ namespace OA.Tes
         public void PreloadTextureFileAsync(string texturePath)
         {
             // If the texture has already been created we don't have to load the file again.
-            if (cachedTextures.ContainsKey(texturePath)) { return; }
-            Task<Texture2DInfo> textureFileLoadingTask;
+            if (cachedTextures.ContainsKey(texturePath))  return;
             // Start loading the texture file asynchronously if we haven't already started.
-            if (!textureFilePreloadTasks.TryGetValue(texturePath, out textureFileLoadingTask))
+            if (!textureFilePreloadTasks.TryGetValue(texturePath, out Task<Texture2DInfo> textureFileLoadingTask))
             {
                 textureFileLoadingTask = r.LoadTextureAsync(texturePath);
                 textureFilePreloadTasks[texturePath] = textureFileLoadingTask;

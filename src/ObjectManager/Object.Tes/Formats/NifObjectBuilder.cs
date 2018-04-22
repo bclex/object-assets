@@ -62,8 +62,7 @@ namespace OA.Tes.Formats
         private GameObject InstantiateRootNiObject(NiObject obj)
         {
             var gameObject = InstantiateNiObject(obj);
-            bool shouldAddMissingColliders, isMarker;
-            ProcessExtraData(obj, out shouldAddMissingColliders, out isMarker);
+            ProcessExtraData(obj, out bool shouldAddMissingColliders, out bool isMarker);
             if (file.name != null && IsMarkerFileName(file.name))
             {
                 shouldAddMissingColliders = false;
@@ -84,7 +83,7 @@ namespace OA.Tes.Formats
             if (obj is NiObjectNET)
             {
                 var objNET = (NiObjectNET)obj;
-                var extraData = (objNET.extraData.value >= 0) ? (NiExtraData)file.blocks[objNET.extraData.value] : null;
+                var extraData = objNET.extraData.value >= 0 ? (NiExtraData)file.blocks[objNET.extraData.value] : null;
                 while (extraData != null)
                 {
                     if (extraData is NiStringExtraData)

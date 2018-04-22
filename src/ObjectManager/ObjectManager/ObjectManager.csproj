@@ -49,6 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IAssetPack.cs" />
     <Compile Include="Core\Audio\ASound.cs" />
     <Compile Include="Core\Audio\AudioEffects.cs" />
     <Compile Include="Core\Audio\VolumeState.cs" />
@@ -83,12 +84,18 @@
     <Compile Include="Core\Utils.cs" />
     <Compile Include="Core\Vector2i.cs" />
     <Compile Include="Formats\DdsReader.cs" />
+    <Compile Include="AssetManager.cs" />
+    <Compile Include="EngineId.cs" />
+    <Compile Include="HttpCache\HttpCacheManager.cs" />
     <Compile Include="VirtualFileSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XR\Editor\XRInputLoader.cs" />
     <Compile Include="XR\XRInput.cs" />
     <Compile Include="XR\XRVignetteOverlay.cs" />
     <Compile Include="_BCL\FileFormatException.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Sqlite\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

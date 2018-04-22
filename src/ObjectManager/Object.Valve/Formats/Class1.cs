@@ -1,6 +1,6 @@
 ﻿using ValveResourceFormat;
 
-namespace Object.Vlv
+namespace OA.Valve.Formats
 {
     public class Class1
     {

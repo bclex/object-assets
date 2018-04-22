@@ -40,8 +40,8 @@ namespace OA.Core.UI.Html.Parsing
         /// </summary>
         public bool EnableHeuristics
         {
-            get { return _tp.bEnableHeuristics; }
-            set { _tp.bEnableHeuristics = value; }
+            get { return _tp.EnableHeuristics; }
+            set { _tp.EnableHeuristics = value; }
         }
 
         /// <summary>

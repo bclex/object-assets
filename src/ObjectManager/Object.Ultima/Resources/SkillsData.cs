@@ -96,24 +96,48 @@ namespace OA.Ultima.Resources
     public class Skill
     {
         SkillVars _data;
-        public SkillVars Data { get { return _data; } }
+        public SkillVars Data
+        {
+            get { return _data; }
+        }
 
         int _index = -1;
-        public int Index { get { return _index; } }
+        public int Index
+        {
+            get { return _index; }
+        }
 
         bool _useButton;
-        public bool UseButton { get { return _useButton; } set { _useButton = value; } }
+        public bool UseButton
+        {
+            get { return _useButton; }
+            set { _useButton = value; }
+        }
 
         string _name = String.Empty;
-        public string Name { get { return _name; } set { _name = value; } }
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
 
         SkillCategory _category;
-        public SkillCategory Category { get { return _category; } set { _category = value; } }
+        public SkillCategory Category
+        {
+            get { return _category; }
+            set { _category = value; }
+        }
 
         byte _unknown;
-        public byte Unknown { get { return _unknown; } }
+        public byte Unknown
+        {
+            get { return _unknown; }
+        }
 
-        public int ID { get { return _index + 1; } }
+        public int ID
+        {
+            get { return _index + 1; }
+        }
 
         public Skill(SkillVars data)
         {
@@ -152,27 +176,51 @@ namespace OA.Ultima.Resources
 
     public sealed class SkillVars
     {
-        public static SkillVars NullV { get { return new SkillVars(-1, "null", false, 0, 0x0); } }
+        public static SkillVars NullV
+        {
+            get { return new SkillVars(-1, "null", false, 0, 0x0); }
+        }
 
         int _index = -1;
-        public int Index { get { return _index; } }
+        public int Index
+        {
+            get { return _index; }
+        }
 
         readonly string _name = String.Empty;
-        public string Name { get { return _name; } }
+        public string Name
+        {
+            get { return _name; }
+        }
 
         readonly int _extra;
-        public int Extra { get { return _extra; } }
+        public int Extra
+        {
+            get { return _extra; }
+        }
 
         readonly bool _useButton;
-        public bool UseButton { get { return _useButton; } }
+        public bool UseButton
+        {
+            get { return _useButton; }
+        }
 
         readonly byte _unknown;
-        public byte Unknown { get { return _unknown; } }
+        public byte Unknown
+        {
+            get { return _unknown; }
+        }
 
         SkillCategory _category;
-        public SkillCategory Category { get { return _category; } }
+        public SkillCategory Category
+        {
+            get { return _category; }
+        }
 
-        public int NameLength { get { return _name.Length; } }
+        public int NameLength
+        {
+            get { return _name.Length; }
+        }
 
         public SkillVars(int index, string name, bool useButton, int extra, byte unk)
         {
@@ -181,15 +229,20 @@ namespace OA.Ultima.Resources
             _useButton = useButton;
             _extra = extra;
             _unknown = unk;
+            _category = null;
         }
     }
 
     public class SkillCategories
     {
         static SkillCategory[] _list = new SkillCategory[0];
-        public static SkillCategory[] List { get { return _list; } }
+        public static SkillCategory[] List
+        {
+            get { return _list; }
+        }
 
         private SkillCategories() { }
+
         public static SkillCategory GetCategory(int index)
         {
             if (_list.Length > 0)
@@ -297,13 +350,22 @@ namespace OA.Ultima.Resources
         public static SkillCategoryData DefaultData { get { return new SkillCategoryData(0, -1, "null"); } }
 
         long _fileIndex = -1;
-        public long FileIndex { get { return _fileIndex; } }
+        public long FileIndex
+        {
+            get { return _fileIndex; }
+        }
 
         int _index = -1;
-        public int Index { get { return _index; } }
+        public int Index
+        {
+            get { return _index; }
+        }
 
         readonly string _name = String.Empty;
-        public string Name { get { return _name; } }
+        public string Name
+        {
+            get { return _name; }
+        }
 
         public SkillCategoryData(long fileIndex, int index, string name)
         {

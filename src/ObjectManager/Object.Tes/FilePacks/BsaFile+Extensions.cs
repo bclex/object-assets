@@ -4,6 +4,7 @@ using OA.Tes.Formats;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace OA.Tes.FilePacks
 {
@@ -50,16 +51,16 @@ namespace OA.Tes.FilePacks
             var filePath = textureNameInTexturesDir + ".dds";
             if (ContainsFile(filePath))
                 return filePath;
-            filePath = textureNameInTexturesDir + ".tga";
-            if (ContainsFile(filePath))
-                return filePath;
+            //filePath = textureNameInTexturesDir + ".tga";
+            //if (ContainsFile(filePath))
+            //    return filePath;
             var texturePathWithoutExtension = Path.GetDirectoryName(texturePath) + '/' + textureName;
             filePath = texturePathWithoutExtension + ".dds";
             if (ContainsFile(filePath))
                 return filePath;
-            filePath = texturePathWithoutExtension + ".tga";
-            if (ContainsFile(filePath))
-                return filePath;
+            //filePath = texturePathWithoutExtension + ".tga";
+            //if (ContainsFile(filePath))
+            //    return filePath;
             // Could not find the file.
             return null;
         }

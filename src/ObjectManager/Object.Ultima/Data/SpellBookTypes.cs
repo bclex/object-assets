@@ -1,6 +1,6 @@
 ﻿namespace OA.Ultima.Data
 {
-    public enum SpellBookTypes
+    public enum SpellbookTypes
     {
         Magic,
         Necromancer,

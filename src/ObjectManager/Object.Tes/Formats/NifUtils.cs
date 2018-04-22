@@ -18,7 +18,7 @@ namespace OA.Tes.Formats
 
         public static Matrix4x4 NifRotationMatrixToUnityRotationMatrix(Matrix4x4 NIFRotationMatrix)
         {
-            Matrix4x4 matrix = new Matrix4x4();
+            var matrix = new Matrix4x4();
             matrix.m00 = NIFRotationMatrix.m00;
             matrix.m01 = NIFRotationMatrix.m02;
             matrix.m02 = NIFRotationMatrix.m01;

@@ -1,4 +1,10 @@
-﻿namespace OA.Core.UI.Html
+﻿using OA.Core.UI.Html.Elements;
+using OA.Core.UI.Html.Styles;
+using OA.Ultima.Core;
+using OA.Ultima.Core.Graphics;
+using UnityEngine;
+
+namespace OA.Core.UI.Html
 {
     class HtmlRenderer
     {
@@ -8,22 +14,15 @@
         /// </summary>
         public Texture2D Render(BlockElement root, int ascender, HtmlLinkList links)
         {
-            SpriteBatchUI sb = Service.Get<SpriteBatchUI>();
-            GraphicsDevice graphics = sb.GraphicsDevice;
-
+            var sb = Service.Get<SpriteBatchUI>();
             if (root == null || root.Width == 0 || root.Height == 0) // empty text string
-            {
-                return new Texture2D(graphics, 1, 1);
-            }
-            uint[] pixels = new uint[root.Width * root.Height];
-
+                return new Texture2D(1, 1);
+            var pixels = new uint[root.Width * root.Height];
             if (root.Err_Cant_Fit_Children)
             {
-                for (int i = 0; i < pixels.Length; i++)
-                {
+                for (var i = 0; i < pixels.Length; i++)
                     pixels[i] = 0xffffff00;
-                }
-                Tracer.Error("Err: Block can't fit children.");
+                Utils.Error("Err: Block can't fit children.");
             }
             else
             {
@@ -36,24 +35,24 @@
                 }
             }
 
-            Texture2D texture = new Texture2D(graphics, root.Width, root.Height, false, SurfaceFormat.Color);
-            texture.SetData(pixels);
+            var texture = new Texture2D(root.Width, root.Height, TextureFormat.RGBA32, false);
+            //texture.SetData(pixels);
             return texture;
         }
 
         unsafe void DoRenderBlock(BlockElement root, int ascender, HtmlLinkList links, uint* ptr, int width, int height)
         {
-            foreach (AElement e in root.Children)
+            foreach (var e in root.Children)
             {
-                int x = e.Layout_X;
-                int y = e.Layout_Y - ascender; // ascender is always negative.
+                var x = e.Layout_X;
+                var y = e.Layout_Y - ascender; // ascender is always negative.
                 StyleState style = e.Style;
                 if (e is CharacterElement)
                 {
-                    IFont font = style.Font;
-                    ICharacter character = font.GetCharacter((e as CharacterElement).Character);
+                    var font = style.Font;
+                    var character = font.GetCharacter((e as CharacterElement).Character);
                     // HREF links should be colored white, because we will hue them at runtime.
-                    uint color = style.IsHREF ? 0xFFFFFFFF : Utility.UintFromColor(style.Color);
+                    var color = style.IsHREF ? 0xFFFFFFFF : Utility.UintFromColor(style.Color);
                     character.WriteToBuffer(ptr, x, y, width, height, font.Baseline, style.IsBold, style.IsItalic, style.IsUnderlined, style.DrawOutline, color, 0xFF000008);
                     // offset y by ascender for links...
                     if (character.YOffset < 0)
@@ -64,23 +63,19 @@
                 }
                 else if (e is ImageElement)
                 {
-                    ImageElement image = (e as ImageElement);
-                    image.AssociatedImage.Area = new Rectangle(x, y, image.Width, image.Height);
+                    var image = (e as ImageElement);
+                    image.AssociatedImage.Area = new RectInt(x, y, image.Width, image.Height);
                     if (style.IsHREF)
                     {
-                        links.AddLink(style, new Rectangle(x, y, e.Width, e.Height));
+                        links.AddLink(style, new RectInt(x, y, e.Width, e.Height));
                         image.AssociatedImage.LinkIndex = links.Count;
                     }
                 }
                 else if (e is BlockElement)
-                {
                     DoRenderBlock(e as BlockElement, ascender, links, ptr, width, height);
-                }
                 // set href link regions
                 if (style.IsHREF)
-                {
-                    links.AddLink(style, new Rectangle(x, y, e.Width, e.Height));
-                }
+                    links.AddLink(style, new RectInt(x, y, e.Width, e.Height));
             }
         }
     }

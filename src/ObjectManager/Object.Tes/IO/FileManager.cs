@@ -60,6 +60,7 @@ namespace OA.Tes.IO
                         else Utils.Debug($"Incompatible: {dataPath}");
                     }
                 }
+                HardAdds();
             }
             if (_fileDirectories.Count == 0)
                 _isDataPresent = false;
@@ -67,6 +68,16 @@ namespace OA.Tes.IO
             {
                 Utils.Debug(string.Empty);
                 Utils.Debug($"Selected: {_fileDirectories.Count}");
+            }
+        }
+
+        static void HardAdds()
+        {
+            var morrowind = @"C:\Program Files (x86)\Steam\steamapps\common\Morrowind";
+            if (Directory.Exists(morrowind))
+            {
+                var dataPath = Path.Combine(morrowind, "Data Files");
+                _fileDirectories.Add(GameId.Morrowind, dataPath);
             }
         }
 

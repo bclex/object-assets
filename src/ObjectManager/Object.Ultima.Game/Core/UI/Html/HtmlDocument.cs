@@ -1,71 +1,64 @@
-﻿using OA.Core.UI.Html.Parsing;
+﻿using OA.Core.UI.Html.Elements;
+using OA.Core.UI.Html.Parsing;
+using OA.Core.UI.Html.Styles;
+using OA.Ultima.Resources;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using UnityEngine;
 
 namespace OA.Core.UI.Html
 {
     class HtmlDocument
     {
-        static HTMLparser m_Parser = new HTMLparser();
-        static HtmlRenderer m_Renderer = new HtmlRenderer();
+        static HTMLparser _parser = new HTMLparser();
+        static HtmlRenderer _renderer = new HtmlRenderer();
 
-        string m_CachedHtml;
-        int m_MaxWidth;
-        HtmlImageList m_Images;
-        BlockElement m_Root;
-        bool m_CollapseToContent;
-        Action<int> m_OnPageOverflow;
-        HtmlLinkList m_Links;
+        string _cachedHtml;
+        int _maxWidth;
+        HtmlImageList _images;
+        BlockElement _root;
+        bool _collapseToContent;
+        Action<int> _onPageOverflow;
+        HtmlLinkList _links;
 
-        public int Width => m_Root.Width;
-        public int Height => m_Root.Height;
+        public int Width => _root.Width;
+        public int Height => _root.Height;
 
-        public int Ascender
-        {
-            get;
-            private set;
-        }
+        public int Ascender { get; private set; }
 
-        public int MaxLineCount
-        {
-            get;
-            private set;
-        }
+        public int MaxLineCount { get; private set; }
 
         public HtmlImageList Images
         {
             get
             {
-                if (m_Images == null)
-                {
+                if (_images == null)
                     return HtmlImageList.Empty;
-                }
-                return m_Images;
+                return _images;
             }
         }
 
-        public HtmlLinkList Links => m_Links == null ? HtmlLinkList.Empty : m_Links;
+        public HtmlLinkList Links => _links == null ? HtmlLinkList.Empty : _links;
 
         public string TextWithLineBreaks
         {
             get
             {
-                if (m_Root == null)
-                {
+                if (_root == null)
                     return string.Empty;
-                }
-                StringBuilder text = new StringBuilder(512);
-                for (int i = 0; i < m_Root.Children.Count; i++)
+                var b = new StringBuilder(512);
+                for (var i = 0; i < _root.Children.Count; i++)
                 {
-                    AElement e = m_Root.Children[i];
+                    var e = _root.Children[i];
                     if (e is CharacterElement)
-                    {
-                        text.Append((e as CharacterElement).Character);
-                    }
+                        b.Append((e as CharacterElement).Character);
                 }
-                return text.ToString();
+                return b.ToString();
             }
         }
 
-        public Texture2D Render() => m_Renderer.Render(m_Root, Ascender, Links);
+        public Texture2D Render() => _renderer.Render(_root, Ascender, Links);
 
         // ============================================================================================================
         // Ctor and Dipose
@@ -78,7 +71,7 @@ namespace OA.Core.UI.Html
 
         ~HtmlDocument()
         {
-            m_OnPageOverflow = null;
+            _onPageOverflow = null;
         }
 
         // ============================================================================================================
@@ -87,42 +80,36 @@ namespace OA.Core.UI.Html
 
         public void SetHtml(string html, int width, bool collapseContent = false)
         {
-            if (html == m_CachedHtml && m_MaxWidth == width && m_CollapseToContent == collapseContent)
-            {
+            if (html == _cachedHtml && _maxWidth == width && _collapseToContent == collapseContent)
                 return;
-            }
-            m_CachedHtml = html;
-            m_MaxWidth = width;
-            m_CollapseToContent = collapseContent;
+            _cachedHtml = html;
+            _maxWidth = width;
+            _collapseToContent = collapseContent;
             Reset();
             if (string.IsNullOrEmpty(html))
-            {
-                m_Root = null;
-            }
+                _root = null;
             else
             {
-                m_Root = ParseHtmlToBlocks(html);
-                GetAllImages(m_Root);
-                m_Links = GetAllHrefRegionsInBlock(m_Root);
-                DoLayout(m_Root, width);
+                _root = ParseHtmlToBlocks(html);
+                GetAllImages(_root);
+                _links = GetAllHrefRegionsInBlock(_root);
+                DoLayout(_root, width);
                 if (Ascender != 0)
-                {
-                    m_Root.Height -= Ascender; // ascender should always be negative.
-                }
+                    _root.Height -= Ascender; // ascender should always be negative.
             }
         }
 
         public void SetMaxLines(int max, Action<int> onPageOverflow)
         {
             MaxLineCount = max;
-            m_OnPageOverflow = onPageOverflow;
+            _onPageOverflow = onPageOverflow;
         }
 
         public void Reset()
         {
             // TODO: we need to handle disposing the ImageList better, it references textures.
             Images?.Clear();
-            m_Links?.Clear();
+            _links?.Clear();
         }
 
         // ============================================================================================================
@@ -131,54 +118,46 @@ namespace OA.Core.UI.Html
 
         BlockElement ParseHtmlToBlocks(string html)
         {
-            IResourceProvider provider = Service.Get<IResourceProvider>();
-            StyleParser styles = new StyleParser(provider);
+            var provider = Service.Get<IResourceProvider>();
+            var styles = new StyleParser(provider);
             BlockElement root, currentBlock;
             root = currentBlock = new BlockElement("root", styles.Style); // this is the root!
             // if this is not HTML, do not parse tags. Otherwise search out and interpret tags.
-            bool parseHTML = true;
+            var parseHTML = true;
             if (!parseHTML)
-            {
                 for (int i = 0; i < html.Length; i++)
-                {
                     currentBlock.AddAtom(new CharacterElement(styles.Style, html[i]));
-                }
-            }
             else
             {
-                m_Parser.Init(html);
+                _parser.Init(html);
                 HTMLchunk chunk;
-                while ((chunk = ParseNext(m_Parser)) != null)
+                while ((chunk = ParseNext(_parser)) != null)
                 {
-                    if (!(chunk.oHTML == string.Empty))
+                    if (!(chunk.Html == string.Empty))
                     {
                         // This is a span of text.
-                        string text = chunk.oHTML;
+                        var text = chunk.Html;
                         // make sure to replace escape characters!
                         text = EscapeCharacters.ReplaceEscapeCharacters(text);
                         //Add the characters to the current box
-                        for (int i = 0; i < text.Length; i++)
-                        {
+                        for (var i = 0; i < text.Length; i++)
                             currentBlock.AddAtom(new CharacterElement(styles.Style, text[i]));
-                        }
                     }
                     else
                     {
                         // This is a tag. interpret the tag and edit the openTags list.
                         // It may also be an atom, in which case we should add it to the list of atoms!
                         AElement atom = null;
-                        if (chunk.bClosure && !chunk.bEndClosure)
+                        if (chunk.Closure && !chunk.EndClosure)
                         {
                             styles.CloseOneTag(chunk);
-                            if (currentBlock.Tag == chunk.sTag)
-                            {
+                            if (currentBlock.Tag == chunk.Tag)
                                 currentBlock = currentBlock.Parent;
-                            }
                         }
                         else
                         {
-                            bool isBlockTag = false;
-                            switch (chunk.sTag)
+                            var isBlockTag = false;
+                            switch (chunk.Tag)
                             {
                                 // ====================================================================================
                                 // Anchor elements are added to the open tag collection as HREFs.
@@ -233,11 +212,11 @@ namespace OA.Core.UI.Html
                                 // Every other element is not interpreted, but rendered as text. Easy!
                                 default:
                                     {
-                                        string text = html.Substring(chunk.iChunkOffset, chunk.iChunkLength);
+                                        var text = html.Substring(chunk.ChunkOffset, chunk.ChunkLength);
                                         // make sure to replace escape characters!
                                         text = EscapeCharacters.ReplaceEscapeCharacters(text);
                                         //Add the characters to the current box
-                                        for (int i = 0; i < text.Length; i++)
+                                        for (var i = 0; i < text.Length; i++)
                                             currentBlock.AddAtom(new CharacterElement(styles.Style, text[i]));
                                     }
                                     break;
@@ -246,7 +225,7 @@ namespace OA.Core.UI.Html
                             if (atom != null)
                             {
                                 currentBlock.AddAtom(atom);
-                                if (isBlockTag && !chunk.bEndClosure)
+                                if (isBlockTag && !chunk.EndClosure)
                                     currentBlock = (BlockElement)atom;
                             }
                             styles.CloseAnySoloTags();
@@ -254,13 +233,12 @@ namespace OA.Core.UI.Html
                     }
                 }
             }
-
             return root;
         }
 
         HTMLchunk ParseNext(HTMLparser parser)
         {
-            HTMLchunk chunk = parser.ParseNext();
+            var chunk = parser.ParseNext();
             return chunk;
         }
 
@@ -283,11 +261,11 @@ namespace OA.Core.UI.Html
         {
             int longestBlockWidth = 0, blockWidth = 0;
             int longestLineWidth = 0, lineWidth = 0;
-            int styleWidth = 0;
-            bool isLastElement = false;
-            for (int i = 0; i < root.Children.Count; i++)
+            var styleWidth = 0;
+            var isLastElement = false;
+            for (var i = 0; i < root.Children.Count; i++)
             {
-                AElement e = root.Children[i];
+                var e = root.Children[i];
                 isLastElement = i >= root.Children.Count - 1;
                 if (e is BlockElement)
                 {
@@ -299,44 +277,31 @@ namespace OA.Core.UI.Html
                 else
                 {
                     if (!e.IsThisAtomABreakingSpace)
-                    {
                         blockWidth += e.Width;
-                    }
                     if (e.IsThisAtomABreakingSpace || isLastElement)
                     {
                         if (blockWidth > root.Width)
-                        {
-                            int restartAtIndex, restartBlockWidth;
-                            if (TryReduceBlockWidth(root, i - 1, blockWidth + styleWidth, out restartAtIndex, out restartBlockWidth))
+                            if (TryReduceBlockWidth(root, i - 1, blockWidth + styleWidth, out int restartAtIndex, out int restartBlockWidth))
                             {
                                 i = restartAtIndex - 1;
                                 blockWidth = restartBlockWidth;
                                 lineWidth = restartBlockWidth;
                                 continue;
                             }
-                        }
                         if (blockWidth + styleWidth > longestBlockWidth)
-                        {
                             longestBlockWidth = blockWidth + styleWidth;
-                        }
                         blockWidth = 0;
                     }
                     lineWidth += e.Width;
                     if (e.Style.ExtraWidth > styleWidth)
-                    {
                         styleWidth = e.Style.ExtraWidth;
-                    }
                 }
                 if (e.IsThisAtomALineBreak || isLastElement)
                 {
                     if (blockWidth + styleWidth > longestBlockWidth)
-                    {
                         longestBlockWidth = blockWidth + styleWidth;
-                    }
                     if (lineWidth + styleWidth > longestLineWidth)
-                    {
                         longestLineWidth = lineWidth + styleWidth;
-                    }
                     blockWidth = 0;
                     lineWidth = 0;
                     styleWidth = 0;
@@ -345,25 +310,23 @@ namespace OA.Core.UI.Html
             root.Layout_MinWidth = longestBlockWidth;
             root.Layout_MaxWidth = longestLineWidth;
         }
-        
+
         bool TryReduceBlockWidth(BlockElement root, int blockEndIndex, int blockWidth, out int restartAtIndex, out int restartBlockWidth)
         {
             restartAtIndex = 0;
             restartBlockWidth = 0;
-            for (int i = blockEndIndex; i >= 0; i--)
+            for (var i = blockEndIndex; i >= 0; i--)
             {
-                AElement e = root.Children[i];
+                var e = root.Children[i];
                 if (e.IsThisAtomABreakingSpace)
-                {
                     return false;
-                }
                 blockWidth -= e.Width;
                 if (blockWidth <= root.Width)
                 {
                     // if this is text, hyphenate, otherwise just insert a line break.
                     if (e is CharacterElement)
                     {
-                        AElement hyphen = new InternalHyphenBreakElement(e.Style);
+                        var hyphen = new InternalHyphenBreakElement(e.Style);
                         if (blockWidth + hyphen.Width <= root.Width)
                         {
                             root.Children.Insert(i, hyphen);
@@ -394,90 +357,75 @@ namespace OA.Core.UI.Html
             //      -> Flow blocks to the next y line until all remaining blocks can fit on one line.
             //      -> Expand remaining blocks, and start all over again.
             //      -> Actually, this is not yet implemented. Any takers?
-            int ascender = 0;
+            var ascender = 0;
             if (root.Layout_MaxWidth <= root.Width) // 1
             {
-                if (m_CollapseToContent)
-                {
+                if (_collapseToContent)
                     root.Width = root.Layout_MaxWidth;
-                }
-                foreach (AElement element in root.Children)
-                {
+                foreach (var element in root.Children)
                     if (element is BlockElement)
-                    {
                         (element as BlockElement).Width = (element as BlockElement).Layout_MaxWidth;
-                    }
-                }
                 LayoutElementsHorizontal(root, root.Layout_X, root.Layout_Y, out ascender);
             }
             else if (root.Layout_MinWidth <= root.Width || root.Layout_MinWidth == root.Layout_MaxWidth) // 2
             {
                 // get the amount of extra width that we could fill.
-                int extraRequestedWidth = 0;
-                int extraAllowedWidth = root.Width;
-                foreach (AElement element in root.Children)
-                {
+                var extraRequestedWidth = 0;
+                var extraAllowedWidth = root.Width;
+                foreach (var element in root.Children)
                     if (element is BlockElement)
                     {
-                        BlockElement block = (element as BlockElement);
+                        var block = (element as BlockElement);
                         extraRequestedWidth = block.Layout_MaxWidth - block.Layout_MinWidth;
                         extraAllowedWidth -= block.Layout_MinWidth;
                     }
-                }
                 // distribute the extra width.
-                foreach (AElement element in root.Children)
-                {
+                foreach (var element in root.Children)
                     if (element is BlockElement)
                     {
-                        BlockElement block = (element as BlockElement);
+                        var block = (element as BlockElement);
                         block.Width = block.Layout_MinWidth + (int)(((float)(block.Layout_MaxWidth - block.Layout_MinWidth) / extraRequestedWidth) * extraAllowedWidth);
                         extraAllowedWidth -= block.Layout_MaxWidth - block.Layout_MinWidth;
                     }
-                }
                 LayoutElementsHorizontal(root, root.Layout_X, root.Layout_Y, out ascender);
             }
-            else // 4
-            {
-                // At least one block cannot fit within the width.
-                root.Err_Cant_Fit_Children = true;
-            }
+            // 4 // At least one block cannot fit within the width.
+            else root.Err_Cant_Fit_Children = true;
             if (ascender < Ascender)
-            {
                 Ascender = ascender;
-            }
         }
 
         void LayoutElementsHorizontal(BlockElement root, int x, int y, out int ascenderDelta)
         {
-            int x0 = x;
-            int x1 = x + root.Width;
+            var x0 = x;
+            var x1 = x + root.Width;
             int height = 0, lineHeight = 0;
             ascenderDelta = 0;
-            int lineBeganAtElementIndex = 0;
-            int lineCount = 0;
+            var lineBeganAtElementIndex = 0;
+            var lineCount = 0;
 
-            for (int i = 0; i < root.Children.Count; i++)
+            for (var i = 0; i < root.Children.Count; i++)
             {
-                AElement e0 = root.Children[i];
+                var e0 = root.Children[i];
                 if (e0.IsThisAtomALineBreak)
                 {
                     // root alignment styles align a root's children elements within the root width.
                     if (root.Alignment == Alignments.Center)
                     {
-                        int centerX = x + (x1 - x0) / 2;
-                        for (int j = lineBeganAtElementIndex; j < i; j++)
+                        var centerX = x + (x1 - x0) / 2;
+                        for (var j = lineBeganAtElementIndex; j < i; j++)
                         {
-                            AElement e1 = root.Children[j];
+                            var e1 = root.Children[j];
                             e1.Layout_X = centerX;
                             centerX += e1.Width;
                         }
                     }
                     else if (root.Alignment == Alignments.Right)
                     {
-                        int rightX = x1 - x0;
-                        for (int j = lineBeganAtElementIndex; j < i; j++)
+                        var rightX = x1 - x0;
+                        for (var j = lineBeganAtElementIndex; j < i; j++)
                         {
-                            AElement e1 = root.Children[j];
+                            var e1 = root.Children[j];
                             e1.Layout_X = rightX;
                             rightX += e1.Width;
                         }
@@ -485,9 +433,7 @@ namespace OA.Core.UI.Html
                     e0.Layout_X = x0;
                     e0.Layout_Y = y;
                     if (lineHeight < e0.Height)
-                    {
                         lineHeight = e0.Height;
-                    }
                     y += lineHeight;
                     x0 = x;
                     x1 = x + root.Width;
@@ -497,20 +443,17 @@ namespace OA.Core.UI.Html
                     lineCount++;
                     if (MaxLineCount > 0 && lineCount >= MaxLineCount)
                     {
-                        int index = 0;
-                        for (int j = 0; j < i; j++)
-                        {
+                        var index = 0;
+                        for (var j = 0; j < i; j++)
                             index += root.Children[j].IsThisAtomInternalOnly ? 0 : 1;
-                        }
                         root.Children.RemoveRange(i, root.Children.Count - i);
-                        m_OnPageOverflow?.Invoke(index);
+                        _onPageOverflow?.Invoke(index);
                         break;
                     }
                 }
                 else
                 {
-                    int wordWidth, styleWidth, wordHeight, ascender;
-                    List<AElement> word = LayoutElementsGetWord(root.Children, i, out wordWidth, out styleWidth, out wordHeight, out ascender);
+                    var word = LayoutElementsGetWord(root.Children, i, out int wordWidth, out int styleWidth, out int wordHeight, out int ascender);
                     if (wordWidth + styleWidth > root.Width)
                     {
                         // Can't fit this word on even a full line. Must break it somewhere. 
@@ -526,9 +469,7 @@ namespace OA.Core.UI.Html
                         // TODO: we should introduce some heuristic that that super long words aren't flowed. Perhaps words 
                         // longer than 8 chars, where the break would be after character 3 and before 3 characters from the end?
                         if (word.Count == 1 && word[0].IsThisAtomABreakingSpace)
-                        {
                             root.Children.Insert(i + 1, new InternalLineBreakElement(e0.Style));
-                        }
                         else
                         {
                             root.Children.Insert(i, new InternalLineBreakElement(e0.Style));
@@ -538,11 +479,11 @@ namespace OA.Core.UI.Html
                     else
                     {
                         // This word can fit on the current line without breaking. Lay it out!
-                        foreach (AElement e1 in word)
+                        foreach (var e1 in word)
                         {
                             if (e1 is BlockElement)
                             {
-                                Alignments alignment = (e1 as BlockElement).Alignment;
+                                var alignment = (e1 as BlockElement).Alignment;
                                 switch (alignment)
                                 {
                                     case Alignments.Left:
@@ -577,9 +518,7 @@ namespace OA.Core.UI.Html
                     }
                 }
                 if (e0.Height > lineHeight)
-                {
                     lineHeight = e0.Height;
-                }
             }
             root.Height = height + lineHeight;
         }
@@ -596,67 +535,47 @@ namespace OA.Core.UI.Html
         /// <returns></returns>
         List<AElement> LayoutElementsGetWord(List<AElement> elements, int start, out int wordWidth, out int styleWidth, out int wordHeight, out int ascender)
         {
-            List<AElement> word = new List<AElement>();
+            var word = new List<AElement>();
             wordWidth = 0;
             wordHeight = 0;
             styleWidth = 0;
             ascender = 0;
-            for (int i = start; i < elements.Count; i++)
+            for (var i = start; i < elements.Count; i++)
             {
                 if (elements[i].IsThisAtomALineBreak)
-                {
                     return word;
-                }
                 if (elements[i].CanBreakAtThisAtom)
-                {
                     if (word.Count > 0)
-                    {
                         return word;
-                    }
-                }
                 word.Add(elements[i]);
                 wordWidth += elements[i].Width;
                 styleWidth -= elements[i].Width;
                 if (styleWidth < 0)
-                {
                     styleWidth = 0;
-                }
                 if (wordHeight < elements[i].Height)
-                {
                     wordHeight = elements[i].Height;
-                }
                 // we may need to add additional width for special style characters.
                 if (elements[i] is CharacterElement)
                 {
-                    CharacterElement atom = (CharacterElement)elements[i];
-                    IFont font = atom.Style.Font;
-                    ICharacter ch = font.GetCharacter(atom.Character);
+                    var atom = (CharacterElement)elements[i];
+                    var font = atom.Style.Font;
+                    var ch = font.GetCharacter(atom.Character);
                     // italic characters need a little extra width if they are at the end of the line.
                     if (atom.Style.IsItalic)
-                    {
                         styleWidth = font.Height / 2;
-                    }
                     if (atom.Style.DrawOutline)
                     {
                         styleWidth += 2;
                         if (-1 < ascender)
-                        {
                             ascender = -1;
-                        }
                     }
                     if (ch.YOffset + ch.Height > wordHeight)
-                    {
                         wordHeight = ch.YOffset + ch.Height;
-                    }
                     if (ch.YOffset < 0 && ascender > ch.YOffset)
-                    {
                         ascender = ch.YOffset;
-                    }
                 }
                 if (i == elements.Count - 1 || elements[i].CanBreakAtThisAtom)
-                {
                     return word;
-                }
             }
             return word;
         }
@@ -666,9 +585,9 @@ namespace OA.Core.UI.Html
         /// </summary>
         void LayoutElements_BreakWordAtLineEnd(List<AElement> elements, int start, int lineWidth, List<AElement> word, int wordWidth, int styleWidth)
         {
-            InternalLineBreakElement lineend = new InternalLineBreakElement(word[0].Style);
-            int width = lineend.Width + styleWidth + 2;
-            for (int i = 0; i < word.Count; i++)
+            var lineend = new InternalLineBreakElement(word[0].Style);
+            var width = lineend.Width + styleWidth + 2;
+            for (var i = 0; i < word.Count; i++)
             {
                 width += word[i].Width;
                 if (width >= lineWidth)
@@ -685,35 +604,31 @@ namespace OA.Core.UI.Html
 
         void GetAllImages(BlockElement block)
         {
-            IResourceProvider provider = Service.Get<IResourceProvider>();
-            foreach (AElement atom in block.Children)
+            var provider = Service.Get<IResourceProvider>();
+            foreach (var atom in block.Children)
             {
                 if (atom is ImageElement)
                 {
-                    if (m_Images == null)
-                    {
-                        m_Images = new HtmlImageList();
-                    }
-                    ImageElement img = (ImageElement)atom;
+                    if (_images == null)
+                        _images = new HtmlImageList();
+                    var img = (ImageElement)atom;
                     if (img.ImageType == ImageElement.ImageTypes.UI)
                     {
-                        Texture2D standard = provider.GetUITexture(img.ImgSrc);
-                        Texture2D over = provider.GetUITexture(img.ImgSrcOver);
-                        Texture2D down = provider.GetUITexture(img.ImgSrcDown);
-                        m_Images.AddImage(new Rectangle(), standard, over, down);
+                        var standard = provider.GetUITexture(img.ImgSrc);
+                        var over = provider.GetUITexture(img.ImgSrcOver);
+                        var down = provider.GetUITexture(img.ImgSrcDown);
+                        _images.AddImage(new RectInt(), standard, over, down);
                     }
                     else if (img.ImageType == ImageElement.ImageTypes.Item)
                     {
                         Texture2D standard, over, down;
                         standard = over = down = provider.GetItemTexture(img.ImgSrc);
-                        m_Images.AddImage(new Rectangle(), standard, over, down);
+                        _images.AddImage(new RectInt(), standard, over, down);
                     }
-                    img.AssociatedImage = m_Images[m_Images.Count - 1];
+                    img.AssociatedImage = _images[_images.Count - 1];
                 }
                 else if (atom is BlockElement)
-                {
                     GetAllImages(atom as BlockElement);
-                }
             }
         }
 
@@ -726,33 +641,27 @@ namespace OA.Core.UI.Html
         // Get Carat Position, given an input index into the text or a clicked position
         // ============================================================================================================
 
-        public Point GetCaratPositionByIndex(int textIndex)
+        public Vector2Int GetCaratPositionByIndex(int textIndex)
         {
-            Point carat = Point.Zero;
-            if (m_Root == null)
-            {
+            var carat = Vector2Int.zero;
+            if (_root == null)
                 return carat;
-            }
-            int index = 0;
-            for (int i = 0; i < m_Root.Children.Count; i++)
+            var index = 0;
+            for (var i = 0; i < _root.Children.Count; i++)
             {
-                AElement e = m_Root.Children[i];
+                var e = _root.Children[i];
                 if (index == textIndex && !e.IsThisAtomInternalOnly)
-                {
                     return carat;
-                }
                 if (e.IsThisAtomALineBreak)
                 {
-                    carat.X = 0;
-                    carat.Y += e.Height;
+                    carat.x = 0;
+                    carat.y += e.Height;
                 }
-                carat.X += e.Width;
+                carat.x += e.Width;
                 if (e.IsThisAtomInternalOnly)
                 {
                     if (index == textIndex)
-                    {
                         return carat;
-                    }
                     index--;
                 }
                 index++;
@@ -760,46 +669,38 @@ namespace OA.Core.UI.Html
             return carat;
         }
 
-        public int GetCaratIndexByPosition(Point pointInText)
+        public int GetCaratIndexByPosition(Vector2Int pointInText)
         {
-            int index = 0;
-            if (m_Root == null)
-            {
+            var index = 0;
+            if (_root == null)
                 return index;
-            }
-            Rectangle rect = new Rectangle(0,0,0,0);
-            for (int i = 0; i < m_Root.Children.Count; i++)
+            var rect = new RectInt(0, 0, 0, 0);
+            for (var i = 0; i < _root.Children.Count; i++)
             {
-                AElement e = m_Root.Children[i];
-                rect.Width = e.Width;
-                rect.Height = e.Height;
+                var e = _root.Children[i];
+                rect.width = e.Width;
+                rect.height = e.Height;
                 if (rect.Contains(pointInText))
                 {
                     return index;
                 }
                 if (e.IsThisAtomALineBreak)
                 {
-                    rect.Width = m_MaxWidth - rect.X;
+                    rect.width = _maxWidth - rect.x;
                     if (rect.Contains(pointInText))
-                    {
                         return e.IsThisAtomInternalOnly ? index - 1 : index;
-                    }
-                    rect.X = 0;
-                    rect.Y += e.Height;
+                    rect.x = 0;
+                    rect.y += e.Height;
                 }
                 if (e.IsThisAtomInternalOnly)
-                {
                     index--;
-                }
-                rect.X += e.Width;
+                rect.x += e.Width;
                 index++;
             }
             // check for click at bottom of page
-            rect = new Rectangle(0, rect.Y, m_MaxWidth, 2000);
+            rect = new RectInt(0, rect.y, _maxWidth, 2000);
             if (rect.Contains(pointInText))
-            {
                 return index; // end of the last line
-            }
             return -1; // don't change
         }
     }

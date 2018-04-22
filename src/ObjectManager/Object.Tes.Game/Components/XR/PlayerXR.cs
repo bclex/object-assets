@@ -20,7 +20,7 @@ namespace OA.Tes.Components.XR
         Transform _transform = null;
         RectTransform _canvas = null;
         Transform _pivotCanvas = null;
-        RectTransform _hud = null;
+        //RectTransform _hud = null;
 
         [SerializeField]
         bool _isSpectator = false;

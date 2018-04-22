@@ -45,6 +45,8 @@ namespace OA.Tes.FilePacks
 
         public BsaFile(string filePath)
         {
+            if (filePath == null)
+                return;
             r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             ReadMetadata();
         }
@@ -71,7 +73,7 @@ namespace OA.Tes.FilePacks
         /// <summary>
         /// Determines whether the BSA archive contains a file.
         /// </summary>
-        public bool ContainsFile(string filePath)
+        public virtual bool ContainsFile(string filePath)
         {
             return fileMetadataHashTable.ContainsKey(HashFilePath(filePath));
         }
@@ -79,7 +81,7 @@ namespace OA.Tes.FilePacks
         /// <summary>
         /// Loads an archived file's data.
         /// </summary>
-        public byte[] LoadFileData(string filePath)
+        public virtual byte[] LoadFileData(string filePath)
         {
             var hash = HashFilePath(filePath);
             FileMetadata metadata;
