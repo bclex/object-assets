@@ -14,7 +14,7 @@ namespace OA.Components
         UICrosshair _crosshair;
         bool _paused = false;
         bool _isGrounded = false;
-        bool _isFlying = true;
+        bool _isFlying = false;
 
         [Header("Movement Settings")]
         public float slowSpeed = 3;
@@ -47,7 +47,7 @@ namespace OA.Components
             get { return _paused; }
         }
 
-        private void Start()
+        void Start()
         {
             _transform = GetComponent<Transform>();
             _camTransform = Camera.main.GetComponent<Transform>();
@@ -61,7 +61,7 @@ namespace OA.Components
             _crosshair = FindObjectOfType<UICrosshair>();
         }
 
-        private void Update()
+        void Update()
         {
             if (_paused)
                 return;
@@ -78,7 +78,7 @@ namespace OA.Components
                 lantern.enabled = !lantern.enabled;
         }
 
-        private void FixedUpdate()
+        void FixedUpdate()
         {
             _isGrounded = CalculateIsGrounded();
             if (_isGrounded || IsFlying)
@@ -87,7 +87,7 @@ namespace OA.Components
                 ApplyAirborneForce();
         }
 
-        private void Rotate()
+        void Rotate()
         {
             if (Cursor.lockState != CursorLockMode.Locked)
             {
@@ -114,7 +114,7 @@ namespace OA.Components
             _transform.localEulerAngles = new Vector3(0, eulerAngles.y, 0);
         }
 
-        private void SetVelocity()
+        void SetVelocity()
         {
             Vector3 velocity;
             if (!IsFlying)
@@ -126,7 +126,7 @@ namespace OA.Components
             _rigidbody.velocity = velocity;
         }
 
-        private void ApplyAirborneForce()
+        void ApplyAirborneForce()
         {
             var forceDirection = _transform.TransformVector(CalculateLocalMovementDirection());
             forceDirection.y = 0;
@@ -135,7 +135,7 @@ namespace OA.Components
             _rigidbody.AddForce(force);
         }
 
-        private Vector3 CalculateLocalMovementDirection()
+        Vector3 CalculateLocalMovementDirection()
         {
             // Calculate the local movement direction.
             var direction = new Vector3(InputManager.GetAxis("Horizontal"), 0.0f, InputManager.GetAxis("Vertical"));
@@ -154,7 +154,7 @@ namespace OA.Components
             return direction.normalized;
         }
 
-        private float CalculateSpeed()
+        float CalculateSpeed()
         {
             var speed = normalSpeed;
             if (InputManager.GetButton("Run")) speed = fastSpeed;
@@ -163,12 +163,12 @@ namespace OA.Components
             return speed;
         }
 
-        private Vector3 CalculateLocalVelocity()
+        Vector3 CalculateLocalVelocity()
         {
             return CalculateSpeed() * CalculateLocalMovementDirection();
         }
 
-        private bool CalculateIsGrounded()
+        bool CalculateIsGrounded()
         {
             var playerCenter = _transform.position + _capsuleCollider.center;
             var castedSphereRadius = 0.8f * _capsuleCollider.radius;
