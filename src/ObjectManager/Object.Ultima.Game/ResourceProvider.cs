@@ -72,7 +72,7 @@ namespace OA.Ultima
         /// <summary>
         /// Returns a Ultima Online Hue index that approximates the passed color.
         /// </summary>
-        public ushort GetWebSafeHue(Color color)
+        public ushort GetWebSafeHue(Color32 color)
         {
             return (ushort)HueData.GetWebSafeHue(color);
         }
@@ -97,7 +97,7 @@ namespace OA.Ultima
             var type = typeof(T);
             if (_resources.ContainsKey(type))
             {
-                Utils.Critical($"Attempted to register resource provider of type {type} twice.");
+                Utils.Error($"Attempted to register resource provider of type {type} twice.");
                 _resources.Remove(type);
             }
             _resources.Add(type, resource);
@@ -113,7 +113,7 @@ namespace OA.Ultima
             }
             else
             {
-                Utils.Critical($"Attempted to get resource provider of type {type}, but no provider with this type is registered.");
+                Utils.Error($"Attempted to get resource provider of type {type}, but no provider with this type is registered.");
                 return default(T);
             }
         }

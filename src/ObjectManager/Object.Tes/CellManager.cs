@@ -9,28 +9,28 @@ using OA.Tes.FilePacks.Records;
 
 namespace OA.Tes
 {
-    public class InRangeCellInfo
-    {
-        public GameObject gameObject;
-        public GameObject objectsContainerGameObject;
-        public CELLRecord cellRecord;
-        public IEnumerator objectsCreationCoroutine;
+    //public class InRangeCellInfo
+    //{
+    //    public GameObject gameObject;
+    //    public GameObject objectsContainerGameObject;
+    //    public CELLRecord cellRecord;
+    //    public IEnumerator objectsCreationCoroutine;
 
-        public InRangeCellInfo(GameObject gameObject, GameObject objectsContainerGameObject, CELLRecord cellRecord, IEnumerator objectsCreationCoroutine)
-        {
-            this.gameObject = gameObject;
-            this.objectsContainerGameObject = objectsContainerGameObject;
-            this.cellRecord = cellRecord;
-            this.objectsCreationCoroutine = objectsCreationCoroutine;
-        }
-    }
+    //    public InRangeCellInfo(GameObject gameObject, GameObject objectsContainerGameObject, CELLRecord cellRecord, IEnumerator objectsCreationCoroutine)
+    //    {
+    //        this.gameObject = gameObject;
+    //        this.objectsContainerGameObject = objectsContainerGameObject;
+    //        this.cellRecord = cellRecord;
+    //        this.objectsCreationCoroutine = objectsCreationCoroutine;
+    //    }
+    //}
 
-    public class RefCellObjInfo
-    {
-        public CELLRecord.RefObjDataGroup refObjDataGroup;
-        public Record referencedRecord;
-        public string modelFilePath;
-    }
+    //public class RefCellObjInfo
+    //{
+    //    public CELLRecord.RefObjDataGroup refObjDataGroup;
+    //    public Record referencedRecord;
+    //    public string modelFilePath;
+    //}
 
     public class CellManager : ICellManager
     {
@@ -159,8 +159,7 @@ namespace OA.Tes
                 cellObjName = "cell " + cell.gridCoords.ToString();
                 land = _dataPack.FindLANDRecord(cell.gridCoords);
             }
-            else
-                cellObjName = cell.NAME.value;
+            else cellObjName = cell.NAME.value;
             var cellObj = new GameObject(cellObjName);
             cellObj.tag = "Cell";
             var cellObjectsContainer = new GameObject("objects");
@@ -229,10 +228,11 @@ namespace OA.Tes
                 var refObjInfo = new RefCellObjInfo();
                 refObjInfo.refObjDataGroup = cell.refObjDataGroups[i];
                 // Get the record the RefObjDataGroup references.
-                _dataPack.objectsByIDString.TryGetValue(refObjInfo.refObjDataGroup.NAME.value, out refObjInfo.referencedRecord);
+                var refObjDataGroup = (CELLRecord.RefObjDataGroup)refObjInfo.refObjDataGroup;
+                _dataPack.objectsByIDString.TryGetValue(refObjDataGroup.NAME.value, out refObjInfo.referencedRecord);
                 if (refObjInfo.referencedRecord != null)
                 {
-                    var modelFileName = RecordUtils.GetModelFileName(refObjInfo.referencedRecord);
+                    var modelFileName = RecordUtils.GetModelFileName((Record)refObjInfo.referencedRecord);
                     // If the model file name is valid, store the model file path.
                     if (!string.IsNullOrEmpty(modelFileName))
                         refObjInfo.modelFilePath = "meshes\\" + modelFileName;
@@ -291,7 +291,7 @@ namespace OA.Tes
                     }
                 }
             }
-            else Utils.Log("Unknown Object: " + refCellObjInfo.refObjDataGroup.NAME.value);
+            else Utils.Log("Unknown Object: " + ((CELLRecord.RefObjDataGroup)refCellObjInfo.refObjDataGroup).NAME.value);
         }
 
         private GameObject InstantiateLight(LIGHRecord LIGH, bool indoors)
@@ -315,7 +315,7 @@ namespace OA.Tes
         /// </summary>
         private void PostProcessInstantiatedCellObject(GameObject gameObject, RefCellObjInfo refCellObjInfo)
         {
-            var refObjDataGroup = refCellObjInfo.refObjDataGroup;
+            var refObjDataGroup = (CELLRecord.RefObjDataGroup)refCellObjInfo.refObjDataGroup;
             // Handle object transforms.
             if (refObjDataGroup.XSCL != null)
                 gameObject.transform.localScale = Vector3.one * refObjDataGroup.XSCL.value;

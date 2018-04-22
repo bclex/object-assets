@@ -5,7 +5,7 @@ using OA.Tes.UI;
 using System.IO;
 using UnityEngine;
 
-namespace OA.Tes.Components
+namespace OA.Tes
 {
     public class TesGame : MonoBehaviour
     {

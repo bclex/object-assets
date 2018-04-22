@@ -167,10 +167,10 @@ namespace OA.Ultima.Core
         public static string ColorToHexString(Color32 color)
         {
             var bytes = new byte[4];
-            bytes[0] = Convert.ToByte(color.a);
-            bytes[1] = Convert.ToByte(color.r);
-            bytes[2] = Convert.ToByte(color.g);
-            bytes[3] = Convert.ToByte(color.b);
+            bytes[0] = color.a;
+            bytes[1] = color.r;
+            bytes[2] = color.g;
+            bytes[3] = color.b;
             var chars = new char[8];
             for (var i = 0; i < 4; i++)
             {
@@ -207,7 +207,7 @@ namespace OA.Ultima.Core
 
         public static uint UintFromColor(Color32 color)
         {
-            return Convert.ToUInt32(color.a) << 24 | (Convert.ToUInt32(color.b) << 16) | (Convert.ToUInt32(color.g) << 8) | Convert.ToUInt32(color.r);
+            return ((uint)color.a) << 24 | ((uint)color.b << 16) | ((uint)color.g << 8) | (uint)color.r;
         }
 
         public static Color32 ColorFromHexString(string hex)
@@ -227,33 +227,33 @@ namespace OA.Ultima.Core
                         var r = (HexDigitToByte(hex[0]) << 4) + HexDigitToByte(hex[1]);
                         var g = (HexDigitToByte(hex[2]) << 4) + HexDigitToByte(hex[3]);
                         var b = (HexDigitToByte(hex[4]) << 4) + HexDigitToByte(hex[5]);
-                        return new Color32((byte)r, (byte)g, (byte)b);
+                        return new Color32((byte)r, (byte)g, (byte)b, 0);
                     }
                 case 3:
                     {
                         var r = (HexDigitToByte(hex[0]) << 4) + HexDigitToByte(hex[0]);
                         var g = (HexDigitToByte(hex[1]) << 4) + HexDigitToByte(hex[1]);
                         var b = (HexDigitToByte(hex[2]) << 4) + HexDigitToByte(hex[2]);
-                        return new Color32((byte)r, (byte)g, (byte)b);
+                        return new Color32((byte)r, (byte)g, (byte)b, 0);
                     }
-                default: return Color32.black;
+                default: return Color.black;
             }
         }
 
-        private static readonly Dictionary<string, Color32> ColorTable = new Dictionary<string, Color32>()
+        private static readonly Dictionary<string, Color> ColorTable = new Dictionary<string, Color>()
         {
-            {"white", Color32.white},
-            {"red", Color32.red},
-            {"blue", Color32.blue},
-            {"green", Color32.green},
-            {"orange", Color32.magenta},
-            {"yellow", Color32.yellow}
+            {"white", Color.white},
+            {"red", Color.red},
+            {"blue", Color.blue},
+            {"green", Color.green},
+            {"orange", Color.magenta},
+            {"yellow", Color.yellow}
             //add more colors here
         };
 
-        public static Color32? ColorFromString(string color)
+        public static Color? ColorFromString(string color)
         {
-            if (!ColorTable.TryGetValue(color.ToLower(), out Color32 output)) return null;
+            if (!ColorTable.TryGetValue(color.ToLower(), out Color output)) return null;
             return output;
         }
 

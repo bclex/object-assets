@@ -257,8 +257,8 @@ namespace OA.Tes
                 {
                     var cellInfo = _cellManager.StartCreatingInteriorCell(component.doorData.doorExitName);
                     _temporalLoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
-                    newCell = cellInfo.cellRecord;
-                    OnInteriorCell(cellInfo.cellRecord);
+                    newCell = (CELLRecord)cellInfo.cellRecord;
+                    OnInteriorCell(newCell);
                 }
                 else
                 {

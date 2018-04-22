@@ -72,7 +72,7 @@
     <Compile Include="Components\Records\ProbComponent.cs" />
     <Compile Include="Components\Records\RepaireComponent.cs" />
     <Compile Include="Components\Records\WeaponComponent.cs" />
-    <Compile Include="Components\TesGame.cs" />
+    <Compile Include="TesGame.cs" />
     <Compile Include="Components\XR\PlayerXR.cs" />
     <Compile Include="Components\XR\XRGazeUI.cs" />
     <Compile Include="Effects\LightAnim.cs" />

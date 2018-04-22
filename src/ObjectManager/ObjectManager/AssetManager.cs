@@ -1,11 +1,16 @@
 ﻿using OA.Core;
 using System;
+using System.Collections;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
 
 namespace OA
 {
+    public interface IRecord
+    {
+    }
+
     public interface IAssetPack : IDisposable
     {
         Texture2D LoadTexture(string texturePath, bool flipVertically = false);
@@ -16,10 +21,14 @@ namespace OA
 
     public interface IDataPack : IDisposable
     {
+        IRecord FindExteriorCellRecord(Vector2i cellIndices);
+        IRecord FindInteriorCellRecord(string cellName);
+        IRecord FindInteriorCellRecord(Vector2i gridCoords);
     }
 
     public interface ICellManager
     {
+        InRangeCellInfo StartCreatingExteriorCell(Vector2i cellIndices);
     }
 
     public interface IGameAssetManager
@@ -76,6 +85,12 @@ namespace OA
         public static TemporalLoadBalancer TemporalLoadBalancer = new TemporalLoadBalancer();
 
         public static async Task<IAssetPack> GetAssetPack(EngineId engineId, string uri) { return await GetAssetPack(engineId, new Uri(uri)); }
+
+        public static void WaitForTask(IEnumerator taskCoroutine)
+        {
+            TemporalLoadBalancer.WaitForTask(taskCoroutine);
+        }
+
         public static Task<IAssetPack> GetAssetPack(EngineId engineId, Uri uri)
         {
             var manager = AssetReferences.GetManager(engineId);

@@ -101,7 +101,7 @@ namespace OA.Tes.FilePacks
         }
     }
 
-    public abstract class Record
+    public abstract class Record : IRecord
     {
         public Header header;
 

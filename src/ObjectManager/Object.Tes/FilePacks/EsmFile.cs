@@ -39,8 +39,8 @@ namespace OA.Tes.FilePacks
     {
         const int recordHeaderSizeInBytes = 16;
         public Record[] records;
-        public Dictionary<Type, List<Record>> recordsByType;
-        public Dictionary<string, Record> objectsByIDString;
+        public Dictionary<Type, List<IRecord>> recordsByType;
+        public Dictionary<string, IRecord> objectsByIDString;
         public Dictionary<Vector2i, CELLRecord> exteriorCELLRecordsByIndices;
         public Dictionary<Vector2i, LANDRecord> LANDRecordsByIndices;
 
@@ -62,9 +62,9 @@ namespace OA.Tes.FilePacks
 
         public void Close() { }
 
-        public List<Record> GetRecordsOfType<T>() where T : Record
+        public List<IRecord> GetRecordsOfType<T>() where T : Record
         {
-            List<Record> records;
+            List<IRecord> records;
             if (recordsByType.TryGetValue(typeof(T), out records))
                 return records;
             return null;
@@ -107,8 +107,8 @@ namespace OA.Tes.FilePacks
 
         private void PostProcessRecords()
         {
-            recordsByType = new Dictionary<Type, List<Record>>();
-            objectsByIDString = new Dictionary<string, Record>();
+            recordsByType = new Dictionary<Type, List<IRecord>>();
+            objectsByIDString = new Dictionary<string, IRecord>();
             exteriorCELLRecordsByIndices = new Dictionary<Vector2i, CELLRecord>();
             LANDRecordsByIndices = new Dictionary<Vector2i, LANDRecord>();
             foreach (var record in records)
@@ -117,12 +117,12 @@ namespace OA.Tes.FilePacks
                     continue;
                 // Add the record to the list for it's type.
                 var recordType = record.GetType();
-                List<Record> recordsOfSameType;
+                List<IRecord> recordsOfSameType;
                 if (recordsByType.TryGetValue(recordType, out recordsOfSameType))
                     recordsOfSameType.Add(record);
                 else
                 {
-                    recordsOfSameType = new List<Record>();
+                    recordsOfSameType = new List<IRecord>();
                     recordsOfSameType.Add(record);
                     recordsByType.Add(recordType, recordsOfSameType);
                 }

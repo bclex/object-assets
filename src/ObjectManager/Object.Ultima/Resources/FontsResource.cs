@@ -17,14 +17,14 @@ namespace OA.Ultima.Resources
         public const int AsciiFontCount = 10;
         readonly AFont[] _asciiFonts = new AFont[AsciiFontCount];
 
-        internal AFont GetUniFont(int index)
+        public AFont GetUniFont(int index)
         {
             if (index < 0 || index >= UniFontCount)
                 return _unicodeFonts[0];
             return _unicodeFonts[index];
         }
 
-        internal AFont GetAsciiFont(int index)
+        public AFont GetAsciiFont(int index)
         {
             if (index < 0 || index >= AsciiFontCount)
                 return _asciiFonts[9];

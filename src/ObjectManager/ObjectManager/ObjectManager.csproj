@@ -49,6 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CellManager.cs" />
     <Compile Include="Core\Audio\ASound.cs" />
     <Compile Include="Core\Audio\AudioEffects.cs" />
     <Compile Include="Core\Audio\VolumeState.cs" />
