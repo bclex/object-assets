@@ -11,14 +11,14 @@ namespace OA.Tes.Formats
     /// </summary>
     public class NifManager
     {
-        readonly BsaFile r;
+        readonly BsaMultiFile r;
         readonly MaterialManager materialManager;
         GameObject prefabContainerObj;
         readonly Dictionary<string, Task<NiFile>> nifFilePreloadTasks = new Dictionary<string, Task<NiFile>>();
         readonly Dictionary<string, GameObject> nifPrefabs = new Dictionary<string, GameObject>();
         readonly int markerLayer;
 
-        public NifManager(BsaFile r, MaterialManager materialManager, int markerLayer)
+        public NifManager(BsaMultiFile r, MaterialManager materialManager, int markerLayer)
         {
             this.r = r;
             this.materialManager = materialManager;
@@ -28,7 +28,7 @@ namespace OA.Tes.Formats
         /// <summary>
         /// Instantiates a NIF file.
         /// </summary>
-        public GameObject InstantiateNIF(string filePath)
+        public GameObject InstantiateNif(string filePath)
         {
             EnsurePrefabContainerObjectExists();
             // Get the prefab.

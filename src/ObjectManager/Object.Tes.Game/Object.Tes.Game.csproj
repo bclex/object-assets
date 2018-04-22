@@ -41,14 +41,13 @@
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\Program Files\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files\Unity\Hub\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SpatialTracking">
-      <HintPath>..\..\..\..\..\Program Files\Unity\Editor\Data\UnityExtensions\Unity\UnitySpatialTracking\Runtime\UnityEngine.SpatialTracking.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files\Unity\Hub\Editor\Data\UnityExtensions\Unity\UnitySpatialTracking\Runtime\UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Program Files\Unity\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\Program Files\Unity\Hub\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -73,15 +72,17 @@
     <Compile Include="Components\Records\ProbComponent.cs" />
     <Compile Include="Components\Records\RepaireComponent.cs" />
     <Compile Include="Components\Records\WeaponComponent.cs" />
+    <Compile Include="Components\TesGame.cs" />
     <Compile Include="Components\XR\PlayerXR.cs" />
     <Compile Include="Components\XR\XRGazeUI.cs" />
     <Compile Include="Effects\LightAnim.cs" />
     <Compile Include="Effects\UnderwaterEffect.cs" />
-    <Compile Include="MorrowindDataReader.cs" />
+    <Compile Include="_\MorrowindDataReader.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="MorrowindEngine.cs" />
+    <Compile Include="_\MorrowindEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TESUnity.cs" />
+    <Compile Include="TesEngine.cs" />
+    <Compile Include="_\TESUnity.cs" />
     <Compile Include="UI\UIBook.cs" />
     <Compile Include="UI\UICrosshair.cs" />
     <Compile Include="UI\UIInteractiveText.cs" />

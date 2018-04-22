@@ -1,12 +1,32 @@
-﻿using System;
+﻿using OA.Core;
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace OA
 {
+    public interface IAssetPack : IDisposable
+    {
+        Texture2D LoadTexture(string texturePath, bool flipVertically = false);
+        void PreloadTextureAsync(string path);
+        GameObject CreateObject(string path);
+        void PreloadObjectAsync(string path);
+    }
+
+    public interface IDataPack : IDisposable
+    {
+    }
+
+    public interface ICellManager
+    {
+    }
+
     public interface IGameAssetManager
     {
         Task<IAssetPack> GetAssetPack(Uri uri);
+        Task<IDataPack> GetDataPack(Uri uri);
+        ICellManager GetCellManager(IAssetPack asset, IDataPack data, TemporalLoadBalancer temporalLoadBalancer);
     }
 
     static class AssetReferences
@@ -53,11 +73,26 @@ namespace OA
 
     public static class AssetManager
     {
+        public static TemporalLoadBalancer TemporalLoadBalancer = new TemporalLoadBalancer();
+
         public static async Task<IAssetPack> GetAssetPack(EngineId engineId, string uri) { return await GetAssetPack(engineId, new Uri(uri)); }
         public static Task<IAssetPack> GetAssetPack(EngineId engineId, Uri uri)
         {
             var manager = AssetReferences.GetManager(engineId);
             return manager.GetAssetPack(uri);
+        }
+
+        public static async Task<IDataPack> GetDataPack(EngineId engineId, string uri) { return await GetDataPack(engineId, new Uri(uri)); }
+        public static Task<IDataPack> GetDataPack(EngineId engineId, Uri uri)
+        {
+            var manager = AssetReferences.GetManager(engineId);
+            return manager.GetDataPack(uri);
+        }
+
+        public static ICellManager GetCellManager(EngineId engineId, IAssetPack asset, IDataPack data)
+        {
+            var manager = AssetReferences.GetManager(engineId);
+            return manager.GetCellManager(asset, data, TemporalLoadBalancer);
         }
     }
 }

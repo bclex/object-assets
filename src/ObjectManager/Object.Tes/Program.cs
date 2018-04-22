@@ -19,7 +19,7 @@ namespace OA.Tes
             var dataPath2 = FileManager.GetFilePath("Fallout4.bsa", GameId.Fallout4VR);
 #endif
             using (var esmFile = new EsmFile(dataPath, GameId.Fallout4VR))
-            using (var bsaFile = new BsaFile(dataPath2))
+            using (var bsaFile = new BsaMultiFile(dataPath2))
             {
                 Console.WriteLine("Loaded");
                 var text = bsaFile.LoadTextureAsync("tx_cursor").Result;

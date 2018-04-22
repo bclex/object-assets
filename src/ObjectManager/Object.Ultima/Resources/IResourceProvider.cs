@@ -15,7 +15,7 @@ namespace OA.Ultima.Resources
         bool IsPointInItemTexture(int textureID, int x, int y, int extraRange = 0);
         void GetItemDimensions(int textureID, out int width, out int height);
 
-        ushort GetWebSafeHue(Color color);
+        ushort GetWebSafeHue(Color32 color);
         IFont GetUnicodeFont(int fontIndex);
         IFont GetAsciiFont(int fontIndex);
         string GetString(int strIndex);

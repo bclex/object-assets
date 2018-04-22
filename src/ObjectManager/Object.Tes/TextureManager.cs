@@ -8,11 +8,11 @@ namespace OA.Tes
 {
     public class TextureManager
     {
-        readonly BsaFile r;
+        readonly BsaMultiFile r;
         readonly Dictionary<string, Task<Texture2DInfo>> textureFilePreloadTasks = new Dictionary<string, Task<Texture2DInfo>>();
         readonly Dictionary<string, Texture2D> cachedTextures = new Dictionary<string, Texture2D>();
 
-        public TextureManager(BsaFile r)
+        public TextureManager(BsaMultiFile r)
         {
             this.r = r;
         }
@@ -33,7 +33,7 @@ namespace OA.Tes
         public void PreloadTextureFileAsync(string texturePath)
         {
             // If the texture has already been created we don't have to load the file again.
-            if (cachedTextures.ContainsKey(texturePath))  return;
+            if (cachedTextures.ContainsKey(texturePath)) return;
             // Start loading the texture file asynchronously if we haven't already started.
             if (!textureFilePreloadTasks.TryGetValue(texturePath, out Task<Texture2DInfo> textureFileLoadingTask))
             {

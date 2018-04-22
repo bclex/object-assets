@@ -124,7 +124,7 @@ namespace OA.Tes.FilePacks
             {
                 var subRecordStartStreamPosition = r.BaseStream.Position;
                 var subRecordHeader = new SubRecordHeader(r, gameId);
-                var subRecord = gameId != GameId.Oblivion ? CreateUninitializedSubRecord(subRecordHeader.type, gameId) : CreateUninitializedSubRecord(subRecordHeader.type);
+                var subRecord = gameId > GameId.Morrowind ? CreateUninitializedSubRecord(subRecordHeader.type, gameId) : CreateUninitializedSubRecord(subRecordHeader.type);
                 // Read or skip the record.
                 if (subRecord != null)
                 {

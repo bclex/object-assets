@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace OA.Tes.FilePacks
 {
@@ -73,7 +74,7 @@ namespace OA.Tes.FilePacks
         /// <summary>
         /// Determines whether the BSA archive contains a file.
         /// </summary>
-        public virtual bool ContainsFile(string filePath)
+        public bool ContainsFile(string filePath)
         {
             return fileMetadataHashTable.ContainsKey(HashFilePath(filePath));
         }
@@ -81,13 +82,13 @@ namespace OA.Tes.FilePacks
         /// <summary>
         /// Loads an archived file's data.
         /// </summary>
-        public virtual byte[] LoadFileData(string filePath)
+        public byte[] LoadFileData(string filePath)
         {
             var hash = HashFilePath(filePath);
             FileMetadata metadata;
             if (fileMetadataHashTable.TryGetValue(hash, out metadata))
                 return LoadFileData(metadata);
-            throw new FileNotFoundException("Could not find file \"" + filePath + "\" in a BSA file.");
+            throw new FileNotFoundException($"Could not find file \"{filePath}\" in a BSA file.");
         }
 
         /// <summary>
@@ -133,7 +134,7 @@ namespace OA.Tes.FilePacks
                 byte curCharAsByte;
                 while ((curCharAsByte = r.ReadByte()) != 0)
                     filenameBuffer.Add(curCharAsByte);
-                fileMetadatas[i].path = System.Text.Encoding.ASCII.GetString(filenameBuffer.ToArray());
+                fileMetadatas[i].path = Encoding.ASCII.GetString(filenameBuffer.ToArray());
             }
             // Read filename hashes.
             r.BaseStream.Position = hashTablePosition;

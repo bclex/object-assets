@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace OA.Tes.FilePacks
 {
-    partial class BsaFile
+    partial class BsaMultiFile
     {
         public Task<Texture2DInfo> LoadTextureAsync(string texturePath)
         {

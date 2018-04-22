@@ -30,11 +30,11 @@ namespace OA.Tes.IO
         static FileManager()
         {
             var tesRender = TesSettings.TesRender;
-            Utils.Debug($"Initializing TES Data. Is64Bit = {Is64Bit}");
-            Utils.Debug("Looking for TES Installation(s):");
+            Utils.Log($"Initializing TES Data. Is64Bit = {Is64Bit}");
+            Utils.Log("Looking for TES Installation(s):");
             if (tesRender.DataDirectory != null && Directory.Exists(tesRender.DataDirectory))
             {
-                Utils.Debug($"Settings: {tesRender.DataDirectory}");
+                Utils.Log($"Settings: {tesRender.DataDirectory}");
                 var gameId = (GameId)Enum.Parse(typeof(GameId), tesRender.GameId);
                 _fileDirectories.Add(gameId, tesRender.DataDirectory);
                 _isDataPresent = true;
@@ -50,14 +50,14 @@ namespace OA.Tes.IO
                         var gameId = (GameId)_knownRegkeys[i + 1];
                         if (Directory.Exists(dataPath))
                         {
-                            Utils.Debug($"Compatible: {dataPath}");
-                            Utils.Debug($"GameId: {gameId}");
+                            Utils.Log($"Compatible: {dataPath}");
+                            Utils.Log($"GameId: {gameId}");
                             //tesRender.DataDirectory = dataPath;
                             //tesRender.GameId = gameId.ToString();
                             _fileDirectories.Add(gameId, dataPath);
                             _isDataPresent = true;
                         }
-                        else Utils.Debug($"Incompatible: {dataPath}");
+                        else Utils.Log($"Incompatible: {dataPath}");
                     }
                 }
                 HardAdds();
@@ -66,8 +66,8 @@ namespace OA.Tes.IO
                 _isDataPresent = false;
             else
             {
-                Utils.Debug(string.Empty);
-                Utils.Debug($"Selected: {_fileDirectories.Count}");
+                Utils.Log(string.Empty);
+                Utils.Log($"Selected: {_fileDirectories.Count}");
             }
         }
 

@@ -14,13 +14,13 @@ namespace OA.Tes
             TesSettings.TesRender.GameId = "Morrowind";
             var dataPath = FileManager.GetFilePath("Morrowind.esm", GameId.Morrowind);
             var dataPath2 = FileManager.GetFilePath("Morrowind.bsa", GameId.Morrowind);
-            using (var esmFile = new EsmFile(dataPath, GameId.Morrowind))
-            using (var bsaFile = new BsaFile(dataPath2))
-            {
-                Console.WriteLine("Loaded");
-                var engine = new MorrowindEngine(esmFile, bsaFile, false);
-                engine.TestAllCells("results.txt");
-            }
+            //using (var esmFile = new TesDataFile(dataPath, GameId.Morrowind))
+            //using (var bsaFile = new TesAssetFile(dataPath2))
+            //{
+            //    Console.WriteLine("Loaded");
+            //    var engine = new TesEngine(esmFile, bsaFile, false);
+            //    engine.TestAllCells("results.txt");
+            //}
         }
     }
 }

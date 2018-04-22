@@ -5,42 +5,42 @@ namespace OA.Core
 {
     public static class Utils
     {
+        public static bool InUnity = false;
+
         //public static void Assert(bool condition)
         //{
         //    Debug.Assert(condition);
         //}
 
-        public static void Debug(string msg)
-        {
-            Console.WriteLine(msg);
-        }
 
         public static void Log(string msg)
         {
-            Console.WriteLine(msg);
-            //Debug.Log(msg);
+            if (InUnity) Debug.Log(msg);
+            else Console.WriteLine(msg);
         }
 
         public static void Info(string msg)
         {
+            if (InUnity) Debug.Log(msg);
             Console.WriteLine($"INFO: {msg}");
         }
 
         public static void Warning(string msg)
         {
-            Console.WriteLine($"WARNING: {msg}");
-            //Debug.LogWarning(msg);
+            if (InUnity) Debug.LogWarning(msg);
+            else Console.WriteLine($"WARNING: {msg}");
         }
 
         public static void Error(string msg)
         {
-            Console.WriteLine($"ERROR: {msg}");
-            //Debug.LogError(msg);
+            if (InUnity) Debug.LogError(msg);
+            else Console.WriteLine($"ERROR: {msg}");
         }
 
-        public static void Critical(string msg)
+        public static void Exception(Exception msg)
         {
-            Console.WriteLine($"CRITICAL: {msg}");
+            if (InUnity) Debug.LogException(msg);
+            else Console.WriteLine($"CRITICAL: {msg.Message}");
         }
 
         public static void Swap<T>(ref T a, ref T b)

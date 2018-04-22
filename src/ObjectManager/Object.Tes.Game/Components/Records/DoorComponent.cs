@@ -41,7 +41,7 @@ namespace OA.Tes.Components.Records
                 doorData.doorExitName = refObjDataGroup.DNAM.value;
             if (doorData.leadsToAnotherCell && !doorData.leadsToInteriorCell)
             {
-                var doorExitCell = MorrowindEngine.instance.r.FindExteriorCellRecord(MorrowindEngine.instance.cellManager.GetExteriorCellIndices(doorData.doorExitPos));
+                var doorExitCell = TesEngine.instance._data.FindExteriorCellRecord(TesEngine.instance._cellManager.GetExteriorCellIndices(doorData.doorExitPos));
                 doorData.doorExitName = doorExitCell != null ? (doorExitCell.RGNN?.value ?? "Unknown Region") : doorData.doorName;
             }
             if (refObjDataGroup.DODT != null)

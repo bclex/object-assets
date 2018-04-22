@@ -3,9 +3,9 @@ using OA.Tes.Formats;
 using System.IO;
 using UnityEngine;
 
-namespace OA.Tes
+namespace OA.Tes.FilePacks
 {
-    public class TesAssetPack : BsaFile, IAssetPack
+    public class TesAssetPack : BsaMultiFile, IAssetPack
     {
         TextureManager _textureManager;
         MaterialManager _materialManager;
@@ -13,10 +13,11 @@ namespace OA.Tes
         string _directory;
         string _webPath;
 
-        public TesAssetPack(string filePath, string webPath)
-            : base(filePath != null && File.Exists(filePath) ? filePath : null)
+        public TesAssetPack(string searchPath, string webPath)
+            : base(searchPath) //: base(filePath != null && File.Exists(filePath) ? filePath : null)
         {
-            _directory = filePath != null && Directory.Exists(filePath) ? filePath : null;
+            //_directory = searchPath != null && Directory.Exists(searchPath) ? searchPath : null;
+            _directory = null;
             _webPath = webPath;
             _textureManager = new TextureManager(this);
             _materialManager = new MaterialManager(_textureManager);
@@ -29,9 +30,19 @@ namespace OA.Tes
             return _textureManager.LoadTexture(path, flipVertically);
         }
 
+        public void PreloadTextureAsync(string path)
+        {
+            _textureManager.PreloadTextureFileAsync(path);
+        }
+
         public GameObject CreateObject(string path)
         {
-            return _nifManager.InstantiateNIF(path);
+            return _nifManager.InstantiateNif(path);
+        }
+
+        public void PreloadObjectAsync(string path)
+        {
+            _nifManager.PreloadNifFileAsync(path);
         }
 
         public override bool ContainsFile(string filePath)

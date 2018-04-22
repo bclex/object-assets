@@ -4,21 +4,21 @@ namespace OA.Tes.Effects
 {
     public sealed class UnderwaterEffect : MonoBehaviour
     {
-        private bool _defaultFog;
-        private Color _defaultFogColor;
-        private float _defaultFogDensity;
-        private Material _defaultSkybox = null;
-        private bool _isUnderwater = false;
-        private Transform _transform = null;
+        bool _defaultFog;
+        Color _defaultFogColor;
+        float _defaultFogDensity;
+        Material _defaultSkybox = null;
+        bool _isUnderwater = false;
+        Transform _transform = null;
 
         [SerializeField]
-        private float underwaterLevel = 0.0f;
+        float underwaterLevel = 0.0f;
         [SerializeField]
-        private Color ambientColor = Color.white;
+        Color ambientColor = Color.white;
         [SerializeField]
-        private Color fogColor = new Color(0, 0.4f, 0.7f, 0.6f);
+        Color fogColor = new Color(0, 0.4f, 0.7f, 0.6f);
         [SerializeField]
-        private float fogDensity = 0.04f;
+        float fogDensity = 0.04f;
 
         public float Level
         {

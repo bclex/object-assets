@@ -42,10 +42,10 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\Program Files\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files\Unity\Hub\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\..\Games\3DNesVR\3DNesVR_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files\Unity\Hub\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -452,10 +452,6 @@
     <Compile Include="World\Position3D.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Object.Common\Object.Common.csproj">
-      <Project>{f0f8a97b-f6ea-4fc9-8b8e-ca7087553586}</Project>
-      <Name>Object.Common.Asset</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Object.Ultima\Object.Ultima.csproj">
       <Project>{2e0f5143-916d-4606-b645-690a962c6af4}</Project>
       <Name>Object.Ultima</Name>

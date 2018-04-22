@@ -75,7 +75,7 @@ namespace OA.Tes.FilePacks
             var r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             var header = new Header(r, gameId);
             if ((gameId == GameId.Morrowind && header.type != "TES3") || (gameId != GameId.Morrowind && header.type != "TES4"))
-                throw new InvalidOperationException(filePath + " is not a valid plugin.");
+                throw new InvalidOperationException($"{filePath} is not a valid plugin.");
             var record = header.CreateUninitializedRecord();
             record.DeserializeData(r, gameId);
             if (loadHeaderOnly)

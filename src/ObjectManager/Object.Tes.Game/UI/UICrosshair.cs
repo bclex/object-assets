@@ -21,8 +21,7 @@ namespace OA.Tes.UI
 
         private void Start()
         {
-            var textureManager = TESUnity.instance.TextureManager;
-            var crosshairTexture = textureManager.LoadTexture("target", true);
+            var crosshairTexture = TesEngine.instance._asset.LoadTexture("target", true);
             _crosshair.sprite = GUIUtils.CreateSprite(crosshairTexture);
         }
 

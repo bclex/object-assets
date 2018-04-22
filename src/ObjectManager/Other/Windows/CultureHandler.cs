@@ -22,7 +22,7 @@ namespace OA.Core.Windows
         private static Encoding GetCurrentEncoding()
         {
             var encoding = Encoding.GetEncoding((int)NativeMethods.GetCurrentCodePage());
-            Utils.Debug($"Keyboard: Using encoding {encoding.EncodingName} (Code page {encoding.CodePage}).");
+            Utils.Log($"Keyboard: Using encoding {encoding.EncodingName} (Code page {encoding.CodePage}).");
             return encoding;
         }
     }

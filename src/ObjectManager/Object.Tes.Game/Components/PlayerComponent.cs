@@ -15,8 +15,6 @@ namespace OA.Tes.Components
         bool _isGrounded = false;
         bool _isFlying = false;
 
-        #region Editor Fields
-
         [Header("Movement Settings")]
         public float slowSpeed = 3;
         public float normalSpeed = 5;
@@ -32,11 +30,7 @@ namespace OA.Tes.Components
         public Transform leftHand;
         public Transform rightHand;
 
-        #endregion
-
-        #region Public Fields
-
-        public bool isFlying
+        public bool IsFlying
         {
             get { return _isFlying; }
             set
@@ -52,8 +46,6 @@ namespace OA.Tes.Components
             get { return _paused; }
         }
 
-        #endregion
-
         private void Start()
         {
             _transform = GetComponent<Transform>();
@@ -63,7 +55,7 @@ namespace OA.Tes.Components
             // Setup the camera
             var tesRender = TesSettings.TesRender;
             var camera = Camera.main;
-            camera.renderingPath = tesRender.RrenderPath;
+            camera.renderingPath = tesRender.RenderPath;
             camera.farClipPlane = tesRender.CameraFarClip;
             _crosshair = FindObjectOfType<UICrosshair>();
         }
@@ -74,8 +66,8 @@ namespace OA.Tes.Components
                 return;
             Rotate();
             if (Input.GetKeyDown(KeyCode.Tab))
-                isFlying = !isFlying;
-            if (_isGrounded && !isFlying && InputManager.GetButtonDown("Jump"))
+                IsFlying = !IsFlying;
+            if (_isGrounded && !IsFlying && InputManager.GetButtonDown("Jump"))
             {
                 var newVelocity = _rigidbody.velocity;
                 newVelocity.y = 5;
@@ -88,9 +80,9 @@ namespace OA.Tes.Components
         private void FixedUpdate()
         {
             _isGrounded = CalculateIsGrounded();
-            if (_isGrounded || isFlying)
+            if (_isGrounded || IsFlying)
                 SetVelocity();
-            else if (!_isGrounded || !isFlying)
+            else if (!_isGrounded || !IsFlying)
                 ApplyAirborneForce();
         }
 
@@ -124,7 +116,7 @@ namespace OA.Tes.Components
         private void SetVelocity()
         {
             Vector3 velocity;
-            if (!isFlying)
+            if (!IsFlying)
             {
                 velocity = _transform.TransformVector(CalculateLocalVelocity());
                 velocity.y = _rigidbody.velocity.y;
@@ -166,7 +158,7 @@ namespace OA.Tes.Components
             var speed = normalSpeed;
             if (InputManager.GetButton("Run")) speed = fastSpeed;
             else if (InputManager.GetButton("Slow")) speed = slowSpeed;
-            if (isFlying) speed *= flightSpeedMultiplier;
+            if (IsFlying) speed *= flightSpeedMultiplier;
             return speed;
         }
 

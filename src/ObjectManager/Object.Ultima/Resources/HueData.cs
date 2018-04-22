@@ -124,7 +124,7 @@ namespace OA.Ultima.Resources
             get { return _hueTexture1; }
         }
 
-        public static int GetWebSafeHue(Color inColor)
+        public static int GetWebSafeHue(Color32 inColor)
         {
             return GetWebSafeHue((int)inColor.r, (int)inColor.g, (int)inColor.b);
         }

@@ -12,7 +12,7 @@ namespace OA.Core
             var type = typeof(T);
             if (_services.ContainsKey(type))
             {
-                Utils.Critical($"Attempted to register service of type {type} twice.");
+                Utils.Error($"Attempted to register service of type {type} twice.");
                 _services.Remove(type);
             }
             _services.Add(type, service);
@@ -24,7 +24,7 @@ namespace OA.Core
             var type = typeof(T);
             if (_services.ContainsKey(type))
                 _services.Remove(type);
-            else Utils.Critical($"Attempted to unregister service of type {type}, but no service of this type (or type and equality) is registered.");
+            else Utils.Error($"Attempted to unregister service of type {type}, but no service of this type (or type and equality) is registered.");
         }
 
         public static bool Has<T>()
@@ -39,7 +39,7 @@ namespace OA.Core
             if (_services.ContainsKey(type))
                 return (T)_services[type];
             if (failIfNotRegistered)
-                Utils.Critical($"Attempted to get service service of type {type}, but no service of this type is registered.");
+                Utils.Error($"Attempted to get service service of type {type}, but no service of this type is registered.");
             return default(T);
         }
     }

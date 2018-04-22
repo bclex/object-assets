@@ -24,6 +24,18 @@ namespace OA.Tes.Configuration
             get { return _kinematicRigidbodies; }
             set { SetProperty(ref _kinematicRigidbodies, value); }
         }
+        bool _playMusic = false;
+        public bool PlayMusic
+        {
+            get { return _playMusic; }
+            set { SetProperty(ref _playMusic, value); }
+        }
+        bool _enableLog = false;
+        public bool EnableLog
+        {
+            get { return _enableLog; }
+            set { SetProperty(ref _enableLog, value); }
+        }
 
         // RENDERING
         MaterialType _materialType = MaterialType.BumpedDiffuse;
@@ -33,7 +45,7 @@ namespace OA.Tes.Configuration
             set { SetProperty(ref _materialType, value); }
         }
         public RenderingPath _renderPath = RenderingPath.Forward;
-        public RenderingPath RrenderPath
+        public RenderingPath RenderPath
         {
             get { return _renderPath; }
             set { SetProperty(ref _renderPath, value); }
@@ -44,20 +56,26 @@ namespace OA.Tes.Configuration
             get { return _cameraFarClip; }
             set { SetProperty(ref _cameraFarClip, value); }
         }
+        bool _waterBackSideTransparent = false;
+        public bool WaterBackSideTransparent
+        {
+            get { return _waterBackSideTransparent; }
+            set { SetProperty(ref _waterBackSideTransparent, value); }
+        }
 
         // LIGHTING
-        //float _ambientIntensity = 1.5f;
-        //public float AmbientIntensity
-        //{
-        //    get { return _ambientIntensity; }
-        //    set { SetProperty(ref _ambientIntensity, value); }
-        //}
-        //bool _renderSunShadows = false;
-        //public bool RenderSunShadows
-        //{
-        //    get { return _renderSunShadows; }
-        //    set { SetProperty(ref _renderSunShadows, value); }
-        //}
+        float _ambientIntensity = 1.5f;
+        public float AmbientIntensity
+        {
+            get { return _ambientIntensity; }
+            set { SetProperty(ref _ambientIntensity, value); }
+        }
+        bool _renderSunShadows = false;
+        public bool RenderSunShadows
+        {
+            get { return _renderSunShadows; }
+            set { SetProperty(ref _renderSunShadows, value); }
+        }
         bool _renderLightShadows = false;
         public bool RenderLightShadows
         {
@@ -76,12 +94,12 @@ namespace OA.Tes.Configuration
             get { return _animateLights; }
             set { SetProperty(ref _animateLights, value); }
         }
-        //bool _dayNightCycle = false;
-        //public bool DayNightCycle
-        //{
-        //    get { return _dayNightCycle; }
-        //    set { SetProperty(ref _dayNightCycle, value); }
-        //}
+        bool _dayNightCycle = false;
+        public bool DayNightCycle
+        {
+            get { return _dayNightCycle; }
+            set { SetProperty(ref _dayNightCycle, value); }
+        }
         bool _generateNormalMap = true;
         public bool GenerateNormalMap
         {

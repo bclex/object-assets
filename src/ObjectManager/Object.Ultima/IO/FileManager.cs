@@ -42,11 +42,11 @@ namespace OA.Ultima.IO
         static FileManager()
         {
             var ultimaOnline = UltimaSettings.UltimaOnline;
-            Utils.Debug($"Initializing UO Data. Is64Bit = {Is64Bit}");
-            Utils.Debug("Looking for UO Installation:");
+            Utils.Log($"Initializing UO Data. Is64Bit = {Is64Bit}");
+            Utils.Log("Looking for UO Installation:");
             if (ultimaOnline.DataDirectory != null && Directory.Exists(ultimaOnline.DataDirectory))
             {
-                Utils.Debug($"Settings: {ultimaOnline.DataDirectory}");
+                Utils.Log($"Settings: {ultimaOnline.DataDirectory}");
                 _fileDirectory = ultimaOnline.DataDirectory;
                 _isDataPresent = true;
             }
@@ -59,12 +59,12 @@ namespace OA.Ultima.IO
                     {
                         if (IsClientIsCompatible(exePath))
                         {
-                            Utils.Debug($"Compatible: {exePath}");
+                            Utils.Log($"Compatible: {exePath}");
                             ultimaOnline.DataDirectory = exePath;
                             _fileDirectory = exePath;
                             _isDataPresent = true;
                         }
-                        else Utils.Debug($"Incompatible: {exePath}");
+                        else Utils.Log($"Incompatible: {exePath}");
                     }
                 }
             }
@@ -72,11 +72,11 @@ namespace OA.Ultima.IO
                 _isDataPresent = false;
             else
             {
-                Utils.Debug(string.Empty);
-                Utils.Debug($"Selected: {_fileDirectory}");
+                Utils.Log(string.Empty);
+                Utils.Log($"Selected: {_fileDirectory}");
                 var clientVersion = string.Join(".", ClientVersion.ClientExe);
                 var patchVersion = string.Join(".", ultimaOnline.PatchVersion);
-                Utils.Debug($"Client.Exe version: {clientVersion}; Patch version reported to server: {patchVersion}");
+                Utils.Log($"Client.Exe version: {clientVersion}; Patch version reported to server: {patchVersion}");
                 if (!ClientVersion.EqualTo(ultimaOnline.PatchVersion, ClientVersion.DefaultVersion))
                     Utils.Warning($"Note from ZaneDubya: I will not support any code where the Patch version is not {string.Join(".", ClientVersion.DefaultVersion)}");
             }
@@ -147,7 +147,7 @@ namespace OA.Ultima.IO
             try
             {
                 name = Path.Combine(_fileDirectory, name);
-                Utils.Debug($"Checking if file exists [{name}]");
+                Utils.Log($"Checking if file exists [{name}]");
                 if (File.Exists(name))
                     return true;
                 return false;

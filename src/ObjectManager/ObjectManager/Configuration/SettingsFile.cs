@@ -64,13 +64,13 @@ namespace OA.Configuration
             {
                 lock (_syncRoot)
                 {
-                    if (LoadFromFile(_filename)) Utils.Debug("Read settings from settings file.");
+                    if (LoadFromFile(_filename)) Utils.Log("Read settings from settings file.");
                     else
                     {
                         if (File.Exists(_filename + ".bak"))
                         {
                             Utils.Error("Unable to read settings file.  Trying backup file");
-                            if (LoadFromFile(_filename + ".bak")) Utils.Debug("Read settings from backup settings file.");
+                            if (LoadFromFile(_filename + ".bak")) Utils.Log("Read settings from backup settings file.");
                             else Utils.Error("Unable to read backup settings file. All settings are set to default values.");
                         }
                         else Utils.Error("Unable to read settings file. All settings are set to default values.");

@@ -32,24 +32,22 @@ namespace OA.Tes
         public string modelFilePath;
     }
 
-    public class CellManager
+    public class CellManager : ICellManager
     {
-        const int cellRadius = 4;
-        const int detailRadius = 3;
-        const string defaultLandTextureFilePath = "textures/_land_default.dds";
+        const int _cellRadius = 4;
+        const int _detailRadius = 3;
+        const string _defaultLandTextureFilePath = "textures/_land_default.dds";
 
-        EsmFile r;
-        TextureManager textureManager;
-        NifManager nifManager;
-        TemporalLoadBalancer temporalLoadBalancer;
-        Dictionary<Vector2i, InRangeCellInfo> cellObjects = new Dictionary<Vector2i, InRangeCellInfo>();
+        TesAssetPack _assetPack;
+        TesDataPack _dataPack;
+        TemporalLoadBalancer _temporalLoadBalancer;
+        Dictionary<Vector2i, InRangeCellInfo> _cellObjects = new Dictionary<Vector2i, InRangeCellInfo>();
 
-        public CellManager(EsmFile r, TextureManager textureManager, NifManager nifManager, TemporalLoadBalancer temporalLoadBalancer)
+        public CellManager(TesAssetPack assetPack, TesDataPack r, TemporalLoadBalancer temporalLoadBalancer)
         {
-            this.r = r;
-            this.textureManager = textureManager;
-            this.nifManager = nifManager;
-            this.temporalLoadBalancer = temporalLoadBalancer;
+            _assetPack = assetPack;
+            _dataPack = r;
+            _temporalLoadBalancer = temporalLoadBalancer;
         }
 
         public Vector2i GetExteriorCellIndices(Vector3 point)
@@ -59,11 +57,11 @@ namespace OA.Tes
 
         public InRangeCellInfo StartCreatingExteriorCell(Vector2i cellIndices)
         {
-            var cell = r.FindExteriorCellRecord(cellIndices);
+            var cell = _dataPack.FindExteriorCellRecord(cellIndices);
             if (cell != null)
             {
                 var cellInfo = StartInstantiatingCell(cell);
-                cellObjects[cellIndices] = cellInfo;
+                _cellObjects[cellIndices] = cellInfo;
                 return cellInfo;
             }
             return null;
@@ -73,7 +71,7 @@ namespace OA.Tes
         {
             var cameraCellIndices = GetExteriorCellIndices(currentPosition);
 
-            var cellRadius = (cellRadiusOverride >= 0) ? cellRadiusOverride : CellManager.cellRadius;
+            var cellRadius = (cellRadiusOverride >= 0) ? cellRadiusOverride : CellManager._cellRadius;
             var minCellX = cameraCellIndices.x - cellRadius;
             var maxCellX = cameraCellIndices.x + cellRadius;
             var minCellY = cameraCellIndices.y - cellRadius;
@@ -82,7 +80,7 @@ namespace OA.Tes
             // Destroy out of range cells.
             var outOfRangeCellIndices = new List<Vector2i>();
 
-            foreach (var KVPair in cellObjects)
+            foreach (var KVPair in _cellObjects)
                 if (KVPair.Key.x < minCellX || KVPair.Key.x > maxCellX || KVPair.Key.y < minCellY || KVPair.Key.y > maxCellY)
                     outOfRangeCellIndices.Add(KVPair.Key);
 
@@ -98,23 +96,23 @@ namespace OA.Tes
                         var cellXDistance = Mathf.Abs(cameraCellIndices.x - cellIndices.x);
                         var cellYDistance = Mathf.Abs(cameraCellIndices.y - cellIndices.y);
                         var cellDistance = Mathf.Max(cellXDistance, cellYDistance);
-                        if (cellDistance == r && !cellObjects.ContainsKey(cellIndices))
+                        if (cellDistance == r && !_cellObjects.ContainsKey(cellIndices))
                         {
                             var cellInfo = StartCreatingExteriorCell(cellIndices);
                             if (cellInfo != null && immediate)
-                                temporalLoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
+                                _temporalLoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
                         }
                     }
 
             // Update LODs.
-            foreach (var keyValuePair in cellObjects)
+            foreach (var keyValuePair in _cellObjects)
             {
                 var cellIndices = keyValuePair.Key;
                 var cellInfo = keyValuePair.Value;
                 var cellXDistance = Mathf.Abs(cameraCellIndices.x - cellIndices.x);
                 var cellYDistance = Mathf.Abs(cameraCellIndices.y - cellIndices.y);
                 var cellDistance = Mathf.Max(cellXDistance, cellYDistance);
-                if (cellDistance <= detailRadius)
+                if (cellDistance <= _detailRadius)
                 {
                     if (!cellInfo.objectsContainerGameObject.activeSelf)
                         cellInfo.objectsContainerGameObject.SetActive(true);
@@ -129,11 +127,11 @@ namespace OA.Tes
 
         public InRangeCellInfo StartCreatingInteriorCell(string cellName)
         {
-            var cell = r.FindInteriorCellRecord(cellName);
+            var cell = _dataPack.FindInteriorCellRecord(cellName);
             if (cell != null)
             {
                 var cellInfo = StartInstantiatingCell(cell);
-                cellObjects[Vector2i.zero] = cellInfo;
+                _cellObjects[Vector2i.zero] = cellInfo;
                 return cellInfo;
             }
             return null;
@@ -141,11 +139,11 @@ namespace OA.Tes
 
         public InRangeCellInfo StartCreatingInteriorCell(Vector2i gridCoords)
         {
-            var cell = r.FindInteriorCellRecord(gridCoords);
+            var cell = _dataPack.FindInteriorCellRecord(gridCoords);
             if (cell != null)
             {
                 var cellInfo = StartInstantiatingCell(cell);
-                cellObjects[Vector2i.zero] = cellInfo;
+                _cellObjects[Vector2i.zero] = cellInfo;
                 return cellInfo;
             }
             return null;
@@ -159,7 +157,7 @@ namespace OA.Tes
             if (!cell.isInterior)
             {
                 cellObjName = "cell " + cell.gridCoords.ToString();
-                land = r.FindLANDRecord(cell.gridCoords);
+                land = _dataPack.FindLANDRecord(cell.gridCoords);
             }
             else
                 cellObjName = cell.NAME.value;
@@ -168,18 +166,18 @@ namespace OA.Tes
             var cellObjectsContainer = new GameObject("objects");
             cellObjectsContainer.transform.parent = cellObj.transform;
             var cellObjectsCreationCoroutine = InstantiateCellObjectsCoroutine(cell, land, cellObj, cellObjectsContainer);
-            temporalLoadBalancer.AddTask(cellObjectsCreationCoroutine);
+            _temporalLoadBalancer.AddTask(cellObjectsCreationCoroutine);
             return new InRangeCellInfo(cellObj, cellObjectsContainer, cell, cellObjectsCreationCoroutine);
         }
 
         public void DestroyAllCells()
         {
-            foreach (var keyValuePair in cellObjects)
+            foreach (var keyValuePair in _cellObjects)
             {
-                temporalLoadBalancer.CancelTask(keyValuePair.Value.objectsCreationCoroutine);
+                _temporalLoadBalancer.CancelTask(keyValuePair.Value.objectsCreationCoroutine);
                 Object.Destroy(keyValuePair.Value.gameObject);
             }
-            cellObjects.Clear();
+            _cellObjects.Clear();
         }
 
         /// <summary>
@@ -193,7 +191,7 @@ namespace OA.Tes
                 var landTextureFilePaths = GetLANDTextureFilePaths(land);
                 if (landTextureFilePaths != null)
                     foreach (var landTextureFilePath in landTextureFilePaths)
-                        textureManager.PreloadTextureFileAsync(landTextureFilePath);
+                        _assetPack.PreloadTextureAsync(landTextureFilePath);
                 yield return null;
             }
             // Extract information about referenced objects.
@@ -202,7 +200,7 @@ namespace OA.Tes
             // Start pre-loading all required files for referenced objects. The NIF manager will load the textures as well.
             foreach (var refCellObjInfo in refCellObjInfos)
                 if (refCellObjInfo.modelFilePath != null)
-                    nifManager.PreloadNifFileAsync(refCellObjInfo.modelFilePath);
+                    _assetPack.PreloadObjectAsync(refCellObjInfo.modelFilePath);
             yield return null;
             // Instantiate terrain.
             if (land != null)
@@ -231,7 +229,7 @@ namespace OA.Tes
                 var refObjInfo = new RefCellObjInfo();
                 refObjInfo.refObjDataGroup = cell.refObjDataGroups[i];
                 // Get the record the RefObjDataGroup references.
-                r.objectsByIDString.TryGetValue(refObjInfo.refObjDataGroup.NAME.value, out refObjInfo.referencedRecord);
+                _dataPack.objectsByIDString.TryGetValue(refObjInfo.refObjDataGroup.NAME.value, out refObjInfo.referencedRecord);
                 if (refObjInfo.referencedRecord != null)
                 {
                     var modelFileName = RecordUtils.GetModelFileName(refObjInfo.referencedRecord);
@@ -255,7 +253,7 @@ namespace OA.Tes
                 // If the object has a model, instantiate it.
                 if (refCellObjInfo.modelFilePath != null)
                 {
-                    modelObj = nifManager.InstantiateNIF(refCellObjInfo.modelFilePath);
+                    modelObj = _assetPack.CreateObject(refCellObjInfo.modelFilePath);
                     PostProcessInstantiatedCellObject(modelObj, refCellObjInfo);
                     modelObj.transform.parent = parent.transform;
                 }
@@ -371,10 +369,10 @@ namespace OA.Tes
                 var textureIndex = (short)((short)distinctTextureIndices[i] - 1);
                 if (textureIndex < 0)
                 {
-                    textureFilePaths.Add(defaultLandTextureFilePath);
+                    textureFilePaths.Add(_defaultLandTextureFilePath);
                     continue;
                 }
-                var ltex = r.FindLTEXRecord(textureIndex);
+                var ltex = _dataPack.FindLTEXRecord(textureIndex);
                 var textureFilePath = ltex.DATA.value;
                 textureFilePaths.Add(textureFilePath);
             }
@@ -430,13 +428,13 @@ namespace OA.Tes
                     // Load terrain texture.
                     string textureFilePath;
                     if (textureIndex < 0)
-                        textureFilePath = defaultLandTextureFilePath;
+                        textureFilePath = _defaultLandTextureFilePath;
                     else
                     {
-                        var LTEX = r.FindLTEXRecord(textureIndex);
+                        var LTEX = _dataPack.FindLTEXRecord(textureIndex);
                         textureFilePath = LTEX.DATA.value;
                     }
-                    var texture = textureManager.LoadTexture(textureFilePath);
+                    var texture = _assetPack.LoadTexture(textureFilePath);
                     // Yield after loading each texture to avoid doing too much work on one frame.
                     yield return null;
                     // Create the splat prototype.
@@ -484,11 +482,11 @@ namespace OA.Tes
         private void DestroyExteriorCell(Vector2i indices)
         {
             InRangeCellInfo cellInfo;
-            if (cellObjects.TryGetValue(indices, out cellInfo))
+            if (_cellObjects.TryGetValue(indices, out cellInfo))
             {
-                temporalLoadBalancer.CancelTask(cellInfo.objectsCreationCoroutine);
+                _temporalLoadBalancer.CancelTask(cellInfo.objectsCreationCoroutine);
                 Object.Destroy(cellInfo.gameObject);
-                cellObjects.Remove(indices);
+                _cellObjects.Remove(indices);
             }
             else Utils.Error("Tried to destroy a cell that isn't created.");
         }

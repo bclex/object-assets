@@ -146,7 +146,7 @@ namespace OA.Ultima.Core.Network
                 for (var i = 0; i < _extendedTypedHandlers[extendedId].Length; i++)
                     _extendedTypedHandlers[extendedId][i] = new List<PacketHandler>();
             }
-            Utils.Debug($"Registering Extended Command: id: 0x{extendedId:X2} subCommand: 0x{subId:X2} Length: {length}");
+            Utils.Log($"Registering Extended Command: id: 0x{extendedId:X2} subCommand: 0x{subId:X2} Length: {length}");
             var handler = new PacketHandler<T>(subId, length, type, client, onReceive);
             _extendedTypedHandlers[extendedId][subId].Add(handler);
         }
@@ -179,12 +179,12 @@ namespace OA.Ultima.Core.Network
                     }
                 }
                 _serverEndPoint = new IPEndPoint(_serverAddress, port);
-                Utils.Debug($"Connecting to {_serverAddress}:{port}...");
+                Utils.Log($"Connecting to {_serverAddress}:{port}...");
                 _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 _serverSocket.Connect(_serverEndPoint);
                 if (_serverSocket.Connected)
                 {
-                    Utils.Debug("Connected.");
+                    Utils.Log("Connected.");
                     var state = new SocketState(_serverSocket, _bufferPool.AcquireBuffer());
                     _serverSocket.BeginReceive(state.Buffer, 0, state.Buffer.Length, SocketFlags.None, OnReceive, state);
                 }
@@ -208,7 +208,7 @@ namespace OA.Ultima.Core.Network
                 _serverSocket = null;
                 _serverEndPoint = null;
                 _isDecompressionEnabled = false;
-                Utils.Debug("Disconnected.");
+                Utils.Log("Disconnected.");
                 _isConnected = false;
             }
         }
@@ -241,7 +241,7 @@ namespace OA.Ultima.Core.Network
             }
             catch (Exception e)
             {
-                Utils.Debug(e.ToString());
+                Utils.Log(e.ToString());
                 success = false;
             }
             return success;
@@ -285,7 +285,7 @@ namespace OA.Ultima.Core.Network
             }
             catch (Exception e)
             {
-                Utils.Debug(e.ToString());
+                Utils.Exception(e);
                 Disconnect();
             }
         }
@@ -407,11 +407,11 @@ namespace OA.Ultima.Core.Network
 
         void LogPacket(byte[] buffer, int length, bool servertoclient = true)
         {
-            if (Settings.Debug.LogPackets)
+            if (UltimaGameSettings.Debug.LogPackets)
             {
-                Utils.Debug(servertoclient ? "Server - > Client" : "Client - > Server");
-                Utils.Debug($"Id: 0x{buffer[0]:X2} Length: {length}");
-                Utils.Debug($"{Utility.FormatBuffer(buffer, length)}{Environment.NewLine}");
+                Utils.Log(servertoclient ? "Server - > Client" : "Client - > Server");
+                Utils.Log($"Id: 0x{buffer[0]:X2} Length: {length}");
+                Utils.Log($"{Utility.FormatBuffer(buffer, length)}{Environment.NewLine}");
             }
         }
 

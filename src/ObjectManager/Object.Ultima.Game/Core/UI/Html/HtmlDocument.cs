@@ -174,7 +174,7 @@ namespace OA.Core.UI.Html
                                 case "left":
                                 case "right":
                                 case "div":
-                                    atom = new BlockElement(chunk.sTag, styles.Style);
+                                    atom = new BlockElement(chunk.Tag, styles.Style);
                                     styles.ParseTag(chunk, atom);
                                     isBlockTag = true;
                                     break;

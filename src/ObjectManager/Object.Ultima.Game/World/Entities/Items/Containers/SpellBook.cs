@@ -26,7 +26,7 @@ namespace OA.Ultima.World.Entities.Items.Containers
             return _spellBookItemIDs.Contains<ushort>(itemID);
         }
 
-        public SpellBookTypes BookType { get; private set; }
+        public SpellbookTypes BookType { get; private set; }
 
         ulong _spellsBitfield;
         public bool HasSpell(int circle, int index)
@@ -39,11 +39,11 @@ namespace OA.Ultima.World.Entities.Items.Containers
         public SpellBook(Serial serial, Map map)
             : base(serial, map)
         {
-            BookType = SpellBookTypes.Unknown;
+            BookType = SpellbookTypes.Unknown;
             _spellsBitfield = 0;
         }
 
-        public void ReceiveSpellData(SpellBookTypes sbType, ulong sbBitfield)
+        public void ReceiveSpellData(SpellbookTypes sbType, ulong sbBitfield)
         {
             var entityUpdated = false;
             if (BookType != sbType)

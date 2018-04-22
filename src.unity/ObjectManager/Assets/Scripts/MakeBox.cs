@@ -8,10 +8,7 @@ public class MakeBox : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Debug.Log("Start");
-        var ot = new ObjectTest();
-        ot.Start();
-
+        ObjectTest.Start();
         //var chair = ResourcesEx.LoadFromUri("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
         //var box = Instantiate(GameObject.Find("Cube00"), this.transform);
         //box.transform.position += new Vector3(2, 2, 2);
