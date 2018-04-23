@@ -11,7 +11,7 @@ namespace OA.Tes.FilePacks
 {
     public static class RecordUtils
     {
-        public static string GetModelFileName(Record record)
+        public static string GetModelFileName(IRecord record)
         {
             if (record is STATRecord) return ((STATRecord)record).MODL.value;
             else if (record is DOORRecord) return ((DOORRecord)record).MODL.value;

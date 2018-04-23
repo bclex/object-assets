@@ -1,9 +1,9 @@
 ﻿using OA.Core;
-using OA.Tes.FilePacks.Records;
+using OA.Ultima.FilePacks.Records;
 
-namespace OA.Tes.FilePacks
+namespace OA.Ultima.FilePacks
 {
-    partial class EsmFile
+    partial class DataFile
     {
         public LTEXRecord FindLTEXRecord(int index)
         {
@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks
             for (int i = 0, l = records.Count; i < l; i++)
             {
                 ltex = (LTEXRecord)records[i];
-                if (ltex.INTV.value == index)
+                if (ltex.Intv == index)
                     return ltex;
             }
             return null;
@@ -37,7 +37,7 @@ namespace OA.Tes.FilePacks
             for (int i = 0, l = records.Count; i < l; i++)
             {
                 cell = (CELLRecord)records[i];
-                if (cell.NAME.value == cellName)
+                if (cell.Name == cellName)
                     return cell;
             }
             return null;

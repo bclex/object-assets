@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-namespace OA.Tes
+namespace OA.Ultima
 {
 	public static class ConvertUtils
-	{
+    {
 		public const int yardInMWUnits = 64;
 		public const float meterInYards = 1.09361f;
 		public const float meterInMWUnits = meterInYards * yardInMWUnits;

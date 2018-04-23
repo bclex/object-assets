@@ -13,7 +13,7 @@ namespace OA.Tes.Formats
 
         public static Vector3 NifPointToUnityPoint(Vector3 NIFPoint)
         {
-            return NifVectorToUnityVector(NIFPoint) / Convert.meterInMWUnits;
+            return NifVectorToUnityVector(NIFPoint) / ConvertUtils.meterInMWUnits;
         }
 
         public static Matrix4x4 NifRotationMatrixToUnityRotationMatrix(Matrix4x4 NIFRotationMatrix)
@@ -40,7 +40,7 @@ namespace OA.Tes.Formats
 
         public static Quaternion NifRotationMatrixToUnityQuaternion(Matrix4x4 NIFRotationMatrix)
         {
-            return Convert.RotationMatrixToQuaternion(NifRotationMatrixToUnityRotationMatrix(NIFRotationMatrix));
+            return ConvertUtils.RotationMatrixToQuaternion(NifRotationMatrixToUnityRotationMatrix(NIFRotationMatrix));
         }
 
         public static Quaternion NifEulerAnglesToUnityQuaternion(Vector3 NifEulerAngles)

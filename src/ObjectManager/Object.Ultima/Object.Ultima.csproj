@@ -45,7 +45,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CellManager.cs" />
     <Compile Include="Configuration\UltimaOnlineSettings.cs" />
+    <Compile Include="Convert.cs" />
     <Compile Include="Core\IO\AsyncWriter.cs" />
     <Compile Include="Core\IO\BinaryFileReader.cs" />
     <Compile Include="Core\IO\BinaryFileWriter.cs" />
@@ -80,6 +82,17 @@
     <Compile Include="Data\StatLocks.cs" />
     <Compile Include="Data\TileFlags.cs" />
     <Compile Include="Direction.cs" />
+    <Compile Include="FilePacks\AssetFile+Extensions.cs" />
+    <Compile Include="FilePacks\AssetFile.cs" />
+    <Compile Include="FilePacks\DataFile+Extensions.cs" />
+    <Compile Include="FilePacks\DataFile.cs" />
+    <Compile Include="FilePacks\DataRecords.cs" />
+    <Compile Include="FilePacks\Records\CELLRecord.cs" />
+    <Compile Include="FilePacks\Records\LIGHRecord.cs" />
+    <Compile Include="FilePacks\Records\LANDRecord.cs" />
+    <Compile Include="FilePacks\Records\LTEXRecord.cs" />
+    <Compile Include="FilePacks\UltimaAssetPack.cs" />
+    <Compile Include="FilePacks\UltimaDataPack.cs" />
     <Compile Include="IO\AFileIndex.cs" />
     <Compile Include="IO\FileIndexEntry3D.cs" />
     <Compile Include="IO\FileIndexEntry5D.cs" />
@@ -125,6 +138,7 @@
     <Compile Include="Resources\AnimationResource.cs" />
     <Compile Include="Resources\ArtMulResource.cs" />
     <Compile Include="Serial.cs" />
+    <Compile Include="UltimaAssetManager.cs" />
     <Compile Include="UltimaSettings.cs" />
   </ItemGroup>
   <ItemGroup>
