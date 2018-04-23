@@ -73,10 +73,9 @@ namespace OA.Ultima.World.WorldViews
             _drawTerrain = true;
             _underSurface = false;
             MapTile tile;
-            AEntity underObject, underTerrain;
             if ((tile = map.GetMapTile(center.X, center.Y)) != null)
             {
-                if (tile.IsZUnderEntityOrGround(center.Z, out underObject, out underTerrain))
+                if (tile.IsZUnderEntityOrGround(center.Z, out AEntity underObject, out AEntity underTerrain))
                 {
                     // if we are under terrain, then do not draw any terrain at all.
                     _drawTerrain = (underTerrain == null);
@@ -129,19 +128,20 @@ namespace OA.Ultima.World.WorldViews
             _spriteBatch.SetLightDirection(Lighting.IsometricLightDirection);
             // get variables that describe the tiles drawn in the viewport: the first tile to draw,
             // the offset to that tile, and the number of tiles drawn in the x and y dimensions.
-            Vector2Int firstTile, renderDimensions;
             var overDrawTilesOnSides = 3;
             var overDrawTilesAtTopAndBottom = 6;
             var overDrawAdditionalTilesOnBottom = 10;
-            CalculateViewport(center, overDrawTilesOnSides, overDrawTilesAtTopAndBottom, out firstTile, out renderOffset, out renderDimensions);
+            CalculateViewport(center, overDrawTilesOnSides, overDrawTilesAtTopAndBottom, out Vector2Int firstTile, out renderOffset, out Vector2Int renderDimensions);
             CountEntitiesRendered = 0; // Count of objects rendered for statistics and debug
             var overList = new MouseOverList(mousePicking); // List of entities mouse is over.
             var deferredToRemove = new List<AEntity>();
             for (var y = 0; y < renderDimensions.y * 2 + 1 + overDrawAdditionalTilesOnBottom; y++)
             {
-                var drawPosition = new Vector3();
-                drawPosition.x = (firstTile.x - firstTile.y + (y % 2)) * TILE_SIZE_FLOAT_HALF + renderOffset.x;
-                drawPosition.y = (firstTile.x + firstTile.y + y) * TILE_SIZE_FLOAT_HALF + renderOffset.y;
+                var drawPosition = new Vector3
+                {
+                    x = (firstTile.x - firstTile.y + (y % 2)) * TILE_SIZE_FLOAT_HALF + renderOffset.x,
+                    y = (firstTile.x + firstTile.y + y) * TILE_SIZE_FLOAT_HALF + renderOffset.y
+                };
                 var firstTileInRow = new Vector2Int(firstTile.x + ((y + 1) / 2), firstTile.y + (y / 2));
                 for (var x = 0; x < renderDimensions.x + 1; x++)
                 {
@@ -189,9 +189,11 @@ namespace OA.Ultima.World.WorldViews
         private void CalculateViewport(Position3D center, int overDrawTilesOnSides, int overDrawTilesOnTopAndBottom, out Vector2Int firstTile, out Vector2 renderOffset, out Vector2Int renderDimensions)
         {
             var pixelScale = (UltimaGameSettings.UserInterface.PlayWindowPixelDoubling) ? 2 : 1;
-            renderDimensions = new Vector2Int();
-            renderDimensions.y = UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Height / pixelScale / TILE_SIZE_INTEGER + overDrawTilesOnTopAndBottom; // the number of tiles that are drawn for half the screen (doubled to fill the entire screen).
-            renderDimensions.x = UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Width / pixelScale / TILE_SIZE_INTEGER + overDrawTilesOnSides; // the number of tiles that are drawn in the x-direction ( + renderExtraColumnsAtSides * 2 ).
+            renderDimensions = new Vector2Int
+            {
+                y = UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Height / pixelScale / TILE_SIZE_INTEGER + overDrawTilesOnTopAndBottom, // the number of tiles that are drawn for half the screen (doubled to fill the entire screen).
+                x = UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Width / pixelScale / TILE_SIZE_INTEGER + overDrawTilesOnSides // the number of tiles that are drawn in the x-direction ( + renderExtraColumnsAtSides * 2 ).
+            };
             var renderDimensionsDiff = Math.Abs(renderDimensions.x - renderDimensions.y);
             renderDimensionsDiff -= renderDimensionsDiff % 2; // make sure this is an even number...
             // when the player entity is at a higher z altitude in the world, we must offset the first row drawn so that tiles at lower altitudes are drawn.

@@ -61,10 +61,9 @@ namespace OA.Ultima.UI.WorldGumps
                 if (_gumpTexture != null)
                     _gumpTexture = null;
                 var provider = Service.Get<IResourceProvider>();
-                _gumpTexture = provider.GetUITexture((_useLargeMap ? 5011 : 5010), true);
+                _gumpTexture = provider.GetUITexture(_useLargeMap ? 5011 : 5010, true);
                 Size = new Vector2Int(_gumpTexture.width, _gumpTexture.height);
             }
-
             base.Update(totalMS, frameMS);
         }
 
@@ -95,7 +94,7 @@ namespace OA.Ultima.UI.WorldGumps
                     _playerIndicator = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
                     _playerIndicator.SetData(new uint[1] { 0xFFFFFFFF });
                 }
-                spriteBatch.Draw2D(_playerIndicator, new Vector3(position.X + Width / 2, position.Y + Height / 2 - 8, 0), Vector3.Zero);
+                spriteBatch.Draw2D(_playerIndicator, new Vector3(position.x + Width / 2, position.y + Height / 2 - 8, 0), Vector3.zero);
             }
             if (_timeMS >= ReticleBlinkMS * 2)
                 _timeMS -= ReticleBlinkMS * 2;

@@ -23,7 +23,7 @@ namespace OA.Ultima.Core
                 ((Timer)state).Dispose();
                 _action.Invoke();
             }
-            catch (Exception ex) { Utils.Error(ex); }
+            catch (Exception ex) { Utils.Exception(ex); }
         }
 
         public static DelayedAction Start(Action callback, int msDelay)

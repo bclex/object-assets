@@ -3,6 +3,7 @@ using OA.Ultima.Core.Graphics;
 using OA.Ultima.World.Entities.Items;
 using OA.Ultima.World.Input;
 using OA.Ultima.World.Maps;
+using OA.Ultima.World.WorldViews;
 using UnityEngine;
 
 namespace OA.Ultima.World.EntityViews

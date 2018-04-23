@@ -19,8 +19,7 @@ namespace OA.Ultima.World.WorldViews
             Colors = new uint[64];
             // get data from the tile Matrix
             var groundData = tileData.GetLandChunk(x, y);
-            int staticLength;
-            var staticsData = tileData.GetStaticChunk(x, y, out staticLength);
+            var staticsData = tileData.GetStaticChunk(x, y, out int staticLength);
             // get the ground colors
             var groundDataIndex = 0;
             for (var i = 0; i < 64; i++)

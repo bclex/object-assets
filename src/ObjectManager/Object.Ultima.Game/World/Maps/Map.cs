@@ -112,10 +112,8 @@ namespace OA.Ultima.World.Maps
             if (t != null) return t.Ground.Z;
             else
             {
-                ushort tileID;
-                sbyte alt;
                 // THIS IS VERY INEFFICIENT :(
-                MapData.GetLandTile((uint)x, (uint)y, out tileID, out alt);
+                MapData.GetLandTile((uint)x, (uint)y, out ushort tileID, out sbyte alt);
                 return alt;
             }
         }
