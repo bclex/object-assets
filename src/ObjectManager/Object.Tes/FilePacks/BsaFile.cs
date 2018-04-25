@@ -85,8 +85,7 @@ namespace OA.Tes.FilePacks
         public byte[] LoadFileData(string filePath)
         {
             var hash = HashFilePath(filePath);
-            FileMetadata metadata;
-            if (fileMetadataHashTable.TryGetValue(hash, out metadata))
+            if (fileMetadataHashTable.TryGetValue(hash, out FileMetadata metadata))
                 return LoadFileData(metadata);
             throw new FileNotFoundException($"Could not find file \"{filePath}\" in a BSA file.");
         }

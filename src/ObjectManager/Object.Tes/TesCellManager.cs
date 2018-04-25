@@ -371,17 +371,17 @@ namespace OA.Tes
             const int LAND_SIDE_LENGTH_IN_SAMPLES = 65;
             var heights = new float[LAND_SIDE_LENGTH_IN_SAMPLES, LAND_SIDE_LENGTH_IN_SAMPLES];
             // Read in the heights in Morrowind units.
-            const int VHGTIncrementToMWUnits = 8;
-            float rowOffset = land.VHGT.ReferenceHeight;
+            const int vhgtScaler = 8; //: VHGTIncrementToMWUnits
+            var rowOffset = land.VHGT.ReferenceHeight;
             for (var y = 0; y < LAND_SIDE_LENGTH_IN_SAMPLES; y++)
             {
                 rowOffset += land.VHGT.HeightOffsets[y * LAND_SIDE_LENGTH_IN_SAMPLES];
-                heights[y, 0] = VHGTIncrementToMWUnits * rowOffset;
-                float colOffset = rowOffset;
+                heights[y, 0] = rowOffset * vhgtScaler;
+                var colOffset = rowOffset;
                 for (var x = 1; x < LAND_SIDE_LENGTH_IN_SAMPLES; x++)
                 {
                     colOffset += land.VHGT.HeightOffsets[(y * LAND_SIDE_LENGTH_IN_SAMPLES) + x];
-                    heights[y, x] = VHGTIncrementToMWUnits * colOffset;
+                    heights[y, x] = colOffset * vhgtScaler;
                 }
             }
             // Change the heights to percentages.
@@ -415,11 +415,13 @@ namespace OA.Tes
                     // Yield after loading each texture to avoid doing too much work on one frame.
                     yield return null;
                     // Create the splat prototype.
-                    var splat = new SplatPrototype();
-                    splat.texture = texture;
-                    splat.smoothness = 0;
-                    splat.metallic = 0;
-                    splat.tileSize = new Vector2(6, 6);
+                    var splat = new SplatPrototype
+                    {
+                        texture = texture,
+                        smoothness = 0,
+                        metallic = 0,
+                        tileSize = new Vector2(6, 6)
+                    };
                     // Update collections.
                     var splatIndex = splatPrototypeList.Count;
                     splatPrototypeList.Add(splat);
