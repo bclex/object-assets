@@ -45,7 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CellManager.cs" />
+    <Compile Include="UltimaCellManager.cs" />
     <Compile Include="Configuration\UltimaOnlineSettings.cs" />
     <Compile Include="Convert.cs" />
     <Compile Include="Core\IO\AsyncWriter.cs" />

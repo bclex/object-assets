@@ -15,20 +15,20 @@ namespace OA.Configuration
             var notifier = storage as INotifyPropertyChanged;
             if (notifier != null)
                 // Stop listening to the old value since it is no longer part of the settings section.
-                notifier.PropertyChanged -= onSectionPropertyChanged;
+                notifier.PropertyChanged -= OnSectionPropertyChanged;
             notifier = value as INotifyPropertyChanged;
             if (notifier != null)
                 // Start listening to the new value 
-                notifier.PropertyChanged += onSectionPropertyChanged;
+                notifier.PropertyChanged += OnSectionPropertyChanged;
             return true;
         }
 
-        void onSectionPropertyChanged(object sender, PropertyChangedEventArgs e)
+        void OnSectionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            onInvalidated();
+            OnInvalidated();
         }
 
-        private void onInvalidated()
+        private void OnInvalidated()
         {
             Invalidated?.Invoke(this, EventArgs.Empty);
         }

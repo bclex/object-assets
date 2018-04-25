@@ -1,5 +1,6 @@
 ﻿using OA.Core;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace OA.Ultima.FilePacks.Records
 {
@@ -31,6 +32,8 @@ namespace OA.Ultima.FilePacks.Records
         {
             get { return new Vector2i(gridX, gridY); }
         }
+
+        public Color? AmbientLight => null;
 
         public List<RefObjDataGroup> refObjDataGroups = new List<RefObjDataGroup>();
     }

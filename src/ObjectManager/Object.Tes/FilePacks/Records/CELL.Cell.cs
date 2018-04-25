@@ -103,6 +103,11 @@ namespace OA.Tes.FilePacks.Records
             get { return new Vector2i(DATA.gridX, DATA.gridY); }
         }
 
+        public Color? AmbientLight
+        {
+            get { return AMBI != null ? (Color?)ColorUtils.B8G8R8ToColor32(AMBI.ambientColor) : null; }
+        }
+
         public NAMESubRecord NAME;
 
         public bool isReadingObjectDataGroups = false;

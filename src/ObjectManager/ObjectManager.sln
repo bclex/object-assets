@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Ultima", "Object.Ult
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Other", "Other\Other.csproj", "{6CC3AD98-3BA0-4F00-A281-88A145579799}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Tes.Game", "Object.Tes.Game\Object.Tes.Game.csproj", "{D2517487-9532-4C02-89CD-0F3B03B0A0F5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Ultima.Game", "Object.Ultima.Game\Object.Ultima.Game.csproj", "{99B43C32-5788-4C67-A353-D173030DDD4C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectTest", "ObjectTest\ObjectTest.csproj", "{11FAE0A1-0A80-4E35-B005-46EE421C9C41}"
@@ -47,10 +45,6 @@ Global
 		{6CC3AD98-3BA0-4F00-A281-88A145579799}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CC3AD98-3BA0-4F00-A281-88A145579799}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CC3AD98-3BA0-4F00-A281-88A145579799}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D2517487-9532-4C02-89CD-0F3B03B0A0F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D2517487-9532-4C02-89CD-0F3B03B0A0F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D2517487-9532-4C02-89CD-0F3B03B0A0F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D2517487-9532-4C02-89CD-0F3B03B0A0F5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{99B43C32-5788-4C67-A353-D173030DDD4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{99B43C32-5788-4C67-A353-D173030DDD4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99B43C32-5788-4C67-A353-D173030DDD4C}.Release|Any CPU.ActiveCfg = Release|Any CPU

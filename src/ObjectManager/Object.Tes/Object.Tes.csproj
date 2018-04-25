@@ -50,7 +50,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CellManager.cs" />
+    <Compile Include="TesCellManager.cs" />
+    <Compile Include="Components\PlayerInventory.cs" />
+    <Compile Include="Components\Records\ActivatorComponent.cs" />
+    <Compile Include="Components\Records\AlchemyApparatusComponent.cs" />
+    <Compile Include="Components\Records\AlchemyComponent.cs" />
+    <Compile Include="Components\Records\ArmorComponent.cs" />
+    <Compile Include="Components\Records\BookComponent.cs" />
+    <Compile Include="Components\Records\ClothComponent.cs" />
+    <Compile Include="Components\Records\ContainerComponent.cs" />
+    <Compile Include="Components\Records\CreatureComponent.cs" />
+    <Compile Include="Components\Records\DoorComponent.cs" />
+    <Compile Include="Components\Records\GenericObjectComponent.cs" />
+    <Compile Include="Components\Records\IngredientComponent.cs" />
+    <Compile Include="Components\Records\LightComponent.cs" />
+    <Compile Include="Components\Records\LockComponent.cs" />
+    <Compile Include="Components\Records\MiscObjectComponent.cs" />
+    <Compile Include="Components\Records\NpcComponent.cs" />
+    <Compile Include="Components\Records\ProbComponent.cs" />
+    <Compile Include="Components\Records\RepaireComponent.cs" />
+    <Compile Include="Components\Records\WeaponComponent.cs" />
     <Compile Include="Configuration\TesRenderSettings.cs" />
     <Compile Include="Convert.cs" />
     <Compile Include="FilePacks\BsaMultiFile.cs" />
@@ -102,8 +121,13 @@
     <Compile Include="Formats\NifUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FilePacks\TesAssetPack.cs" />
+    <Compile Include="TesEngine.cs" />
+    <Compile Include="TesGame.cs" />
     <Compile Include="TesSettings.cs" />
     <Compile Include="TesAssetManager.cs" />
+    <Compile Include="UI\TesUIManager.cs" />
+    <Compile Include="UI\UIBook.cs" />
+    <Compile Include="UI\UIScroll.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ObjectManager\ObjectManager.csproj">

@@ -1,6 +1,5 @@
 ﻿using OA.Core;
 using System;
-using System.Collections;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -28,16 +27,15 @@ namespace OA
         ICellRecord FindInteriorCellRecord(Vector2i gridCoords);
     }
 
-    public interface IGameAssetManager
+    public interface IAssetManager
     {
         Task<IAssetPack> GetAssetPack(Uri uri);
         Task<IDataPack> GetDataPack(Uri uri);
-        ICellManager GetCellManager(IAssetPack asset, IDataPack data, TemporalLoadBalancer temporalLoadBalancer);
+        ICellManager GetCellManager(IAssetPack asset, IDataPack data, TemporalLoadBalancer loadBalancer);
     }
 
     static class AssetReferences
     {
-        static IGameAssetManager[] Statics = new IGameAssetManager[2];
         internal static Assembly TesAssembly;
         internal static Assembly ValveAssembly;
         // tes
@@ -60,61 +58,24 @@ namespace OA
             }
             catch { }
         }
+    }
 
-        // loading
-        internal static IGameAssetManager GetManager(EngineId engineId)
+    public static class AssetManager
+    {
+        static IAssetManager[] Statics = new IAssetManager[2];
+
+        public static IAssetManager GetAssetManager(EngineId engineId)
         {
             var manager = Statics[(int)engineId];
             if (manager != null)
                 return manager;
             switch (engineId)
             {
-                case EngineId.Tes: manager = Statics[(int)engineId] = (IGameAssetManager)Activator.CreateInstance(TesAssetManagerType, new object[] { }); break;
-                case EngineId.Valve: manager = Statics[(int)engineId] = (IGameAssetManager)Activator.CreateInstance(ValveAssetManagerType, new object[] { }); break;
+                case EngineId.Tes: manager = Statics[(int)engineId] = (IAssetManager)Activator.CreateInstance(AssetReferences.TesAssetManagerType, new object[] { }); break;
+                case EngineId.Valve: manager = Statics[(int)engineId] = (IAssetManager)Activator.CreateInstance(AssetReferences.ValveAssetManagerType, new object[] { }); break;
                 default: throw new ArgumentOutOfRangeException("engineId", engineId.ToString());
             }
             return manager;
-        }
-    }
-
-    public static class AssetManager
-    {
-        private static TemporalLoadBalancer TemporalLoadBalancer = new TemporalLoadBalancer();
-
-        public static void RunTasks(float desiredWorkTime)
-        {
-            TemporalLoadBalancer.RunTasks(desiredWorkTime);
-        }
-
-        public static void WaitForTask(IEnumerator taskCoroutine)
-        {
-            TemporalLoadBalancer.WaitForTask(taskCoroutine);
-        }
-
-        public static void WaitForAllTasks()
-        {
-            TemporalLoadBalancer.WaitForAllTasks();
-        }
-
-        public static async Task<IAssetPack> GetAssetPack(EngineId engineId, string uri) { return await GetAssetPack(engineId, new Uri(uri)); }
-
-        public static Task<IAssetPack> GetAssetPack(EngineId engineId, Uri uri)
-        {
-            var manager = AssetReferences.GetManager(engineId);
-            return manager.GetAssetPack(uri);
-        }
-
-        public static async Task<IDataPack> GetDataPack(EngineId engineId, string uri) { return await GetDataPack(engineId, new Uri(uri)); }
-        public static Task<IDataPack> GetDataPack(EngineId engineId, Uri uri)
-        {
-            var manager = AssetReferences.GetManager(engineId);
-            return manager.GetDataPack(uri);
-        }
-
-        public static ICellManager GetCellManager(EngineId engineId, IAssetPack asset, IDataPack data)
-        {
-            var manager = AssetReferences.GetManager(engineId);
-            return manager.GetCellManager(asset, data, TemporalLoadBalancer);
         }
     }
 }

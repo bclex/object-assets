@@ -1,26 +1,25 @@
-﻿using OA.Tes.FilePacks;
-using OA.Tes.Formats;
-using OA.Core;
+﻿using OA.Core;
+using OA.Ultima.FilePacks;
+using OA.Ultima.FilePacks.Records;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using OA.Tes.FilePacks.Records;
 
-namespace OA.Tes
+namespace OA.Ultima
 {
-    public class CellManager : ICellManager
+    public class UltimaCellManager : ICellManager
     {
         const int _cellRadius = 4;
         const int _detailRadius = 3;
         const string _defaultLandTextureFilePath = "textures/_land_default.dds";
 
-        TesAssetPack _asset;
-        TesDataPack _data;
+        UltimaAssetPack _asset;
+        UltimaDataPack _data;
         TemporalLoadBalancer _temporalLoadBalancer;
         Dictionary<Vector2i, InRangeCellInfo> _cellObjects = new Dictionary<Vector2i, InRangeCellInfo>();
 
-        public CellManager(TesAssetPack asset, TesDataPack data, TemporalLoadBalancer temporalLoadBalancer)
+        public UltimaCellManager(UltimaAssetPack asset, UltimaDataPack data, TemporalLoadBalancer temporalLoadBalancer)
         {
             _asset = asset;
             _data = data;
@@ -48,7 +47,7 @@ namespace OA.Tes
         {
             var cameraCellIndices = GetExteriorCellIndices(currentPosition);
 
-            var cellRadius = cellRadiusOverride >= 0 ? cellRadiusOverride : CellManager._cellRadius;
+            var cellRadius = cellRadiusOverride >= 0 ? cellRadiusOverride : UltimaCellManager._cellRadius;
             var minCellX = cameraCellIndices.x - cellRadius;
             var maxCellX = cameraCellIndices.x + cellRadius;
             var minCellY = cameraCellIndices.y - cellRadius;
@@ -136,7 +135,7 @@ namespace OA.Tes
                 cellObjName = "cell " + cell.GridCoords.ToString();
                 land = _data.FindLANDRecord(cell.GridCoords);
             }
-            else cellObjName = cell.NAME.value;
+            else cellObjName = cell.Name;
             var cellObj = new GameObject(cellObjName)
             {
                 tag = "Cell"
@@ -210,7 +209,7 @@ namespace OA.Tes
                 };
                 // Get the record the RefObjDataGroup references.
                 var refObjDataGroup = (CELLRecord.RefObjDataGroup)refObjInfo.refObjDataGroup;
-                _data.objectsByIDString.TryGetValue(refObjDataGroup.NAME.value, out refObjInfo.referencedRecord);
+                _data.objectsByIDString.TryGetValue(refObjDataGroup.Name, out refObjInfo.referencedRecord);
                 if (refObjInfo.referencedRecord != null)
                 {
                     var modelFileName = RecordUtils.GetModelFileName(refObjInfo.referencedRecord);
@@ -272,19 +271,19 @@ namespace OA.Tes
                     }
                 }
             }
-            else Utils.Log("Unknown Object: " + ((CELLRecord.RefObjDataGroup)refCellObjInfo.refObjDataGroup).NAME.value);
+            else Utils.Log("Unknown Object: " + ((CELLRecord.RefObjDataGroup)refCellObjInfo.refObjDataGroup).Name);
         }
 
         private GameObject InstantiateLight(LIGHRecord LIGH, bool indoors)
         {
-            var game = TesSettings.Game;
+            var game = UltimaSettings.Game;
             var lightObj = new GameObject("Light")
             {
                 isStatic = true
             };
             var lightComponent = lightObj.AddComponent<Light>();
-            lightComponent.range = 3 * (LIGH.LHDT.radius / ConvertUtils.meterInMWUnits);
-            lightComponent.color = new Color32(LIGH.LHDT.red, LIGH.LHDT.green, LIGH.LHDT.blue, 255);
+            lightComponent.range = 3 * (LIGH.radius / ConvertUtils.meterInMWUnits);
+            lightComponent.color = new Color32(LIGH.red, LIGH.green, LIGH.blue, 255);
             lightComponent.intensity = 1.5f;
             lightComponent.bounceIntensity = 0f;
             lightComponent.shadows = game.RenderLightShadows ? LightShadows.Soft : LightShadows.None;
@@ -298,33 +297,33 @@ namespace OA.Tes
         /// </summary>
         private void PostProcessInstantiatedCellObject(GameObject gameObject, RefCellObjInfo refCellObjInfo)
         {
-            var refObjDataGroup = (CELLRecord.RefObjDataGroup)refCellObjInfo.refObjDataGroup;
-            // Handle object transforms.
-            if (refObjDataGroup.XSCL != null)
-                gameObject.transform.localScale = Vector3.one * refObjDataGroup.XSCL.value;
-            gameObject.transform.position += NifUtils.NifPointToUnityPoint(refObjDataGroup.DATA.position);
-            gameObject.transform.rotation *= NifUtils.NifEulerAnglesToUnityQuaternion(refObjDataGroup.DATA.eulerAngles);
-            var tagTarget = gameObject;
-            var coll = gameObject.GetComponentInChildren<Collider>(); // if the collider is on a child object and not on the object with the component, we need to set that object's tag instead.
-            if (coll != null)
-                tagTarget = coll.gameObject;
-            ProcessObjectType<DOORRecord>(tagTarget, refCellObjInfo, "Door");
-            ProcessObjectType<ACTIRecord>(tagTarget, refCellObjInfo, "Activator");
-            ProcessObjectType<CONTRecord>(tagTarget, refCellObjInfo, "Container");
-            ProcessObjectType<LIGHRecord>(tagTarget, refCellObjInfo, "Light");
-            ProcessObjectType<LOCKRecord>(tagTarget, refCellObjInfo, "Lock");
-            ProcessObjectType<PROBRecord>(tagTarget, refCellObjInfo, "Probe");
-            ProcessObjectType<REPARecord>(tagTarget, refCellObjInfo, "RepairTool");
-            ProcessObjectType<WEAPRecord>(tagTarget, refCellObjInfo, "Weapon");
-            ProcessObjectType<CLOTRecord>(tagTarget, refCellObjInfo, "Clothing");
-            ProcessObjectType<ARMORecord>(tagTarget, refCellObjInfo, "Armor");
-            ProcessObjectType<INGRRecord>(tagTarget, refCellObjInfo, "Ingredient");
-            ProcessObjectType<ALCHRecord>(tagTarget, refCellObjInfo, "Alchemical");
-            ProcessObjectType<APPARecord>(tagTarget, refCellObjInfo, "Apparatus");
-            ProcessObjectType<BOOKRecord>(tagTarget, refCellObjInfo, "Book");
-            ProcessObjectType<MISCRecord>(tagTarget, refCellObjInfo, "MiscObj");
-            ProcessObjectType<CREARecord>(tagTarget, refCellObjInfo, "Creature");
-            ProcessObjectType<NPC_Record>(tagTarget, refCellObjInfo, "NPC");
+            //var refObjDataGroup = (CELLRecord.RefObjDataGroup)refCellObjInfo.refObjDataGroup;
+            //// Handle object transforms.
+            //if (refObjDataGroup.XSCL != null)
+            //    gameObject.transform.localScale = Vector3.one * refObjDataGroup.XSCL.value;
+            //gameObject.transform.position += NifUtils.NifPointToUnityPoint(refObjDataGroup.DATA.position);
+            //gameObject.transform.rotation *= NifUtils.NifEulerAnglesToUnityQuaternion(refObjDataGroup.DATA.eulerAngles);
+            //var tagTarget = gameObject;
+            //var coll = gameObject.GetComponentInChildren<Collider>(); // if the collider is on a child object and not on the object with the component, we need to set that object's tag instead.
+            //if (coll != null)
+            //    tagTarget = coll.gameObject;
+            //ProcessObjectType<DOORRecord>(tagTarget, refCellObjInfo, "Door");
+            //ProcessObjectType<ACTIRecord>(tagTarget, refCellObjInfo, "Activator");
+            //ProcessObjectType<CONTRecord>(tagTarget, refCellObjInfo, "Container");
+            //ProcessObjectType<LIGHRecord>(tagTarget, refCellObjInfo, "Light");
+            //ProcessObjectType<LOCKRecord>(tagTarget, refCellObjInfo, "Lock");
+            //ProcessObjectType<PROBRecord>(tagTarget, refCellObjInfo, "Probe");
+            //ProcessObjectType<REPARecord>(tagTarget, refCellObjInfo, "RepairTool");
+            //ProcessObjectType<WEAPRecord>(tagTarget, refCellObjInfo, "Weapon");
+            //ProcessObjectType<CLOTRecord>(tagTarget, refCellObjInfo, "Clothing");
+            //ProcessObjectType<ARMORecord>(tagTarget, refCellObjInfo, "Armor");
+            //ProcessObjectType<INGRRecord>(tagTarget, refCellObjInfo, "Ingredient");
+            //ProcessObjectType<ALCHRecord>(tagTarget, refCellObjInfo, "Alchemical");
+            //ProcessObjectType<APPARecord>(tagTarget, refCellObjInfo, "Apparatus");
+            //ProcessObjectType<BOOKRecord>(tagTarget, refCellObjInfo, "Book");
+            //ProcessObjectType<MISCRecord>(tagTarget, refCellObjInfo, "MiscObj");
+            //ProcessObjectType<CREARecord>(tagTarget, refCellObjInfo, "Creature");
+            //ProcessObjectType<NPC_Record>(tagTarget, refCellObjInfo, "NPC");
         }
 
         private void ProcessObjectType<RecordType>(GameObject gameObject, RefCellObjInfo info, string tag) where RecordType : Record
@@ -356,7 +355,7 @@ namespace OA.Tes
                     continue;
                 }
                 var ltex = _data.FindLTEXRecord(textureIndex);
-                var textureFilePath = ltex.DATA.value;
+                var textureFilePath = ltex.Data;
                 textureFilePaths.Add(textureFilePath);
             }
             return textureFilePaths;
@@ -373,92 +372,93 @@ namespace OA.Tes
                 yield break;
             // Return before doing any work to provide an IEnumerator handle to the coroutine.
             yield return null;
-            const int LAND_SIDE_LENGTH_IN_SAMPLES = 65;
-            var heights = new float[LAND_SIDE_LENGTH_IN_SAMPLES, LAND_SIDE_LENGTH_IN_SAMPLES];
-            // Read in the heights in Morrowind units.
-            const int VHGTIncrementToMWUnits = 8;
-            float rowOffset = land.VHGT.referenceHeight;
-            for (var y = 0; y < LAND_SIDE_LENGTH_IN_SAMPLES; y++)
-            {
-                rowOffset += land.VHGT.heightOffsets[y * LAND_SIDE_LENGTH_IN_SAMPLES];
-                heights[y, 0] = VHGTIncrementToMWUnits * rowOffset;
-                float colOffset = rowOffset;
-                for (var x = 1; x < LAND_SIDE_LENGTH_IN_SAMPLES; x++)
-                {
-                    colOffset += land.VHGT.heightOffsets[(y * LAND_SIDE_LENGTH_IN_SAMPLES) + x];
-                    heights[y, x] = VHGTIncrementToMWUnits * colOffset;
-                }
-            }
-            // Change the heights to percentages.
-            ArrayUtils.GetExtrema(heights, out float minHeight, out float maxHeight);
-            for (var y = 0; y < LAND_SIDE_LENGTH_IN_SAMPLES; y++)
-                for (var x = 0; x < LAND_SIDE_LENGTH_IN_SAMPLES; x++)
-                    heights[y, x] = Utils.ChangeRange(heights[y, x], minHeight, maxHeight, 0, 1);
-            // Texture the terrain.
-            SplatPrototype[] splatPrototypes = null;
-            float[,,] alphaMap = null;
-            const int LAND_TEXTURE_INDICES_COUNT = 256;
-            var textureIndices = land.VTEX != null ? land.VTEX.textureIndices : new ushort[LAND_TEXTURE_INDICES_COUNT];
-            // Create splat prototypes.
-            var splatPrototypeList = new List<SplatPrototype>();
-            var texInd2splatInd = new Dictionary<ushort, int>();
-            for (var i = 0; i < textureIndices.Length; i++)
-            {
-                var textureIndex = (short)((short)textureIndices[i] - 1);
-                if (!texInd2splatInd.ContainsKey((ushort)textureIndex))
-                {
-                    // Load terrain texture.
-                    string textureFilePath;
-                    if (textureIndex < 0)
-                        textureFilePath = _defaultLandTextureFilePath;
-                    else
-                    {
-                        var LTEX = _data.FindLTEXRecord(textureIndex);
-                        textureFilePath = LTEX.DATA.value;
-                    }
-                    var texture = _asset.LoadTexture(textureFilePath);
-                    // Yield after loading each texture to avoid doing too much work on one frame.
-                    yield return null;
-                    // Create the splat prototype.
-                    var splat = new SplatPrototype();
-                    splat.texture = texture;
-                    splat.smoothness = 0;
-                    splat.metallic = 0;
-                    splat.tileSize = new Vector2(6, 6);
-                    // Update collections.
-                    var splatIndex = splatPrototypeList.Count;
-                    splatPrototypeList.Add(splat);
-                    texInd2splatInd.Add((ushort)textureIndex, splatIndex);
-                }
-            }
-            splatPrototypes = splatPrototypeList.ToArray();
-            // Create the alpha map.
-            var VTEX_ROWS = 16;
-            var VTEX_COLUMNS = VTEX_ROWS;
-            alphaMap = new float[VTEX_ROWS, VTEX_COLUMNS, splatPrototypes.Length];
-            for (var y = 0; y < VTEX_ROWS; y++)
-            {
-                var yMajor = y / 4;
-                var yMinor = y - (yMajor * 4);
-                for (var x = 0; x < VTEX_COLUMNS; x++)
-                {
-                    var xMajor = x / 4;
-                    var xMinor = x - (xMajor * 4);
-                    var texIndex = (short)((short)textureIndices[(yMajor * 64) + (xMajor * 16) + (yMinor * 4) + xMinor] - 1);
-                    if (texIndex >= 0) { var splatIndex = texInd2splatInd[(ushort)texIndex]; alphaMap[y, x, splatIndex] = 1; }
-                    else alphaMap[y, x, 0] = 1;
-                }
-            }
+            //    const int LAND_SIDE_LENGTH_IN_SAMPLES = 65;
+            //    var heights = new float[LAND_SIDE_LENGTH_IN_SAMPLES, LAND_SIDE_LENGTH_IN_SAMPLES];
+            //    // Read in the heights in Morrowind units.
+            //    const int VHGTIncrementToMWUnits = 8;
+            //    float rowOffset = land.VHGT.referenceHeight;
+            //    for (var y = 0; y < LAND_SIDE_LENGTH_IN_SAMPLES; y++)
+            //    {
+            //        rowOffset += land.VHGT.heightOffsets[y * LAND_SIDE_LENGTH_IN_SAMPLES];
+            //        heights[y, 0] = VHGTIncrementToMWUnits * rowOffset;
+            //        float colOffset = rowOffset;
+            //        for (var x = 1; x < LAND_SIDE_LENGTH_IN_SAMPLES; x++)
+            //        {
+            //            colOffset += land.VHGT.heightOffsets[(y * LAND_SIDE_LENGTH_IN_SAMPLES) + x];
+            //            heights[y, x] = VHGTIncrementToMWUnits * colOffset;
+            //        }
+            //    }
+            //    // Change the heights to percentages.
+            //    float minHeight, maxHeight;
+            //    ArrayUtils.GetExtrema(heights, out minHeight, out maxHeight);
+            //    for (var y = 0; y < LAND_SIDE_LENGTH_IN_SAMPLES; y++)
+            //        for (var x = 0; x < LAND_SIDE_LENGTH_IN_SAMPLES; x++)
+            //            heights[y, x] = Utils.ChangeRange(heights[y, x], minHeight, maxHeight, 0, 1);
+            //    // Texture the terrain.
+            //    SplatPrototype[] splatPrototypes = null;
+            //    float[,,] alphaMap = null;
+            //    const int LAND_TEXTURE_INDICES_COUNT = 256;
+            //    var textureIndices = land.VTEX != null ? land.VTEX.textureIndices : new ushort[LAND_TEXTURE_INDICES_COUNT];
+            //    // Create splat prototypes.
+            //    var splatPrototypeList = new List<SplatPrototype>();
+            //    var texInd2splatInd = new Dictionary<ushort, int>();
+            //    for (var i = 0; i < textureIndices.Length; i++)
+            //    {
+            //        var textureIndex = (short)((short)textureIndices[i] - 1);
+            //        if (!texInd2splatInd.ContainsKey((ushort)textureIndex))
+            //        {
+            //            // Load terrain texture.
+            //            string textureFilePath;
+            //            if (textureIndex < 0)
+            //                textureFilePath = _defaultLandTextureFilePath;
+            //            else
+            //            {
+            //                var LTEX = _data.FindLTEXRecord(textureIndex);
+            //                textureFilePath = LTEX.DATA.value;
+            //            }
+            //            var texture = _asset.LoadTexture(textureFilePath);
+            //            // Yield after loading each texture to avoid doing too much work on one frame.
+            //            yield return null;
+            //            // Create the splat prototype.
+            //            var splat = new SplatPrototype();
+            //            splat.texture = texture;
+            //            splat.smoothness = 0;
+            //            splat.metallic = 0;
+            //            splat.tileSize = new Vector2(6, 6);
+            //            // Update collections.
+            //            var splatIndex = splatPrototypeList.Count;
+            //            splatPrototypeList.Add(splat);
+            //            texInd2splatInd.Add((ushort)textureIndex, splatIndex);
+            //        }
+            //    }
+            //    splatPrototypes = splatPrototypeList.ToArray();
+            //    // Create the alpha map.
+            //    var VTEX_ROWS = 16;
+            //    var VTEX_COLUMNS = VTEX_ROWS;
+            //    alphaMap = new float[VTEX_ROWS, VTEX_COLUMNS, splatPrototypes.Length];
+            //    for (var y = 0; y < VTEX_ROWS; y++)
+            //    {
+            //        var yMajor = y / 4;
+            //        var yMinor = y - (yMajor * 4);
+            //        for (var x = 0; x < VTEX_COLUMNS; x++)
+            //        {
+            //            var xMajor = x / 4;
+            //            var xMinor = x - (xMajor * 4);
+            //            var texIndex = (short)((short)textureIndices[(yMajor * 64) + (xMajor * 16) + (yMinor * 4) + xMinor] - 1);
+            //            if (texIndex >= 0) { var splatIndex = texInd2splatInd[(ushort)texIndex]; alphaMap[y, x, splatIndex] = 1; }
+            //            else alphaMap[y, x, 0] = 1;
+            //        }
+            //    }
             // Yield before creating the terrain GameObject because it takes a while.
             yield return null;
-            // Create the terrain.
-            var heightRange = maxHeight - minHeight;
-            var terrainPosition = new Vector3(ConvertUtils.exteriorCellSideLengthInMeters * land.gridCoords.x, minHeight / ConvertUtils.meterInMWUnits, ConvertUtils.exteriorCellSideLengthInMeters * land.gridCoords.y);
-            var heightSampleDistance = ConvertUtils.exteriorCellSideLengthInMeters / (LAND_SIDE_LENGTH_IN_SAMPLES - 1);
-            var terrain = GameObjectUtils.CreateTerrain(heights, heightRange / ConvertUtils.meterInMWUnits, heightSampleDistance, splatPrototypes, alphaMap, terrainPosition);
-            terrain.GetComponent<Terrain>().materialType = Terrain.MaterialType.BuiltInLegacyDiffuse;
-            terrain.transform.parent = parent.transform;
-            terrain.isStatic = true;
+            //    // Create the terrain.
+            //    var heightRange = maxHeight - minHeight;
+            //    var terrainPosition = new Vector3(Convert.exteriorCellSideLengthInMeters * land.gridCoords.x, minHeight / Convert.meterInMWUnits, Convert.exteriorCellSideLengthInMeters * land.gridCoords.y);
+            //    var heightSampleDistance = Convert.exteriorCellSideLengthInMeters / (LAND_SIDE_LENGTH_IN_SAMPLES - 1);
+            //    var terrain = GameObjectUtils.CreateTerrain(heights, heightRange / Convert.meterInMWUnits, heightSampleDistance, splatPrototypes, alphaMap, terrainPosition);
+            //    terrain.GetComponent<Terrain>().materialType = Terrain.MaterialType.BuiltInLegacyDiffuse;
+            //    terrain.transform.parent = parent.transform;
+            //    terrain.isStatic = true;
         }
 
         private void DestroyExteriorCell(Vector2i indices)

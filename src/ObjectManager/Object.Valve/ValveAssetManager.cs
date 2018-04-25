@@ -4,7 +4,7 @@ using OA.Core;
 
 namespace OA.Valve
 {
-    public class ValveAssetManager : IGameAssetManager
+    public class ValveAssetManager : IAssetManager
     {
         public Task<IAssetPack> GetAssetPack(Uri uri)
         {

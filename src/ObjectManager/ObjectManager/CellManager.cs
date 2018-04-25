@@ -7,6 +7,7 @@ namespace OA
     public interface ICellRecord : IRecord
     {
         bool IsInterior { get; }
+        Color? AmbientLight { get; }
     }
 
     public class InRangeCellInfo
@@ -34,7 +35,11 @@ namespace OA
 
     public interface ICellManager
     {
+        Vector2i GetExteriorCellIndices(Vector3 point);
         InRangeCellInfo StartCreatingExteriorCell(Vector2i cellIndices);
+        InRangeCellInfo StartCreatingInteriorCell(string cellName);
+        InRangeCellInfo StartCreatingInteriorCell(Vector2i gridCoords);
         void UpdateExteriorCells(Vector3 currentPosition, bool immediate = false, int cellRadiusOverride = -1);
+        void DestroyAllCells();
     }
 }

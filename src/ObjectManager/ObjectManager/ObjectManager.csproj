@@ -49,6 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OAExtensions.cs" />
     <Compile Include="CellManager.cs" />
     <Compile Include="Components\DayNightCycle.cs" />
     <Compile Include="Components\PlayerComponent.cs" />
@@ -101,7 +102,9 @@
     <Compile Include="Materials\DefaultMaterial.cs" />
     <Compile Include="Materials\StandardMaterial.cs" />
     <Compile Include="Materials\UnlitMaterial.cs" />
-    <Compile Include="ObjectTest.cs" />
+    <Compile Include="ObjectTestCell.cs" />
+    <Compile Include="ObjectTestPack.cs" />
+    <Compile Include="ObjectTestEngine.cs" />
     <Compile Include="BaseEngine.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="UI\UICrosshair.cs" />

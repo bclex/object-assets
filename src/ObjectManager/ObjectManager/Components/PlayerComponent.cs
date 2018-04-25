@@ -1,6 +1,7 @@
 ﻿using OA.Configuration;
 using OA.Core;
 using OA.UI;
+using System;
 using UnityEngine;
 
 namespace OA.Components
@@ -49,10 +50,16 @@ namespace OA.Components
 
         void Start()
         {
+            if (Camera.main == null)
+                throw new InvalidOperationException("Camera.main missing");
             _transform = GetComponent<Transform>();
             _camTransform = Camera.main.GetComponent<Transform>();
             _capsuleCollider = GetComponent<CapsuleCollider>();
+            if (_capsuleCollider = null)
+                throw new InvalidOperationException("Player:CapsuleCollider missing");
             _rigidbody = GetComponent<Rigidbody>();
+            if (_rigidbody = null)
+                throw new InvalidOperationException("Player:Rigidbody missing");
             // Setup the camera
             var game = BaseSettings.Game;
             var camera = Camera.main;
@@ -170,6 +177,10 @@ namespace OA.Components
 
         bool CalculateIsGrounded()
         {
+            if (_transform = null)
+                throw new InvalidOperationException("_transform missing");
+            if (_capsuleCollider = null)
+                throw new InvalidOperationException("_capsuleCollider missing");
             var playerCenter = _transform.position + _capsuleCollider.center;
             var castedSphereRadius = 0.8f * _capsuleCollider.radius;
             var sphereCastDistance = (_capsuleCollider.height / 2);

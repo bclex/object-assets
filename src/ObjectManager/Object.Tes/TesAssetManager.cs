@@ -8,26 +8,26 @@ using System.Threading.Tasks;
 
 namespace OA.Tes
 {
-    public class TesAssetManager : IGameAssetManager
+    public class TesAssetManager : IAssetManager
     {
         public Task<IAssetPack> GetAssetPack(Uri uri)
         {
             switch (uri.Scheme)
             {
-                case "file":
-                    {
-                        var localPath = uri.LocalPath;
-                        //if (!File.Exists(localPath) && !Directory.Exists(localPath))
-                        //    throw new IndexOutOfRangeException("file or directory not found");
-                        var pack = (IAssetPack)new TesAssetPack(localPath, null);
-                        return Task.FromResult(pack);
-                    }
                 case "game":
                     {
                         var localPath = uri.LocalPath.Substring(1);
                         var gameId = StringToGameId(uri.Host);
                         var filePath = FileManager.GetFilePath(localPath, gameId);
                         var pack = (IAssetPack)new TesAssetPack(filePath, null);
+                        return Task.FromResult(pack);
+                    }
+                case "file":
+                    {
+                        var localPath = uri.LocalPath;
+                        //if (!File.Exists(localPath) && !Directory.Exists(localPath))
+                        //    throw new IndexOutOfRangeException("file or directory not found");
+                        var pack = (IAssetPack)new TesAssetPack(localPath, null);
                         return Task.FromResult(pack);
                     }
                 default:
@@ -42,6 +42,14 @@ namespace OA.Tes
         {
             switch (uri.Scheme)
             {
+                case "game":
+                    {
+                        var localPath = uri.LocalPath.Substring(1);
+                        var gameId = StringToGameId(uri.Host);
+                        var filePath = FileManager.GetFilePath(localPath, gameId);
+                        var pack = (IDataPack)new TesDataPack(filePath, null, gameId);
+                        return Task.FromResult(pack);
+                    }
                 case "file":
                     {
                         var localPath = uri.LocalPath;
@@ -49,14 +57,6 @@ namespace OA.Tes
                             throw new IndexOutOfRangeException("file not found");
                         var gameId = StringToGameId(uri.Fragment);
                         var pack = (IDataPack)new TesDataPack(localPath, null, gameId);
-                        return Task.FromResult(pack);
-                    }
-                case "game":
-                    {
-                        var localPath = uri.LocalPath.Substring(1);
-                        var gameId = StringToGameId(uri.Host);
-                        var filePath = FileManager.GetFilePath(localPath, gameId);
-                        var pack = (IDataPack)new TesDataPack(filePath, null, gameId);
                         return Task.FromResult(pack);
                     }
                 default:
@@ -68,9 +68,9 @@ namespace OA.Tes
             }
         }
 
-        public ICellManager GetCellManager(IAssetPack asset, IDataPack data, TemporalLoadBalancer temporalLoadBalancer)
+        public ICellManager GetCellManager(IAssetPack asset, IDataPack data, TemporalLoadBalancer loadBalancer)
         {
-            return new CellManager((TesAssetPack)asset, (TesDataPack)data, temporalLoadBalancer);
+            return new TesCellManager((TesAssetPack)asset, (TesDataPack)data, loadBalancer);
         }
 
         static GameId StringToGameId(string key)

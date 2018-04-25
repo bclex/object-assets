@@ -4,7 +4,7 @@
     {
         public static void Main()
         {
-            ObjectTest.Start();
+            ObjectTestPack.Start();
         }
     }
 }

@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 
 namespace OA.Ultima
 {
-    public class UltimaAssetManager : IGameAssetManager
+    public class UltimaAssetManager : IAssetManager
     {
         public Task<IAssetPack> GetAssetPack(Uri uri)
         {
             switch (uri.Scheme)
             {
-                case "file":
-                    {
-                        var localPath = uri.LocalPath;
-                        var pack = (IAssetPack)new UltimaAssetPack(localPath, null);
-                        return Task.FromResult(pack);
-                    }
                 case "game":
                     {
                         var localPath = uri.LocalPath.Substring(1);
                         var filePath = FileManager.GetFilePath(localPath);
                         var pack = (IAssetPack)new UltimaAssetPack(filePath, null);
+                        return Task.FromResult(pack);
+                    }
+                case "file":
+                    {
+                        var localPath = uri.LocalPath;
+                        var pack = (IAssetPack)new UltimaAssetPack(localPath, null);
                         return Task.FromResult(pack);
                     }
                 default:
@@ -38,19 +38,19 @@ namespace OA.Ultima
         {
             switch (uri.Scheme)
             {
+                case "game":
+                    {
+                        var localPath = uri.LocalPath.Substring(1);
+                        var filePath = FileManager.GetFilePath(localPath);
+                        var pack = (IDataPack)new UltimaDataPack(filePath, null);
+                        return Task.FromResult(pack);
+                    }
                 case "file":
                     {
                         var localPath = uri.LocalPath;
                         if (!File.Exists(localPath))
                             throw new IndexOutOfRangeException("file not found");
                         var pack = (IDataPack)new UltimaDataPack(localPath, null);
-                        return Task.FromResult(pack);
-                    }
-                case "game":
-                    {
-                        var localPath = uri.LocalPath.Substring(1);
-                        var filePath = FileManager.GetFilePath(localPath);
-                        var pack = (IDataPack)new UltimaDataPack(filePath, null);
                         return Task.FromResult(pack);
                     }
                 default:
@@ -61,9 +61,9 @@ namespace OA.Ultima
             }
         }
 
-        public ICellManager GetCellManager(IAssetPack asset, IDataPack data, TemporalLoadBalancer temporalLoadBalancer)
+        public ICellManager GetCellManager(IAssetPack asset, IDataPack data, TemporalLoadBalancer loadBalancer)
         {
-            return new CellManager((UltimaAssetPack)asset, (UltimaDataPack)data, temporalLoadBalancer);
+            return new UltimaCellManager((UltimaAssetPack)asset, (UltimaDataPack)data, loadBalancer);
         }
     }
 }

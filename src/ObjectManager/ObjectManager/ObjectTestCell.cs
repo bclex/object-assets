@@ -3,37 +3,31 @@ using UnityEngine;
 
 namespace OA
 {
-    public static class ObjectTest
+    public static class ObjectTestCell
     {
         static IAssetPack Asset;
         static IDataPack Data;
         static ICellManager CellManager;
-        static GameObject _playerPrefab;
+        static TemporalLoadBalancer LoadBalancer = new TemporalLoadBalancer();
+        static GameObject PlayerPrefab;
 
         public static void Awake()
         {
             Utils.InUnity = true;
-            _playerPrefab = GameObject.Find("Cube00");
-            Utils.Info($"{_playerPrefab}");
+            PlayerPrefab = GameObject.Find("Cube00");
         }
 
         static GameObject _sunObj;
+
         public static void Start()
         {
-            //var assetUri = "file:///C:/Program%20Files%20(x86)/Steam/steamapps/common/Morrowind/Data%20Files/Morrowind.*";
-            //var dataUri = "file:///C:/Program%20Files%20(x86)/Steam/steamapps/common/Morrowind/Data%20Files/Morrowind.esm#Morrowind";
-            //var file2Uri = "file://192.168.1.3/User/_ASSETS/Fallout4/Textures1";
             var assetUri = "game://Morrowind/Morrowind.bsa";
             var dataUri = "game://Morrowind/Morrowind.esm";
-            //var file4Uri = "http://192.168.1.3/assets/Morrowind/Morrowind.bsa";
-            //var file4Uri = "http://192.168.1.3/assets/Morrowind/Morrowind.bsa";
 
-            Asset = AssetManager.GetAssetPack(EngineId.Tes, assetUri).Result;
-            Data = AssetManager.GetDataPack(EngineId.Tes, dataUri).Result;
-            CellManager = AssetManager.GetCellManager(EngineId.Tes, Asset, Data);
-
-            //var obj = Asset.CreateObject("meshes/x/ex_common_balcony_01.nif");
-            //GameObject.Instantiate(obj);
+            var assetManager = AssetManager.GetAssetManager(EngineId.Tes);
+            Asset = assetManager.GetAssetPack(assetUri).Result;
+            Data = assetManager.GetDataPack(dataUri).Result;
+            CellManager = assetManager.GetCellManager(Asset, Data, LoadBalancer);
 
             // ambient
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
@@ -47,7 +41,7 @@ namespace OA
             Cursor.SetCursor(Asset.LoadTexture("tx_cursor", true), Vector2.zero, CursorMode.Auto);
 
             // engine
-            SpawnPlayerOutside(_playerPrefab, new Vector2i(-2, -9), new Vector3(-137.94f, 2.30f, -1037.6f));
+            SpawnPlayerOutside(PlayerPrefab, new Vector2i(-2, -9), new Vector3(-137.94f, 2.30f, -1037.6f));
         }
 
         public static void OnDestroy()
@@ -70,7 +64,7 @@ namespace OA
             // The current cell can be null if the player is outside of the defined game world.
             if (_currentCell == null || !_currentCell.IsInterior)
                 CellManager.UpdateExteriorCells(_playerCameraObj.transform.position);
-            AssetManager.RunTasks(DesiredWorkTimePerFrame);
+            LoadBalancer.RunTasks(DesiredWorkTimePerFrame);
         }
 
         static ICellRecord _currentCell;
@@ -96,7 +90,7 @@ namespace OA
             Utils.Assert(_currentCell != null);
             CreatePlayer(playerPrefab, position, out _playerCameraObj);
             var cellInfo = CellManager.StartCreatingExteriorCell(gridCoords);
-            AssetManager.WaitForTask(cellInfo.objectsCreationCoroutine);
+            LoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
         }
     }
 }
