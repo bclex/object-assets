@@ -32,13 +32,13 @@ namespace OA
                 //textures = new MaterialTextures { mainFilePath = "lnd1" },
                 //textures = new MaterialTextures { mainFilePath = "lnd516" },
                 //textures = new MaterialTextures { mainFilePath = "lnd1137" },
-                textures = new MaterialTextures { mainFilePath = "art37" },
+                //textures = new MaterialTextures { mainFilePath = "stx69" },
+                textures = new MaterialTextures { mainFilePath = "gmp65" },
                 //textures = new MaterialTextures { mainFilePath = "tex789" },
             };
             meshRenderer.material = materialManager.BuildMaterialFromProperties(materialProps);
-            //GameObject.Instantiate(obj);
 
-            var cursor = Asset.LoadTexture("art37");
+            var cursor = Asset.LoadTexture("gmp65");
             Cursor.SetCursor(cursor, Vector2.zero, CursorMode.Auto);
         }
 

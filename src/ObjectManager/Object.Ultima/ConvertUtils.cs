@@ -17,6 +17,7 @@ namespace OA.Ultima
             return Quaternion.LookRotation(matrix.GetColumn(2), matrix.GetColumn(1));
         }
 
+        // https://github.com/gchudnov/cpp-colors/blob/master/include/cpp-colors/pixel_format.h
         public static uint FromBGR555(ushort bgr555, bool addAlpha = true)
         {
             //return (uint)bgr555;

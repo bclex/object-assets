@@ -22,11 +22,8 @@ namespace OA.Ultima.Resources
             {
                 String line;
                 while ((line = reader.ReadLine()) != null)
-                {
-                    Tuple<int, string, bool> songData;
-                    if (TryParseConfigLine(line, out songData))
+                    if (TryParseConfigLine(line, out Tuple<int, string, bool> songData))
                         _musicData.Add(songData.Item1, new Tuple<string, bool>(songData.Item2, songData.Item3));
-                }
             }
         }
 

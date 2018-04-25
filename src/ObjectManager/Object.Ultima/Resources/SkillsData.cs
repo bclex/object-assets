@@ -41,12 +41,10 @@ namespace OA.Ultima.Resources
         {
             if (_list[index] != null)
                 return _list[index];
-            int length, extra;
-            bool patched;
-            var reader = _fileIndex.Seek(index, out length, out extra, out patched);
-            if (reader == null)
+            var r = _fileIndex.Seek(index, out int length, out int extra, out bool patched);
+            if (r == null)
                 return _list[index] = new Skill(SkillVars.NullV);
-            return _list[index] = LoadSkill(index, reader);
+            return _list[index] = LoadSkill(index, r);
         }
 
         private static unsafe Skill LoadSkill(int index, BinaryFileReader reader)

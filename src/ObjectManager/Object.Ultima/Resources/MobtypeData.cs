@@ -22,7 +22,7 @@ namespace OA.Ultima.Resources
                     if ((line != string.Empty) && (line.Substring(0, 1) != "#"))
                     {
                         var data = line.Split('\t');
-                        var bodyID = Int32.Parse(data[0]);
+                        var bodyID = int.Parse(data[0]);
                         if (_entries.ContainsKey(bodyID))
                             _entries.Remove(bodyID);
                         _entries.Add(bodyID, new MobtypeEntry(data[1], data[2]));

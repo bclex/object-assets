@@ -29,7 +29,6 @@ namespace OA.Ultima.Resources
             return _cache[index];
         }
 
-        // https://github.com/gchudnov/cpp-colors/blob/master/include/cpp-colors/pixel_format.h
         private unsafe Texture2DInfo ReadTexmapTexture(int index)
         {
             var reader = _index.Seek(index, out int length, out int extra, out bool isPatched);
@@ -57,7 +56,7 @@ namespace OA.Ultima.Resources
                     count++;
                 }
             }
-            var texture = new Texture2DInfo(textureSize, textureSize, TextureFormat.BGRA32, false, pixels); //: SurfaceFormat.Bgra5551
+            var texture = new Texture2DInfo(textureSize, textureSize, TextureFormat.BGRA32, false, pixels);
             Metrics.ReportDataRead((int)reader.Position - metrics_dataread_start);
             return texture;
         }

@@ -44,7 +44,7 @@ namespace OA.Ultima.Resources
         {
             using (var fileStream = FileManager.GetFile("tiledata.mul"))
             {
-                var bin = new BinaryReader(fileStream);
+                var r = new BinaryReader(fileStream);
                 LandData landData;
                 ItemData itemData;
                 if (fileStream.Length == 3188736) // 7.0.9.0
@@ -54,12 +54,12 @@ namespace OA.Ultima.Resources
                     {
                         landData = new LandData();
                         if (i == 1 || (i > 0 && (i & 0x1F) == 0))
-                            bin.ReadInt32();
-                        var flags = (TileFlag)bin.ReadInt64();
-                        var iTextureID = bin.ReadInt16();
-                        bin.BaseStream.Seek(20, SeekOrigin.Current);
+                            r.ReadInt32();
+                        var flags = (TileFlag)r.ReadInt64();
+                        var textureID = r.ReadInt16();
+                        r.BaseStream.Seek(20, SeekOrigin.Current);
                         landData.Flags = flags;
-                        landData.TextureID = iTextureID;
+                        landData.TextureID = textureID;
                         LandData[i] = landData;
                     }
                     ItemData = new ItemData[0x10000];
@@ -67,20 +67,20 @@ namespace OA.Ultima.Resources
                     {
                         itemData = new ItemData();
                         if ((i & 0x1F) == 0)
-                            bin.ReadInt32();
-                        itemData.Flags = (TileFlag)bin.ReadInt64();
-                        itemData.Weight = bin.ReadByte();
-                        itemData.Quality = bin.ReadByte();
-                        itemData.Unknown1 = bin.ReadByte();
-                        itemData.Unknown2 = bin.ReadByte();
-                        itemData.Unknown3 = bin.ReadByte();
-                        itemData.Quantity = bin.ReadByte();
-                        itemData.AnimID = bin.ReadInt16();
-                        bin.BaseStream.Seek(2, SeekOrigin.Current); // hue?
-                        itemData.Unknown4 = bin.ReadByte();
-                        itemData.Value = bin.ReadByte();
-                        itemData.Height = bin.ReadByte();
-                        itemData.Name = Encoding.ASCII.GetString((bin.ReadBytes(20)));
+                            r.ReadInt32();
+                        itemData.Flags = (TileFlag)r.ReadInt64();
+                        itemData.Weight = r.ReadByte();
+                        itemData.Quality = r.ReadByte();
+                        itemData.Unknown1 = r.ReadByte();
+                        itemData.Unknown2 = r.ReadByte();
+                        itemData.Unknown3 = r.ReadByte();
+                        itemData.Quantity = r.ReadByte();
+                        itemData.AnimID = r.ReadInt16();
+                        r.BaseStream.Seek(2, SeekOrigin.Current); // hue?
+                        itemData.Unknown4 = r.ReadByte();
+                        itemData.Value = r.ReadByte();
+                        itemData.Height = r.ReadByte();
+                        itemData.Name = Encoding.ASCII.GetString((r.ReadBytes(20)));
                         itemData.Name = itemData.Name.Trim('\0');
                         // binaryReader.BaseStream.Seek(20, SeekOrigin.Current);
                         // Issue 5 - Statics (bridge, stairs, etc) should be walkable - http://code.google.com/p/ultimaxna/issues/detail?id=5 - Smjert
@@ -97,10 +97,10 @@ namespace OA.Ultima.Resources
                     {
                         landData = new LandData();
                         if ((i & 0x1F) == 0)
-                            bin.ReadInt32();
-                        var flags = (TileFlag)bin.ReadInt32();
-                        var iTextureID = bin.ReadInt16();
-                        bin.BaseStream.Seek(20, SeekOrigin.Current);
+                            r.ReadInt32();
+                        var flags = (TileFlag)r.ReadInt32();
+                        var iTextureID = r.ReadInt16();
+                        r.BaseStream.Seek(20, SeekOrigin.Current);
                         landData.Flags = flags;
                         landData.TextureID = iTextureID;
                         LandData[i] = landData;
@@ -112,20 +112,20 @@ namespace OA.Ultima.Resources
                         {
                             itemData = new ItemData();
                             if ((i & 0x1F) == 0)
-                                bin.ReadInt32();
-                            itemData.Flags = (TileFlag)bin.ReadInt32();
-                            itemData.Weight = bin.ReadByte();
-                            itemData.Quality = bin.ReadByte();
-                            itemData.Unknown1 = bin.ReadByte();
-                            itemData.Unknown2 = bin.ReadByte();
-                            itemData.Unknown3 = bin.ReadByte();
-                            itemData.Quantity = bin.ReadByte();
-                            itemData.AnimID = bin.ReadInt16();
-                            bin.BaseStream.Seek(2, SeekOrigin.Current); // hue?
-                            itemData.Unknown4 = bin.ReadByte();
-                            itemData.Value = bin.ReadByte();
-                            itemData.Height = bin.ReadByte();
-                            itemData.Name = Encoding.ASCII.GetString((bin.ReadBytes(20)));
+                                r.ReadInt32();
+                            itemData.Flags = (TileFlag)r.ReadInt32();
+                            itemData.Weight = r.ReadByte();
+                            itemData.Quality = r.ReadByte();
+                            itemData.Unknown1 = r.ReadByte();
+                            itemData.Unknown2 = r.ReadByte();
+                            itemData.Unknown3 = r.ReadByte();
+                            itemData.Quantity = r.ReadByte();
+                            itemData.AnimID = r.ReadInt16();
+                            r.BaseStream.Seek(2, SeekOrigin.Current); // hue?
+                            itemData.Unknown4 = r.ReadByte();
+                            itemData.Value = r.ReadByte();
+                            itemData.Height = r.ReadByte();
+                            itemData.Name = Encoding.ASCII.GetString((r.ReadBytes(20)));
                             itemData.Name = itemData.Name.Trim('\0');
                             // binaryReader.BaseStream.Seek(20, SeekOrigin.Current);
                             // Issue 5 - Statics (bridge, stairs, etc) should be walkable - http://code.google.com/p/ultimaxna/issues/detail?id=5 - Smjert
@@ -142,20 +142,20 @@ namespace OA.Ultima.Resources
                         {
                             itemData = new ItemData();
                             if ((i & 0x1F) == 0)
-                                bin.ReadInt32();
-                            itemData.Flags = (TileFlag)bin.ReadInt32();
-                            itemData.Weight = bin.ReadByte();
-                            itemData.Quality = bin.ReadByte();
-                            itemData.Unknown1 = bin.ReadByte();
-                            itemData.Unknown2 = bin.ReadByte();
-                            itemData.Unknown3 = bin.ReadByte();
-                            itemData.Quantity = bin.ReadByte();
-                            itemData.AnimID = bin.ReadInt16();
-                            bin.BaseStream.Seek(2, SeekOrigin.Current); // hue?
-                            itemData.Unknown4 = bin.ReadByte();
-                            itemData.Value = bin.ReadByte();
-                            itemData.Height = bin.ReadByte();
-                            itemData.Name = Encoding.ASCII.GetString((bin.ReadBytes(20)));
+                                r.ReadInt32();
+                            itemData.Flags = (TileFlag)r.ReadInt32();
+                            itemData.Weight = r.ReadByte();
+                            itemData.Quality = r.ReadByte();
+                            itemData.Unknown1 = r.ReadByte();
+                            itemData.Unknown2 = r.ReadByte();
+                            itemData.Unknown3 = r.ReadByte();
+                            itemData.Quantity = r.ReadByte();
+                            itemData.AnimID = r.ReadInt16();
+                            r.BaseStream.Seek(2, SeekOrigin.Current); // hue?
+                            itemData.Unknown4 = r.ReadByte();
+                            itemData.Value = r.ReadByte();
+                            itemData.Height = r.ReadByte();
+                            itemData.Name = Encoding.ASCII.GetString((r.ReadBytes(20)));
                             itemData.Name = itemData.Name.Trim('\0');
                             // binaryReader.BaseStream.Seek(20, SeekOrigin.Current);
                             // Issue 5 - Statics (bridge, stairs, etc) should be walkable - http://code.google.com/p/ultimaxna/issues/detail?id=5 - Smjert
@@ -166,7 +166,7 @@ namespace OA.Ultima.Resources
                         }
                     }
                 }
-                Metrics.ReportDataRead((int)bin.BaseStream.Position);
+                Metrics.ReportDataRead((int)r.BaseStream.Position);
             }
         }
     }

@@ -104,14 +104,11 @@ namespace OA.Ultima.Resources
                     var split = Regex.Split(line, @"\t|\s+", RegexOptions.IgnoreCase);
                     var original = System.Convert.ToInt32(split[0]);
                     var anim2 = System.Convert.ToInt32(split[1]);
-                    int anim3;
-                    int anim4;
-                    int anim5;
-                    if (split.Length < 3 || !int.TryParse(split[2], out anim3))
+                    if (split.Length < 3 || !int.TryParse(split[2], out int anim3))
                         anim3 = -1;
-                    if (split.Length < 4 || !int.TryParse(split[3], out anim4))
+                    if (split.Length < 4 || !int.TryParse(split[3], out int anim4))
                         anim4 = -1;
-                    if (split.Length < 5 || !int.TryParse(split[4], out anim5))
+                    if (split.Length < 5 || !int.TryParse(split[4], out int anim5))
                         anim5 = -1;
                     if (anim2 != -1)
                     {
@@ -150,21 +147,21 @@ namespace OA.Ultima.Resources
             _table2 = new int[max2 + 1];
             _table3 = new int[max3 + 1];
             _table4 = new int[max4 + 1];
-            for (int i = 0; i < _table1.Length; ++i)
+            for (var i = 0; i < _table1.Length; ++i)
                 _table1[i] = -1;
-            for (int i = 0; i < list1.Count; i += 2)
+            for (var i = 0; i < list1.Count; i += 2)
                 _table1[(int)list1[i]] = (int)list1[i + 1];
-            for (int i = 0; i < _table2.Length; ++i)
+            for (var i = 0; i < _table2.Length; ++i)
                 _table2[i] = -1;
-            for (int i = 0; i < list2.Count; i += 2)
+            for (var i = 0; i < list2.Count; i += 2)
                 _table2[(int)list2[i]] = (int)list2[i + 1];
-            for (int i = 0; i < _table3.Length; ++i)
+            for (var i = 0; i < _table3.Length; ++i)
                 _table3[i] = -1;
-            for (int i = 0; i < list3.Count; i += 2)
+            for (var i = 0; i < list3.Count; i += 2)
                 _table3[(int)list3[i]] = (int)list3[i + 1];
-            for (int i = 0; i < _table4.Length; ++i)
+            for (var i = 0; i < _table4.Length; ++i)
                 _table4[i] = -1;
-            for (int i = 0; i < list4.Count; i += 2)
+            for (var i = 0; i < list4.Count; i += 2)
                 _table4[(int)list4[i]] = (int)list4[i + 1];
         }
 

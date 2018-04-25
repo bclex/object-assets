@@ -26,30 +26,28 @@ namespace OA.Ultima.Resources
             if (!_filesPrepared || soundID < 0) return false;
             else
             {
-                int length, extra;
-                bool is_patched;
-                var reader = _index.Seek(soundID, out length, out extra, out is_patched);
-                var streamStart = (int)reader.Position;
-                var offset = (int)reader.Position;
+                var r = _index.Seek(soundID, out int length, out int extra, out bool patched);
+                var streamStart = (int)r.Position;
+                var offset = (int)r.Position;
                 if (offset < 0 || length <= 0)
                 {
                     if (!_translations.TryGetValue(soundID, out soundID))
                         return false;
-                    reader = _index.Seek(soundID, out length, out extra, out is_patched);
-                    streamStart = (int)reader.Position;
-                    offset = (int)reader.Position;
+                    r = _index.Seek(soundID, out length, out extra, out patched);
+                    streamStart = (int)r.Position;
+                    offset = (int)r.Position;
                 }
                 if (offset < 0 || length <= 0)
                     return false;
                 var stringBuffer = new byte[40];
                 data = new byte[length - 40];
-                reader.Seek((long)(offset), SeekOrigin.Begin);
-                stringBuffer = reader.ReadBytes(40);
-                data = reader.ReadBytes(length - 40);
+                r.Seek((long)(offset), SeekOrigin.Begin);
+                stringBuffer = r.ReadBytes(40);
+                data = r.ReadBytes(length - 40);
                 name = Encoding.ASCII.GetString(stringBuffer).Trim();
                 var end = name.IndexOf("\0");
                 name = name.Substring(0, end);
-                Metrics.ReportDataRead((int)reader.Position - streamStart);
+                Metrics.ReportDataRead((int)r.Position - streamStart);
                 return true;
             }
         }

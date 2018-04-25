@@ -67,7 +67,7 @@ namespace OA.Ultima.Resources
             var maxHeight = 0; // because all unifonts are designed to be used together, they must all share a single maxheight value.
             for (var i = 0; i < UniFontCount; i++)
             {
-                var path = FileManager.GetFilePath("unifont" + (i == 0 ? "" : i.ToString()) + ".mul");
+                var path = FileManager.GetFilePath("unifont" + (i == 0 ? string.Empty : i.ToString()) + ".mul");
                 if (path != null)
                 {
                     _unicodeFonts[i] = new FontUnicode();

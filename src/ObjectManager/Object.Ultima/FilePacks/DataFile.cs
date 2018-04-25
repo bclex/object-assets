@@ -1,5 +1,6 @@
 ﻿using OA.Core;
 using OA.Ultima.FilePacks.Records;
+using OA.Ultima.Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,14 +19,16 @@ namespace OA.Ultima.FilePacks
     public partial class DataFile : IDisposable
     {
         const int recordHeaderSizeInBytes = 16;
+        TileMatrixData _tileMatrixData;
         public Record[] records;
         public Dictionary<Type, List<IRecord>> recordsByType;
         public Dictionary<string, IRecord> objectsByIDString;
         public Dictionary<Vector2i, CELLRecord> exteriorCELLRecordsByIndices;
         public Dictionary<Vector2i, LANDRecord> LANDRecordsByIndices;
 
-        public DataFile()
+        public DataFile(uint index)
         {
+            _tileMatrixData = new TileMatrixData(index);
             ReadRecords();
             PostProcessRecords();
         }
@@ -40,13 +43,22 @@ namespace OA.Ultima.FilePacks
             Close();
         }
 
-        public void Close() { }
+        public void Close()
+        {
+            if (_tileMatrixData != null)
+            {
+                _tileMatrixData.Dispose();
+                _tileMatrixData = null;
+            }
+        }
 
         public List<IRecord> GetRecordsOfType<T>() where T : Record { return recordsByType.TryGetValue(typeof(T), out List<IRecord> records) ? records : null; }
 
         private void ReadRecords()
         {
             records = new Record[0];
+            var groundData = _tileMatrixData.GetLandChunk(0, 0);
+            var staticsData = _tileMatrixData.GetStaticChunk(0, 0, out int staticLength);
         }
 
         private void PostProcessRecords()

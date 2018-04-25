@@ -52,7 +52,7 @@ namespace OA.Ultima.Resources
             // load buffers
             _bufferedLandChunkKeys = new uint[CountBufferedLandChunk];
             _bufferedLandChunks = new byte[CountBufferedLandChunk][];
-            for (uint i = 0; i < CountBufferedLandChunk; i++)
+            for (var i = 0; i < CountBufferedLandChunk; i++)
                 _bufferedLandChunks[i] = new byte[SizeOfLandChunkData];
             _staticTileLoadingBuffer = new byte[SizeOfInitialStaticTileLoadingBuffer];
         }

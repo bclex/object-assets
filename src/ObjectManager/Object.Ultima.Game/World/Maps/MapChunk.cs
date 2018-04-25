@@ -1,5 +1,7 @@
 ﻿
 using OA.Ultima.Resources;
+using OA.Ultima.World.Entities;
+using OA.Ultima.World.Entities.Items;
 
 namespace OA.Ultima.World.Maps
 {
@@ -64,12 +66,12 @@ namespace OA.Ultima.World.Maps
             var staticDataIndex = 0;
             for (var i = 0; i < countStatics; i++)
             {
-                var iTileID = staticsData[staticDataIndex++] + (staticsData[staticDataIndex++] << 8);
+                var tileID = staticsData[staticDataIndex++] + (staticsData[staticDataIndex++] << 8);
                 var iX = staticsData[staticDataIndex++];
                 var iY = staticsData[staticDataIndex++];
                 var iTileZ = (sbyte)staticsData[staticDataIndex++];
                 var hue = staticsData[staticDataIndex++] + (staticsData[staticDataIndex++] * 256);
-                var item = new StaticItem(iTileID, hue, i, map);
+                var item = new StaticItem(tileID, hue, i, map);
                 item.Position.Set((int)ChunkX * 8 + iX, (int)ChunkY * 8 + iY, iTileZ);
             }
         }

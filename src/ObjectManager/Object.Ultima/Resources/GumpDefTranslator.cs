@@ -46,8 +46,7 @@ namespace OA.Ultima.Resources
 
         public static bool ItemHasGumpTranslation(int gumpIndex, out int gumpIndexTranslated, out int defaultHue)
         {
-            Tuple<int, int> translation;
-            if (_translations.TryGetValue(gumpIndex, out translation))
+            if (_translations.TryGetValue(gumpIndex, out Tuple<int, int> translation))
             {
                 gumpIndexTranslated = translation.Item1;
                 defaultHue = translation.Item2;

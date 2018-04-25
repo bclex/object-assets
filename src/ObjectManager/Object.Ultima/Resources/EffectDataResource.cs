@@ -27,15 +27,17 @@ namespace OA.Ultima.Resources
             // byte     Frame Interval
             // byte     Start Interval
             _animData = new EffectData[Count][];
-            var stream = FileManager.GetFile("animdata.mul");
-            var reader = new BinaryReader(stream);
-            for (var i = 0; i < Count; i++)
+            using (var s = FileManager.GetFile("animdata.mul"))
             {
-                var data = new EffectData[8];
-                var header = reader.ReadInt32(); // unknown value.
-                for (var j = 0; j < 8; j++)
-                    data[j] = new EffectData(reader);
-                _animData[i] = data;
+                var r = new BinaryReader(s);
+                for (var i = 0; i < Count; i++)
+                {
+                    var data = new EffectData[8];
+                    var header = r.ReadInt32(); // unknown value.
+                    for (var j = 0; j < 8; j++)
+                        data[j] = new EffectData(r);
+                    _animData[i] = data;
+                }
             }
         }
 

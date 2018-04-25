@@ -72,8 +72,7 @@ namespace OA.Ultima.Resources
                         else tables.Add(table = new Dictionary<int, SpeechEntry>());
                     }
                     lastIndex = index;
-                    SpeechEntry entry = null;
-                    table.TryGetValue(index, out entry);
+                    table.TryGetValue(index, out SpeechEntry entry);
                     if (entry == null)
                         table[index] = entry = new SpeechEntry(index);
                     entry.Strings.Add(text);

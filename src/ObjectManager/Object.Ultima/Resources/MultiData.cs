@@ -32,12 +32,10 @@ namespace OA.Ultima.Resources
         {
             try
             {
-                int length, extra;
-                bool patched;
-                var reader = _fileIndex.Seek(index, out length, out extra, out patched);
-                if (reader == null)
+                var r = _fileIndex.Seek(index, out int length, out int extra, out bool patched);
+                if (r == null)
                     return MultiComponentList.Empty;
-                return new MultiComponentList(reader, length / 12);
+                return new MultiComponentList(r, length / 12);
             }
             catch { return MultiComponentList.Empty; }
         }
