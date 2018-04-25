@@ -97,8 +97,8 @@ namespace OA.Ultima.World.Entities
             get { return Position.Z; }
         }
 
-        private Position3D m_Position;
-        public virtual Position3D Position { get { return m_Position; } }
+        Position3D _position;
+        public virtual Position3D Position { get { return _position; } }
 
         // ============================================================================================================
         // Methods
@@ -108,7 +108,7 @@ namespace OA.Ultima.World.Entities
         {
             Serial = serial;
             Map = map;
-            m_Position = new Position3D(OnTileChanged);
+            _position = new Position3D(OnTileChanged);
         }
 
         public virtual void Update(double frameMS)

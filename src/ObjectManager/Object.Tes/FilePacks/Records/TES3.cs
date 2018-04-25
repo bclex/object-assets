@@ -8,19 +8,19 @@ namespace OA.Tes.FilePacks.Records
     {
         public class HEDRSubRecord : SubRecord
         {
-            public float version;
-            public uint fileType;
-            public string companyName; // 32 bytes
-            public string fileDescription; // 256 bytes
-            public uint numRecords;
+            public float Version;
+            public uint FileType;
+            public string CompanyName; // 32 bytes
+            public string FileDescription; // 256 bytes
+            public uint NumRecords;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                version = r.ReadLESingle();
-                fileType = r.ReadLEUInt32();
-                companyName = r.ReadASCIIString(32);
-                fileDescription = r.ReadASCIIString(256);
-                numRecords = r.ReadLEUInt32();
+                Version = r.ReadLESingle();
+                FileType = r.ReadLEUInt32();
+                CompanyName = r.ReadASCIIString(32);
+                FileDescription = r.ReadASCIIString(256);
+                NumRecords = r.ReadLEUInt32();
             }
         }
 

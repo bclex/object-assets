@@ -8,25 +8,25 @@ namespace OA.Tes.FilePacks.Records
     {
         public class WEATSubRecord : SubRecord
         {
-            public byte clear;
-            public byte cloudy;
-            public byte foggy;
-            public byte overcast;
-            public byte rain;
-            public byte thunder;
-            public byte ash;
-            public byte blight;
+            public byte Clear;
+            public byte Cloudy;
+            public byte Foggy;
+            public byte Overcast;
+            public byte Rain;
+            public byte Thunder;
+            public byte Ash;
+            public byte Blight;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                clear = r.ReadByte();
-                cloudy = r.ReadByte();
-                foggy = r.ReadByte();
-                overcast = r.ReadByte();
-                rain = r.ReadByte();
-                thunder = r.ReadByte();
-                ash = r.ReadByte();
-                blight = r.ReadByte();
+                Clear = r.ReadByte();
+                Cloudy = r.ReadByte();
+                Foggy = r.ReadByte();
+                Overcast = r.ReadByte();
+                Rain = r.ReadByte();
+                Thunder = r.ReadByte();
+                Ash = r.ReadByte();
+                Blight = r.ReadByte();
                 // v1.3 ESM files add 2 bytes to WEAT subrecords.
                 if (dataSize == 10)
                 {
@@ -37,28 +37,28 @@ namespace OA.Tes.FilePacks.Records
         }
         public class CNAMSubRecord : SubRecord
         {
-            byte red;
-            byte green;
-            byte blue;
-            byte nullByte;
+            byte Red;
+            byte Green;
+            byte Blue;
+            byte NullByte;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                red = r.ReadByte();
-                green = r.ReadByte();
-                blue = r.ReadByte();
-                nullByte = r.ReadByte();
+                Red = r.ReadByte();
+                Green = r.ReadByte();
+                Blue = r.ReadByte();
+                NullByte = r.ReadByte();
             }
         }
         public class SNAMSubRecord : SubRecord
         {
-            byte[] soundName;
-            byte chance;
+            byte[] SoundName;
+            byte Chance;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                soundName = r.ReadBytes(32);
-                chance = r.ReadByte();
+                SoundName = r.ReadBytes(32);
+                Chance = r.ReadByte();
             }
         }
 

@@ -6,7 +6,7 @@ namespace OA.Ultima.World.Entities.Items
     {
         public int SortInfluence;
 
-        public StaticItem(int itemID, int hue,  int sortInfluence, Map map)
+        public StaticItem(int itemID, int hue, int sortInfluence, Map map)
             : base(Serial.Null, map)
         {
             ItemID = itemID;

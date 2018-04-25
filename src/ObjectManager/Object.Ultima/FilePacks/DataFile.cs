@@ -3,8 +3,6 @@ using OA.Ultima.FilePacks.Records;
 using OA.Ultima.Resources;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
 
 namespace OA.Ultima.FilePacks
 {
@@ -19,18 +17,21 @@ namespace OA.Ultima.FilePacks
     public partial class DataFile : IDisposable
     {
         const int recordHeaderSizeInBytes = 16;
-        TileMatrixData _tileMatrixData;
+        TileMatrixData _tileData;
         public Record[] records;
         public Dictionary<Type, List<IRecord>> recordsByType;
         public Dictionary<string, IRecord> objectsByIDString;
         public Dictionary<Vector2i, CELLRecord> exteriorCELLRecordsByIndices;
         public Dictionary<Vector2i, LANDRecord> LANDRecordsByIndices;
 
-        public DataFile(uint index)
+        public DataFile(uint map)
         {
-            _tileMatrixData = new TileMatrixData(index);
+            _tileData = new TileMatrixData(map);
+            Utils.Info("Load");
             ReadRecords();
+            Utils.Info("Loading...");
             PostProcessRecords();
+            Utils.Info("Loaded");
         }
 
         void IDisposable.Dispose()
@@ -45,10 +46,10 @@ namespace OA.Ultima.FilePacks
 
         public void Close()
         {
-            if (_tileMatrixData != null)
+            if (_tileData != null)
             {
-                _tileMatrixData.Dispose();
-                _tileMatrixData = null;
+                _tileData.Dispose();
+                _tileData = null;
             }
         }
 
@@ -56,9 +57,24 @@ namespace OA.Ultima.FilePacks
 
         private void ReadRecords()
         {
-            records = new Record[0];
-            var groundData = _tileMatrixData.GetLandChunk(0, 0);
-            var staticsData = _tileMatrixData.GetStaticChunk(0, 0, out int staticLength);
+            var recordList = new List<Record>();
+            // add items
+            for (var i = 0; i < TileData.ItemData.Length; i++)
+            {
+                var itemData = TileData.ItemData[i];
+                recordList.Add(new ITEMRecord
+                {
+                    ItemId = i
+                });
+            }
+            // add tiles
+            for (uint chunkY = 0; chunkY < _tileData.ChunkHeight; chunkY++)
+                for (uint chunkX = 0; chunkX < _tileData.ChunkWidth; chunkX++)
+                {
+                    recordList.Add(new CELLRecord(_tileData, chunkX, chunkY));
+                    recordList.Add(new LANDRecord(_tileData, chunkX, chunkY));
+                }
+            records = recordList.ToArray();
         }
 
         private void PostProcessRecords()
@@ -69,20 +85,18 @@ namespace OA.Ultima.FilePacks
             LANDRecordsByIndices = new Dictionary<Vector2i, LANDRecord>();
             foreach (var record in records)
             {
-                //if (record == null)
-                //    continue;
-                //// Add the record to the list for it's type.
-                //var recordType = record.GetType();
-                //List<IRecord> recordsOfSameType;
-                //if (recordsByType.TryGetValue(recordType, out recordsOfSameType))
-                //    recordsOfSameType.Add(record);
-                //else
-                //{
-                //    recordsOfSameType = new List<IRecord>();
-                //    recordsOfSameType.Add(record);
-                //    recordsByType.Add(recordType, recordsOfSameType);
-                //}
-                //// Add the record to the object dictionary if applicable.
+                if (record == null)
+                    continue;
+                // Add the record to the list for it's type.
+                var recordType = record.GetType();
+                if (recordsByType.TryGetValue(recordType, out List<IRecord> recordsOfSameType))
+                    recordsOfSameType.Add(record);
+                else
+                {
+                    recordsOfSameType = new List<IRecord> { record };
+                    recordsByType.Add(recordType, recordsOfSameType);
+                }
+                // Add the record to the object dictionary if applicable.
                 //if (record is GMSTRecord) objectsByIDString.Add(((GMSTRecord)record).NAME.value, record);
                 //else if (record is GLOBRecord) objectsByIDString.Add(((GLOBRecord)record).NAME.value, record);
                 //else if (record is SOUNRecord) objectsByIDString.Add(((SOUNRecord)record).NAME.value, record);
@@ -106,19 +120,15 @@ namespace OA.Ultima.FilePacks
                 //else if (record is ALCHRecord) objectsByIDString.Add(((ALCHRecord)record).NAME.value, record);
                 //else if (record is CREARecord) objectsByIDString.Add(((CREARecord)record).NAME.value, record);
                 //else if (record is NPC_Record) objectsByIDString.Add(((NPC_Record)record).NAME.value, record);
-                //// Add the record to exteriorCELLRecordsByIndices if applicable.
-                //if (record is CELLRecord)
-                //{
-                //    var cell = (CELLRecord)record;
-                //    if (!cell.IsInterior)
-                //        exteriorCELLRecordsByIndices[cell.GridCoords] = cell;
-                //}
-                //// Add the record to LANDRecordsByIndices if applicable.
-                //if (record is LANDRecord)
-                //{
-                //    var land = (LANDRecord)record;
-                //    LANDRecordsByIndices[land.gridCoords] = land;
-                //}
+                // Add the record to exteriorCELLRecordsByIndices if applicable.
+                if (record is CELLRecord cell)
+                {
+                    if (!cell.IsInterior)
+                        exteriorCELLRecordsByIndices[cell.GridCoords] = cell;
+                }
+                // Add the record to LANDRecordsByIndices if applicable.
+                if (record is LANDRecord land)
+                    LANDRecordsByIndices[land.GridCoords] = land;
             }
         }
     }

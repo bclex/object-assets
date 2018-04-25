@@ -12,25 +12,25 @@ namespace OA
 
     public class InRangeCellInfo
     {
-        public GameObject gameObject;
-        public GameObject objectsContainerGameObject;
-        public ICellRecord cellRecord;
-        public IEnumerator objectsCreationCoroutine;
+        public GameObject GameObject;
+        public GameObject ObjectsContainerGameObject;
+        public ICellRecord CellRecord;
+        public IEnumerator ObjectsCreationCoroutine;
 
         public InRangeCellInfo(GameObject gameObject, GameObject objectsContainerGameObject, ICellRecord cellRecord, IEnumerator objectsCreationCoroutine)
         {
-            this.gameObject = gameObject;
-            this.objectsContainerGameObject = objectsContainerGameObject;
-            this.cellRecord = cellRecord;
-            this.objectsCreationCoroutine = objectsCreationCoroutine;
+            GameObject = gameObject;
+            ObjectsContainerGameObject = objectsContainerGameObject;
+            CellRecord = cellRecord;
+            ObjectsCreationCoroutine = objectsCreationCoroutine;
         }
     }
 
     public class RefCellObjInfo
     {
-        public object refObjDataGroup; //: CELLRecord.RefObjDataGroup
-        public IRecord referencedRecord;
-        public string modelFilePath;
+        public object RefObj; //: CELLRecord.RefObjDataGroup
+        public IRecord ReferencedRecord;
+        public string ModelFilePath;
     }
 
     public interface ICellManager

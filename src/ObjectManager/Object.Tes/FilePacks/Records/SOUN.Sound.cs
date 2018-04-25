@@ -7,15 +7,15 @@ namespace OA.Tes.FilePacks.Records
     {
         public class DATASubRecord : SubRecord
         {
-            public byte volume;
-            public byte minRange;
-            public byte maxRange;
+            public byte Volume;
+            public byte MinRange;
+            public byte MaxRange;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                volume = r.ReadByte();
-                minRange = r.ReadByte();
-                maxRange = r.ReadByte();
+                Volume = r.ReadByte();
+                MinRange = r.ReadByte();
+                MaxRange = r.ReadByte();
             }
         }
 

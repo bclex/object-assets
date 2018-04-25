@@ -27,16 +27,16 @@ namespace OA.Tes.FilePacks.Records
         }
         public class VHGTSubRecord : SubRecord
         {
-            public float referenceHeight;
-            public sbyte[] heightOffsets;
+            public float ReferenceHeight;
+            public sbyte[] HeightOffsets;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                referenceHeight = r.ReadLESingle();
+                ReferenceHeight = r.ReadLESingle();
                 var heightOffsetCount = header.dataSize - 4 - 2 - 1;
-                heightOffsets = new sbyte[heightOffsetCount];
+                HeightOffsets = new sbyte[heightOffsetCount];
                 for (var i = 0; i < heightOffsetCount; i++)
-                    heightOffsets[i] = r.ReadSByte();
+                    HeightOffsets[i] = r.ReadSByte();
                 // unknown
                 r.ReadLEInt16();
                 // unknown
@@ -71,18 +71,18 @@ namespace OA.Tes.FilePacks.Records
         }
         public class VTEXSubRecord : SubRecord
         {
-            public ushort[] textureIndices;
+            public ushort[] TextureIndices;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
                 var textureIndexCount = header.dataSize / 2;
-                textureIndices = new ushort[textureIndexCount];
+                TextureIndices = new ushort[textureIndexCount];
                 for (var i = 0; i < textureIndexCount; i++)
-                    textureIndices[i] = r.ReadLEUInt16();
+                    TextureIndices[i] = r.ReadLEUInt16();
             }
         }
 
-        public Vector2i gridCoords
+        public Vector2i GridCoords
         {
             get { return new Vector2i(INTV.value0, INTV.value1); }
         }

@@ -155,7 +155,7 @@ namespace OA.Tes.FilePacks
                 if (record is LANDRecord)
                 {
                     var land = (LANDRecord)record;
-                    LANDRecordsByIndices[land.gridCoords] = land;
+                    LANDRecordsByIndices[land.GridCoords] = land;
                 }
             }
         }

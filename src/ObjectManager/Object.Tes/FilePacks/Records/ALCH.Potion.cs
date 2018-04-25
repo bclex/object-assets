@@ -7,39 +7,39 @@ namespace OA.Tes.FilePacks.Records
     {
         public class ALDTSubRecord : SubRecord
         {
-            public float weight;
-            public int value;
-            public int autoCalc;
+            public float Weight;
+            public int Value;
+            public int AutoCalc;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                weight = r.ReadLESingle();
-                value = r.ReadLEInt32();
-                autoCalc = r.ReadLEInt32();
+                Weight = r.ReadLESingle();
+                Value = r.ReadLEInt32();
+                AutoCalc = r.ReadLEInt32();
             }
         }
 
         public class ENAMSubRecord : SubRecord
         {
-            public short effectID;
-            public byte skillID;
-            public byte attributeID;
-            public int unknown1;
-            public int unknown2;
-            public int duration;
-            public int magnitude;
-            public int unknown4;
+            public short EffectId;
+            public byte SkillId;
+            public byte AttributeId;
+            public int Unknown1;
+            public int Unknown2;
+            public int Duration;
+            public int Magnitude;
+            public int Unknown4;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                effectID = r.ReadLEInt16();
-                skillID = r.ReadByte();
-                attributeID = r.ReadByte();
-                unknown1 = r.ReadLEInt32();
-                unknown2 = r.ReadLEInt32();
-                duration = r.ReadLEInt32();
-                magnitude = r.ReadLEInt32();
-                unknown4 = r.ReadLEInt32();
+                EffectId = r.ReadLEInt16();
+                SkillId = r.ReadByte();
+                AttributeId = r.ReadByte();
+                Unknown1 = r.ReadLEInt32();
+                Unknown2 = r.ReadLEInt32();
+                Duration = r.ReadLEInt32();
+                Magnitude = r.ReadLEInt32();
+                Unknown4 = r.ReadLEInt32();
             }
         }
 

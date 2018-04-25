@@ -2,9 +2,9 @@
 {
     public class LIGHRecord : Record
     {
-        public int radius;
-        public byte red;
-        public byte green;
-        public byte blue;
+        public int Radius;
+        public byte Red;
+        public byte Green;
+        public byte Blue;
     }
 }

@@ -7,19 +7,19 @@ namespace OA.Tes.FilePacks.Records
     {
         public class BKDTSubRecord : SubRecord
         {
-            public float weight;
-            public int value;
-            public int scroll;
-            public int skillID;
-            public int enchantPts;
+            public float Weight;
+            public int Value;
+            public int Scroll;
+            public int SkillID;
+            public int EnchantPts;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                weight = r.ReadLESingle();
-                value = r.ReadLEInt32();
-                scroll = r.ReadLEInt32();
-                skillID = r.ReadLEInt32();
-                enchantPts = r.ReadLEInt32();
+                Weight = r.ReadLESingle();
+                Value = r.ReadLEInt32();
+                Scroll = r.ReadLEInt32();
+                SkillID = r.ReadLEInt32();
+                EnchantPts = r.ReadLEInt32();
             }
         }
 

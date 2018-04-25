@@ -96,8 +96,8 @@ namespace OA.Tes
                 if (component.doorData.leadsToInteriorCell)
                 {
                     var cellInfo = CellManager.StartCreatingInteriorCell(component.doorData.doorExitName);
-                    LoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
-                    newCell = (CELLRecord)cellInfo.cellRecord;
+                    LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
+                    newCell = (CELLRecord)cellInfo.CellRecord;
                     OnInteriorCell(newCell);
                 }
                 else
@@ -121,7 +121,7 @@ namespace OA.Tes
                     try
                     {
                         var cellInfo = ((TesCellManager)CellManager).StartInstantiatingCell(CELL);
-                        LoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
+                        LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
                         //DestroyImmediate(cellInfo.gameObject);
                         w.Write("Pass: ");
                     }

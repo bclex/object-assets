@@ -12,7 +12,7 @@ namespace OA.Ultima
     {
         const int _cellRadius = 1;
         const int _detailRadius = 1;
-        const string _defaultLandTextureFilePath = "textures/_land_default.dds";
+        const string _defaultLandTextureFilePath = "tex0";
 
         UltimaAssetPack _asset;
         UltimaDataPack _data;
@@ -47,21 +47,16 @@ namespace OA.Ultima
         {
             var cameraCellIndices = GetExteriorCellIndices(currentPosition);
 
-            var cellRadius = cellRadiusOverride >= 0 ? cellRadiusOverride : UltimaCellManager._cellRadius;
+            var cellRadius = cellRadiusOverride >= 0 ? cellRadiusOverride : _cellRadius;
             var minCellX = cameraCellIndices.x - cellRadius;
             var maxCellX = cameraCellIndices.x + cellRadius;
             var minCellY = cameraCellIndices.y - cellRadius;
             var maxCellY = cameraCellIndices.y + cellRadius;
 
             // Destroy out of range cells.
-            var outOfRangeCellIndices = new List<Vector2i>();
-
-            foreach (var KVPair in _cellObjects)
-                if (KVPair.Key.x < minCellX || KVPair.Key.x > maxCellX || KVPair.Key.y < minCellY || KVPair.Key.y > maxCellY)
-                    outOfRangeCellIndices.Add(KVPair.Key);
-
-            foreach (var cellIndices in outOfRangeCellIndices)
-                DestroyExteriorCell(cellIndices);
+            foreach (var x in _cellObjects)
+                if (x.Key.x < minCellX || x.Key.x > maxCellX || x.Key.y < minCellY || x.Key.y > maxCellY)
+                    DestroyExteriorCell(x.Key);
 
             // Create new cells.
             for (var r = 0; r <= cellRadius; r++)
@@ -76,27 +71,27 @@ namespace OA.Ultima
                         {
                             var cellInfo = StartCreatingExteriorCell(cellIndices);
                             if (cellInfo != null && immediate)
-                                _loadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
+                                _loadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
                         }
                     }
 
             // Update LODs.
-            foreach (var keyValuePair in _cellObjects)
+            foreach (var x in _cellObjects)
             {
-                var cellIndices = keyValuePair.Key;
-                var cellInfo = keyValuePair.Value;
+                var cellIndices = x.Key;
+                var cellInfo = x.Value;
                 var cellXDistance = Mathf.Abs(cameraCellIndices.x - cellIndices.x);
                 var cellYDistance = Mathf.Abs(cameraCellIndices.y - cellIndices.y);
                 var cellDistance = Mathf.Max(cellXDistance, cellYDistance);
                 if (cellDistance <= _detailRadius)
                 {
-                    if (!cellInfo.objectsContainerGameObject.activeSelf)
-                        cellInfo.objectsContainerGameObject.SetActive(true);
+                    if (!cellInfo.ObjectsContainerGameObject.activeSelf)
+                        cellInfo.ObjectsContainerGameObject.SetActive(true);
                 }
                 else
                 {
-                    if (cellInfo.objectsContainerGameObject.activeSelf)
-                        cellInfo.objectsContainerGameObject.SetActive(false);
+                    if (cellInfo.ObjectsContainerGameObject.activeSelf)
+                        cellInfo.ObjectsContainerGameObject.SetActive(false);
                 }
             }
         }
@@ -149,10 +144,10 @@ namespace OA.Ultima
 
         public void DestroyAllCells()
         {
-            foreach (var keyValuePair in _cellObjects)
+            foreach (var x in _cellObjects)
             {
-                _loadBalancer.CancelTask(keyValuePair.Value.objectsCreationCoroutine);
-                Object.Destroy(keyValuePair.Value.gameObject);
+                _loadBalancer.CancelTask(x.Value.ObjectsCreationCoroutine);
+                Object.Destroy(x.Value.GameObject);
             }
             _cellObjects.Clear();
         }
@@ -176,8 +171,8 @@ namespace OA.Ultima
             yield return null;
             // Start pre-loading all required files for referenced objects. The NIF manager will load the textures as well.
             foreach (var refCellObjInfo in refCellObjInfos)
-                if (refCellObjInfo.modelFilePath != null)
-                    _asset.PreloadObjectAsync(refCellObjInfo.modelFilePath);
+                if (refCellObjInfo.ModelFilePath != null)
+                    _asset.PreloadObjectAsync(refCellObjInfo.ModelFilePath);
             yield return null;
             // Instantiate terrain.
             if (land != null)
@@ -200,22 +195,22 @@ namespace OA.Ultima
 
         private RefCellObjInfo[] GetRefCellObjInfos(CELLRecord cell)
         {
-            var refCellObjInfos = new RefCellObjInfo[cell.refObjDataGroups.Count];
-            for (var i = 0; i < cell.refObjDataGroups.Count; i++)
+            var refCellObjInfos = new RefCellObjInfo[cell.RefObjs.Length];
+            for (var i = 0; i < cell.RefObjs.Length; i++)
             {
                 var refObjInfo = new RefCellObjInfo
                 {
-                    refObjDataGroup = cell.refObjDataGroups[i]
+                    RefObj = cell.RefObjs[i]
                 };
                 // Get the record the RefObjDataGroup references.
-                var refObjDataGroup = (CELLRecord.RefObjDataGroup)refObjInfo.refObjDataGroup;
-                _data.objectsByIDString.TryGetValue(refObjDataGroup.Name, out refObjInfo.referencedRecord);
-                if (refObjInfo.referencedRecord != null)
+                var refObj = (CELLRecord.RefObj)refObjInfo.RefObj;
+                _data.objectsByIDString.TryGetValue(refObj.Name, out refObjInfo.ReferencedRecord);
+                if (refObjInfo.ReferencedRecord != null)
                 {
-                    var modelFileName = RecordUtils.GetModelFileName(refObjInfo.referencedRecord);
+                    var modelFileName = RecordUtils.GetModelFileName(refObjInfo.ReferencedRecord);
                     // If the model file name is valid, store the model file path.
                     if (!string.IsNullOrEmpty(modelFileName))
-                        refObjInfo.modelFilePath = "meshes\\" + modelFileName;
+                        refObjInfo.ModelFilePath = "meshes\\" + modelFileName;
                 }
                 refCellObjInfos[i] = refObjInfo;
             }
@@ -227,20 +222,20 @@ namespace OA.Ultima
         /// </summary>
         private void InstantiateCellObject(CELLRecord cell, GameObject parent, RefCellObjInfo refCellObjInfo)
         {
-            if (refCellObjInfo.referencedRecord != null)
+            if (refCellObjInfo.ReferencedRecord != null)
             {
                 GameObject modelObj = null;
                 // If the object has a model, instantiate it.
-                if (refCellObjInfo.modelFilePath != null)
+                if (refCellObjInfo.ModelFilePath != null)
                 {
-                    modelObj = _asset.CreateObject(refCellObjInfo.modelFilePath);
+                    modelObj = _asset.CreateObject(refCellObjInfo.ModelFilePath);
                     PostProcessInstantiatedCellObject(modelObj, refCellObjInfo);
                     modelObj.transform.parent = parent.transform;
                 }
                 // If the object has a light, instantiate it.
-                if (refCellObjInfo.referencedRecord is LIGHRecord)
+                if (refCellObjInfo.ReferencedRecord is LIGHRecord)
                 {
-                    var lightObj = InstantiateLight((LIGHRecord)refCellObjInfo.referencedRecord, cell.IsInterior);
+                    var lightObj = InstantiateLight((LIGHRecord)refCellObjInfo.ReferencedRecord, cell.IsInterior);
                     // If the object also has a model, parent the model to the light.
                     if (modelObj != null)
                     {
@@ -271,7 +266,7 @@ namespace OA.Ultima
                     }
                 }
             }
-            else Utils.Log("Unknown Object: " + ((CELLRecord.RefObjDataGroup)refCellObjInfo.refObjDataGroup).Name);
+            else Utils.Log("Unknown Object: " + ((CELLRecord.RefObj)refCellObjInfo.RefObj).Name);
         }
 
         private GameObject InstantiateLight(LIGHRecord LIGH, bool indoors)
@@ -282,8 +277,8 @@ namespace OA.Ultima
                 isStatic = true
             };
             var lightComponent = lightObj.AddComponent<Light>();
-            lightComponent.range = 3 * (LIGH.radius / ConvertUtils.meterInMWUnits);
-            lightComponent.color = new Color32(LIGH.red, LIGH.green, LIGH.blue, 255);
+            lightComponent.range = 3 * (LIGH.Radius / ConvertUtils.meterInMWUnits);
+            lightComponent.color = new Color32(LIGH.Red, LIGH.Green, LIGH.Blue, 255);
             lightComponent.intensity = 1.5f;
             lightComponent.bounceIntensity = 0f;
             lightComponent.shadows = game.RenderLightShadows ? LightShadows.Soft : LightShadows.None;
@@ -328,11 +323,11 @@ namespace OA.Ultima
 
         private void ProcessObjectType<RecordType>(GameObject gameObject, RefCellObjInfo info, string tag) where RecordType : Record
         {
-            var record = info.referencedRecord;
+            var record = info.ReferencedRecord;
             if (record is RecordType)
             {
                 var obj = GameObjectUtils.FindTopLevelObject(gameObject);
-                if (obj == null) { return; }
+                if (obj == null) return;
                 //var component = GenericObjectComponent.Create(obj, record, tag);
                 ////only door records need access to the cell object data group so far
                 //if (record is DOORRecord)
@@ -342,20 +337,19 @@ namespace OA.Ultima
 
         private List<string> GetLANDTextureFilePaths(LANDRecord land)
         {
-            // Don't return anything if the LAND doesn't have height data or texture data.
-            if (land.VHGT == null || land.VTEX == null) return null;
+            // Don't return anything if the LAND doesn't have data.
+            if (land.Tiles == null) return null;
             var textureFilePaths = new List<string>();
-            var distinctTextureIndices = land.VTEX.textureIndices.Distinct().ToList();
-            for (var i = 0; i < distinctTextureIndices.Count; i++)
+            var distinctTextureIds = land.Tiles.Select(x => x.Data.TextureID).Distinct().ToList();
+            for (var i = 0; i < distinctTextureIds.Count; i++)
             {
-                var textureIndex = (short)((short)distinctTextureIndices[i] - 1);
+                var textureIndex = distinctTextureIds[i];
                 if (textureIndex < 0)
                 {
                     textureFilePaths.Add(_defaultLandTextureFilePath);
                     continue;
                 }
-                var ltex = _data.FindLTEXRecord(textureIndex);
-                var textureFilePath = ltex.Data;
+                var textureFilePath = $"tex{textureIndex}";
                 textureFilePaths.Add(textureFilePath);
             }
             return textureFilePaths;
@@ -367,8 +361,8 @@ namespace OA.Ultima
         private IEnumerator InstantiateLANDCoroutine(LANDRecord land, GameObject parent)
         {
             Debug.Assert(land != null);
-            // Don't create anything if the LAND doesn't have height data.
-            if (land.VHGT == null)
+            // Don't create anything if the LAND doesn't have data.
+            if (land.Tiles == null)
                 yield break;
             // Return before doing any work to provide an IEnumerator handle to the coroutine.
             yield return null;
@@ -465,8 +459,8 @@ namespace OA.Ultima
         {
             if (_cellObjects.TryGetValue(indices, out InRangeCellInfo cellInfo))
             {
-                _loadBalancer.CancelTask(cellInfo.objectsCreationCoroutine);
-                Object.Destroy(cellInfo.gameObject);
+                _loadBalancer.CancelTask(cellInfo.ObjectsCreationCoroutine);
+                Object.Destroy(cellInfo.GameObject);
                 _cellObjects.Remove(indices);
             }
             else Utils.Error("Tried to destroy a cell that isn't created.");

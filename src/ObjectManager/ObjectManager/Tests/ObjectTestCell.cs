@@ -90,7 +90,7 @@ namespace OA
             Utils.Assert(_currentCell != null);
             CreatePlayer(playerPrefab, position, out _playerCameraObj);
             var cellInfo = CellManager.StartCreatingExteriorCell(gridCoords);
-            LoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
+            LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
         }
     }
 }

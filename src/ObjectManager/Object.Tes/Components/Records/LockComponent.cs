@@ -11,8 +11,8 @@ namespace OA.Tes.Components.Records
             var LOCK = (LOCKRecord)record;
             //objData.icon = TESUnity.instance.Engine.textureManager.LoadTexture(WPDT.ITEX.value, "icons"); 
             objData.name = LOCK.FNAM.value;
-            objData.weight = LOCK.LKDT.weight.ToString();
-            objData.value = LOCK.LKDT.value.ToString();
+            objData.weight = LOCK.LKDT.Weight.ToString();
+            objData.value = LOCK.LKDT.Value.ToString();
         }
     }
 }

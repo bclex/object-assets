@@ -5,19 +5,6 @@ namespace OA.Ultima.FilePacks
 {
     partial class DataFile
     {
-        public LTEXRecord FindLTEXRecord(int index)
-        {
-            var records = GetRecordsOfType<LTEXRecord>();
-            LTEXRecord ltex = null;
-            for (int i = 0, l = records.Count; i < l; i++)
-            {
-                ltex = (LTEXRecord)records[i];
-                if (ltex.Intv == index)
-                    return ltex;
-            }
-            return null;
-        }
-
         public LANDRecord FindLANDRecord(Vector2i cellIndices)
         {
             LANDRecordsByIndices.TryGetValue(cellIndices, out LANDRecord land);

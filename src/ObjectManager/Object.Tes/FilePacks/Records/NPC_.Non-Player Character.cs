@@ -9,100 +9,100 @@ namespace OA.Tes.FilePacks.Records
         public class KNAMSubRecord : STRVSubRecord { }
         public class NPDTSubRecord : SubRecord
         {
-            public short level;
-            public byte strength;
-            public byte intelligence;
-            public byte willpower;
-            public byte agility;
-            public byte speed;
-            public byte endurance;
-            public byte personality;
-            public byte luck;
-            public byte[] skills;//[27];
-            public byte reputation;
-            public short health;
-            public short spellPts;
-            public short fatigue;
-            public byte disposition;
-            public byte factionID;
-            public byte rank;
-            public byte unknown1;
-            public int gold;
-            public byte version;
+            public short Level;
+            public byte Strength;
+            public byte Intelligence;
+            public byte Willpower;
+            public byte Agility;
+            public byte Speed;
+            public byte Endurance;
+            public byte Personality;
+            public byte Luck;
+            public byte[] Skills;//[27];
+            public byte Reputation;
+            public short Health;
+            public short SpellPts;
+            public short Fatigue;
+            public byte Disposition;
+            public byte FactionId;
+            public byte Rank;
+            public byte Unknown1;
+            public int Gold;
+            public byte Version;
 
             // 12 byte version
-            //public short level;
-            //public byte disposition;
-            //public byte factionID;
-            //public byte rank;
-            //public byte unknown1;
-            public byte unknown2;
-            public byte unknown3;
-            //public long gold;
+            //public short Level;
+            //public byte Disposition;
+            //public byte FactionId;
+            //public byte Rank;
+            //public byte Unknown1;
+            public byte Unknown2;
+            public byte Unknown3;
+            //public long Gold;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
                 if (dataSize == 52)
                 {
-                    level = r.ReadLEInt16();
-                    strength = r.ReadByte();
-                    intelligence = r.ReadByte();
-                    willpower = r.ReadByte();
-                    agility = r.ReadByte();
-                    speed = r.ReadByte();
-                    endurance = r.ReadByte();
-                    personality = r.ReadByte();
-                    luck = r.ReadByte();
-                    skills = r.ReadBytes(26);
-                    reputation = r.ReadByte();
-                    health = r.ReadLEInt16();
-                    spellPts = r.ReadLEInt16();
-                    fatigue = r.ReadLEInt16();
-                    disposition = r.ReadByte();
-                    factionID = r.ReadByte();
-                    rank = r.ReadByte();
-                    unknown1 = r.ReadByte();
-                    gold = r.ReadLEInt32();
-                    version = r.ReadByte();
+                    Level = r.ReadLEInt16();
+                    Strength = r.ReadByte();
+                    Intelligence = r.ReadByte();
+                    Willpower = r.ReadByte();
+                    Agility = r.ReadByte();
+                    Speed = r.ReadByte();
+                    Endurance = r.ReadByte();
+                    Personality = r.ReadByte();
+                    Luck = r.ReadByte();
+                    Skills = r.ReadBytes(26);
+                    Reputation = r.ReadByte();
+                    Health = r.ReadLEInt16();
+                    SpellPts = r.ReadLEInt16();
+                    Fatigue = r.ReadLEInt16();
+                    Disposition = r.ReadByte();
+                    FactionId = r.ReadByte();
+                    Rank = r.ReadByte();
+                    Unknown1 = r.ReadByte();
+                    Gold = r.ReadLEInt32();
+                    Version = r.ReadByte();
                 }
                 else
                 {
-                    level = r.ReadLEInt16();
-                    disposition = r.ReadByte();
-                    factionID = r.ReadByte();
-                    rank = r.ReadByte();
-                    unknown1 = r.ReadByte();
-                    unknown2 = r.ReadByte();
-                    unknown3 = r.ReadByte();
-                    gold = r.ReadLEInt32();
+                    Level = r.ReadLEInt16();
+                    Disposition = r.ReadByte();
+                    FactionId = r.ReadByte();
+                    Rank = r.ReadByte();
+                    Unknown1 = r.ReadByte();
+                    Unknown2 = r.ReadByte();
+                    Unknown3 = r.ReadByte();
+                    Gold = r.ReadLEInt32();
                 }
             }
         }
         public class FLAGSubRecord : INTVSubRecord { }
         public class NPCOSubRecord : SubRecord
         {
-            public int count;
-            public char[] name;
+            public int Count;
+            public char[] Name;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                count = r.ReadLEInt32();
-                var bytes = r.ReadBytes(count);
-                name = new char[32];
+                Count = r.ReadLEInt32();
+                var bytes = r.ReadBytes(Count);
+                Name = new char[32];
                 for (var i = 0; i < 32; i++)
-                    name[i] = System.Convert.ToChar(bytes[i]);
+                    Name[i] = System.Convert.ToChar(bytes[i]);
             }
         }
         public class NPCSSubRecord : SubRecord
         {
-            public char[] name;
+            public char[] Name;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
                 var bytes = r.ReadBytes(32);
-                name = new char[32];
+                Name = new char[32];
                 for (var i = 0; i < 32; i++)
-                    name[i] = System.Convert.ToChar(bytes[i]);
+                    Name[i] = System.Convert.ToChar(bytes[i]);
             }
         }
         public class AIDTSubRecord : SubRecord
@@ -129,110 +129,110 @@ namespace OA.Tes.FilePacks.Records
                 RepairItem = 0x20000
             }
 
-            public byte hello;
-            public byte unknown1;
-            public byte fight;
-            public byte flee;
-            public byte alarm;
-            public byte unknown2;
-            public byte unknown3;
-            public byte unknown4;
-            public int flags;
+            public byte Hello;
+            public byte Unknown1;
+            public byte Fight;
+            public byte Flee;
+            public byte Alarm;
+            public byte Unknown2;
+            public byte Unknown3;
+            public byte Unknown4;
+            public int Flags;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                hello = r.ReadByte();
-                unknown1 = r.ReadByte();
-                fight = r.ReadByte();
-                flee = r.ReadByte();
-                alarm = r.ReadByte();
-                unknown2 = r.ReadByte();
-                unknown3 = r.ReadByte();
-                unknown4 = r.ReadByte();
-                flags = r.ReadLEInt32();
+                Hello = r.ReadByte();
+                Unknown1 = r.ReadByte();
+                Fight = r.ReadByte();
+                Flee = r.ReadByte();
+                Alarm = r.ReadByte();
+                Unknown2 = r.ReadByte();
+                Unknown3 = r.ReadByte();
+                Unknown4 = r.ReadByte();
+                Flags = r.ReadLEInt32();
             }
         }
         public class AI_WSubRecord : SubRecord
         {
-            public short distance;
-            public short duration;
-            public byte timeOfDay;
-            public byte[] idle;
-            public byte unknow;
+            public short Distance;
+            public short Duration;
+            public byte TimeOfDay;
+            public byte[] Idle;
+            public byte Unknow;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                distance = r.ReadLEInt16();
-                duration = r.ReadLEInt16();
-                timeOfDay = r.ReadByte();
-                idle = r.ReadBytes(8);
-                unknow = r.ReadByte();
+                Distance = r.ReadLEInt16();
+                Duration = r.ReadLEInt16();
+                TimeOfDay = r.ReadByte();
+                Idle = r.ReadBytes(8);
+                Unknow = r.ReadByte();
             }
         }
         public class AI_TSubRecord : SubRecord
         {
-            public float x;
-            public float y;
-            public float z;
-            public float unknown;
+            public float X;
+            public float Y;
+            public float Z;
+            public float Unknown;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                x = r.ReadLESingle();
-                y = r.ReadLESingle();
-                z = r.ReadLESingle();
-                unknown = r.ReadLESingle();
+                X = r.ReadLESingle();
+                Y = r.ReadLESingle();
+                Z = r.ReadLESingle();
+                Unknown = r.ReadLESingle();
             }
         }
         public class AI_FSubRecord : SubRecord
         {
-            public float x;
-            public float y;
-            public float z;
-            public short duration;
-            public char[] id;
-            public float unknown;
+            public float X;
+            public float Y;
+            public float Z;
+            public short Duration;
+            public char[] Id;
+            public float Unknown;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                x = r.ReadLESingle();
-                y = r.ReadLESingle();
-                z = r.ReadLESingle();
-                duration = r.ReadLEInt16();
+                X = r.ReadLESingle();
+                Y = r.ReadLESingle();
+                Z = r.ReadLESingle();
+                Duration = r.ReadLEInt16();
                 var bytes = r.ReadBytes(32);
-                id = new char[32];
+                Id = new char[32];
                 for (var i = 0; i < 32; i++)
-                    id[i] = System.Convert.ToChar(bytes[i]);
-                unknown = r.ReadLESingle();
+                    Id[i] = System.Convert.ToChar(bytes[i]);
+                Unknown = r.ReadLESingle();
             }
         }
         public class AI_ESubRecord : SubRecord
         {
-            public float x;
-            public float y;
-            public float z;
-            public short duration;
-            public char[] id;
-            public float unknown;
+            public float X;
+            public float Y;
+            public float Z;
+            public short Duration;
+            public char[] Id;
+            public float Unknown;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                x = r.ReadLESingle();
-                y = r.ReadLESingle();
-                z = r.ReadLESingle();
-                duration = r.ReadLEInt16();
+                X = r.ReadLESingle();
+                Y = r.ReadLESingle();
+                Z = r.ReadLESingle();
+                Duration = r.ReadLEInt16();
                 var bytes = r.ReadBytes(32);
-                id = new char[32];
+                Id = new char[32];
                 for (var i = 0; i < 32; i++)
-                    id[i] = System.Convert.ToChar(bytes[i]);
-                unknown = r.ReadLESingle();
+                    Id[i] = System.Convert.ToChar(bytes[i]);
+                Unknown = r.ReadLESingle();
             }
         }
         public class CNDTSubRecord : STRVSubRecord { }
         public class AI_ASubRecord : SubRecord
         {
-            public char[] name;
-            public byte unknown;
+            public char[] Name;
+            public byte Unknown;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
@@ -240,21 +240,21 @@ namespace OA.Tes.FilePacks.Records
         }
         public class DODTSubRecord : SubRecord
         {
-            public float xPos;
-            public float yPos;
-            public float zPos;
-            public float xRot;
-            public float yRot;
-            public float zRot;
+            public float XPos;
+            public float YPos;
+            public float ZPos;
+            public float XRot;
+            public float YRot;
+            public float ZRot;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                xPos = r.ReadLESingle();
-                yPos = r.ReadLESingle();
-                zPos = r.ReadLESingle();
-                xRot = r.ReadLESingle();
-                yRot = r.ReadLESingle();
-                zRot = r.ReadLESingle();
+                XPos = r.ReadLESingle();
+                YPos = r.ReadLESingle();
+                ZPos = r.ReadLESingle();
+                XRot = r.ReadLESingle();
+                YRot = r.ReadLESingle();
+                ZRot = r.ReadLESingle();
             }
         }
         public class DNAMSubRecord : STRVSubRecord { }

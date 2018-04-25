@@ -7,27 +7,27 @@ namespace OA.Tes.FilePacks.Records
     {
         public class LHDTSubRecord : SubRecord
         {
-            public float weight;
-            public int value;
-            public int time;
-            public int radius;
-            public byte red;
-            public byte green;
-            public byte blue;
-            public byte nullByte;
-            public int flags;
+            public float Weight;
+            public int Value;
+            public int Time;
+            public int Radius;
+            public byte Red;
+            public byte Green;
+            public byte Blue;
+            public byte NullByte;
+            public int Flags;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                weight = r.ReadLESingle();
-                value = r.ReadLEInt32();
-                time = r.ReadLEInt32();
-                radius = r.ReadLEInt32();
-                red = r.ReadByte();
-                green = r.ReadByte();
-                blue = r.ReadByte();
-                nullByte = r.ReadByte();
-                flags = r.ReadLEInt32();
+                Weight = r.ReadLESingle();
+                Value = r.ReadLEInt32();
+                Time = r.ReadLEInt32();
+                Radius = r.ReadLEInt32();
+                Red = r.ReadByte();
+                Green = r.ReadByte();
+                Blue = r.ReadByte();
+                NullByte = r.ReadByte();
+                Flags = r.ReadLEInt32();
             }
         }
 

@@ -7,37 +7,37 @@ namespace OA.Tes.FilePacks.Records
     {
         public class WPDTSubRecord : SubRecord
         {
-            public float weight;
-            public int value;
-            public short type;
-            public short health;
-            public float speed;
-            public float reach;
-            public short enchantPts;
-            public byte chopMin;
-            public byte chopMax;
-            public byte slashMin;
-            public byte slashMax;
-            public byte thrustMin;
-            public byte thrustMax;
-            public int flags;
+            public float Weight;
+            public int Value;
+            public short Type;
+            public short Health;
+            public float Speed;
+            public float Reach;
+            public short EnchantPts;
+            public byte ChopMin;
+            public byte ChopMax;
+            public byte SlashMin;
+            public byte SlashMax;
+            public byte ThrustMin;
+            public byte ThrustMax;
+            public int Flags;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                weight = r.ReadLESingle();
-                value = r.ReadLEInt32();
-                type = r.ReadLEInt16();
-                health = r.ReadLEInt16();
-                speed = r.ReadLESingle();
-                reach = r.ReadLESingle();
-                enchantPts = r.ReadLEInt16();
-                chopMin = r.ReadByte();
-                chopMax = r.ReadByte();
-                slashMin = r.ReadByte();
-                slashMax = r.ReadByte();
-                thrustMin = r.ReadByte();
-                thrustMax = r.ReadByte();
-                flags = r.ReadLEInt32();
+                Weight = r.ReadLESingle();
+                Value = r.ReadLEInt32();
+                Type = r.ReadLEInt16();
+                Health = r.ReadLEInt16();
+                Speed = r.ReadLESingle();
+                Reach = r.ReadLESingle();
+                EnchantPts = r.ReadLEInt16();
+                ChopMin = r.ReadByte();
+                ChopMax = r.ReadByte();
+                SlashMin = r.ReadByte();
+                SlashMax = r.ReadByte();
+                ThrustMin = r.ReadByte();
+                ThrustMax = r.ReadByte();
+                Flags = r.ReadLEInt32();
             }
         }
 

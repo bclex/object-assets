@@ -50,8 +50,7 @@ namespace OA.Ultima.World.Maps
         {
             // get data from the tile Matrix
             var groundData = tileData.GetLandChunk(ChunkX, ChunkY);
-            int staticLength;
-            var staticsData = tileData.GetStaticChunk(ChunkX, ChunkY, out staticLength);
+            var staticsData = tileData.GetStaticChunk(ChunkX, ChunkY, out int staticLength);
             // load the ground data into the tiles.
             var groundDataIndex = 0;
             for (var i = 0; i < 64; i++)
@@ -67,12 +66,12 @@ namespace OA.Ultima.World.Maps
             for (var i = 0; i < countStatics; i++)
             {
                 var tileID = staticsData[staticDataIndex++] + (staticsData[staticDataIndex++] << 8);
-                var iX = staticsData[staticDataIndex++];
-                var iY = staticsData[staticDataIndex++];
-                var iTileZ = (sbyte)staticsData[staticDataIndex++];
+                var x = staticsData[staticDataIndex++];
+                var y = staticsData[staticDataIndex++];
+                var tileZ = (sbyte)staticsData[staticDataIndex++];
                 var hue = staticsData[staticDataIndex++] + (staticsData[staticDataIndex++] * 256);
                 var item = new StaticItem(tileID, hue, i, map);
-                item.Position.Set((int)ChunkX * 8 + iX, (int)ChunkY * 8 + iY, iTileZ);
+                item.Position.Set((int)ChunkX * 8 + x, (int)ChunkY * 8 + y, tileZ);
             }
         }
 

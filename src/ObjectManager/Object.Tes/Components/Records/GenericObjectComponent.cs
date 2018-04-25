@@ -27,7 +27,7 @@ namespace OA.Tes.Components.Records
 
         protected Transform _transform = null;
 
-        public CELLRecord.RefObjDataGroup refObjDataGroup = null;
+        public CELLRecord.RefObj refObjDataGroup = null;
         public Record record;
         public ObjectData objData = new ObjectData();
         public bool usable = false;

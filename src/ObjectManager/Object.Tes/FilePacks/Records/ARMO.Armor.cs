@@ -8,21 +8,21 @@ namespace OA.Tes.FilePacks.Records
     {
         public class AODTSubRecord : SubRecord
         {
-            public int type;
-            public float weight;
-            public int value;
-            public int health;
-            public int enchantPts;
-            public int armour;
+            public int Type;
+            public float Weight;
+            public int Value;
+            public int Health;
+            public int EnchantPts;
+            public int Armour;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                type = r.ReadLEInt32();
-                weight = r.ReadLESingle();
-                value = r.ReadLEInt32();
-                health = r.ReadLEInt32();
-                enchantPts = r.ReadLEInt32();
-                armour = r.ReadLEInt32();
+                Type = r.ReadLEInt32();
+                Weight = r.ReadLESingle();
+                Value = r.ReadLEInt32();
+                Health = r.ReadLEInt32();
+                EnchantPts = r.ReadLEInt32();
+                Armour = r.ReadLEInt32();
             }
         }
 

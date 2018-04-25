@@ -7,25 +7,25 @@ namespace OA.Tes.FilePacks.Records
     {
         public class IRDTSubRecord : SubRecord
         {
-            public float weight;
-            public int value;
-            public int[] effectID;
-            public int[] skillID;
-            public int[] attributeID;
+            public float Weight;
+            public int Value;
+            public int[] EffectId;
+            public int[] SkillId;
+            public int[] AttributeId;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                weight = r.ReadLESingle();
-                value = r.ReadLEInt32();
-                effectID = new int[4];
-                for (var i = 0; i < effectID.Length; i++)
-                    effectID[i] = r.ReadLEInt32();
-                skillID = new int[4];
-                for (var i = 0; i < skillID.Length; i++)
-                    skillID[i] = r.ReadLEInt32();
-                attributeID = new int[4];
-                for (var i = 0; i < attributeID.Length; i++)
-                    attributeID[i] = r.ReadLEInt32();
+                Weight = r.ReadLESingle();
+                Value = r.ReadLEInt32();
+                EffectId = new int[4];
+                for (var i = 0; i < EffectId.Length; i++)
+                    EffectId[i] = r.ReadLEInt32();
+                SkillId = new int[4];
+                for (var i = 0; i < SkillId.Length; i++)
+                    SkillId[i] = r.ReadLEInt32();
+                AttributeId = new int[4];
+                for (var i = 0; i < AttributeId.Length; i++)
+                    AttributeId[i] = r.ReadLEInt32();
             }
         }
 

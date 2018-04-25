@@ -74,14 +74,13 @@ namespace OA.Ultima.Resources
             if (ClientVersion.InstallationIsUopFormat)
                 return false;
             var key = MakeChunkKey(blockX, blockY);
-            LandPatchData data;
-            if (_landPatchPtrs.TryGetValue(key, out data))
+            if (_landPatchPtrs.TryGetValue(key, out LandPatchData data))
             {
-                if (data.Index >= EnabledDiffs.MapPatches[map])
+                if (EnabledDiffs != null && data.Index >= EnabledDiffs.MapPatches[map])
                     return false;
                 while (data.Next != null)
                 {
-                    if (data.Next.Index >= EnabledDiffs.MapPatches[map])
+                    if (EnabledDiffs != null && data.Next.Index >= EnabledDiffs.MapPatches[map])
                         break;
                     data = data.Next;
                 }
@@ -120,7 +119,7 @@ namespace OA.Ultima.Resources
                             current = current.Next;
                         current.Next = new LandPatchData(i, ptr);
                     }
-                    else  _landPatchPtrs.Add(key, new LandPatchData(i, ptr));
+                    else _landPatchPtrs.Add(key, new LandPatchData(i, ptr));
                     ptr += 192;
                 }
                 indexReader.Close();
@@ -136,14 +135,13 @@ namespace OA.Ultima.Resources
                 if (ClientVersion.InstallationIsUopFormat)
                     return false;
                 var key = MakeChunkKey(blockX, blockY);
-                StaticPatchData data;
-                if (_staticPatchPtrs.TryGetValue(key, out data))
+                if (_staticPatchPtrs.TryGetValue(key, out StaticPatchData data))
                 {
-                    if (data.Index >= EnabledDiffs.StaticPatches[map])
+                    if (EnabledDiffs != null && data.Index >= EnabledDiffs.StaticPatches[map])
                         return false;
                     while (data.Next != null)
                     {
-                        if (data.Next.Index >= EnabledDiffs.StaticPatches[map])
+                        if (EnabledDiffs != null && data.Next.Index >= EnabledDiffs.StaticPatches[map])
                             break;
                         data = data.Next;
                     }

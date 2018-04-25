@@ -8,17 +8,17 @@ namespace OA.Tes.FilePacks.Records
     {
         public class CTDTSubRecord : SubRecord
         {
-            public int type;
-            public float weight;
-            public short value;
-            public short enchantPts;
+            public int Type;
+            public float Weight;
+            public short Value;
+            public short EnchantPts;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                type = r.ReadLEInt32();
-                weight = r.ReadLESingle();
-                value = r.ReadLEInt16();
-                enchantPts = r.ReadLEInt16();
+                Type = r.ReadLEInt32();
+                Weight = r.ReadLESingle();
+                Value = r.ReadLEInt16();
+                EnchantPts = r.ReadLEInt16();
             }
         }
 

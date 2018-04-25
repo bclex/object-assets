@@ -82,7 +82,7 @@ namespace OA.Ultima.Resources
                         itemData.Height = r.ReadByte();
                         itemData.Name = Encoding.ASCII.GetString((r.ReadBytes(20)));
                         itemData.Name = itemData.Name.Trim('\0');
-                        // binaryReader.BaseStream.Seek(20, SeekOrigin.Current);
+                        // r.BaseStream.Seek(20, SeekOrigin.Current);
                         // Issue 5 - Statics (bridge, stairs, etc) should be walkable - http://code.google.com/p/ultimaxna/issues/detail?id=5 - Smjert
                         if (i > 1005 && i < 7640)
                             itemData.IsStairs = !(Array.BinarySearch(_stairsID, i) < 0);
@@ -127,7 +127,7 @@ namespace OA.Ultima.Resources
                             itemData.Height = r.ReadByte();
                             itemData.Name = Encoding.ASCII.GetString((r.ReadBytes(20)));
                             itemData.Name = itemData.Name.Trim('\0');
-                            // binaryReader.BaseStream.Seek(20, SeekOrigin.Current);
+                            // r.BaseStream.Seek(20, SeekOrigin.Current);
                             // Issue 5 - Statics (bridge, stairs, etc) should be walkable - http://code.google.com/p/ultimaxna/issues/detail?id=5 - Smjert
                             if (i > 1005 && i < 7640)
                                 itemData.IsStairs = !(Array.BinarySearch(_stairsID, i) < 0);
@@ -157,7 +157,7 @@ namespace OA.Ultima.Resources
                             itemData.Height = r.ReadByte();
                             itemData.Name = Encoding.ASCII.GetString((r.ReadBytes(20)));
                             itemData.Name = itemData.Name.Trim('\0');
-                            // binaryReader.BaseStream.Seek(20, SeekOrigin.Current);
+                            // r.BaseStream.Seek(20, SeekOrigin.Current);
                             // Issue 5 - Statics (bridge, stairs, etc) should be walkable - http://code.google.com/p/ultimaxna/issues/detail?id=5 - Smjert
                             if (i > 1005 && i < 7640)
                                 itemData.IsStairs = !(Array.BinarySearch(_stairsID, i) < 0);

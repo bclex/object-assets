@@ -7,57 +7,57 @@ namespace OA.Tes.FilePacks.Records
     {
         public class NPDTSubRecord : SubRecord
         {
-            public int type;
-            public int level;
-            public int strength;
-            public int intelligence;
-            public int willpower;
-            public int agility;
-            public int speed;
-            public int endurance;
-            public int personality;
-            public int luck;
-            public int health;
-            public int spellPts;
-            public int fatigue;
-            public int soul;
-            public int combat;
-            public int magic;
-            public int stealth;
-            public int attackMin1;
-            public int attackMax1;
-            public int attackMin2;
-            public int attackMax2;
-            public int attackMin3;
-            public int attackMax3;
-            public int gold;
+            public int Type;
+            public int Level;
+            public int Strength;
+            public int Intelligence;
+            public int Willpower;
+            public int Agility;
+            public int Speed;
+            public int Endurance;
+            public int Personality;
+            public int Luck;
+            public int Health;
+            public int SpellPts;
+            public int Fatigue;
+            public int Soul;
+            public int Combat;
+            public int Magic;
+            public int Stealth;
+            public int AttackMin1;
+            public int AttackMax1;
+            public int AttackMin2;
+            public int AttackMax2;
+            public int AttackMin3;
+            public int AttackMax3;
+            public int Gold;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                type = r.ReadLEInt32();
-                level = r.ReadLEInt32();
-                strength = r.ReadLEInt32();
-                intelligence = r.ReadLEInt32();
-                willpower = r.ReadLEInt32();
-                agility = r.ReadLEInt32();
-                speed = r.ReadLEInt32();
-                endurance = r.ReadLEInt32();
-                personality = r.ReadLEInt32();
-                luck = r.ReadLEInt32();
-                health = r.ReadLEInt32();
-                spellPts = r.ReadLEInt32();
-                fatigue = r.ReadLEInt32();
-                soul = r.ReadLEInt32();
-                combat = r.ReadLEInt32();
-                magic = r.ReadLEInt32();
-                stealth = r.ReadLEInt32();
-                attackMin1 = r.ReadLEInt32();
-                attackMax1 = r.ReadLEInt32();
-                attackMin2 = r.ReadLEInt32();
-                attackMax2 = r.ReadLEInt32();
-                attackMin3 = r.ReadLEInt32();
-                attackMax3 = r.ReadLEInt32();
-                gold = r.ReadLEInt32();
+                Type = r.ReadLEInt32();
+                Level = r.ReadLEInt32();
+                Strength = r.ReadLEInt32();
+                Intelligence = r.ReadLEInt32();
+                Willpower = r.ReadLEInt32();
+                Agility = r.ReadLEInt32();
+                Speed = r.ReadLEInt32();
+                Endurance = r.ReadLEInt32();
+                Personality = r.ReadLEInt32();
+                Luck = r.ReadLEInt32();
+                Health = r.ReadLEInt32();
+                SpellPts = r.ReadLEInt32();
+                Fatigue = r.ReadLEInt32();
+                Soul = r.ReadLEInt32();
+                Combat = r.ReadLEInt32();
+                Magic = r.ReadLEInt32();
+                Stealth = r.ReadLEInt32();
+                AttackMin1 = r.ReadLEInt32();
+                AttackMax1 = r.ReadLEInt32();
+                AttackMin2 = r.ReadLEInt32();
+                AttackMax2 = r.ReadLEInt32();
+                AttackMin3 = r.ReadLEInt32();
+                AttackMax3 = r.ReadLEInt32();
+                Gold = r.ReadLEInt32();
             }
         }
 
@@ -65,36 +65,36 @@ namespace OA.Tes.FilePacks.Records
 
         public class NPCOSubRecord : SubRecord
         {
-            public int count;
-            public char[] name;
+            public int Count;
+            public char[] Name;
 
             public NPCOSubRecord()
             {
-                name = new char[32];
+                Name = new char[32];
             }
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                count = r.ReadLEInt32();
+                Count = r.ReadLEInt32();
                 var bytes = r.ReadBytes(32);
                 for (var i = 0; i < 32; i++)
-                    name[i] = System.Convert.ToChar(bytes[i]);
+                    Name[i] = Convert.ToChar(bytes[i]);
             }
         }
 
         public class AI_WSubRecord : SubRecord
         {
-            public short distance;
-            public byte duration;
-            public byte timeOfDay;
-            public byte[] idle;
+            public short Distance;
+            public byte Duration;
+            public byte TimeOfDay;
+            public byte[] Idle;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                distance = r.ReadLEInt16();
-                duration = r.ReadByte();
-                timeOfDay = r.ReadByte();
-                idle = r.ReadBytes(10);
+                Distance = r.ReadLEInt16();
+                Duration = r.ReadByte();
+                TimeOfDay = r.ReadByte();
+                Idle = r.ReadBytes(10);
             }
         }
 

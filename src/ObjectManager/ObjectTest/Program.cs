@@ -4,7 +4,8 @@
     {
         public static void Main()
         {
-            ObjectTest.Start();
+            //ObjectTest.Start();
+            ObjectTestDataPack.Start();
         }
     }
 }

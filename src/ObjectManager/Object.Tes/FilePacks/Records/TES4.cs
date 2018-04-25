@@ -8,15 +8,15 @@ namespace OA.Tes.FilePacks.Records
     {
         public class HEDRSubRecord : SubRecord
         {
-            public float version;
-            public int numRecords;
-            public uint nextObjectId;
+            public float Version;
+            public int NumRecords;
+            public uint NextObjectId;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                version = r.ReadLESingle();
-                numRecords = r.ReadLEInt32();
-                nextObjectId = r.ReadLEUInt32();
+                Version = r.ReadLESingle();
+                NumRecords = r.ReadLEInt32();
+                NextObjectId = r.ReadLEUInt32();
             }
         }
 

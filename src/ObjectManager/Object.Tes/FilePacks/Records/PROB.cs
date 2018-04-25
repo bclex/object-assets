@@ -7,17 +7,17 @@ namespace OA.Tes.FilePacks.Records
     {
         public class PBDTSubRecord : SubRecord
         {
-            public float weight;
-            public int value;
-            public float quality;
-            public int uses;
+            public float Weight;
+            public int Value;
+            public float Quality;
+            public int Uses;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                weight = r.ReadLESingle();
-                value = r.ReadLEInt32();
-                quality = r.ReadLESingle();
-                uses = r.ReadLEInt32();
+                Weight = r.ReadLESingle();
+                Value = r.ReadLEInt32();
+                Quality = r.ReadLESingle();
+                Uses = r.ReadLEInt32();
             }
         }
 

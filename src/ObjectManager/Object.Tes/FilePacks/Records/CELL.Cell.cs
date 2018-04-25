@@ -10,15 +10,15 @@ namespace OA.Tes.FilePacks.Records
     {
         public class CELLDATASubRecord : SubRecord
         {
-            public uint flags;
-            public int gridX;
-            public int gridY;
+            public uint Flags;
+            public int GridX;
+            public int GridY;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                flags = r.ReadLEUInt32();
-                gridX = r.ReadLEInt32();
-                gridY = r.ReadLEInt32();
+                Flags = r.ReadLEUInt32();
+                GridX = r.ReadLEInt32();
+                GridY = r.ReadLEInt32();
             }
         }
         public class RGNNSubRecord : NAMESubRecord { }
@@ -27,33 +27,33 @@ namespace OA.Tes.FilePacks.Records
         public class WHGTSubRecord : FLTVSubRecord { }
         public class AMBISubRecord : SubRecord
         {
-            public uint ambientColor;
-            public uint sunlightColor;
-            public uint fogColor;
-            public float fogDensity;
+            public uint AmbientColor;
+            public uint SunlightColor;
+            public uint FogColor;
+            public float FogDensity;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                ambientColor = r.ReadLEUInt32();
-                sunlightColor = r.ReadLEUInt32();
-                fogColor = r.ReadLEUInt32();
-                fogDensity = r.ReadLESingle();
+                AmbientColor = r.ReadLEUInt32();
+                SunlightColor = r.ReadLEUInt32();
+                FogColor = r.ReadLEUInt32();
+                FogDensity = r.ReadLESingle();
             }
         }
 
-        public class RefObjDataGroup
+        public class RefObj
         {
             public class FRMRSubRecord : UInt32SubRecord { }
             public class XSCLSubRecord : FLTVSubRecord { }
             public class DODTSubRecord : SubRecord
             {
-                public Vector3 position;
-                public Vector3 eulerAngles;
+                public Vector3 Position;
+                public Vector3 EulerAngles;
 
                 public override void DeserializeData(UnityBinaryReader r, uint dataSize)
                 {
-                    position = r.ReadLEVector3();
-                    eulerAngles = r.ReadLEVector3();
+                    Position = r.ReadLEVector3();
+                    EulerAngles = r.ReadLEVector3();
                 }
             }
             public class DNAMSubRecord : NAMESubRecord { }
@@ -66,13 +66,13 @@ namespace OA.Tes.FilePacks.Records
             public class XSOLSubRecord : NAMESubRecord { }
             public class DATASubRecord : SubRecord
             {
-                public Vector3 position;
-                public Vector3 eulerAngles;
+                public Vector3 Position;
+                public Vector3 EulerAngles;
 
                 public override void DeserializeData(UnityBinaryReader r, uint dataSize)
                 {
-                    position = r.ReadLEVector3();
-                    eulerAngles = r.ReadLEVector3();
+                    Position = r.ReadLEVector3();
+                    EulerAngles = r.ReadLEVector3();
                 }
             }
 
@@ -95,22 +95,22 @@ namespace OA.Tes.FilePacks.Records
 
         public bool IsInterior
         {
-            get { return Utils.ContainsBitFlags(DATA.flags, 0x01); }
+            get { return Utils.ContainsBitFlags(DATA.Flags, 0x01); }
         }
 
         public Vector2i GridCoords
         {
-            get { return new Vector2i(DATA.gridX, DATA.gridY); }
+            get { return new Vector2i(DATA.GridX, DATA.GridY); }
         }
 
         public Color? AmbientLight
         {
-            get { return AMBI != null ? (Color?)ColorUtils.B8G8R8ToColor32(AMBI.ambientColor) : null; }
+            get { return AMBI != null ? (Color?)ColorUtils.B8G8R8ToColor32(AMBI.AmbientColor) : null; }
         }
 
         public NAMESubRecord NAME;
 
-        public bool isReadingObjectDataGroups = false;
+        public bool IsReadingObjectDataGroups = false;
         public CELLDATASubRecord DATA;
 
         public RGNNSubRecord RGNN;
@@ -123,14 +123,13 @@ namespace OA.Tes.FilePacks.Records
         public WHGTSubRecord WHGT;
         public AMBISubRecord AMBI;
 
-        public List<RefObjDataGroup> refObjDataGroups = new List<RefObjDataGroup>();
+        public List<RefObj> RefObjs = new List<RefObj>();
 
         public override SubRecord CreateUninitializedSubRecord(string subRecordName)
         {
-            if (!isReadingObjectDataGroups && subRecordName == "FRMR")
-                isReadingObjectDataGroups = true;
-            if (!isReadingObjectDataGroups)
-            {
+            if (!IsReadingObjectDataGroups && subRecordName == "FRMR")
+                IsReadingObjectDataGroups = true;
+            if (!IsReadingObjectDataGroups)
                 switch (subRecordName)
                 {
                     case "NAME": NAME = new NAMESubRecord(); return NAME;
@@ -142,30 +141,26 @@ namespace OA.Tes.FilePacks.Records
                     case "AMBI": AMBI = new AMBISubRecord(); return AMBI;
                     default: return null;
                 }
-            }
-            else
-            {
-                switch (subRecordName)
+            else switch (subRecordName)
                 {
                     // RefObjDataGroup sub-records
-                    case "FRMR": refObjDataGroups.Add(new RefObjDataGroup()); ArrayUtils.Last(refObjDataGroups).FRMR = new RefObjDataGroup.FRMRSubRecord(); return ArrayUtils.Last(refObjDataGroups).FRMR;
-                    case "NAME": ArrayUtils.Last(refObjDataGroups).NAME = new NAMESubRecord(); return ArrayUtils.Last(refObjDataGroups).NAME;
-                    case "XSCL": ArrayUtils.Last(refObjDataGroups).XSCL = new RefObjDataGroup.XSCLSubRecord(); return ArrayUtils.Last(refObjDataGroups).XSCL;
-                    case "DODT": ArrayUtils.Last(refObjDataGroups).DODT = new RefObjDataGroup.DODTSubRecord(); return ArrayUtils.Last(refObjDataGroups).DODT;
-                    case "DNAM": ArrayUtils.Last(refObjDataGroups).DNAM = new RefObjDataGroup.DNAMSubRecord(); return ArrayUtils.Last(refObjDataGroups).DNAM;
-                    case "FLTV": ArrayUtils.Last(refObjDataGroups).FLTV = new FLTVSubRecord(); return ArrayUtils.Last(refObjDataGroups).FLTV;
-                    case "KNAM": ArrayUtils.Last(refObjDataGroups).KNAM = new RefObjDataGroup.KNAMSubRecord(); return ArrayUtils.Last(refObjDataGroups).KNAM;
-                    case "TNAM": ArrayUtils.Last(refObjDataGroups).TNAM = new RefObjDataGroup.TNAMSubRecord(); return ArrayUtils.Last(refObjDataGroups).TNAM;
-                    case "UNAM": ArrayUtils.Last(refObjDataGroups).UNAM = new RefObjDataGroup.UNAMSubRecord(); return ArrayUtils.Last(refObjDataGroups).UNAM;
-                    case "ANAM": ArrayUtils.Last(refObjDataGroups).ANAM = new RefObjDataGroup.ANAMSubRecord(); return ArrayUtils.Last(refObjDataGroups).ANAM;
-                    case "BNAM": ArrayUtils.Last(refObjDataGroups).BNAM = new RefObjDataGroup.BNAMSubRecord(); return ArrayUtils.Last(refObjDataGroups).BNAM;
-                    case "INTV": ArrayUtils.Last(refObjDataGroups).INTV = new INTVSubRecord(); return ArrayUtils.Last(refObjDataGroups).INTV;
-                    case "NAM9": ArrayUtils.Last(refObjDataGroups).NAM9 = new RefObjDataGroup.NAM9SubRecord(); return ArrayUtils.Last(refObjDataGroups).NAM9;
-                    case "XSOL": ArrayUtils.Last(refObjDataGroups).XSOL = new RefObjDataGroup.XSOLSubRecord(); return ArrayUtils.Last(refObjDataGroups).XSOL;
-                    case "DATA": ArrayUtils.Last(refObjDataGroups).DATA = new RefObjDataGroup.DATASubRecord(); return ArrayUtils.Last(refObjDataGroups).DATA;
+                    case "FRMR": RefObjs.Add(new RefObj()); ArrayUtils.Last(RefObjs).FRMR = new RefObj.FRMRSubRecord(); return ArrayUtils.Last(RefObjs).FRMR;
+                    case "NAME": ArrayUtils.Last(RefObjs).NAME = new NAMESubRecord(); return ArrayUtils.Last(RefObjs).NAME;
+                    case "XSCL": ArrayUtils.Last(RefObjs).XSCL = new RefObj.XSCLSubRecord(); return ArrayUtils.Last(RefObjs).XSCL;
+                    case "DODT": ArrayUtils.Last(RefObjs).DODT = new RefObj.DODTSubRecord(); return ArrayUtils.Last(RefObjs).DODT;
+                    case "DNAM": ArrayUtils.Last(RefObjs).DNAM = new RefObj.DNAMSubRecord(); return ArrayUtils.Last(RefObjs).DNAM;
+                    case "FLTV": ArrayUtils.Last(RefObjs).FLTV = new FLTVSubRecord(); return ArrayUtils.Last(RefObjs).FLTV;
+                    case "KNAM": ArrayUtils.Last(RefObjs).KNAM = new RefObj.KNAMSubRecord(); return ArrayUtils.Last(RefObjs).KNAM;
+                    case "TNAM": ArrayUtils.Last(RefObjs).TNAM = new RefObj.TNAMSubRecord(); return ArrayUtils.Last(RefObjs).TNAM;
+                    case "UNAM": ArrayUtils.Last(RefObjs).UNAM = new RefObj.UNAMSubRecord(); return ArrayUtils.Last(RefObjs).UNAM;
+                    case "ANAM": ArrayUtils.Last(RefObjs).ANAM = new RefObj.ANAMSubRecord(); return ArrayUtils.Last(RefObjs).ANAM;
+                    case "BNAM": ArrayUtils.Last(RefObjs).BNAM = new RefObj.BNAMSubRecord(); return ArrayUtils.Last(RefObjs).BNAM;
+                    case "INTV": ArrayUtils.Last(RefObjs).INTV = new INTVSubRecord(); return ArrayUtils.Last(RefObjs).INTV;
+                    case "NAM9": ArrayUtils.Last(RefObjs).NAM9 = new RefObj.NAM9SubRecord(); return ArrayUtils.Last(RefObjs).NAM9;
+                    case "XSOL": ArrayUtils.Last(RefObjs).XSOL = new RefObj.XSOLSubRecord(); return ArrayUtils.Last(RefObjs).XSOL;
+                    case "DATA": ArrayUtils.Last(RefObjs).DATA = new RefObj.DATASubRecord(); return ArrayUtils.Last(RefObjs).DATA;
                     default: return null;
                 }
-            }
         }
 
         public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();

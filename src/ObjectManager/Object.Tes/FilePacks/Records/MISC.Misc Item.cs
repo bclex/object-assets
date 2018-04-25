@@ -7,15 +7,15 @@ namespace OA.Tes.FilePacks.Records
     {
         public class MCDTSubRecord : SubRecord
         {
-            public float weight;
-            public uint value;
-            public uint unknown;
+            public float Weight;
+            public uint Value;
+            public uint Unknown;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                weight = r.ReadLESingle();
-                value = r.ReadLEUInt32();
-                unknown = r.ReadLEUInt32();
+                Weight = r.ReadLESingle();
+                Value = r.ReadLEUInt32();
+                Unknown = r.ReadLEUInt32();
             }
         }
 

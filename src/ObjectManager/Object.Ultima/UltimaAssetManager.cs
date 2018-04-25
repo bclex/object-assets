@@ -17,7 +17,7 @@ namespace OA.Ultima
 
         public Task<IDataPack> GetDataPack(Uri uri)
         {
-            var pack = (IDataPack)new UltimaDataPack();
+            var pack = (IDataPack)new UltimaDataPack(0);
             return Task.FromResult(pack);
         }
 

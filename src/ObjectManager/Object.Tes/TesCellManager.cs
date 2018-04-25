@@ -48,21 +48,16 @@ namespace OA.Tes
         {
             var cameraCellIndices = GetExteriorCellIndices(currentPosition);
 
-            var cellRadius = cellRadiusOverride >= 0 ? cellRadiusOverride : TesCellManager._cellRadius;
+            var cellRadius = cellRadiusOverride >= 0 ? cellRadiusOverride : _cellRadius;
             var minCellX = cameraCellIndices.x - cellRadius;
             var maxCellX = cameraCellIndices.x + cellRadius;
             var minCellY = cameraCellIndices.y - cellRadius;
             var maxCellY = cameraCellIndices.y + cellRadius;
 
             // Destroy out of range cells.
-            var outOfRangeCellIndices = new List<Vector2i>();
-
-            foreach (var KVPair in _cellObjects)
-                if (KVPair.Key.x < minCellX || KVPair.Key.x > maxCellX || KVPair.Key.y < minCellY || KVPair.Key.y > maxCellY)
-                    outOfRangeCellIndices.Add(KVPair.Key);
-
-            foreach (var cellIndices in outOfRangeCellIndices)
-                DestroyExteriorCell(cellIndices);
+            foreach (var x in _cellObjects)
+                if (x.Key.x < minCellX || x.Key.x > maxCellX || x.Key.y < minCellY || x.Key.y > maxCellY)
+                    DestroyExteriorCell(x.Key);
 
             // Create new cells.
             for (var r = 0; r <= cellRadius; r++)
@@ -77,27 +72,27 @@ namespace OA.Tes
                         {
                             var cellInfo = StartCreatingExteriorCell(cellIndices);
                             if (cellInfo != null && immediate)
-                                _loadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
+                                _loadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
                         }
                     }
 
             // Update LODs.
-            foreach (var keyValuePair in _cellObjects)
+            foreach (var x in _cellObjects)
             {
-                var cellIndices = keyValuePair.Key;
-                var cellInfo = keyValuePair.Value;
+                var cellIndices = x.Key;
+                var cellInfo = x.Value;
                 var cellXDistance = Mathf.Abs(cameraCellIndices.x - cellIndices.x);
                 var cellYDistance = Mathf.Abs(cameraCellIndices.y - cellIndices.y);
                 var cellDistance = Mathf.Max(cellXDistance, cellYDistance);
                 if (cellDistance <= _detailRadius)
                 {
-                    if (!cellInfo.objectsContainerGameObject.activeSelf)
-                        cellInfo.objectsContainerGameObject.SetActive(true);
+                    if (!cellInfo.ObjectsContainerGameObject.activeSelf)
+                        cellInfo.ObjectsContainerGameObject.SetActive(true);
                 }
                 else
                 {
-                    if (cellInfo.objectsContainerGameObject.activeSelf)
-                        cellInfo.objectsContainerGameObject.SetActive(false);
+                    if (cellInfo.ObjectsContainerGameObject.activeSelf)
+                        cellInfo.ObjectsContainerGameObject.SetActive(false);
                 }
             }
         }
@@ -150,10 +145,10 @@ namespace OA.Tes
 
         public void DestroyAllCells()
         {
-            foreach (var keyValuePair in _cellObjects)
+            foreach (var x in _cellObjects)
             {
-                _loadBalancer.CancelTask(keyValuePair.Value.objectsCreationCoroutine);
-                Object.Destroy(keyValuePair.Value.gameObject);
+                _loadBalancer.CancelTask(x.Value.ObjectsCreationCoroutine);
+                Object.Destroy(x.Value.GameObject);
             }
             _cellObjects.Clear();
         }
@@ -177,8 +172,8 @@ namespace OA.Tes
             yield return null;
             // Start pre-loading all required files for referenced objects. The NIF manager will load the textures as well.
             foreach (var refCellObjInfo in refCellObjInfos)
-                if (refCellObjInfo.modelFilePath != null)
-                    _asset.PreloadObjectAsync(refCellObjInfo.modelFilePath);
+                if (refCellObjInfo.ModelFilePath != null)
+                    _asset.PreloadObjectAsync(refCellObjInfo.ModelFilePath);
             yield return null;
             // Instantiate terrain.
             if (land != null)
@@ -201,22 +196,22 @@ namespace OA.Tes
 
         private RefCellObjInfo[] GetRefCellObjInfos(CELLRecord cell)
         {
-            var refCellObjInfos = new RefCellObjInfo[cell.refObjDataGroups.Count];
-            for (var i = 0; i < cell.refObjDataGroups.Count; i++)
+            var refCellObjInfos = new RefCellObjInfo[cell.RefObjs.Count];
+            for (var i = 0; i < cell.RefObjs.Count; i++)
             {
                 var refObjInfo = new RefCellObjInfo
                 {
-                    refObjDataGroup = cell.refObjDataGroups[i]
+                    RefObj = cell.RefObjs[i]
                 };
                 // Get the record the RefObjDataGroup references.
-                var refObjDataGroup = (CELLRecord.RefObjDataGroup)refObjInfo.refObjDataGroup;
-                _data.objectsByIDString.TryGetValue(refObjDataGroup.NAME.value, out refObjInfo.referencedRecord);
-                if (refObjInfo.referencedRecord != null)
+                var refObj = (CELLRecord.RefObj)refObjInfo.RefObj;
+                _data.objectsByIDString.TryGetValue(refObj.NAME.value, out refObjInfo.ReferencedRecord);
+                if (refObjInfo.ReferencedRecord != null)
                 {
-                    var modelFileName = RecordUtils.GetModelFileName(refObjInfo.referencedRecord);
+                    var modelFileName = RecordUtils.GetModelFileName(refObjInfo.ReferencedRecord);
                     // If the model file name is valid, store the model file path.
                     if (!string.IsNullOrEmpty(modelFileName))
-                        refObjInfo.modelFilePath = "meshes\\" + modelFileName;
+                        refObjInfo.ModelFilePath = "meshes\\" + modelFileName;
                 }
                 refCellObjInfos[i] = refObjInfo;
             }
@@ -228,20 +223,20 @@ namespace OA.Tes
         /// </summary>
         private void InstantiateCellObject(CELLRecord cell, GameObject parent, RefCellObjInfo refCellObjInfo)
         {
-            if (refCellObjInfo.referencedRecord != null)
+            if (refCellObjInfo.ReferencedRecord != null)
             {
                 GameObject modelObj = null;
                 // If the object has a model, instantiate it.
-                if (refCellObjInfo.modelFilePath != null)
+                if (refCellObjInfo.ModelFilePath != null)
                 {
-                    modelObj = _asset.CreateObject(refCellObjInfo.modelFilePath);
+                    modelObj = _asset.CreateObject(refCellObjInfo.ModelFilePath);
                     PostProcessInstantiatedCellObject(modelObj, refCellObjInfo);
                     modelObj.transform.parent = parent.transform;
                 }
                 // If the object has a light, instantiate it.
-                if (refCellObjInfo.referencedRecord is LIGHRecord)
+                if (refCellObjInfo.ReferencedRecord is LIGHRecord)
                 {
-                    var lightObj = InstantiateLight((LIGHRecord)refCellObjInfo.referencedRecord, cell.IsInterior);
+                    var lightObj = InstantiateLight((LIGHRecord)refCellObjInfo.ReferencedRecord, cell.IsInterior);
                     // If the object also has a model, parent the model to the light.
                     if (modelObj != null)
                     {
@@ -272,7 +267,7 @@ namespace OA.Tes
                     }
                 }
             }
-            else Utils.Log("Unknown Object: " + ((CELLRecord.RefObjDataGroup)refCellObjInfo.refObjDataGroup).NAME.value);
+            else Utils.Log("Unknown Object: " + ((CELLRecord.RefObj)refCellObjInfo.RefObj).NAME.value);
         }
 
         private GameObject InstantiateLight(LIGHRecord LIGH, bool indoors)
@@ -283,8 +278,8 @@ namespace OA.Tes
                 isStatic = true
             };
             var lightComponent = lightObj.AddComponent<Light>();
-            lightComponent.range = 3 * (LIGH.LHDT.radius / ConvertUtils.meterInMWUnits);
-            lightComponent.color = new Color32(LIGH.LHDT.red, LIGH.LHDT.green, LIGH.LHDT.blue, 255);
+            lightComponent.range = 3 * (LIGH.LHDT.Radius / ConvertUtils.meterInMWUnits);
+            lightComponent.color = new Color32(LIGH.LHDT.Red, LIGH.LHDT.Green, LIGH.LHDT.Blue, 255);
             lightComponent.intensity = 1.5f;
             lightComponent.bounceIntensity = 0f;
             lightComponent.shadows = game.RenderLightShadows ? LightShadows.Soft : LightShadows.None;
@@ -298,12 +293,12 @@ namespace OA.Tes
         /// </summary>
         private void PostProcessInstantiatedCellObject(GameObject gameObject, RefCellObjInfo refCellObjInfo)
         {
-            var refObjDataGroup = (CELLRecord.RefObjDataGroup)refCellObjInfo.refObjDataGroup;
+            var refObjDataGroup = (CELLRecord.RefObj)refCellObjInfo.RefObj;
             // Handle object transforms.
             if (refObjDataGroup.XSCL != null)
                 gameObject.transform.localScale = Vector3.one * refObjDataGroup.XSCL.value;
-            gameObject.transform.position += NifUtils.NifPointToUnityPoint(refObjDataGroup.DATA.position);
-            gameObject.transform.rotation *= NifUtils.NifEulerAnglesToUnityQuaternion(refObjDataGroup.DATA.eulerAngles);
+            gameObject.transform.position += NifUtils.NifPointToUnityPoint(refObjDataGroup.DATA.Position);
+            gameObject.transform.rotation *= NifUtils.NifEulerAnglesToUnityQuaternion(refObjDataGroup.DATA.EulerAngles);
             var tagTarget = gameObject;
             var coll = gameObject.GetComponentInChildren<Collider>(); // if the collider is on a child object and not on the object with the component, we need to set that object's tag instead.
             if (coll != null)
@@ -329,11 +324,11 @@ namespace OA.Tes
 
         private void ProcessObjectType<RecordType>(GameObject gameObject, RefCellObjInfo info, string tag) where RecordType : Record
         {
-            var record = info.referencedRecord;
+            var record = info.ReferencedRecord;
             if (record is RecordType)
             {
                 var obj = GameObjectUtils.FindTopLevelObject(gameObject);
-                if (obj == null) { return; }
+                if (obj == null) return;
                 //var component = GenericObjectComponent.Create(obj, record, tag);
                 ////only door records need access to the cell object data group so far
                 //if (record is DOORRecord)
@@ -346,7 +341,7 @@ namespace OA.Tes
             // Don't return anything if the LAND doesn't have height data or texture data.
             if (land.VHGT == null || land.VTEX == null) return null;
             var textureFilePaths = new List<string>();
-            var distinctTextureIndices = land.VTEX.textureIndices.Distinct().ToList();
+            var distinctTextureIndices = land.VTEX.TextureIndices.Distinct().ToList();
             for (var i = 0; i < distinctTextureIndices.Count; i++)
             {
                 var textureIndex = (short)((short)distinctTextureIndices[i] - 1);
@@ -377,15 +372,15 @@ namespace OA.Tes
             var heights = new float[LAND_SIDE_LENGTH_IN_SAMPLES, LAND_SIDE_LENGTH_IN_SAMPLES];
             // Read in the heights in Morrowind units.
             const int VHGTIncrementToMWUnits = 8;
-            float rowOffset = land.VHGT.referenceHeight;
+            float rowOffset = land.VHGT.ReferenceHeight;
             for (var y = 0; y < LAND_SIDE_LENGTH_IN_SAMPLES; y++)
             {
-                rowOffset += land.VHGT.heightOffsets[y * LAND_SIDE_LENGTH_IN_SAMPLES];
+                rowOffset += land.VHGT.HeightOffsets[y * LAND_SIDE_LENGTH_IN_SAMPLES];
                 heights[y, 0] = VHGTIncrementToMWUnits * rowOffset;
                 float colOffset = rowOffset;
                 for (var x = 1; x < LAND_SIDE_LENGTH_IN_SAMPLES; x++)
                 {
-                    colOffset += land.VHGT.heightOffsets[(y * LAND_SIDE_LENGTH_IN_SAMPLES) + x];
+                    colOffset += land.VHGT.HeightOffsets[(y * LAND_SIDE_LENGTH_IN_SAMPLES) + x];
                     heights[y, x] = VHGTIncrementToMWUnits * colOffset;
                 }
             }
@@ -398,7 +393,7 @@ namespace OA.Tes
             SplatPrototype[] splatPrototypes = null;
             float[,,] alphaMap = null;
             const int LAND_TEXTURE_INDICES_COUNT = 256;
-            var textureIndices = land.VTEX != null ? land.VTEX.textureIndices : new ushort[LAND_TEXTURE_INDICES_COUNT];
+            var textureIndices = land.VTEX != null ? land.VTEX.TextureIndices : new ushort[LAND_TEXTURE_INDICES_COUNT];
             // Create splat prototypes.
             var splatPrototypeList = new List<SplatPrototype>();
             var texInd2splatInd = new Dictionary<ushort, int>();
@@ -453,7 +448,7 @@ namespace OA.Tes
             yield return null;
             // Create the terrain.
             var heightRange = maxHeight - minHeight;
-            var terrainPosition = new Vector3(ConvertUtils.exteriorCellSideLengthInMeters * land.gridCoords.x, minHeight / ConvertUtils.meterInMWUnits, ConvertUtils.exteriorCellSideLengthInMeters * land.gridCoords.y);
+            var terrainPosition = new Vector3(ConvertUtils.exteriorCellSideLengthInMeters * land.GridCoords.x, minHeight / ConvertUtils.meterInMWUnits, ConvertUtils.exteriorCellSideLengthInMeters * land.GridCoords.y);
             var heightSampleDistance = ConvertUtils.exteriorCellSideLengthInMeters / (LAND_SIDE_LENGTH_IN_SAMPLES - 1);
             var terrain = GameObjectUtils.CreateTerrain(heights, heightRange / ConvertUtils.meterInMWUnits, heightSampleDistance, splatPrototypes, alphaMap, terrainPosition);
             terrain.GetComponent<Terrain>().materialType = Terrain.MaterialType.BuiltInLegacyDiffuse;
@@ -465,8 +460,8 @@ namespace OA.Tes
         {
             if (_cellObjects.TryGetValue(indices, out InRangeCellInfo cellInfo))
             {
-                _loadBalancer.CancelTask(cellInfo.objectsCreationCoroutine);
-                Object.Destroy(cellInfo.gameObject);
+                _loadBalancer.CancelTask(cellInfo.ObjectsCreationCoroutine);
+                Object.Destroy(cellInfo.GameObject);
                 _cellObjects.Remove(indices);
             }
             else Utils.Error("Tried to destroy a cell that isn't created.");

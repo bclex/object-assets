@@ -105,7 +105,7 @@ namespace OA
             Debug.Assert(_currentCell != null);
             CreatePlayer(playerPrefab, position, out _playerCameraObj);
             var cellInfo = CellManager.StartCreatingInteriorCell(interiorCellName);
-            LoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
+            LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
             OnInteriorCell(_currentCell);
         }
 
@@ -121,7 +121,7 @@ namespace OA
             Debug.Assert(_currentCell != null);
             CreatePlayer(playerPrefab, position, out _playerCameraObj);
             var cellInfo = CellManager.StartCreatingInteriorCell(gridCoords);
-            LoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
+            LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
             OnInteriorCell(_currentCell);
         }
 
@@ -137,7 +137,7 @@ namespace OA
             Debug.Assert(_currentCell != null);
             CreatePlayer(playerPrefab, position, out _playerCameraObj);
             var cellInfo = CellManager.StartCreatingExteriorCell(gridCoords);
-            LoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
+            LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
             OnExteriorCell(_currentCell);
         }
 

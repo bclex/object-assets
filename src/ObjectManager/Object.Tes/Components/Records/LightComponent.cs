@@ -40,7 +40,7 @@ namespace OA.Tes.Components.Records
             objData.interactionPrefix = "Take ";
             if (LIGH.LHDT != null)
             {
-                lightData.flags = LIGH.LHDT.flags;
+                lightData.flags = LIGH.LHDT.Flags;
                 if (Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.CanCarry))
                 {
                     gameObject.AddComponent<BoxCollider>().size *= 0.5f; //very weak-- adding a box collider to light objects so we can interact with them

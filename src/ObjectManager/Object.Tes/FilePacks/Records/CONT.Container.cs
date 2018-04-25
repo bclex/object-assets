@@ -10,13 +10,13 @@ namespace OA.Tes.FilePacks.Records
         public class FLAGSubRecord : UInt32SubRecord { }
         public class NPCOSubRecord : SubRecord
         {
-            public uint itemCount;
-            public string itemName;
+            public uint ItemCount;
+            public string ItemName;
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                itemCount = r.ReadLEUInt32();
-                itemName = r.ReadPossiblyNullTerminatedASCIIString(32);
+                ItemCount = r.ReadLEUInt32();
+                ItemName = r.ReadPossiblyNullTerminatedASCIIString(32);
             }
         }
 
