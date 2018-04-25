@@ -11,8 +11,7 @@ namespace OA.Ultima.Resources
 
         public bool Get(int textureID, int x, int y, int extraRange = 0)
         {
-            int index;
-            if (!_ids.TryGetValue(textureID, out index))
+            if (!_ids.TryGetValue(textureID, out int index))
                 return false;
             var width = ReadIntegerFromData(ref index);
             if (x < 0 || x >= width)
@@ -51,8 +50,7 @@ namespace OA.Ultima.Resources
 
         public void GetDimensions(int textureID, out int width, out int height)
         {
-            int index;
-            if (!_ids.TryGetValue(textureID, out index))
+            if (!_ids.TryGetValue(textureID, out int index))
             {
                 width = height = 0;
                 return;
@@ -61,26 +59,26 @@ namespace OA.Ultima.Resources
             height = ReadIntegerFromData(ref index);
         }
 
-        public void Set(int textureID, int width, int height, ushort[] pixels)
+        public void Set(int textureID, int width, int height, byte[] pixels)
         {
-            var begin = _data.Count;
-            WriteIntegerToData(width);
-            WriteIntegerToData(height);
-            var countingTransparent = true;
-            var count = 0;
-            for (var i = 0; i < pixels.Length; i++)
-            {
-                var isTransparent = pixels[i] == 0;
-                if (countingTransparent != isTransparent)
-                {
-                    WriteIntegerToData(count);
-                    countingTransparent = !countingTransparent;
-                    count = 0;
-                }
-                count += 1;
-            }
-            WriteIntegerToData(count);
-            _ids[textureID] = begin;
+            //var begin = _data.Count;
+            //WriteIntegerToData(width);
+            //WriteIntegerToData(height);
+            //var countingTransparent = true;
+            //var count = 0;
+            //for (var i = 0; i < pixels.Length; i++)
+            //{
+            //    var isTransparent = pixels[i] == 0;
+            //    if (countingTransparent != isTransparent)
+            //    {
+            //        WriteIntegerToData(count);
+            //        countingTransparent = !countingTransparent;
+            //        count = 0;
+            //    }
+            //    count += 1;
+            //}
+            //WriteIntegerToData(count);
+            //_ids[textureID] = begin;
         }
 
         bool Has(int textureID)

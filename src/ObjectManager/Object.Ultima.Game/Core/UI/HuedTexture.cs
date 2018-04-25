@@ -6,7 +6,7 @@ namespace OA.Ultima.Resources
 {
     public class HuedTexture
     {
-        readonly Texture2D _texture;
+        readonly Texture2DInfo _texture;
         readonly RectInt _sourceRect = default(RectInt);
 
         Vector2Int _offset;
@@ -23,7 +23,7 @@ namespace OA.Ultima.Resources
             get { return _hue; }
         }
 
-        public HuedTexture(Texture2D texture, Vector2Int offset, RectInt source, int hue)
+        public HuedTexture(Texture2DInfo texture, Vector2Int offset, RectInt source, int hue)
         {
             _texture = texture;
             _offset = offset;

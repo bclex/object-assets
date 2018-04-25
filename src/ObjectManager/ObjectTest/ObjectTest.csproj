@@ -48,6 +48,10 @@
       <Project>{cef70bd8-ecf0-46cf-ab58-4105b9273351}</Project>
       <Name>Object.Tes</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Object.Ultima\Object.Ultima.csproj">
+      <Project>{2e0f5143-916d-4606-b645-690a962c6af4}</Project>
+      <Name>Object.Ultima</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ObjectManager\ObjectManager.csproj">
       <Project>{d752b5ed-4acd-473e-80c2-439da37e466f}</Project>
       <Name>ObjectManager</Name>

@@ -24,9 +24,9 @@ namespace OA.Ultima.FilePacks
         public Dictionary<Vector2i, CELLRecord> exteriorCELLRecordsByIndices;
         public Dictionary<Vector2i, LANDRecord> LANDRecordsByIndices;
 
-        public DataFile(string filePath)
+        public DataFile()
         {
-            ReadRecords(filePath);
+            ReadRecords();
             PostProcessRecords();
         }
 
@@ -42,16 +42,11 @@ namespace OA.Ultima.FilePacks
 
         public void Close() { }
 
-        public List<IRecord> GetRecordsOfType<T>() where T : Record
-        {
-            List<IRecord> records;
-            if (recordsByType.TryGetValue(typeof(T), out records))
-                return records;
-            return null;
-        }
+        public List<IRecord> GetRecordsOfType<T>() where T : Record { return recordsByType.TryGetValue(typeof(T), out List<IRecord> records) ? records : null; }
 
-        private void ReadRecords(string filePath)
+        private void ReadRecords()
         {
+            records = new Record[0];
         }
 
         private void PostProcessRecords()

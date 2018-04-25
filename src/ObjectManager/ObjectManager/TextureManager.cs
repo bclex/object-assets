@@ -16,14 +16,14 @@ namespace OA
             _asset = asset;
         }
 
-        public Texture2D LoadTexture(string texturePath, bool flipVertically = false)
+        public Texture2D LoadTexture(string texturePath, int method = 1)
         {
             if (!_cachedTextures.TryGetValue(texturePath, out Texture2D texture))
             {
                 // Load & cache the texture.
                 var textureInfo = LoadTextureInfo(texturePath);
                 texture = textureInfo != null ? textureInfo.ToTexture2D() : new Texture2D(1, 1);
-                if (flipVertically) { TextureUtils.FlipTexture2DVertically(texture); }
+                //if (method == 1) TextureUtils.FlipTexture2DVertically(texture);
                 _cachedTextures[texturePath] = texture;
             }
             return texture;

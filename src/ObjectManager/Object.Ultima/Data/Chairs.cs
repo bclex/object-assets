@@ -135,15 +135,15 @@ namespace OA.Ultima.Data
             public readonly ChairType ChairType;
             public readonly int SittingPixelOffset;
 
-            /*private Texture2D m_Texture;
-            public Texture2D Texture
+            /*private Texture2DInfo _texture;
+            public Texture2DInfo Texture
             {
                 get
                 {
                     if (_texture == null)
                     {
                         var provider = ServiceRegistry.GetService<IResourceProvider>();
-                        Texture2D baseTexture = provider.GetItemTexture(ItemID);
+                        var baseTexture = provider.GetItemTexture(ItemID);
                         _texture = provider.GetItemTexture(ItemID);
                     }
                     return _texture;

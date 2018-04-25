@@ -31,7 +31,7 @@ namespace OA.Ultima.IO
                 return new FileIndexEntry3D[0];
             var entries = new List<FileIndexEntry3D>();
             var length = (int)((new FileInfo(IndexPath).Length / 3) / 4);
-            using (FileStream index = new FileStream(IndexPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var index = new FileStream(IndexPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var bin = new BinaryReader(index);
                 var count = (int)(index.Length / 12);

@@ -12,9 +12,8 @@ namespace OA.Materials
 
         public override Material BuildMaterialFromProperties(MaterialProps mp)
         {
-            Material material;
             //check if the material is already cached
-            if (!_existingMaterials.TryGetValue(mp, out material))
+            if (!_existingMaterials.TryGetValue(mp, out Material material))
             {
                 //otherwise create a new material and cache it
                 if (mp.alphaBlended) material = BuildMaterialBlended(mp.srcBlendMode, mp.dstBlendMode);

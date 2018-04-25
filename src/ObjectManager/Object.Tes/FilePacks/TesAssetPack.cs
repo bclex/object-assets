@@ -26,9 +26,9 @@ namespace OA.Tes.FilePacks
             _nifManager = new NifManager(this, _materialManager, markerLayer);
         }
 
-        public Texture2D LoadTexture(string texturePath, bool flipVertically = false)
+        public Texture2D LoadTexture(string texturePath, int method = 0)
         {
-            return _textureManager.LoadTexture(texturePath, flipVertically);
+            return _textureManager.LoadTexture(texturePath, method);
         }
 
         public void PreloadTextureAsync(string texturePath)

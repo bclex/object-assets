@@ -58,7 +58,7 @@ namespace OA.Core.UI.Html
             }
         }
 
-        public Texture2D Render() => _renderer.Render(_root, Ascender, Links);
+        public Texture2DInfo Render() => _renderer.Render(_root, Ascender, Links);
 
         // ============================================================================================================
         // Ctor and Dipose
@@ -621,7 +621,7 @@ namespace OA.Core.UI.Html
                     }
                     else if (img.ImageType == ImageElement.ImageTypes.Item)
                     {
-                        Texture2D standard, over, down;
+                        Texture2DInfo standard, over, down;
                         standard = over = down = provider.GetItemTexture(img.ImgSrc);
                         _images.AddImage(new RectInt(), standard, over, down);
                     }

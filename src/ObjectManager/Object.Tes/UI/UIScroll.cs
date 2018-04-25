@@ -23,7 +23,7 @@ namespace OA.Tes.UI
 
         void Start()
         {
-            var texture = TesEngine.Instance.Asset.LoadTexture("scroll", true);
+            var texture = TesEngine.Instance.Asset.LoadTexture("scroll", 1);
             _background.sprite = GUIUtils.CreateSprite(texture);
             // If the book is already opened, don't change its transform.
             if (_bookRecord == null)

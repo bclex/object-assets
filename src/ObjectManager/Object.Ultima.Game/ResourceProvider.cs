@@ -34,7 +34,7 @@ namespace OA.Ultima
             return _anim.GetAnimation(body, ref hue, action, direction);
         }
 
-        public Texture2D GetUITexture(int textureID, bool replaceMask080808 = false)
+        public Texture2DInfo GetUITexture(int textureID, bool replaceMask080808 = false)
         {
             return _gumps.GetGumpTexture(textureID, replaceMask080808);
         }
@@ -44,7 +44,7 @@ namespace OA.Ultima
             return _gumps.IsPointInGumpTexture(textureID, x, y);
         }
 
-        public Texture2D GetItemTexture(int itemIndex)
+        public Texture2DInfo GetItemTexture(int itemIndex)
         {
             return _art.GetStaticTexture(itemIndex);
         }
@@ -54,7 +54,7 @@ namespace OA.Ultima
             return _art.IsPointInItemTexture(textureID, x, y, extraRange);
         }
 
-        public Texture2D GetLandTexture(int landIndex)
+        public Texture2DInfo GetLandTexture(int landIndex)
         {
             return _art.GetLandTexture(landIndex);
         }
@@ -64,7 +64,7 @@ namespace OA.Ultima
             _art.GetStaticDimensions(itemIndex, out width, out height);
         }
 
-        public Texture2D GetTexmapTexture(int textureIndex)
+        public Texture2DInfo GetTexmapTexture(int textureIndex)
         {
             return _texmaps.GetTexmapTexture(textureIndex);
         }

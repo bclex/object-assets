@@ -62,13 +62,7 @@ namespace OA.Tes.FilePacks
 
         public void Close() { }
 
-        public List<IRecord> GetRecordsOfType<T>() where T : Record
-        {
-            List<IRecord> records;
-            if (recordsByType.TryGetValue(typeof(T), out records))
-                return records;
-            return null;
-        }
+        public List<IRecord> GetRecordsOfType<T>() where T : Record { return recordsByType.TryGetValue(typeof(T), out List<IRecord> records) ? records : null; }
 
         private void ReadRecords(string filePath, GameId gameId, bool loadHeaderOnly = false)
         {

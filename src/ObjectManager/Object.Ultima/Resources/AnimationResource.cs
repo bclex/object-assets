@@ -39,14 +39,12 @@ namespace OA.Ultima.Resources
         {
             int animIndex;
             AFileIndex fileIndex;
-            int length, extra;
-            bool patched;
-            AnimationFrame.SittingTransformation sitting = AnimationFrame.SittingTransformation.None;
+            var sitting = AnimationFrame.SittingTransformation.None;
             if (body <= 0)
                 return null;
             if (!DoesBodyExist(body))
                 BodyDef.TranslateBodyAndHue(ref body, ref hue);
-            AAnimationFrame[] frames = CheckCache(body, action, direction);
+            var frames = CheckCache(body, action, direction);
             if (frames != null)
                 return frames;
             if (action == HUMANOID_SIT_INDEX)
@@ -64,7 +62,7 @@ namespace OA.Ultima.Resources
                 else GetIndexes(body, action, direction, out animIndex, out fileIndex);
             }
             else GetIndexes(body, action, direction, out animIndex, out fileIndex);
-            var reader = fileIndex.Seek(animIndex, out length, out extra, out patched);
+            var reader = fileIndex.Seek(animIndex, out int length, out int extra, out bool patched);
             if (reader == null)
                 return null;
             int uniqueAnimationIndex = ((body & 0xfff) << 20) + ((action & 0x3f) << 12) + ((direction & 0x0f) << 8);

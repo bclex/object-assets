@@ -28,12 +28,12 @@ namespace OA.Core.UI.Html
             get { return _images.Count; }
         }
 
-        public void AddImage(RectInt area, Texture2D image)
+        public void AddImage(RectInt area, Texture2DInfo image)
         {
             _images.Add(new HtmlImage(area, image));
         }
 
-        public void AddImage(RectInt area, Texture2D image, Texture2D overimage, Texture2D downimage)
+        public void AddImage(RectInt area, Texture2DInfo image, Texture2DInfo overimage, Texture2DInfo downimage)
         {
             AddImage(area, image);
             _images[_images.Count - 1].TextureOver = overimage;

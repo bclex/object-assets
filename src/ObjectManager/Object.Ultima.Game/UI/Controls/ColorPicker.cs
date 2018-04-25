@@ -9,8 +9,8 @@ namespace OA.Ultima.UI.Controls
 {
     class ColorPicker : AControl
     {
-        protected Texture2D _huesTexture;
-        protected Texture2D _selectedIndicator;
+        protected Texture2DInfo _huesTexture;
+        protected Texture2DInfo _selectedIndicator;
         protected RectInt _openArea;
 
         protected int _hueWidth, _hueHeight;

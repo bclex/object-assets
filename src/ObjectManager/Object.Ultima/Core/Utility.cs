@@ -381,7 +381,7 @@ namespace OA.Ultima.Core
             return Convert.ToInt32(Math.Sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y)));
         }
 
-        //public static void SaveTexture(Texture2D texture, string path)
+        //public static void SaveTexture(Texture2DInfo texture, string path)
         //{
         //    if (texture != null)
         //        texture.SaveAsPng(new FileStream(path, FileMode.Create), texture.Width, texture.Height);

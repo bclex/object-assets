@@ -27,11 +27,11 @@ namespace OA.Ultima.IO
             // UOP does not do this, so we need to do it ourselves.
             for (var i = 0; i < entries.Length; i++)
                 entries[i].Lookup = -1;
-            using (FileStream index = new FileStream(dataPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var index = new FileStream(dataPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 var fi = new FileInfo(dataPath);
                 var uopPattern = Path.GetFileNameWithoutExtension(fi.Name).ToLowerInvariant();
-                using (BinaryReader br = new BinaryReader(index))
+                using (var br = new BinaryReader(index))
                 {
                     br.BaseStream.Seek(0, SeekOrigin.Begin);
                     if (br.ReadInt32() != UOP_MAGIC_NUMBER)

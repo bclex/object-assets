@@ -12,11 +12,11 @@ namespace OA.Core.UI.Html
         /// Renders all the elements in the root branch. At the same time, also sets areas for regions and href links.
         /// TODO: code for setting areas for regions / hrefs belongs in layout code in HtmlDocument.
         /// </summary>
-        public Texture2D Render(BlockElement root, int ascender, HtmlLinkList links)
+        public Texture2DInfo Render(BlockElement root, int ascender, HtmlLinkList links)
         {
             var sb = Service.Get<SpriteBatchUI>();
             if (root == null || root.Width == 0 || root.Height == 0) // empty text string
-                return new Texture2D(1, 1);
+                return new Texture2DInfo(1, 1);
             var pixels = new uint[root.Width * root.Height];
             if (root.Err_Cant_Fit_Children)
             {
@@ -35,7 +35,7 @@ namespace OA.Core.UI.Html
                 }
             }
 
-            var texture = new Texture2D(root.Width, root.Height, TextureFormat.RGBA32, false);
+            var texture = new Texture2DInfo(root.Width, root.Height, TextureFormat.RGBA32, false);
             //texture.SetData(pixels);
             return texture;
         }

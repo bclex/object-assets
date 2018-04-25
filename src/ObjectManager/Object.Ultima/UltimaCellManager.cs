@@ -10,20 +10,20 @@ namespace OA.Ultima
 {
     public class UltimaCellManager : ICellManager
     {
-        const int _cellRadius = 4;
-        const int _detailRadius = 3;
+        const int _cellRadius = 1;
+        const int _detailRadius = 1;
         const string _defaultLandTextureFilePath = "textures/_land_default.dds";
 
         UltimaAssetPack _asset;
         UltimaDataPack _data;
-        TemporalLoadBalancer _temporalLoadBalancer;
+        TemporalLoadBalancer _loadBalancer;
         Dictionary<Vector2i, InRangeCellInfo> _cellObjects = new Dictionary<Vector2i, InRangeCellInfo>();
 
-        public UltimaCellManager(UltimaAssetPack asset, UltimaDataPack data, TemporalLoadBalancer temporalLoadBalancer)
+        public UltimaCellManager(UltimaAssetPack asset, UltimaDataPack data, TemporalLoadBalancer loadBalancer)
         {
             _asset = asset;
             _data = data;
-            _temporalLoadBalancer = temporalLoadBalancer;
+            _loadBalancer = loadBalancer;
         }
 
         public Vector2i GetExteriorCellIndices(Vector3 point)
@@ -76,7 +76,7 @@ namespace OA.Ultima
                         {
                             var cellInfo = StartCreatingExteriorCell(cellIndices);
                             if (cellInfo != null && immediate)
-                                _temporalLoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
+                                _loadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
                         }
                     }
 
@@ -143,7 +143,7 @@ namespace OA.Ultima
             var cellObjectsContainer = new GameObject("objects");
             cellObjectsContainer.transform.parent = cellObj.transform;
             var cellObjectsCreationCoroutine = InstantiateCellObjectsCoroutine(cell, land, cellObj, cellObjectsContainer);
-            _temporalLoadBalancer.AddTask(cellObjectsCreationCoroutine);
+            _loadBalancer.AddTask(cellObjectsCreationCoroutine);
             return new InRangeCellInfo(cellObj, cellObjectsContainer, cell, cellObjectsCreationCoroutine);
         }
 
@@ -151,7 +151,7 @@ namespace OA.Ultima
         {
             foreach (var keyValuePair in _cellObjects)
             {
-                _temporalLoadBalancer.CancelTask(keyValuePair.Value.objectsCreationCoroutine);
+                _loadBalancer.CancelTask(keyValuePair.Value.objectsCreationCoroutine);
                 Object.Destroy(keyValuePair.Value.gameObject);
             }
             _cellObjects.Clear();
@@ -465,7 +465,7 @@ namespace OA.Ultima
         {
             if (_cellObjects.TryGetValue(indices, out InRangeCellInfo cellInfo))
             {
-                _temporalLoadBalancer.CancelTask(cellInfo.objectsCreationCoroutine);
+                _loadBalancer.CancelTask(cellInfo.objectsCreationCoroutine);
                 Object.Destroy(cellInfo.gameObject);
                 _cellObjects.Remove(indices);
             }

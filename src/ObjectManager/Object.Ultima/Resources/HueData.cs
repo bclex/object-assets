@@ -1,4 +1,5 @@
-﻿using OA.Core.Diagnostics;
+﻿using OA.Core;
+using OA.Core.Diagnostics;
 using OA.Ultima.IO;
 using System;
 using System.IO;
@@ -11,7 +12,7 @@ namespace OA.Ultima.Resources
         public const int HueCount = 4096;
 
         static object graphicsDevice;
-        static Texture2D _hueTexture0, _hueTexture1;
+        static Texture2DInfo _hueTexture0, _hueTexture1;
         const int _hueTextureWidth = 32; // Each hue is 32 colors
         const int _hueTextureHeight = 2048;
         static ushort[] _hues = new ushort[HueCount];
@@ -38,30 +39,31 @@ namespace OA.Ultima.Resources
 
         static void GetHueData()
         {
-            _hueTexture0 = new Texture2D(_hueTextureWidth, _hueTextureHeight);
-            _hueTexture1 = new Texture2D(_hueTextureWidth, _hueTextureHeight);
             var hueData = getTextureData();
+            _hueTexture0 = new Texture2DInfo(_hueTextureWidth, _hueTextureHeight, TextureFormat.Alpha8, false, null);
+            _hueTexture1 = new Texture2DInfo(_hueTextureWidth, _hueTextureHeight, TextureFormat.Alpha8, false, null);
+            
             //_hueTexture0.SetData(hueData, 0, _hueTextureWidth * _hueTextureHeight);
             //_hueTexture1.SetData(hueData, _hueTextureWidth * _hueTextureHeight, _hueTextureWidth * _hueTextureHeight);
         }
 
         static uint[] getTextureData()
         {
-            var reader = new BinaryReader(FileManager.GetFile("hues.mul"));
+            var br = new BinaryReader(FileManager.GetFile("hues.mul"));
             var currentHue = 0;
             var currentIndex = 0;
             var data = new uint[_hueTextureWidth * _hueTextureHeight * 2];
-            Metrics.ReportDataRead((int)reader.BaseStream.Length);
+            Metrics.ReportDataRead((int)br.BaseStream.Length);
             currentIndex += 32;
-            while (reader.BaseStream.Position < reader.BaseStream.Length)
+            while (br.BaseStream.Position < br.BaseStream.Length)
             {
-                reader.ReadInt32(); //Header
+                br.ReadInt32(); //Header
                 for (var entry = 0; entry < 8; entry++)
                 {
                     for (var i = 0; i < 32; i++)
                     {
                         const float multiplier = 0xff / 0x1f;
-                        var color = reader.ReadUInt16();
+                        var color = br.ReadUInt16();
                         if (i == 31)
                             _hues[currentHue] = (ushort)color;
                         data[currentIndex++] = 0xFF000000 + (
@@ -70,13 +72,13 @@ namespace OA.Ultima.Resources
                             ((uint)((color & 0x1F) * multiplier) << 16)
                             );
                     }
-                    reader.ReadInt16(); //table start
-                    reader.ReadInt16(); //table end
-                    reader.ReadBytes(20); //name
+                    br.ReadInt16(); //table start
+                    br.ReadInt16(); //table end
+                    br.ReadBytes(20); //name
                     currentHue++;
                 }
             }
-            reader.Close();
+            br.Close();
             var webSafeHuesBegin = _hueTextureHeight * 2 - 216;
             for (var b = 0; b < 6; b++)
                 for (var g = 0; g < 6; g++)
@@ -89,19 +91,18 @@ namespace OA.Ultima.Resources
             return data;
         }
 
-        public static Texture2D CreateHueSwatch(int width, int height, int[] hues)
+        public static Texture2DInfo CreateHueSwatch(int width, int height, int[] hues)
         {
-            var pixels = new uint[width * height];
+            var pixels = new byte[width * height * 2];
             for (var i = 0; i < pixels.Length; i++)
             {
                 var hue = hues[i];
-                var pixel = new uint[1];
+                var pixel = new byte[1];
                 //if (hue < _hueTextureHeight) HueTexture0.GetData(0, new RectInt(31, hue % _hueTextureHeight, 1, 1), pixel, 0, 1);
                 //else HueTexture1.GetData(0, new RectInt(31, hue % _hueTextureHeight, 1, 1), pixel, 0, 1);
                 pixels[i] = pixel[0];
             }
-            var t = new Texture2D(width, height);
-            //t.SetData(pixels);
+            var t = new Texture2DInfo(width, height, TextureFormat.Alpha8, false, pixels);
             return t;
         }
 
@@ -114,12 +115,12 @@ namespace OA.Ultima.Resources
             return hues;
         }
 
-        public static Texture2D HueTexture0
+        public static Texture2DInfo HueTexture0
         {
             get { return _hueTexture0; }
         }
 
-        public static Texture2D HueTexture1
+        public static Texture2DInfo HueTexture1
         {
             get { return _hueTexture1; }
         }

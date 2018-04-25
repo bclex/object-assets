@@ -740,7 +740,7 @@ namespace OA.Core.UI
 
         #region DebugBoundaryDrawing
 
-        Texture2D _boundsTexture;
+        Texture2DInfo _boundsTexture;
 
         protected void DebugDrawBounds(SpriteBatchUI spriteBatch, Vector2Int position, Color color)
         {
@@ -748,7 +748,7 @@ namespace OA.Core.UI
                 return;
             if (_boundsTexture == null)
             {
-                _boundsTexture = new Texture2D(1, 1);
+                _boundsTexture = new Texture2DInfo(1, 1);
                 //_boundsTexture.SetData(new Color[] { Color.white });
             }
             var drawArea = new RectInt(ScreenX, ScreenY, Width, Height);

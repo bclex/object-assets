@@ -18,7 +18,7 @@ namespace OA.Ultima.UI.Controls
     {
         const int Gump_Up = 0, Gump_Down = 1, Gump_Over = 2;
 
-        Texture2D[] _gumpTextures = { null, null, null };
+        Texture2DInfo[] _gumpTextures = { null, null, null };
         int[] _gumpID = { 0, 0, 0 }; // 0 == up, 1 == down, 2 == additional over state, not sent by the server but can be added for clientside gumps.
         RenderedText _texture;
 
@@ -123,7 +123,7 @@ namespace OA.Ultima.UI.Controls
             base.Draw(spriteBatch, position, frameMS);
         }
 
-        Texture2D GetTextureFromMouseState()
+        Texture2DInfo GetTextureFromMouseState()
         {
             if (MouseDownOnThis && _gumpTextures[Gump_Down] != null)
                 return _gumpTextures[Gump_Down];

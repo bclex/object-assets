@@ -16,8 +16,8 @@ namespace OA.Ultima.UI.WorldGumps
         float _timeMS;
         bool _useLargeMap;
         WorldModel _world;
-        Texture2D _gumpTexture;
-        Texture2D _playerIndicator;
+        Texture2DInfo _gumpTexture;
+        Texture2DInfo _playerIndicator;
 
         public static bool MiniMap_LargeFormat { get; set; }
 
@@ -91,7 +91,7 @@ namespace OA.Ultima.UI.WorldGumps
             {
                 if (_playerIndicator == null)
                 {
-                    _playerIndicator = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+                    _playerIndicator = new Texture2DInfo(spriteBatch.GraphicsDevice, 1, 1);
                     _playerIndicator.SetData(new uint[1] { 0xFFFFFFFF });
                 }
                 spriteBatch.Draw2D(_playerIndicator, new Vector3(position.x + Width / 2, position.y + Height / 2 - 8, 0), Vector3.zero);

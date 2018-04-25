@@ -38,7 +38,7 @@ namespace OA
             _sunObj.GetComponent<Light>().shadows = LightShadows.Soft;
             _sunObj.SetActive(false);
 
-            Cursor.SetCursor(Asset.LoadTexture("tx_cursor", true), Vector2.zero, CursorMode.Auto);
+            Cursor.SetCursor(Asset.LoadTexture("tx_cursor", 1), Vector2.zero, CursorMode.Auto);
 
             // engine
             SpawnPlayerOutside(PlayerPrefab, new Vector2i(-2, -9), new Vector3(-137.94f, 2.30f, -1037.6f));

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace OA
 {
-    public static class ObjectTest
+    public static class ObjectTestEngine
     {
         static IAssetPack Asset;
         static IDataPack Data;

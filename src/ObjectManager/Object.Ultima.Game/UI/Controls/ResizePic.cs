@@ -8,13 +8,13 @@ namespace OA.Ultima.UI.Controls
 {
     public class ResizePic : AControl
     {
-        readonly Texture2D[] _gumps;
+        readonly Texture2DInfo[] _gumps;
         int GumpID;
 
         ResizePic(AControl parent)
             : base(parent)
         {
-            _gumps = new Texture2D[9];
+            _gumps = new Texture2DInfo[9];
             MakeThisADragger();
         }
 

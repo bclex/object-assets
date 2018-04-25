@@ -44,7 +44,7 @@ namespace OA.Ultima.World.EntityViews
 
         protected bool DrawFlip;
         protected RectInt DrawArea = RectInt.zero;
-        protected Texture2D DrawTexture;
+        protected Texture2DInfo DrawTexture;
         protected Vector3 HueVector = Vector3.zero;
 
         protected bool IsShadowCastingView;

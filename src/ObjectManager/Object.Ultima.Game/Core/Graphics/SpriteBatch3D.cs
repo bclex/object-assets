@@ -16,15 +16,15 @@ namespace OA.Ultima.Core.Graphics
         readonly short[] _indexBuffer;
         static Bounds _viewportArea;
         readonly Queue<List<VertexPositionNormalTextureHue>> _vertexListQueue;
-        readonly List<Dictionary<Texture2D, List<VertexPositionNormalTextureHue>>> _drawQueue;
+        readonly List<Dictionary<Texture2DInfo, List<VertexPositionNormalTextureHue>>> _drawQueue;
         readonly VertexPositionNormalTextureHue[] _vertexArray;
 
         public SpriteBatch3D(object game)
         {
             _game = game;
-            _drawQueue = new List<Dictionary<Texture2D, List<VertexPositionNormalTextureHue>>>((int)Techniques.All);
+            _drawQueue = new List<Dictionary<Texture2DInfo, List<VertexPositionNormalTextureHue>>>((int)Techniques.All);
             for (var i = 0; i <= (int)Techniques.All; i++)
-                _drawQueue.Add(new Dictionary<Texture2D, List<VertexPositionNormalTextureHue>>(INITIAL_TEXTURE_COUNT));
+                _drawQueue.Add(new Dictionary<Texture2DInfo, List<VertexPositionNormalTextureHue>>(INITIAL_TEXTURE_COUNT));
             _indexBuffer = CreateIndexBuffer(MAX_VERTICES_PER_DRAW);
             _vertexArray = new VertexPositionNormalTextureHue[MAX_VERTICES_PER_DRAW];
             _vertexListQueue = new Queue<List<VertexPositionNormalTextureHue>>(INITIAL_TEXTURE_COUNT);
@@ -68,7 +68,7 @@ namespace OA.Ultima.Core.Graphics
         /// <param name="texture"></param>
         /// <param name="vertices"></param>
         /// <returns>True if the object was drawn, false otherwise.</returns>
-        public bool DrawSprite(Texture2D texture, VertexPositionNormalTextureHue[] vertices, Techniques effect = Techniques.Default)
+        public bool DrawSprite(Texture2DInfo texture, VertexPositionNormalTextureHue[] vertices, Techniques effect = Techniques.Default)
         {
             var draw = false;
             // Sanity: do not draw if there is no texture to draw with.
@@ -101,7 +101,7 @@ namespace OA.Ultima.Core.Graphics
         /// <param name="drawPosition">The draw position at which this sprite begins (should be the center of an isometric tile for non-moving sprites).</param>
         /// <param name="flipVertices">See AEntityView.Draw(); this is equivalent to DrawFlip.</param>
         /// <param name="z">The z depth at which the shadow sprite should be placed.</param>
-        public void DrawShadow(Texture2D texture, VertexPositionNormalTextureHue[] vertices, Vector2 drawPosition, bool flipVertices, float z)
+        public void DrawShadow(Texture2DInfo texture, VertexPositionNormalTextureHue[] vertices, Vector2 drawPosition, bool flipVertices, float z)
         {
             // Sanity: do not draw if there is no texture to draw with.
             if (texture == null)
@@ -124,7 +124,7 @@ namespace OA.Ultima.Core.Graphics
                 vertexList.Add(vertices[i]);
         }
 
-        public void DrawStencil(Texture2D texture, VertexPositionNormalTextureHue[] vertices)
+        public void DrawStencil(Texture2DInfo texture, VertexPositionNormalTextureHue[] vertices)
         {
             // Sanity: do not draw if there is no texture to draw with.
             if (texture == null)
@@ -216,7 +216,7 @@ namespace OA.Ultima.Core.Graphics
         //    GraphicsDevice.DepthStencilState = dss;
         //}
 
-        private List<VertexPositionNormalTextureHue> GetVertexList(Texture2D texture, Techniques effect)
+        private List<VertexPositionNormalTextureHue> GetVertexList(Texture2DInfo texture, Techniques effect)
         {
             List<VertexPositionNormalTextureHue> vertexList;
             if (_drawQueue[(int)effect].ContainsKey(texture))

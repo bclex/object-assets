@@ -25,14 +25,14 @@ namespace OA.Ultima.World.WorldViews
         /// <summary>
         /// The texture of the last drawn frame.
         /// </summary>
-        public Texture2D Texture
+        public Texture2DInfo Texture
         {
             get { return _renderTargetSprites; }
         }
 
         public IsometricLighting Lighting { get; private set; }
 
-        Texture2D _renderTargetSprites;
+        Texture2DInfo _renderTargetSprites;
         SpriteBatch3D _spriteBatch;
         bool _drawTerrain = true;
         bool _underSurface;

@@ -15,7 +15,7 @@ namespace OA.Core.UI
         string _text;
         HtmlDocument _document;
         bool _mustRender;
-        Texture2D _texture;
+        Texture2DInfo _texture;
         bool _collapseContent;
         int _maxWidth;
 
@@ -71,12 +71,11 @@ namespace OA.Core.UI
 
         public int MouseOverRegionID { get; set; } // not set by anything...
 
-
         public bool IsMouseDown { get; set; }// only used by HtmlGumpling
 
         public HtmlLinkList Regions => _document.Links;
 
-        public Texture2D Texture
+        public Texture2DInfo Texture
         {
             get
             {
@@ -160,7 +159,7 @@ namespace OA.Core.UI
                 if (ClipRectangle(new Vector2Int(xScroll, yScroll), img.Area, destRectangle, out Vector2Int position, out RectInt srcRect))
                 {
                     var srcImage = new RectInt(srcRect.x - img.Area.X, srcRect.y - img.Area.Y, srcRect.width, srcRect.height);
-                    Texture2D texture = null;
+                    Texture2DInfo texture = null;
                     // is the mouse over this image?
                     if (img.LinkIndex != -1 && img.LinkIndex == MouseOverRegionID)
                     {

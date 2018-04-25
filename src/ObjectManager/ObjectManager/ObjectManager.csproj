@@ -102,9 +102,8 @@
     <Compile Include="Materials\DefaultMaterial.cs" />
     <Compile Include="Materials\StandardMaterial.cs" />
     <Compile Include="Materials\UnlitMaterial.cs" />
-    <Compile Include="ObjectTestCell.cs" />
-    <Compile Include="ObjectTestPack.cs" />
-    <Compile Include="ObjectTestEngine.cs" />
+    <Compile Include="Tests\ObjectTestCell.cs" />
+    <Compile Include="Tests\ObjectTestEngine.cs" />
     <Compile Include="BaseEngine.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="UI\UICrosshair.cs" />

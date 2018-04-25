@@ -8,7 +8,7 @@ namespace OA.Ultima.UI.Controls
 {
     class GumpPicTiled : AControl
     {
-        Texture2D _bgGump;
+        Texture2DInfo _bgGump;
         int _gumpID;
 
         GumpPicTiled(AControl parent)

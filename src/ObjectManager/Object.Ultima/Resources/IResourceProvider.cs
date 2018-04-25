@@ -1,4 +1,5 @@
-﻿using OA.Ultima.Core.UI;
+﻿using OA.Core;
+using OA.Ultima.Core.UI;
 using UnityEngine;
 
 namespace OA.Ultima.Resources
@@ -6,10 +7,10 @@ namespace OA.Ultima.Resources
     public interface IResourceProvider
     {
         AAnimationFrame[] GetAnimation(int body, ref int hue, int action, int direction);
-        Texture2D GetUITexture(int textureID, bool replaceMask080808 = false);
-        Texture2D GetItemTexture(int textureID);
-        Texture2D GetLandTexture(int textureID);
-        Texture2D GetTexmapTexture(int textureID);
+        Texture2DInfo GetUITexture(int textureID, bool replaceMask080808 = false);
+        Texture2DInfo GetItemTexture(int textureID);
+        Texture2DInfo GetLandTexture(int textureID);
+        Texture2DInfo GetTexmapTexture(int textureID);
 
         bool IsPointInUITexture(int textureID, int x, int y);
         bool IsPointInItemTexture(int textureID, int x, int y, int extraRange = 0);

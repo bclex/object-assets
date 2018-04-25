@@ -50,6 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Tests\ObjectTestPack.cs" />
     <Compile Include="TesCellManager.cs" />
     <Compile Include="Components\PlayerInventory.cs" />
     <Compile Include="Components\Records\ActivatorComponent.cs" />
@@ -71,7 +72,7 @@
     <Compile Include="Components\Records\RepaireComponent.cs" />
     <Compile Include="Components\Records\WeaponComponent.cs" />
     <Compile Include="Configuration\TesRenderSettings.cs" />
-    <Compile Include="Convert.cs" />
+    <Compile Include="ConvertUtils.cs" />
     <Compile Include="FilePacks\BsaMultiFile.cs" />
     <Compile Include="FilePacks\EsmFile+Extensions.cs" />
     <Compile Include="FilePacks\BsaMultiFile+Extensions.cs" />
@@ -110,7 +111,7 @@
     <Compile Include="FilePacks\Records\TES4.cs" />
     <Compile Include="FilePacks\Records\WEAP.Weapon.cs" />
     <Compile Include="IO\FileManager.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Tests\Program.cs" />
     <Compile Include="FilePacks\BsaFile.cs" />
     <Compile Include="FilePacks\EsmFile.cs" />
     <Compile Include="FilePacks\EsmRecords.cs" />

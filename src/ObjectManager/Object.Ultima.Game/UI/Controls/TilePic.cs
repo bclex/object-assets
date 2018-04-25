@@ -12,7 +12,7 @@ namespace OA.Ultima.UI.Controls
     /// </summary>
     class StaticPic : AControl
     {
-        Texture2D _texture;
+        Texture2DInfo _texture;
         int Hue;
         int _tileID;
 

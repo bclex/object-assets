@@ -43,12 +43,12 @@ namespace OA.Ultima.Resources
                 width += 8;
                 height += 4;
             }
-            var data = new ushort[width * height];
+            var data = new byte[width * height * 4];
             // for sitting:
             // somewhere around the waist of a typical mobile animation, we take twelve rows of pixels,
             // discard every third, and shift every remaining row (total of eight) one pixel to the left
             // or right (depending on orientation), for a total skew of eight pixels.
-            fixed (ushort* pData = data)
+            fixed (byte* pData = data)
             {
                 ushort* dataRef = (ushort*)pData;
                 var dataRead = 0;
@@ -92,9 +92,7 @@ namespace OA.Ultima.Resources
                 Metrics.ReportDataRead(dataRead);
             }
             Center = new Vector2Int(xCenter, yCenter);
-            Texture = new Texture2D(width, height, TextureFormat.Alpha8, false); // SurfaceFormat.Bgra5551
-            //Texture.LoadRawTextureData(data);
-            Texture.Apply();
+            Texture = new Texture2DInfo(width, height, TextureFormat.BGRA32, false, data);
             _picking.Set(_animationIndex, width, height, data);
         }
 

@@ -9,7 +9,7 @@ namespace OA.Ultima.Core.Graphics
 
         VertexPositionNormalTextureHue[] _allocatedVertices = new VertexPositionNormalTextureHue[4];
 
-        public bool Draw2D(Texture2D texture, Vector3 position, Vector3 hue)
+        public bool Draw2D(Texture2DInfo texture, Vector3 position, Vector3 hue)
         {
             _allocatedVertices[0] = new VertexPositionNormalTextureHue(new Vector3(position.x, position.y, 0), new Vector3(0, 0, 1), new Vector3(0, 0, 0));
             _allocatedVertices[1] = new VertexPositionNormalTextureHue(new Vector3(position.x + texture.width, position.y, 0), new Vector3(0, 0, 1), new Vector3(1, 0, 0));
@@ -19,7 +19,7 @@ namespace OA.Ultima.Core.Graphics
             return DrawSprite(texture, _allocatedVertices);
         }
 
-        public bool Draw2D(Texture2D texture, Vector3 position, RectInt sourceRect, Vector3 hue)
+        public bool Draw2D(Texture2DInfo texture, Vector3 position, RectInt sourceRect, Vector3 hue)
         {
             float minX = sourceRect.x / (float)texture.width;
             float maxX = (sourceRect.x + sourceRect.width) / (float)texture.width;
@@ -33,7 +33,7 @@ namespace OA.Ultima.Core.Graphics
             return DrawSprite(texture, _allocatedVertices);
         }
 
-        public bool Draw2D(Texture2D texture, RectInt destRect, RectInt sourceRect, Vector3 hue)
+        public bool Draw2D(Texture2DInfo texture, RectInt destRect, RectInt sourceRect, Vector3 hue)
         {
             float minX = sourceRect.x / (float)texture.width, maxX = (sourceRect.x + sourceRect.width) / (float)texture.width;
             float minY = sourceRect.y / (float)texture.height, maxY = (sourceRect.y + sourceRect.height) / (float)texture.height;
@@ -45,7 +45,7 @@ namespace OA.Ultima.Core.Graphics
             return DrawSprite(texture, _allocatedVertices);
         }
 
-        public bool Draw2D(Texture2D texture, RectInt destRect, Vector3 hue)
+        public bool Draw2D(Texture2DInfo texture, RectInt destRect, Vector3 hue)
         {
             _allocatedVertices[0] = new VertexPositionNormalTextureHue(new Vector3(destRect.x, destRect.y, 0), new Vector3(0, 0, 1), new Vector3(0, 0, 0));
             _allocatedVertices[1] = new VertexPositionNormalTextureHue(new Vector3(destRect.x + destRect.width, destRect.y, 0), new Vector3(0, 0, 1), new Vector3(1, 0, 0));
@@ -55,7 +55,7 @@ namespace OA.Ultima.Core.Graphics
             return DrawSprite(texture, _allocatedVertices);
         }
 
-        public bool Draw2DTiled(Texture2D texture, RectInt destRect, Vector3 hue)
+        public bool Draw2DTiled(Texture2DInfo texture, RectInt destRect, Vector3 hue)
         {
             var y = destRect.y;
             var h = destRect.height;

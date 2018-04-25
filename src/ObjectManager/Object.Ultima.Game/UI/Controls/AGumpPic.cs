@@ -7,7 +7,7 @@ namespace OA.Ultima.UI.Controls
 {
     abstract class AGumpPic : AControl
     {
-        protected Texture2D _texture;
+        protected Texture2DInfo _texture;
         int _lastFrameGumpID = -1;
 
         internal int GumpID { get; set; }

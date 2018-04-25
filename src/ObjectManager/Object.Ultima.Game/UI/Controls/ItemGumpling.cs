@@ -16,7 +16,7 @@ namespace OA.Ultima.UI.Controls
         public bool CanPickUp = true;
         public bool HighlightOnMouseOver = true;
 
-        protected Texture2D _texture;
+        protected Texture2DInfo _texture;
         HtmlGumpling _label;
 
         bool _clickedCanDrag;

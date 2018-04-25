@@ -16,10 +16,10 @@ namespace OA.Ultima.UI.Controls
         // ============================================================================================================
         // Private variables
         // ============================================================================================================
-        Texture2D[] _gumpUpButton;
-        Texture2D[] _gumpDownButton;
-        Texture2D[] _gumpBackground;
-        Texture2D _gumpSlider;
+        Texture2DInfo[] _gumpUpButton;
+        Texture2DInfo[] _gumpDownButton;
+        Texture2DInfo[] _gumpBackground;
+        Texture2DInfo _gumpSlider;
 
         float _sliderPosition;
         float _value;
@@ -99,13 +99,13 @@ namespace OA.Ultima.UI.Controls
             base.OnInitialize();
 
             var provider = Service.Get<IResourceProvider>();
-            _gumpUpButton = new Texture2D[2];
+            _gumpUpButton = new Texture2DInfo[2];
             _gumpUpButton[0] = provider.GetUITexture(251);
             _gumpUpButton[1] = provider.GetUITexture(250);
-            _gumpDownButton = new Texture2D[2];
+            _gumpDownButton = new Texture2DInfo[2];
             _gumpDownButton[0] = provider.GetUITexture(253);
             _gumpDownButton[1] = provider.GetUITexture(252);
-            _gumpBackground = new Texture2D[3];
+            _gumpBackground = new Texture2DInfo[3];
             _gumpBackground[0] = provider.GetUITexture(257);
             _gumpBackground[1] = provider.GetUITexture(256);
             _gumpBackground[2] = provider.GetUITexture(255);

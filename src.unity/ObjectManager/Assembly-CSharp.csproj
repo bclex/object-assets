@@ -275,6 +275,9 @@
     <Reference Include="Object.Tes">
       <HintPath>C:/_GITHUB/object-assets/src.unity/ObjectManager/Assets/Plugins/Object.Tes.dll</HintPath>
     </Reference>
+    <Reference Include="Object.Ultima">
+      <HintPath>C:/_GITHUB/object-assets/src.unity/ObjectManager/Assets/Plugins/Object.Ultima.dll</HintPath>
+    </Reference>
     <Reference Include="ObjectManager">
       <HintPath>C:/_GITHUB/object-assets/src.unity/ObjectManager/Assets/Plugins/ObjectManager.dll</HintPath>
     </Reference>

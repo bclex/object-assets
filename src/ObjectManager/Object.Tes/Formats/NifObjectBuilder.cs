@@ -219,11 +219,13 @@ namespace OA.Tes.Formats
             }
 
             // Create the mesh.
-            var mesh = new Mesh();
-            mesh.vertices = vertices;
-            mesh.normals = normals;
-            mesh.uv = UVs;
-            mesh.triangles = triangles;
+            var mesh = new Mesh
+            {
+                vertices = vertices,
+                normals = normals,
+                uv = UVs,
+                triangles = triangles
+            };
             if (!data.hasNormals)
                 mesh.RecalculateNormals();
             mesh.RecalculateBounds();

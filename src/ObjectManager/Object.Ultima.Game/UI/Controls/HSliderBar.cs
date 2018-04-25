@@ -17,8 +17,8 @@ namespace OA.Ultima.UI.Controls
 
     class HSliderBar : AControl
     {
-        Texture2D[] _gumpSliderBackground;
-        Texture2D _gumpWidget;
+        Texture2DInfo[] _gumpSliderBackground;
+        Texture2DInfo _gumpWidget;
 
         // we use m_newValue to (a) get delta, (b) so Value only changes once per frame.
         int _newValue, _value;
@@ -77,7 +77,7 @@ namespace OA.Ultima.UI.Controls
                 {
                     default:
                     case HSliderBarStyle.MetalWidgetRecessedBar:
-                        _gumpSliderBackground = new Texture2D[3];
+                        _gumpSliderBackground = new Texture2DInfo[3];
                         _gumpSliderBackground[0] = provider.GetUITexture(213);
                         _gumpSliderBackground[1] = provider.GetUITexture(214);
                         _gumpSliderBackground[2] = provider.GetUITexture(215);

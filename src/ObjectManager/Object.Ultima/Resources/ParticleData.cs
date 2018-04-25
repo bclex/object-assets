@@ -45,12 +45,12 @@ namespace OA.Ultima.Resources
                 new ParticleData("Fire Wall (SE)",0x3996, 0),       // field of fire (facing SE)
                 new ParticleData("<null>",0x39A0, 0)                // Used to determine the frame length of the preceding effect.
             };
-            determineParticleLengths();
+            DetermineParticleLengths();
             if (_defaultData == null)
                 _defaultData = _data[0];
         }
 
-        private static void determineParticleLengths()
+        private static void DetermineParticleLengths()
         {
             for (var i = 0; i < _data.Length - 1; i++)
                 _data[i].FrameLength = _data[i + 1].ItemID - _data[i].ItemID;
@@ -96,10 +96,10 @@ namespace OA.Ultima.Resources
             return null;
         }
 
-        private readonly int _itemID;
-        private int _frameLength;
-        private int _speed;
-        private readonly string _name;
+        readonly int _itemID;
+        int _frameLength;
+        int _speed;
+        readonly string _name;
 
         public int ItemID { get { return _itemID; } }
         public int FrameLength { get { return _frameLength; } set { _frameLength = value; } }

@@ -62,7 +62,7 @@ namespace OA
             //    sideMaterial.renderQueue = -1;
             //}
 
-            Cursor.SetCursor(Asset.LoadTexture("tx_cursor", true), Vector2.zero, CursorMode.Auto);
+            Cursor.SetCursor(Asset.LoadTexture("tx_cursor", 1), Vector2.zero, CursorMode.Auto);
         }
 
         #region Player Spawn

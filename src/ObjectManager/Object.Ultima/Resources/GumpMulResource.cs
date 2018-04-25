@@ -13,7 +13,7 @@ namespace OA.Ultima.Resources
             FileManager.CreateFileIndex("Gumpidx.mul", "Gumpart.mul", 0x10000, 12);
         object _graphicsDevice;
         readonly PixelPicking _picking = new PixelPicking();
-        Texture2D[] _textureCache = new Texture2D[0x10000];
+        Texture2DInfo[] _textureCache = new Texture2DInfo[0x10000];
 
         public AFileIndex FileIndex => _fileIndex;
 
@@ -22,15 +22,13 @@ namespace OA.Ultima.Resources
             _graphicsDevice = graphics;
         }
 
-        public unsafe Texture2D GetGumpTexture(int textureID, bool replaceMask080808 = false)
+        public unsafe Texture2DInfo GetGumpTexture(int textureID, bool replaceMask080808 = false)
         {
             if (textureID < 0)
                 return null;
             if (_textureCache[textureID] == null)
             {
-                int length, extra;
-                bool patched;
-                var reader = _fileIndex.Seek(textureID, out length, out extra, out patched);
+                var reader = _fileIndex.Seek(textureID, out int length, out int extra, out bool patched);
                 if (reader == null)
                     return null;
                 var width = (extra >> 16) & 0xFFFF;
@@ -46,39 +44,34 @@ namespace OA.Ultima.Resources
                 var lookups = reader.ReadInts(height);
                 var metrics_dataread_start = (int)reader.Position;
                 var fileData = reader.ReadUShorts(shortsToRead);
-                var pixels = new ushort[width * height];
-                fixed (ushort* line = &pixels[0])
-                {
-                    fixed (ushort* data = &fileData[0])
+                var pixels = new byte[width * height * 4];
+                fixed (byte* line = &pixels[0])
+                fixed (ushort* data = &fileData[0])
+                    for (int y = 0; y < height; ++y)
                     {
-                        for (int y = 0; y < height; ++y)
+                        ushort* dataRef = data + (lookups[y] - height) * 2;
+                        uint* cur = (uint*)line + (y * width);
+                        uint* end = cur + width;
+                        while (cur < end)
                         {
-                            ushort* dataRef = data + (lookups[y] - height) * 2;
-                            ushort* cur = line + (y * width);
-                            ushort* end = cur + width;
-                            while (cur < end)
+                            uint color = ConvertUtils.FromBGR555(*dataRef++, false);
+                            uint* next = cur + *dataRef++;
+                            if (color == 0)
+                                cur = next;
+                            else
                             {
-                                ushort color = *dataRef++;
-                                ushort* next = cur + *dataRef++;
-                                if (color == 0)
-                                    cur = next;
-                                else
-                                {
-                                    color |= 0x8000;
-                                    while (cur < next)
-                                        *cur++ = color;
-                                }
+                                color |= 0xFF000000;
+                                while (cur < next)
+                                    *cur++ = color;
                             }
                         }
                     }
-                }
                 Metrics.ReportDataRead(length);
-                if (replaceMask080808)
-                    for (var i = 0; i < pixels.Length; i++)
-                        if (pixels[i] == 0x8421)
-                            pixels[i] = 0xFC1F;
-                var texture = new Texture2D(width, height, TextureFormat.Alpha8, false); //: SurfaceFormat.Bgra5551
-                //texture.SetData(pixels);
+                //if (replaceMask080808)
+                //    for (var i = 0; i < pixels.Length; i++)
+                //        if (pixels[i] == 0x8421)
+                //            pixels[i] = 0xFC1F;
+                var texture = new Texture2DInfo(width, height, TextureFormat.BGRA32, false, pixels); //: SurfaceFormat.Bgra5551
                 _textureCache[textureID] = texture;
                 _picking.Set(textureID, width, height, pixels);
             }

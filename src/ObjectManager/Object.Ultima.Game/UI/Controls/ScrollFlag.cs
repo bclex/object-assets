@@ -13,7 +13,7 @@ namespace OA.Ultima.UI.Controls
     /// </summary>
     class ScrollFlag : AControl, IScrollBar
     {
-        Texture2D _gumpSlider;
+        Texture2DInfo _gumpSlider;
 
         int _sliderExtentTop, _sliderExtentHeight;
         float _sliderPosition;

@@ -12,7 +12,7 @@ namespace OA.Ultima.World.WorldViews
         uint[] _blockColors;
         MiniMapChunk[] _blockCache;
 
-        public Texture2D Texture { get; private set; }
+        public Texture2DInfo Texture { get; private set; }
 
         SpriteBatchUI _spriteBatch;
 
@@ -28,7 +28,7 @@ namespace OA.Ultima.World.WorldViews
         public void Initialize()
         {
             _spriteBatch = Service.Get<SpriteBatchUI>();
-            Texture = new Texture2D((int)Stride, (int)Stride);
+            Texture = new Texture2DInfo((int)Stride, (int)Stride);
             _textureData = new uint[Stride * Stride];
             _blockColors = new uint[TilesPerBlock];
             _blockCache = new MiniMapChunk[BlockCacheWidth * BlockCacheHeight];

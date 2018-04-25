@@ -12,7 +12,7 @@ namespace OA.Ultima.UI.Controls
     /// </summary>
     class CheckBox : AControl
     {
-        Texture2D _inactive, _active;
+        Texture2DInfo _inactive, _active;
         bool isChecked;
 
         public bool IsChecked

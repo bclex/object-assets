@@ -34,7 +34,7 @@ namespace OA
     }
 
     /// <summary>
-    /// Manages loading and instantiation of Morrowind materials.
+    /// Manages loading and instantiation of materials.
     /// </summary>
     public class MaterialManager
     {

@@ -7,8 +7,8 @@ namespace OA.Ultima.UI.Controls
 {
     class CheckerTrans : AControl
     {
-        static Texture2D _checkeredTransTexture;
-        public static Texture2D CheckeredTransTexture
+        static Texture2DInfo _checkeredTransTexture;
+        public static Texture2DInfo CheckeredTransTexture
         {
             get
             {
@@ -25,7 +25,7 @@ namespace OA.Ultima.UI.Controls
                         }
                     }
                     var sb = Service.Get<SpriteBatchUI>();
-                    _checkeredTransTexture = new Texture2D(sb.GraphicsDevice, 32, 32, false, SurfaceFormat.Bgra5551);
+                    _checkeredTransTexture = new Texture2DInfo(sb.GraphicsDevice, 32, 32, false, SurfaceFormat.Bgra5551);
                     _checkeredTransTexture.SetData<ushort>(data);
                 }
                 return _checkeredTransTexture;
