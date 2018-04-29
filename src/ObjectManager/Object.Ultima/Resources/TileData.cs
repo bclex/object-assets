@@ -99,10 +99,10 @@ namespace OA.Ultima.Resources
                         if ((i & 0x1F) == 0)
                             r.ReadInt32();
                         var flags = (TileFlag)r.ReadInt32();
-                        var iTextureID = r.ReadInt16();
+                        var textureID = r.ReadInt16();
                         r.BaseStream.Seek(20, SeekOrigin.Current);
                         landData.Flags = flags;
-                        landData.TextureID = iTextureID;
+                        landData.TextureID = textureID;
                         LandData[i] = landData;
                     }
                     if (fileStream.Length == 1644544) // 7.0.0.0
@@ -273,7 +273,7 @@ namespace OA.Ultima.Resources
     public struct LandData
     {
         public TileFlag Flags;
-        public int TextureID;
+        public short TextureID;
 
         public bool IsWet
         {

@@ -9,8 +9,7 @@ namespace OA
         /// </summary>
         public static GameObject CreateMainCamera(Vector3 position, Quaternion orientation)
         {
-            var cameraObject = new GameObject("Main Camera");
-            cameraObject.tag = "MainCamera";
+            var cameraObject = new GameObject("Main Camera") { tag = "MainCamera" };
             cameraObject.AddComponent<Camera>();
             cameraObject.AddComponent<FlareLayer>();
             cameraObject.AddComponent<AudioListener>();
@@ -38,30 +37,31 @@ namespace OA
         /// <param name="splatPrototypes">The textures used by the terrain.</param>
         /// <param name="alphaMap">Texture blending information.</param>
         /// <returns>A TerrainData instance.</returns>
-        public static TerrainData CreateTerrainData(float[,] heightPercents, float maxHeight, float heightSampleDistance, SplatPrototype[] splatPrototypes, float[,,] alphaMap)
+        public static TerrainData CreateTerrainData(int offset, float[,] heightPercents, float maxHeight, float heightSampleDistance, SplatPrototype[] splatPrototypes, float[,,] alphaMap)
         {
             Debug.Assert(heightPercents.GetLength(0) == heightPercents.GetLength(1) && maxHeight >= 0 && heightSampleDistance >= 0);
 
             // Create the TerrainData.
-            var terrainData = new TerrainData();
-            terrainData.heightmapResolution = heightPercents.GetLength(0);
-            var terrainWidth = (terrainData.heightmapResolution - 1) * heightSampleDistance;
+            var terrainData = new TerrainData
+            {
+                heightmapResolution = heightPercents.GetLength(0),
+                splatPrototypes = splatPrototypes,
+            };
+            var terrainWidth = (terrainData.heightmapResolution - offset) * heightSampleDistance;
 
             // If maxHeight is 0, leave all the heights in terrainData at 0 and make the vertical size of the terrain 1 to ensure valid AABBs.
-            if (!Mathf.Approximately(maxHeight, 0))
-            {
-                terrainData.size = new Vector3(terrainWidth, maxHeight, terrainWidth);
-                terrainData.SetHeights(0, 0, heightPercents);
-            }
-            else
-                terrainData.size = new Vector3(terrainWidth, 1, terrainWidth);
+            //if (!Mathf.Approximately(maxHeight, 0))
+            //{
+            //    terrainData.size = new Vector3(terrainWidth, maxHeight, terrainWidth);
+            //    terrainData.SetHeights(0, 0, heightPercents);
+            //}
+            //else
+            terrainData.size = new Vector3(terrainWidth, 1, terrainWidth);
 
-            // Texture the terrain.
-            if (splatPrototypes != null && alphaMap != null)
+            if (alphaMap != null)
             {
                 Debug.Assert(alphaMap.GetLength(0) == alphaMap.GetLength(1));
                 terrainData.alphamapResolution = alphaMap.GetLength(0);
-                terrainData.splatPrototypes = splatPrototypes;
                 terrainData.SetAlphamaps(0, 0, alphaMap);
             }
             return terrainData;
@@ -77,17 +77,16 @@ namespace OA
         /// <param name="alphaMap">Texture blending information.</param>
         /// <param name="position">The position of the terrain.</param>
         /// <returns>A terrain GameObject.</returns>
-        public static GameObject CreateTerrain(float[,] heightPercents, float maxHeight, float heightSampleDistance, SplatPrototype[] splatPrototypes, float[,,] alphaMap, Vector3 position)
+        public static GameObject CreateTerrain(int offset, float[,] heightPercents, float maxHeight, float heightSampleDistance, SplatPrototype[] splatPrototypes, float[,,] alphaMap, Vector3 position)
         {
-            var terrainData = CreateTerrainData(heightPercents, maxHeight, heightSampleDistance, splatPrototypes, alphaMap);
+            var terrainData = CreateTerrainData(offset, heightPercents, maxHeight, heightSampleDistance, splatPrototypes, alphaMap);
             return CreateTerrainFromTerrainData(terrainData, position);
         }
 
         public static GameObject CreateTerrainFromTerrainData(TerrainData terrainData, Vector3 position)
         {
             // Create the terrain game object.
-            var terrainObject = new GameObject("terrain");
-            terrainObject.isStatic = true;
+            var terrainObject = new GameObject("terrain") { isStatic = true };
             var terrain = terrainObject.AddComponent<Terrain>();
             terrain.terrainData = terrainData;
             terrainObject.AddComponent<TerrainCollider>().terrainData = terrainData;
@@ -166,7 +165,7 @@ namespace OA
                     return gameObject;
                 // Go up one level in the object hierarchy.
                 var parentTransform = gameObject.transform.parent;
-                gameObject = parentTransform != null ? parentTransform.gameObject : null;
+                gameObject = parentTransform?.gameObject;
             }
             return null;
         }

@@ -49,7 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FilePacks\Records\ITEMRecord.cs" />
+    <Compile Include="UI\UltimaUIManager.cs" />
+    <Compile Include="UltimaEngine.cs" />
     <Compile Include="Tests\ObjectTestDataPack.cs" />
+    <Compile Include="Tests\ObjectTestEngine.cs" />
     <Compile Include="Tests\ObjectTestPack.cs" />
     <Compile Include="UltimaCellManager.cs" />
     <Compile Include="Configuration\UltimaOnlineSettings.cs" />

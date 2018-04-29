@@ -1,6 +1,6 @@
 ﻿using OA.Core;
 
-namespace OA
+namespace OA.Tes
 {
     public static class ObjectTestPack
     {

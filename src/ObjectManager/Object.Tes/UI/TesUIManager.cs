@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace OA.Tes.UI
 {
-    //[RequireComponent(typeof(Canvas))]
     public class TesUIManager : UIManager
     {
         [Header("UI Elements")]

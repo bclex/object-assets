@@ -140,13 +140,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 577227992}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1971776339, guid: 20b93f068f655a4478a2a82bc1aaef0f, type: 3}
+  m_Script: {fileID: 1163278898, guid: 62117ed09489aea4f9a99151f97054f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _crosshair: {fileID: 0}
   _interactiveText: {fileID: 0}
-  _book: {fileID: 0}
-  _scroll: {fileID: 0}
 --- !u!114 &577227994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -537,7 +535,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1122091507}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -511401321, guid: 2ae78523700dbbe41a2b482ef17009a9, type: 3}
+  m_Script: {fileID: -511401321, guid: 62117ed09489aea4f9a99151f97054f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   slowSpeed: 3

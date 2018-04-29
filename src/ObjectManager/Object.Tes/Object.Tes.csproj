@@ -50,6 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Tests\ObjectTestEngine.cs" />
     <Compile Include="Tests\ObjectTestPack.cs" />
     <Compile Include="TesCellManager.cs" />
     <Compile Include="Components\PlayerInventory.cs" />

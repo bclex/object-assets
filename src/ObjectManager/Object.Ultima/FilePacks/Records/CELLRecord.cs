@@ -16,7 +16,6 @@ namespace OA.Ultima.FilePacks.Records
             _tileData = tileData;
             GridX = gridX;
             GridY = gridY;
-            //Load();
         }
 
         public class RefObj
@@ -35,7 +34,7 @@ namespace OA.Ultima.FilePacks.Records
 
         public string Name
         {
-            get { return "{GridX}x{GridY}"; }
+            get { return $"{GridX}x{GridY}"; }
         }
 
         public bool IsInterior
@@ -58,6 +57,7 @@ namespace OA.Ultima.FilePacks.Records
             lock (this)
             {
                 if (RefObjs != null) return;
+                //Utils.Log($"CELL: {GridX}x{GridY}");
                 // load the statics data into the tiles
                 var staticsData = _tileData.GetStaticChunk(GridX, GridY, out int staticLength);
                 var countStatics = staticLength / 7;
@@ -70,7 +70,7 @@ namespace OA.Ultima.FilePacks.Records
                     var itemY = staticsData[staticDataIndex++];
                     var itemZ = (sbyte)staticsData[staticDataIndex++];
                     var hue = staticsData[staticDataIndex++] + (staticsData[staticDataIndex++] * 256);
-                    RefObjs[i] = new RefObj
+                    refObjs[i] = new RefObj
                     {
                         ItemId = itemId,
                         Hue = hue,

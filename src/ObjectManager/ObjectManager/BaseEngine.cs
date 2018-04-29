@@ -14,12 +14,12 @@ namespace OA
         protected const int CellRadiusOnLoad = 2;
         public static BaseEngine Instance;
 
-        public IAssetManager AssetManager;
-        public IAssetPack Asset;
-        public IDataPack Data;
-        public ICellManager CellManager;
-        public TemporalLoadBalancer LoadBalancer;
-        GameObject _sunObj;
+        public readonly IAssetManager AssetManager;
+        public readonly IAssetPack Asset;
+        public readonly IDataPack Data;
+        public readonly ICellManager CellManager;
+        public readonly TemporalLoadBalancer LoadBalancer;
+        readonly GameObject _sunObj;
 
         public BaseEngine(IAssetManager assetManager, Uri asset, Uri data)
             : this(assetManager, assetManager.GetAssetPack(asset).Result, assetManager.GetDataPack(data).Result) { }
@@ -62,7 +62,7 @@ namespace OA
             //    sideMaterial.renderQueue = -1;
             //}
 
-            Cursor.SetCursor(Asset.LoadTexture("tx_cursor", 1), Vector2.zero, CursorMode.Auto);
+            //Cursor.SetCursor(Asset.LoadTexture("tx_cursor", 1), Vector2.zero, CursorMode.Auto);
         }
 
         #region Player Spawn

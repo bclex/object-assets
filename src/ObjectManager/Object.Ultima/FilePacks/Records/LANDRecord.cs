@@ -1,4 +1,5 @@
 ﻿using OA.Core;
+using OA.Ultima.Data;
 using OA.Ultima.Resources;
 
 namespace OA.Ultima.FilePacks.Records
@@ -18,10 +19,10 @@ namespace OA.Ultima.FilePacks.Records
 
         public class Tile
         {
-            public int TileId;
-            public LandData Data;
-            public int X;
-            public int Y;
+            //public int X;
+            //public int Y;
+            public TileFlag Flags;
+            public short TextureId;
             public int Z;
         }
 
@@ -38,21 +39,22 @@ namespace OA.Ultima.FilePacks.Records
             lock (this)
             {
                 if (Tiles != null) return;
+                //Utils.Log($"LAND: {GridX}x{GridY}");
                 // load the ground data into the tiles.
                 var groundData = _tileData.GetLandChunk(GridX, GridY);
                 var tiles = new Tile[64];
                 var groundDataIndex = 0;
                 for (var i = 0; i < 64; i++)
                 {
-                    var tileId = groundData[groundDataIndex++] + (groundData[groundDataIndex++] << 8);
+                    var tileId = (short)(groundData[groundDataIndex++] + (groundData[groundDataIndex++] << 8));
                     var tileZ = (sbyte)groundData[groundDataIndex++];
                     var data = TileData.LandData[tileId & 0x3FFF];
-                    Tiles[i] = new Tile
+                    tiles[i] = new Tile
                     {
-                        TileId = tileId,
-                        Data = data,
-                        X = (int)GridX * 8 + i % 8,
-                        Y = (int)GridY * 8 + (i / 8),
+                        //X = (int)GridX * 8 + i % 8,
+                        //Y = (int)GridY * 8 + (i / 8),
+                        Flags = data.Flags,
+                        TextureId = data.TextureID,
                         Z = tileZ,
                     };
                 }

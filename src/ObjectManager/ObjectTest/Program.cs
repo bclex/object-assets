@@ -1,4 +1,6 @@
-﻿namespace OA
+﻿using OA.Ultima;
+
+namespace OA
 {
     public static class Program
     {

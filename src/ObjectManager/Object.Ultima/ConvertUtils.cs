@@ -5,12 +5,12 @@ namespace OA.Ultima
 {
     public static class ConvertUtils
     {
-        public const int yardInMWUnits = 64;
-        public const float meterInYards = 1.09361f;
-        public const float meterInMWUnits = meterInYards * yardInMWUnits;
+        const int yardInUnits = 1;
+        const float meterInYards = 1.09361f;
+        public const float MeterInUnits = meterInYards * yardInUnits;
 
-        public const int exteriorCellSideLengthInMWUnits = 8192;
-        public const float exteriorCellSideLengthInMeters = (float)exteriorCellSideLengthInMWUnits / meterInMWUnits;
+        const int exteriorCellSideLengthInUnits = 8;
+        public const float ExteriorCellSideLengthInMeters = (float)exteriorCellSideLengthInUnits / MeterInUnits;
 
         public static Quaternion RotationMatrixToQuaternion(Matrix4x4 matrix)
         {

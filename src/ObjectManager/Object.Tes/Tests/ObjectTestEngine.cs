@@ -1,7 +1,7 @@
 ﻿using OA.Core;
 using UnityEngine;
 
-namespace OA
+namespace OA.Tes
 {
     public static class ObjectTestEngine
     {

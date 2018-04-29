@@ -55,9 +55,12 @@ namespace OA.Tes
             var maxCellY = cameraCellIndices.y + cellRadius;
 
             // Destroy out of range cells.
+            var outOfRangeCellIndices = new List<Vector2i>();
             foreach (var x in _cellObjects)
                 if (x.Key.x < minCellX || x.Key.x > maxCellX || x.Key.y < minCellY || x.Key.y > maxCellY)
-                    DestroyExteriorCell(x.Key);
+                    outOfRangeCellIndices.Add(x.Key);
+            foreach (var cellIndices in outOfRangeCellIndices)
+                DestroyExteriorCell(cellIndices);
 
             // Create new cells.
             for (var r = 0; r <= cellRadius; r++)
@@ -132,10 +135,7 @@ namespace OA.Tes
                 land = _data.FindLANDRecord(cell.GridCoords);
             }
             else cellObjName = cell.NAME.value;
-            var cellObj = new GameObject(cellObjName)
-            {
-                tag = "Cell"
-            };
+            var cellObj = new GameObject(cellObjName) { tag = "Cell" };
             var cellObjectsContainer = new GameObject("objects");
             cellObjectsContainer.transform.parent = cellObj.transform;
             var cellObjectsCreationCoroutine = InstantiateCellObjectsCoroutine(cell, land, cellObj, cellObjectsContainer);
@@ -273,10 +273,7 @@ namespace OA.Tes
         private GameObject InstantiateLight(LIGHRecord LIGH, bool indoors)
         {
             var game = TesSettings.Game;
-            var lightObj = new GameObject("Light")
-            {
-                isStatic = true
-            };
+            var lightObj = new GameObject("Light") { isStatic = true };
             var lightComponent = lightObj.AddComponent<Light>();
             lightComponent.range = 3 * (LIGH.LHDT.Radius / ConvertUtils.meterInMWUnits);
             lightComponent.color = new Color32(LIGH.LHDT.Red, LIGH.LHDT.Green, LIGH.LHDT.Blue, 255);
@@ -293,12 +290,12 @@ namespace OA.Tes
         /// </summary>
         private void PostProcessInstantiatedCellObject(GameObject gameObject, RefCellObjInfo refCellObjInfo)
         {
-            var refObjDataGroup = (CELLRecord.RefObj)refCellObjInfo.RefObj;
+            var refObj = (CELLRecord.RefObj)refCellObjInfo.RefObj;
             // Handle object transforms.
-            if (refObjDataGroup.XSCL != null)
-                gameObject.transform.localScale = Vector3.one * refObjDataGroup.XSCL.value;
-            gameObject.transform.position += NifUtils.NifPointToUnityPoint(refObjDataGroup.DATA.Position);
-            gameObject.transform.rotation *= NifUtils.NifEulerAnglesToUnityQuaternion(refObjDataGroup.DATA.EulerAngles);
+            if (refObj.XSCL != null)
+                gameObject.transform.localScale = Vector3.one * refObj.XSCL.value;
+            gameObject.transform.position += NifUtils.NifPointToUnityPoint(refObj.DATA.Position);
+            gameObject.transform.rotation *= NifUtils.NifEulerAnglesToUnityQuaternion(refObj.DATA.EulerAngles);
             var tagTarget = gameObject;
             var coll = gameObject.GetComponentInChildren<Collider>(); // if the collider is on a child object and not on the object with the component, we need to set that object's tag instead.
             if (coll != null)
@@ -332,7 +329,7 @@ namespace OA.Tes
                 //var component = GenericObjectComponent.Create(obj, record, tag);
                 ////only door records need access to the cell object data group so far
                 //if (record is DOORRecord)
-                //    ((DoorComponent)component).refObjDataGroup = info.refObjDataGroup;
+                //    ((DoorComponent)component).RefObj = info.RefObj;
             }
         }
 
@@ -368,39 +365,39 @@ namespace OA.Tes
                 yield break;
             // Return before doing any work to provide an IEnumerator handle to the coroutine.
             yield return null;
-            const int LAND_SIDE_LENGTH_IN_SAMPLES = 65;
-            var heights = new float[LAND_SIDE_LENGTH_IN_SAMPLES, LAND_SIDE_LENGTH_IN_SAMPLES];
+            const int LAND_SIDELENGTH_IN_SAMPLES = 65;
+            var heights = new float[LAND_SIDELENGTH_IN_SAMPLES, LAND_SIDELENGTH_IN_SAMPLES];
             // Read in the heights in Morrowind units.
             const int vhgtScaler = 8; //: VHGTIncrementToMWUnits
             var rowOffset = land.VHGT.ReferenceHeight;
-            for (var y = 0; y < LAND_SIDE_LENGTH_IN_SAMPLES; y++)
+            for (var y = 0; y < LAND_SIDELENGTH_IN_SAMPLES; y++)
             {
-                rowOffset += land.VHGT.HeightOffsets[y * LAND_SIDE_LENGTH_IN_SAMPLES];
+                rowOffset += land.VHGT.HeightOffsets[y * LAND_SIDELENGTH_IN_SAMPLES];
                 heights[y, 0] = rowOffset * vhgtScaler;
                 var colOffset = rowOffset;
-                for (var x = 1; x < LAND_SIDE_LENGTH_IN_SAMPLES; x++)
+                for (var x = 1; x < LAND_SIDELENGTH_IN_SAMPLES; x++)
                 {
-                    colOffset += land.VHGT.HeightOffsets[(y * LAND_SIDE_LENGTH_IN_SAMPLES) + x];
+                    colOffset += land.VHGT.HeightOffsets[(y * LAND_SIDELENGTH_IN_SAMPLES) + x];
                     heights[y, x] = colOffset * vhgtScaler;
                 }
             }
             // Change the heights to percentages.
             ArrayUtils.GetExtrema(heights, out float minHeight, out float maxHeight);
-            for (var y = 0; y < LAND_SIDE_LENGTH_IN_SAMPLES; y++)
-                for (var x = 0; x < LAND_SIDE_LENGTH_IN_SAMPLES; x++)
+            for (var y = 0; y < LAND_SIDELENGTH_IN_SAMPLES; y++)
+                for (var x = 0; x < LAND_SIDELENGTH_IN_SAMPLES; x++)
                     heights[y, x] = Utils.ChangeRange(heights[y, x], minHeight, maxHeight, 0, 1);
             // Texture the terrain.
             SplatPrototype[] splatPrototypes = null;
             float[,,] alphaMap = null;
-            const int LAND_TEXTURE_INDICES_COUNT = 256;
-            var textureIndices = land.VTEX != null ? land.VTEX.TextureIndices : new ushort[LAND_TEXTURE_INDICES_COUNT];
+            const int LAND_TEXTUREINDICES = 256;
+            var textureIndices = land.VTEX != null ? land.VTEX.TextureIndices : new ushort[LAND_TEXTUREINDICES];
             // Create splat prototypes.
             var splatPrototypeList = new List<SplatPrototype>();
-            var texInd2splatInd = new Dictionary<ushort, int>();
+            var texInd2SplatInd = new Dictionary<ushort, int>();
             for (var i = 0; i < textureIndices.Length; i++)
             {
                 var textureIndex = (short)((short)textureIndices[i] - 1);
-                if (!texInd2splatInd.ContainsKey((ushort)textureIndex))
+                if (!texInd2SplatInd.ContainsKey((ushort)textureIndex))
                 {
                     // Load terrain texture.
                     string textureFilePath;
@@ -425,7 +422,7 @@ namespace OA.Tes
                     // Update collections.
                     var splatIndex = splatPrototypeList.Count;
                     splatPrototypeList.Add(splat);
-                    texInd2splatInd.Add((ushort)textureIndex, splatIndex);
+                    texInd2SplatInd.Add((ushort)textureIndex, splatIndex);
                 }
             }
             splatPrototypes = splatPrototypeList.ToArray();
@@ -442,7 +439,7 @@ namespace OA.Tes
                     var xMajor = x / 4;
                     var xMinor = x - (xMajor * 4);
                     var texIndex = (short)((short)textureIndices[(yMajor * 64) + (xMajor * 16) + (yMinor * 4) + xMinor] - 1);
-                    if (texIndex >= 0) { var splatIndex = texInd2splatInd[(ushort)texIndex]; alphaMap[y, x, splatIndex] = 1; }
+                    if (texIndex >= 0) { var splatIndex = texInd2SplatInd[(ushort)texIndex]; alphaMap[y, x, splatIndex] = 1; }
                     else alphaMap[y, x, 0] = 1;
                 }
             }
@@ -451,8 +448,8 @@ namespace OA.Tes
             // Create the terrain.
             var heightRange = maxHeight - minHeight;
             var terrainPosition = new Vector3(ConvertUtils.exteriorCellSideLengthInMeters * land.GridCoords.x, minHeight / ConvertUtils.meterInMWUnits, ConvertUtils.exteriorCellSideLengthInMeters * land.GridCoords.y);
-            var heightSampleDistance = ConvertUtils.exteriorCellSideLengthInMeters / (LAND_SIDE_LENGTH_IN_SAMPLES - 1);
-            var terrain = GameObjectUtils.CreateTerrain(heights, heightRange / ConvertUtils.meterInMWUnits, heightSampleDistance, splatPrototypes, alphaMap, terrainPosition);
+            var heightSampleDistance = ConvertUtils.exteriorCellSideLengthInMeters / (LAND_SIDELENGTH_IN_SAMPLES - 1);
+            var terrain = GameObjectUtils.CreateTerrain(1, heights, heightRange / ConvertUtils.meterInMWUnits, heightSampleDistance, splatPrototypes, alphaMap, terrainPosition);
             terrain.GetComponent<Terrain>().materialType = Terrain.MaterialType.BuiltInLegacyDiffuse;
             terrain.transform.parent = parent.transform;
             terrain.isStatic = true;

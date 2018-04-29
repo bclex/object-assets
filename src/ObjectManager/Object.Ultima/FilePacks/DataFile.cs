@@ -27,11 +27,9 @@ namespace OA.Ultima.FilePacks
         public DataFile(uint map)
         {
             _tileData = new TileMatrixData(map);
-            Utils.Info("Load");
             ReadRecords();
-            Utils.Info("Loading...");
             PostProcessRecords();
-            Utils.Info("Loaded");
+            //Utils.Info("Loaded");
         }
 
         void IDisposable.Dispose()
@@ -55,18 +53,19 @@ namespace OA.Ultima.FilePacks
 
         public List<IRecord> GetRecordsOfType<T>() where T : Record { return recordsByType.TryGetValue(typeof(T), out List<IRecord> records) ? records : null; }
 
-        private void ReadRecords()
+        private void ReadRecords(bool loadItems = false)
         {
             var recordList = new List<Record>();
             // add items
-            for (var i = 0; i < TileData.ItemData.Length; i++)
-            {
-                var itemData = TileData.ItemData[i];
-                recordList.Add(new ITEMRecord
+            if (loadItems)
+                for (var i = 0; i < TileData.ItemData.Length; i++)
                 {
-                    ItemId = i
-                });
-            }
+                    var itemData = TileData.ItemData[i];
+                    recordList.Add(new ITEMRecord
+                    {
+                        ItemId = i
+                    });
+                }
             // add tiles
             for (uint chunkY = 0; chunkY < _tileData.ChunkHeight; chunkY++)
                 for (uint chunkX = 0; chunkX < _tileData.ChunkWidth; chunkX++)

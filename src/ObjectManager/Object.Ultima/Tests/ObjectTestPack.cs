@@ -1,9 +1,9 @@
 ﻿using OA.Core;
 using UnityEngine;
 
-namespace OA
+namespace OA.Ultima
 {
-    public static class ObjectTest
+    public static class ObjectTestPack
     {
         static IAssetPack Asset;
         static IDataPack Data;
