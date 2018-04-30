@@ -361,7 +361,7 @@ namespace OA.Ultima
             const int LAND_SIDELENGTH = 8 * DataFile.CELL_PACK;
             var heights = new float[LAND_SIDELENGTH, LAND_SIDELENGTH];
             // Read in the heights in units.
-            const int VHGTIncrementToUnits = 1;
+            const int VHGTIncrementToUnits = 8*3;
             for (var y = 0; y < LAND_SIDELENGTH; y++)
                 for (var x = 0; x < LAND_SIDELENGTH; x++)
                 {
@@ -389,11 +389,10 @@ namespace OA.Ultima
             // Texture the terrain.
             SplatPrototype[] splatPrototypes = null;
             float[,,] alphaMap = null;
-            const int LAND_TEXTURES = 64;
-            var textureIndices = land.Tiles != null ? land.Tiles.Select(x => x.TextureId).ToArray() : new short[LAND_TEXTURES];
+            var textureIndices = land.Tiles.Select(x => x.TextureId).ToArray();
             // Create splat prototypes.
             var splatPrototypeList = new List<SplatPrototype>();
-            var texInd2SplatInd = new Dictionary<int, int>();
+            var texInd2SplatInd = new Dictionary<short, int>();
             for (var i = 0; i < textureIndices.Length; i++)
             {
                 var textureIndex = textureIndices[i];
@@ -410,7 +409,7 @@ namespace OA.Ultima
                         texture = texture,
                         smoothness = 0,
                         metallic = 0,
-                        tileSize = new Vector2(2, 2)
+                        tileSize = new Vector2(6, 6)
                     };
                     // Update collections.
                     var splatIndex = splatPrototypeList.Count;
@@ -420,22 +419,22 @@ namespace OA.Ultima
             }
             splatPrototypes = splatPrototypeList.ToArray();
             // Create the alpha map.
-            //var VTEX_ROWS = 8;
-            //var VTEX_COLUMNS = VTEX_ROWS;
-            //alphaMap = new float[VTEX_ROWS, VTEX_COLUMNS, splatPrototypes.Length];
-            //for (var y = 0; y < VTEX_ROWS; y++)
-            //{
-            //    var yMajor = y / 4;
-            //    var yMinor = y - (yMajor * 4);
-            //    for (var x = 0; x < VTEX_COLUMNS; x++)
-            //    {
-            //        var xMajor = x / 4;
-            //        var xMinor = x - (xMajor * 4);
-            //        var texIndex = (short)((short)textureIndices[(yMajor * 64) + (xMajor * 16) + (yMinor * 4) + xMinor] - 1);
-            //        if (texIndex >= 0) { var splatIndex = texInd2splatInd[(ushort)texIndex]; alphaMap[y, x, splatIndex] = 1; }
-            //        else alphaMap[y, x, 0] = 1;
-            //    }
-            //}
+            var VTEX_ROWS = 16;
+            var VTEX_COLUMNS = VTEX_ROWS;
+            alphaMap = new float[VTEX_ROWS, VTEX_COLUMNS, splatPrototypes.Length];
+            for (var y = 0; y < VTEX_ROWS; y++)
+            {
+                var yMajor = y / 4;
+                var yMinor = y - (yMajor * 4);
+                for (var x = 0; x < VTEX_COLUMNS; x++)
+                {
+                    var xMajor = x / 4;
+                    var xMinor = x - (xMajor * 4);
+                    var texIndex = textureIndices[(yMajor * 64) + (xMajor * 16) + (yMinor * 4) + xMinor];
+                    if (texIndex >= 0) { var splatIndex = texInd2SplatInd[texIndex]; alphaMap[y, x, splatIndex] = 1; }
+                    else alphaMap[y, x, 0] = 1;
+                }
+            }
             // Yield before creating the terrain GameObject because it takes a while.
             yield return null;
             // Create the terrain.
