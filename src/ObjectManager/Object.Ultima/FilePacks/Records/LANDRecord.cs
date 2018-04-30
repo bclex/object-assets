@@ -1,7 +1,6 @@
 ﻿using OA.Core;
 using OA.Ultima.Data;
 using OA.Ultima.Resources;
-using System.Collections.Generic;
 
 namespace OA.Ultima.FilePacks.Records
 {
@@ -20,11 +19,12 @@ namespace OA.Ultima.FilePacks.Records
 
         public class Tile
         {
-            //public int X;
-            //public int Y;
+            public int TileId;
             public TileFlag Flags;
             public short TextureId;
-            public int Z;
+            public bool Ignored;
+            public bool IsWet => (Flags & TileFlag.Wet) != 0;
+            public bool IsImpassible => (Flags & TileFlag.Impassable) != 0;
         }
 
         public Vector2i GridCoords
@@ -32,25 +32,29 @@ namespace OA.Ultima.FilePacks.Records
             get { return new Vector2i((int)GridX, (int)GridY); }
         }
 
+        public sbyte[] Heights;
         public Tile[] Tiles;
 
         public void Load()
         {
-            if (Tiles != null) return;
+            if (Heights != null) return;
             lock (this)
             {
-                if (Tiles != null) return;
+                if (Heights != null) return;
                 //Utils.Log($"LAND: {GridX}x{GridY}");
-                var tiles = new Tile[64 * DataFile.CELL_PACK * DataFile.CELL_PACK];
+                var heights = new sbyte[STRIDE0 * STRIDE0];
+                var tiles = new Tile[STRIDE0 * STRIDE0];
                 for (uint y = 0; y < DataFile.CELL_PACK; y++)
                     for (uint x = 0; x < DataFile.CELL_PACK; x++)
-                        LoadTile(tiles, x * DataFile.CELL_PACK, y * DataFile.CELL_PACK, (GridX * DataFile.CELL_PACK) + x, (GridY * DataFile.CELL_PACK) + y);
+                        LoadTile(heights, tiles, x * DataFile.CELL_PACK, y * DataFile.CELL_PACK, (GridX * DataFile.CELL_PACK) + x, (GridY * DataFile.CELL_PACK) + y);
+                Heights = heights;
                 Tiles = tiles;
             }
         }
 
-        const int STRIDE = 8 * DataFile.CELL_PACK;
-        public void LoadTile(Tile[] tiles, uint offsetX, uint offsetY, uint chunkX, uint chunkY)
+        //const int STRIDE1 = (8 * DataFile.CELL_PACK) + 1;
+        const int STRIDE0 = 8 * DataFile.CELL_PACK;
+        public void LoadTile(sbyte[] heights, Tile[] tiles, uint offsetX, uint offsetY, uint chunkX, uint chunkY)
         {
             // load the ground data into the tiles.
             var groundData = _tileData.GetLandChunk(chunkX, chunkY);
@@ -61,17 +65,17 @@ namespace OA.Ultima.FilePacks.Records
                     var tileId = (short)(groundData[groundDataIndex++] + (groundData[groundDataIndex++] << 8));
                     var tileZ = (sbyte)groundData[groundDataIndex++];
                     var data = TileData.LandData[tileId & 0x3FFF];
-                    var idx = ((offsetY + y) * STRIDE) + offsetX + x;
+                    var idx = ((offsetY + y) * STRIDE0) + offsetX + x;
+                    heights[idx] = tileZ;
                     tiles[idx] = new Tile
                     {
                         //X = (int)chunkX * 8 + x,
                         //Y = (int)chunkY * 8 + y,
                         Flags = data.Flags,
                         TextureId = data.TextureID,
-                        Z = tileZ,
-                    };
+                        Ignored = tileId == 2 || tileId == 0x1DB || (tileId >= 0x1AE && tileId <= 0x1B5),
+                };
                 }
-
         }
     }
 }

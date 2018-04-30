@@ -20,15 +20,13 @@ namespace OA.Ultima.FilePacks.Records
 
         public class RefObj
         {
-            public int ItemId;
+            public short ItemId;
             public int Hue;
             public int SortInfluence;
-            public int X;
-            public int Y;
-            public int Z;
+            public Vector3 Position;
             public string Name
             {
-                get { return $"obj{ItemId}"; }
+                get { return $"sta{ItemId}"; }
             }
         }
 
@@ -74,9 +72,9 @@ namespace OA.Ultima.FilePacks.Records
             var staticDataIndex = 0;
             for (var i = 0; i < countStatics; i++)
             {
-                var itemId = staticsData[staticDataIndex++] + (staticsData[staticDataIndex++] << 8);
-                var itemX = staticsData[staticDataIndex++];
-                var itemY = staticsData[staticDataIndex++];
+                var itemId = (short)(staticsData[staticDataIndex++] + (staticsData[staticDataIndex++] << 8));
+                var itemX = (sbyte)staticsData[staticDataIndex++];
+                var itemY = (sbyte)staticsData[staticDataIndex++];
                 var itemZ = (sbyte)staticsData[staticDataIndex++];
                 var hue = staticsData[staticDataIndex++] + (staticsData[staticDataIndex++] * 256);
                 refObjs.Add(new RefObj
@@ -84,9 +82,7 @@ namespace OA.Ultima.FilePacks.Records
                     ItemId = itemId,
                     Hue = hue,
                     SortInfluence = i,
-                    X = (int)chunkY * 8 + itemX,
-                    Y = (int)chunkY * 8 + itemY,
-                    Z = itemZ,
+                    Position = new Vector3((int)chunkY * 8 + itemX, itemZ, (int)chunkY * 8 + itemY),
                 });
             }
         }

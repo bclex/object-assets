@@ -33,7 +33,7 @@ namespace OA.Tes.Formats
                 // If the file doesn't contain any NiObjects we are looking for, return an empty GameObject.
                 if (gameObject == null)
                 {
-                    Utils.Log(file.name + " resulted in a null GameObject when instantiated.");
+                    Utils.Log($"{file.name} resulted in a null GameObject when instantiated.");
                     gameObject = new GameObject(file.name);
                 }
                 // If gameObject != null and the root NiObject is an NiNode, discard any transformations (Morrowind apparently does).

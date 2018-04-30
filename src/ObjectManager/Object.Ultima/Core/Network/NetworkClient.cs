@@ -407,7 +407,7 @@ namespace OA.Ultima.Core.Network
 
         void LogPacket(byte[] buffer, int length, bool servertoclient = true)
         {
-            if (UltimaGameSettings.Debug.LogPackets)
+            if (UltimaSettings.Debug.LogPackets)
             {
                 Utils.Log(servertoclient ? "Server - > Client" : "Client - > Server");
                 Utils.Log($"Id: 0x{buffer[0]:X2} Length: {length}");

@@ -1,6 +1,7 @@
 ﻿using OA.Core;
 using OA.Ultima.FilePacks;
 using OA.Ultima.FilePacks.Records;
+using OA.Ultima.Formats;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace OA.Ultima
 {
     public class UltimaCellManager : ICellManager
     {
-        const int _cellRadius = 2;
+        const int _cellRadius = 1;
         const int _detailRadius = 1;
 
         UltimaAssetPack _asset;
@@ -186,12 +187,12 @@ namespace OA.Ultima
                 // Yield after InstantiateLANDCoroutine has finished to avoid doing too much work in one frame.
                 yield return null;
             }
-            //// Instantiate objects.
-            //foreach (var refCellObjInfo in refCellObjInfos)
-            //{
-            //    InstantiateCellObject(cell, cellObjectsContainer, refCellObjInfo);
-            //    yield return null;
-            //}
+            // Instantiate objects.
+            foreach (var refCellObjInfo in refCellObjInfos)
+            {
+                InstantiateCellObject(cell, cellObjectsContainer, refCellObjInfo);
+                yield return null;
+            }
         }
 
         private RefCellObjInfo[] GetRefCellObjInfos(CELLRecord cell)
@@ -211,7 +212,7 @@ namespace OA.Ultima
                     var modelFileName = RecordUtils.GetModelFileName(refObjInfo.ReferencedRecord);
                     // If the model file name is valid, store the model file path.
                     if (!string.IsNullOrEmpty(modelFileName))
-                        refObjInfo.ModelFilePath = "meshes\\" + modelFileName;
+                        refObjInfo.ModelFilePath = modelFileName;
                 }
                 refCellObjInfos[i] = refObjInfo;
             }
@@ -294,8 +295,8 @@ namespace OA.Ultima
             // Handle object transforms.
             //if (refObj.XSCL != null)
             //    gameObject.transform.localScale = Vector3.one * refObj.XSCL.value;
-            //gameObject.transform.position += NifUtils.NifPointToUnityPoint(refObj.DATA.position);
-            //gameObject.transform.rotation *= NifUtils.NifEulerAnglesToUnityQuaternion(refObj.DATA.eulerAngles);
+            gameObject.transform.position += StaUtils.StaPointToUnityPoint(refObj.Position);
+            //gameObject.transform.rotation *= StaUtils.NifEulerAnglesToUnityQuaternion(refObj.DATA.eulerAngles);
             //var tagTarget = gameObject;
             //var coll = gameObject.GetComponentInChildren<Collider>(); // if the collider is on a child object and not on the object with the component, we need to set that object's tag instead.
             //if (coll != null)
@@ -354,18 +355,18 @@ namespace OA.Ultima
         {
             Debug.Assert(land != null);
             // Don't create anything if the LAND doesn't have data.
-            if (land.Tiles == null)
+            if (land.Heights == null || land.Tiles == null)
                 yield break;
             // Return before doing any work to provide an IEnumerator handle to the coroutine.
             yield return null;
             const int LAND_SIDELENGTH = 8 * DataFile.CELL_PACK;
             var heights = new float[LAND_SIDELENGTH, LAND_SIDELENGTH];
             // Read in the heights in units.
-            const int VHGTIncrementToUnits = 8;
+            const int VHGTIncrementToUnits = 16;
             for (var y = 0; y < LAND_SIDELENGTH; y++)
                 for (var x = 0; x < LAND_SIDELENGTH; x++)
                 {
-                    var height = land.Tiles[(y * LAND_SIDELENGTH) + x].Z;
+                    var height = land.Heights[(y * LAND_SIDELENGTH) + x];
                     heights[y, x] = height * VHGTIncrementToUnits;
                 }
             // Change the heights to percentages.

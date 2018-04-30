@@ -1,6 +1,4 @@
-﻿using OA.Core;
-using System;
-using System.Threading.Tasks;
+﻿using OA.Ultima.Formats;
 using UnityEngine;
 
 namespace OA.Ultima.FilePacks
@@ -9,11 +7,13 @@ namespace OA.Ultima.FilePacks
     {
         TextureManager _textureManager;
         MaterialManager _materialManager;
+        StaManager _staManager;
 
         public UltimaAssetPack()
         {
             _textureManager = new TextureManager(this);
             _materialManager = new MaterialManager(_textureManager);
+            _staManager = new StaManager(this, _materialManager);
         }
 
         public Texture2D LoadTexture(string texturePath, int method = 0)
@@ -28,11 +28,12 @@ namespace OA.Ultima.FilePacks
 
         public GameObject CreateObject(string filePath)
         {
-            return null;
+            return _staManager.InstantiateSta(filePath);
         }
 
         public void PreloadObjectAsync(string filePath)
         {
+            _staManager.PreloadStaFileAsync(filePath);
         }
     }
 }

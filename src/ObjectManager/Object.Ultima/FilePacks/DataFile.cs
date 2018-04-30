@@ -10,7 +10,8 @@ namespace OA.Ultima.FilePacks
     {
         public static string GetModelFileName(IRecord record)
         {
-            return null;
+            if (record is STATRecord) return ((STATRecord)record).Name;
+            else return null;
         }
     }
 
@@ -54,19 +55,13 @@ namespace OA.Ultima.FilePacks
 
         public List<IRecord> GetRecordsOfType<T>() where T : Record { return recordsByType.TryGetValue(typeof(T), out List<IRecord> records) ? records : null; }
 
-        private void ReadRecords(bool loadItems = false)
+        private void ReadRecords(bool loadItems = true)
         {
             var recordList = new List<Record>();
             // add items
             if (loadItems)
-                for (var i = 0; i < TileData.ItemData.Length; i++)
-                {
-                    var itemData = TileData.ItemData[i];
-                    recordList.Add(new ITEMRecord
-                    {
-                        ItemId = i
-                    });
-                }
+                for (short i = 0; i < TileData.ItemData.Length; i++)
+                    recordList.Add(new STATRecord(i));
             // add tiles
             for (uint chunkY = 0; chunkY < _tileData.ChunkHeight / CELL_PACK; chunkY++)
                 for (uint chunkX = 0; chunkX < _tileData.ChunkWidth / CELL_PACK; chunkX++)

@@ -68,18 +68,18 @@ namespace OA.Ultima.Resources
             }
         }
 
-        public MultiComponentList(BinaryFileReader reader, int count)
+        public MultiComponentList(BinaryFileReader r, int count)
         {
-            var metrics_dataread_start = (int)reader.Position;
+            var metrics_dataread_start = (int)r.Position;
             _min = _max = Vector2Int.zero;
             Items = new MultiItem[count];
             for (var i = 0; i < count; ++i)
             {
-                Items[i].ItemID = reader.ReadShort();
-                Items[i].OffsetX = reader.ReadShort();
-                Items[i].OffsetY = reader.ReadShort();
-                Items[i].OffsetZ = reader.ReadShort();
-                Items[i].Flags = reader.ReadInt();
+                Items[i].ItemID = r.ReadShort();
+                Items[i].OffsetX = r.ReadShort();
+                Items[i].OffsetY = r.ReadShort();
+                Items[i].OffsetZ = r.ReadShort();
+                Items[i].Flags = r.ReadInt();
                 if (Items[i].OffsetX < _min.x)
                     _min.x = Items[i].OffsetX;
                 if (Items[i].OffsetY < _min.y)
@@ -93,7 +93,7 @@ namespace OA.Ultima.Resources
             _width = (_max.x - _min.x) + 1;
             _height = (_max.y - _min.y) + 1;
             // SortMultiComponentList();
-            Metrics.ReportDataRead((int)reader.Position - metrics_dataread_start);
+            Metrics.ReportDataRead((int)r.Position - metrics_dataread_start);
         }
 
         private void SortMultiComponentList()

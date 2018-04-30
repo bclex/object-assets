@@ -48,7 +48,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FilePacks\Records\ITEMRecord.cs" />
+    <Compile Include="Core\Network\Compression\HuffmanDecompression.cs" />
+    <Compile Include="Core\Network\Compression\ZlibDecompression.cs" />
+    <Compile Include="Core\Network\INetworkClient.cs" />
+    <Compile Include="Core\Network\IRecvPacket.cs" />
+    <Compile Include="Core\Network\ISendPacket.cs" />
+    <Compile Include="Core\Network\NetworkClient.cs" />
+    <Compile Include="Core\Network\NetworkException.cs" />
+    <Compile Include="Core\Network\PacketChunk.cs" />
+    <Compile Include="Core\Network\PacketHandler.cs" />
+    <Compile Include="Core\Network\PacketReader.cs" />
+    <Compile Include="Core\Network\Packets\RevcPacket.cs" />
+    <Compile Include="Core\Network\Packets\SendPacket.cs" />
+    <Compile Include="Core\Network\Packets\SendRecvPacket.cs" />
+    <Compile Include="Core\Network\PacketWriter.cs" />
+    <Compile Include="Core\Network\QueuedPacket.cs" />
+    <Compile Include="Core\Network\SocketState.cs" />
+    <Compile Include="FilePacks\Records\STATRecord.cs" />
+    <Compile Include="Formats\StaUtils.cs" />
+    <Compile Include="Formats\StaReader.cs" />
+    <Compile Include="Formats\StaObjectBuilder.cs" />
+    <Compile Include="Formats\StaManager.cs" />
     <Compile Include="UI\UltimaUIManager.cs" />
     <Compile Include="UltimaEngine.cs" />
     <Compile Include="Tests\ObjectTestDataPack.cs" />

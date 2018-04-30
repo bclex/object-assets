@@ -1,4 +1,5 @@
 ﻿using OA.Core;
+using OA.Ultima.Formats;
 using System;
 using System.Threading.Tasks;
 
@@ -24,7 +25,11 @@ namespace OA.Ultima.FilePacks
 
         public Task<object> LoadObjectInfoAsync(string filePath)
         {
-            throw new NotImplementedException();
+            return Task.Run(() =>
+            {
+                var file = new StFile(filePath);
+                return (object)file;
+            });
         }
     }
 }

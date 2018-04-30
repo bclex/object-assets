@@ -86,7 +86,10 @@ namespace OA
             }
             player.transform.position = position;
             _playerTransform = player.GetComponent<Transform>();
-            playerCamera = player.GetComponentInChildren<Camera>().gameObject;
+            var cameraInPlayer = player.GetComponentInChildren<Camera>();
+            if (cameraInPlayer == null)
+                throw new InvalidOperationException("Player:Camera missing");
+            playerCamera = cameraInPlayer.gameObject;
             _playerComponent = player.GetComponent<PlayerComponent>();
             //_underwaterEffect = playerCamera.GetComponent<UnderwaterEffect>();
             return player;

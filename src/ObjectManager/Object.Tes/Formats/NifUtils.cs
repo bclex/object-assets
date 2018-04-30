@@ -18,23 +18,25 @@ namespace OA.Tes.Formats
 
         public static Matrix4x4 NifRotationMatrixToUnityRotationMatrix(Matrix4x4 NIFRotationMatrix)
         {
-            var matrix = new Matrix4x4();
-            matrix.m00 = NIFRotationMatrix.m00;
-            matrix.m01 = NIFRotationMatrix.m02;
-            matrix.m02 = NIFRotationMatrix.m01;
-            matrix.m03 = 0;
-            matrix.m10 = NIFRotationMatrix.m20;
-            matrix.m11 = NIFRotationMatrix.m22;
-            matrix.m12 = NIFRotationMatrix.m21;
-            matrix.m13 = 0;
-            matrix.m20 = NIFRotationMatrix.m10;
-            matrix.m21 = NIFRotationMatrix.m12;
-            matrix.m22 = NIFRotationMatrix.m11;
-            matrix.m23 = 0;
-            matrix.m30 = 0;
-            matrix.m31 = 0;
-            matrix.m32 = 0;
-            matrix.m33 = 1;
+            var matrix = new Matrix4x4
+            {
+                m00 = NIFRotationMatrix.m00,
+                m01 = NIFRotationMatrix.m02,
+                m02 = NIFRotationMatrix.m01,
+                m03 = 0,
+                m10 = NIFRotationMatrix.m20,
+                m11 = NIFRotationMatrix.m22,
+                m12 = NIFRotationMatrix.m21,
+                m13 = 0,
+                m20 = NIFRotationMatrix.m10,
+                m21 = NIFRotationMatrix.m12,
+                m22 = NIFRotationMatrix.m11,
+                m23 = 0,
+                m30 = 0,
+                m31 = 0,
+                m32 = 0,
+                m33 = 1
+            };
             return matrix;
         }
 

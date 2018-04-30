@@ -32,8 +32,7 @@ namespace OA.Tes.Formats
         {
             EnsurePrefabContainerObjectExists();
             // Get the prefab.
-            GameObject prefab;
-            if (!nifPrefabs.TryGetValue(filePath, out prefab))
+            if (!nifPrefabs.TryGetValue(filePath, out GameObject prefab))
             {
                 // Load & cache the NIF prefab.
                 prefab = LoadNifPrefabDontAddToPrefabCache(filePath);
@@ -46,10 +45,9 @@ namespace OA.Tes.Formats
         public void PreloadNifFileAsync(string filePath)
         {
             // If the NIF prefab has already been created we don't have to load the file again.
-            if (nifPrefabs.ContainsKey(filePath)) { return; }
-            Task<object> nifFileLoadingTask;
+            if (nifPrefabs.ContainsKey(filePath)) return;
             // Start loading the NIF asynchronously if we haven't already started.
-            if (!nifFilePreloadTasks.TryGetValue(filePath, out nifFileLoadingTask))
+            if (!nifFilePreloadTasks.TryGetValue(filePath, out Task<object> nifFileLoadingTask))
             {
                 nifFileLoadingTask = r.LoadObjectInfoAsync(filePath);
                 nifFilePreloadTasks[filePath] = nifFileLoadingTask;
