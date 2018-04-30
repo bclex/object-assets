@@ -269,9 +269,6 @@
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.0b2/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
-    <Reference Include="MP3Sharp">
-      <HintPath>C:/_GITHUB/object-assets/src.unity/ObjectManager/Assets/Plugins/MP3Sharp.dll</HintPath>
-    </Reference>
     <Reference Include="Object.Tes">
       <HintPath>C:/_GITHUB/object-assets/src.unity/ObjectManager/Assets/Plugins/Object.Tes.dll</HintPath>
     </Reference>

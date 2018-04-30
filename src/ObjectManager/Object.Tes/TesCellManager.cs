@@ -29,7 +29,7 @@ namespace OA.Tes
 
         public Vector2i GetExteriorCellIndices(Vector3 point)
         {
-            return new Vector2i(Mathf.FloorToInt(point.x / ConvertUtils.exteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.exteriorCellSideLengthInMeters));
+            return new Vector2i(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters));
         }
 
         public InRangeCellInfo StartCreatingExteriorCell(Vector2i cellIndices)
@@ -275,7 +275,7 @@ namespace OA.Tes
             var game = TesSettings.Game;
             var lightObj = new GameObject("Light") { isStatic = true };
             var lightComponent = lightObj.AddComponent<Light>();
-            lightComponent.range = 3 * (LIGH.LHDT.Radius / ConvertUtils.meterInMWUnits);
+            lightComponent.range = 3 * (LIGH.LHDT.Radius / ConvertUtils.MeterInUnits);
             lightComponent.color = new Color32(LIGH.LHDT.Red, LIGH.LHDT.Green, LIGH.LHDT.Blue, 255);
             lightComponent.intensity = 1.5f;
             lightComponent.bounceIntensity = 0f;
@@ -368,17 +368,17 @@ namespace OA.Tes
             const int LAND_SIDELENGTH_IN_SAMPLES = 65;
             var heights = new float[LAND_SIDELENGTH_IN_SAMPLES, LAND_SIDELENGTH_IN_SAMPLES];
             // Read in the heights in Morrowind units.
-            const int vhgtScaler = 8; //: VHGTIncrementToMWUnits
+            const int VHGTIncrementToUnits = 8;
             var rowOffset = land.VHGT.ReferenceHeight;
             for (var y = 0; y < LAND_SIDELENGTH_IN_SAMPLES; y++)
             {
                 rowOffset += land.VHGT.HeightOffsets[y * LAND_SIDELENGTH_IN_SAMPLES];
-                heights[y, 0] = rowOffset * vhgtScaler;
+                heights[y, 0] = rowOffset * VHGTIncrementToUnits;
                 var colOffset = rowOffset;
                 for (var x = 1; x < LAND_SIDELENGTH_IN_SAMPLES; x++)
                 {
                     colOffset += land.VHGT.HeightOffsets[(y * LAND_SIDELENGTH_IN_SAMPLES) + x];
-                    heights[y, x] = colOffset * vhgtScaler;
+                    heights[y, x] = colOffset * VHGTIncrementToUnits;
                 }
             }
             // Change the heights to percentages.
@@ -447,9 +447,10 @@ namespace OA.Tes
             yield return null;
             // Create the terrain.
             var heightRange = maxHeight - minHeight;
-            var terrainPosition = new Vector3(ConvertUtils.exteriorCellSideLengthInMeters * land.GridCoords.x, minHeight / ConvertUtils.meterInMWUnits, ConvertUtils.exteriorCellSideLengthInMeters * land.GridCoords.y);
-            var heightSampleDistance = ConvertUtils.exteriorCellSideLengthInMeters / (LAND_SIDELENGTH_IN_SAMPLES - 1);
-            var terrain = GameObjectUtils.CreateTerrain(1, heights, heightRange / ConvertUtils.meterInMWUnits, heightSampleDistance, splatPrototypes, alphaMap, terrainPosition);
+            var terrainPosition = new Vector3(ConvertUtils.ExteriorCellSideLengthInMeters * land.GridCoords.x, minHeight / ConvertUtils.MeterInUnits, ConvertUtils.ExteriorCellSideLengthInMeters * land.GridCoords.y);
+            Debug.Log("a: " + terrainPosition.ToString());
+            var heightSampleDistance = ConvertUtils.ExteriorCellSideLengthInMeters / (LAND_SIDELENGTH_IN_SAMPLES - 1);
+            var terrain = GameObjectUtils.CreateTerrain(-1, heights, heightRange / ConvertUtils.MeterInUnits, heightSampleDistance, splatPrototypes, alphaMap, terrainPosition);
             terrain.GetComponent<Terrain>().materialType = Terrain.MaterialType.BuiltInLegacyDiffuse;
             terrain.transform.parent = parent.transform;
             terrain.isStatic = true;

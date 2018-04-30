@@ -42,22 +42,22 @@ namespace OA
             Debug.Assert(heightPercents.GetLength(0) == heightPercents.GetLength(1) && maxHeight >= 0 && heightSampleDistance >= 0);
 
             // Create the TerrainData.
+            var heightmapResolution = heightPercents.GetLength(0);
             var terrainData = new TerrainData
             {
-                heightmapResolution = heightPercents.GetLength(0),
-                splatPrototypes = splatPrototypes,
+                heightmapResolution = heightmapResolution,
             };
-            var terrainWidth = (terrainData.heightmapResolution - offset) * heightSampleDistance;
-
+            //Debug.Log($"{terrainData.heightmapResolution} == {heightmapResolution}");
+            var terrainWidth = (heightmapResolution + offset) * heightSampleDistance;
             // If maxHeight is 0, leave all the heights in terrainData at 0 and make the vertical size of the terrain 1 to ensure valid AABBs.
-            //if (!Mathf.Approximately(maxHeight, 0))
-            //{
-            //    terrainData.size = new Vector3(terrainWidth, maxHeight, terrainWidth);
-            //    terrainData.SetHeights(0, 0, heightPercents);
-            //}
-            //else
-            terrainData.size = new Vector3(terrainWidth, 1, terrainWidth);
+            if (!Mathf.Approximately(maxHeight, 0))
+            {
+                terrainData.size = new Vector3(terrainWidth, maxHeight, terrainWidth);
+                terrainData.SetHeights(0, 0, heightPercents);
+            }
+            else terrainData.size = new Vector3(terrainWidth, 1, terrainWidth);
 
+            terrainData.splatPrototypes = splatPrototypes;
             if (alphaMap != null)
             {
                 Debug.Assert(alphaMap.GetLength(0) == alphaMap.GetLength(1));

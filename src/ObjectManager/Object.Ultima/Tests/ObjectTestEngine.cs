@@ -1,4 +1,5 @@
 ﻿using OA.Core;
+using OA.Ultima.FilePacks;
 using UnityEngine;
 
 namespace OA.Ultima
@@ -23,8 +24,9 @@ namespace OA.Ultima
             Data = assetManager.GetDataPack(null).Result;
             Engine = new UltimaEngine(assetManager, Asset, Data, null);
 
-            var scale = ConvertUtils.ExteriorCellSideLengthInMeters;
-            Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(75 * scale, 5, 128 * scale));
+            var scale = DataFile.CELL_PACK / ConvertUtils.ExteriorCellSideLengthInMeters;
+            //Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(75 * scale, 5, 128 * scale));
+            Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(10 * scale, 5, 10 * scale));
         }
 
         public static void OnDestroy()

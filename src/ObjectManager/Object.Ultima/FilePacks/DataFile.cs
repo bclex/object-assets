@@ -16,6 +16,7 @@ namespace OA.Ultima.FilePacks
 
     public partial class DataFile : IDisposable
     {
+        public const int CELL_PACK = 8;
         const int recordHeaderSizeInBytes = 16;
         TileMatrixData _tileData;
         public Record[] records;
@@ -67,8 +68,8 @@ namespace OA.Ultima.FilePacks
                     });
                 }
             // add tiles
-            for (uint chunkY = 0; chunkY < _tileData.ChunkHeight; chunkY++)
-                for (uint chunkX = 0; chunkX < _tileData.ChunkWidth; chunkX++)
+            for (uint chunkY = 0; chunkY < _tileData.ChunkHeight / CELL_PACK; chunkY++)
+                for (uint chunkX = 0; chunkX < _tileData.ChunkWidth / CELL_PACK; chunkX++)
                 {
                     recordList.Add(new CELLRecord(_tileData, chunkX, chunkY));
                     recordList.Add(new LANDRecord(_tileData, chunkX, chunkY));

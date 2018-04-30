@@ -147,17 +147,17 @@ namespace OA.Components
             // Calculate the local movement direction.
             var direction = new Vector3(InputManager.GetAxis("Horizontal"), 0.0f, InputManager.GetAxis("Vertical"));
             // A small hack for French Keyboard...
-            if (Application.systemLanguage == SystemLanguage.French)
-            {
-                // Cancel Qwerty
-                if (Input.GetKeyDown(KeyCode.W)) direction.z = 0;
-                else if (Input.GetKeyDown(KeyCode.A)) direction.x = 0;
-                // Use Azerty
-                if (Input.GetKey(KeyCode.Z)) direction.z = 1;
-                else if (Input.GetKey(KeyCode.S)) direction.z = -1;
-                if (Input.GetKey(KeyCode.Q)) direction.x = -1;
-                else if (Input.GetKey(KeyCode.D)) direction.x = 1;
-            }
+            //if (Application.systemLanguage == SystemLanguage.French)
+            //{
+            //    // Cancel Qwerty
+            //    if (Input.GetKeyDown(KeyCode.W)) direction.z = 0;
+            //    else if (Input.GetKeyDown(KeyCode.A)) direction.x = 0;
+            //    // Use Azerty
+            //    if (Input.GetKey(KeyCode.Z)) direction.z = 1;
+            //    else if (Input.GetKey(KeyCode.S)) direction.z = -1;
+            //    if (Input.GetKey(KeyCode.Q)) direction.x = -1;
+            //    else if (Input.GetKey(KeyCode.D)) direction.x = 1;
+            //}
             return direction.normalized;
         }
 

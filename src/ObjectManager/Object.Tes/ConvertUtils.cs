@@ -2,18 +2,18 @@
 
 namespace OA.Tes
 {
-	public static class ConvertUtils
-	{
-		public const int yardInMWUnits = 64;
-		public const float meterInYards = 1.09361f;
-		public const float meterInMWUnits = meterInYards * yardInMWUnits;
+    public static class ConvertUtils
+    {
+        const int yardInUnits = 64;
+        const float meterInYards = 1.09361f;
+        public const float MeterInUnits = meterInYards * yardInUnits;
 
-		public const int exteriorCellSideLengthInMWUnits = 8192;
-		public const float exteriorCellSideLengthInMeters = (float)exteriorCellSideLengthInMWUnits / meterInMWUnits;
-        
+        const int exteriorCellSideLengthInUnits = 128 * yardInUnits;
+        public const float ExteriorCellSideLengthInMeters = (float)exteriorCellSideLengthInUnits / MeterInUnits;
+
         public static Quaternion RotationMatrixToQuaternion(Matrix4x4 matrix)
-		{
-			return Quaternion.LookRotation(matrix.GetColumn(2), matrix.GetColumn(1));
-		}
-	}
+        {
+            return Quaternion.LookRotation(matrix.GetColumn(2), matrix.GetColumn(1));
+        }
+    }
 }

@@ -6,7 +6,6 @@ namespace OA
     {
         public static void Main()
         {
-            //ObjectTest.Start();
             ObjectTestDataPack.Start();
         }
     }

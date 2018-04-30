@@ -13,7 +13,7 @@ namespace OA.Tes.Formats
 
         public static Vector3 NifPointToUnityPoint(Vector3 NIFPoint)
         {
-            return NifVectorToUnityVector(NIFPoint) / ConvertUtils.meterInMWUnits;
+            return NifVectorToUnityVector(NIFPoint) / ConvertUtils.MeterInUnits;
         }
 
         public static Matrix4x4 NifRotationMatrixToUnityRotationMatrix(Matrix4x4 NIFRotationMatrix)

@@ -27,7 +27,8 @@ namespace OA.Tes
             Engine = new BaseEngine(assetManager, Asset, Data);
 
             // engine
-            Engine.SpawnPlayerOutside(PlayerPrefab, new Vector2i(-2, -9), new Vector3(-137.94f, 2.30f, -1037.6f));
+            //Engine.SpawnPlayerOutside(PlayerPrefab, new Vector2i(-2, -9), new Vector3(-137.94f, 2.30f, -1037.6f));
+            Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(-137.94f, 2.30f, -1037.6f));
         }
 
         public static void OnDestroy()

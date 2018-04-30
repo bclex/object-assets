@@ -10,7 +10,7 @@ namespace OA.Ultima
 {
     public class UltimaCellManager : ICellManager
     {
-        const int _cellRadius = 1;
+        const int _cellRadius = 2;
         const int _detailRadius = 1;
 
         UltimaAssetPack _asset;
@@ -77,25 +77,25 @@ namespace OA.Ultima
                         }
                     }
 
-            //// Update LODs.
-            //foreach (var x in _cellObjects)
-            //{
-            //    var cellIndices = x.Key;
-            //    var cellInfo = x.Value;
-            //    var cellXDistance = Mathf.Abs(cameraCellIndices.x - cellIndices.x);
-            //    var cellYDistance = Mathf.Abs(cameraCellIndices.y - cellIndices.y);
-            //    var cellDistance = Mathf.Max(cellXDistance, cellYDistance);
-            //    if (cellDistance <= _detailRadius)
-            //    {
-            //        if (!cellInfo.ObjectsContainerGameObject.activeSelf)
-            //            cellInfo.ObjectsContainerGameObject.SetActive(true);
-            //    }
-            //    else
-            //    {
-            //        if (cellInfo.ObjectsContainerGameObject.activeSelf)
-            //            cellInfo.ObjectsContainerGameObject.SetActive(false);
-            //    }
-            //}
+            // Update LODs.
+            foreach (var x in _cellObjects)
+            {
+                var cellIndices = x.Key;
+                var cellInfo = x.Value;
+                var cellXDistance = Mathf.Abs(cameraCellIndices.x - cellIndices.x);
+                var cellYDistance = Mathf.Abs(cameraCellIndices.y - cellIndices.y);
+                var cellDistance = Mathf.Max(cellXDistance, cellYDistance);
+                if (cellDistance <= _detailRadius)
+                {
+                    if (!cellInfo.ObjectsContainerGameObject.activeSelf)
+                        cellInfo.ObjectsContainerGameObject.SetActive(true);
+                }
+                else
+                {
+                    if (cellInfo.ObjectsContainerGameObject.activeSelf)
+                        cellInfo.ObjectsContainerGameObject.SetActive(false);
+                }
+            }
         }
 
         public InRangeCellInfo StartCreatingInteriorCell(string cellName)
@@ -358,20 +358,33 @@ namespace OA.Ultima
                 yield break;
             // Return before doing any work to provide an IEnumerator handle to the coroutine.
             yield return null;
-            const int SIDELENGTH = 8;
-            var heights = new float[SIDELENGTH, SIDELENGTH];
+            const int LAND_SIDELENGTH = 8 * DataFile.CELL_PACK;
+            var heights = new float[LAND_SIDELENGTH, LAND_SIDELENGTH];
             // Read in the heights in units.
-            const int tileScaler = 1;
-            for (var y = 0; y < SIDELENGTH; y++)
-                for (var x = 0; x < SIDELENGTH; x++)
+            const int VHGTIncrementToUnits = 1;
+            for (var y = 0; y < LAND_SIDELENGTH; y++)
+                for (var x = 0; x < LAND_SIDELENGTH; x++)
                 {
-                    var height = land.Tiles[(y * SIDELENGTH) + x].Z;
-                    heights[y, x] = height * tileScaler;
+                    var height = land.Tiles[(y * LAND_SIDELENGTH) + x].Z;
+                    heights[y, x] = height * VHGTIncrementToUnits;
                 }
+            //var rowOffset = 0;
+            //for (var y = 0; y < LAND_SIDELENGTH; y++)
+            //{
+            //    rowOffset += land.Tiles[y * LAND_SIDELENGTH].Z;
+            //    heights[y, 0] = rowOffset * VHGTIncrementToUnits;
+            //    var colOffset = rowOffset;
+            //    for (var x = 1; x < LAND_SIDELENGTH; x++)
+            //    {
+            //        colOffset += land.Tiles[(y * LAND_SIDELENGTH) + x].Z;
+            //        heights[y, x] = colOffset * VHGTIncrementToUnits;
+            //    }
+            //}
+
             // Change the heights to percentages.
             ArrayUtils.GetExtrema(heights, out float minHeight, out float maxHeight);
-            for (var y = 0; y < SIDELENGTH; y++)
-                for (var x = 0; x < SIDELENGTH; x++)
+            for (var y = 0; y < LAND_SIDELENGTH; y++)
+                for (var x = 0; x < LAND_SIDELENGTH; x++)
                     heights[y, x] = Utils.ChangeRange(heights[y, x], minHeight, maxHeight, 0, 1);
             // Texture the terrain.
             SplatPrototype[] splatPrototypes = null;
@@ -397,7 +410,7 @@ namespace OA.Ultima
                         texture = texture,
                         smoothness = 0,
                         metallic = 0,
-                        tileSize = new Vector2(1, 1)
+                        tileSize = new Vector2(2, 2)
                     };
                     // Update collections.
                     var splatIndex = splatPrototypeList.Count;
@@ -428,9 +441,7 @@ namespace OA.Ultima
             // Create the terrain.
             var heightRange = maxHeight - minHeight;
             var terrainPosition = new Vector3(ConvertUtils.ExteriorCellSideLengthInMeters * land.GridCoords.x, minHeight / ConvertUtils.MeterInUnits, ConvertUtils.ExteriorCellSideLengthInMeters * land.GridCoords.y);
-            Utils.Log($"{land.GridX}: {terrainPosition.x}, {terrainPosition.y}, {terrainPosition.z}");
-            var heightSampleDistance = ConvertUtils.ExteriorCellSideLengthInMeters / SIDELENGTH;
-            Utils.Log($"{heightSampleDistance}");
+            var heightSampleDistance = ConvertUtils.ExteriorCellSideLengthInMeters / LAND_SIDELENGTH;
             var terrain = GameObjectUtils.CreateTerrain(0, heights, heightRange / ConvertUtils.MeterInUnits, heightSampleDistance, splatPrototypes, alphaMap, terrainPosition);
             terrain.GetComponent<Terrain>().materialType = Terrain.MaterialType.BuiltInLegacyDiffuse;
             terrain.transform.parent = parent.transform;
