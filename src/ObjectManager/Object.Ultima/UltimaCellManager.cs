@@ -361,26 +361,13 @@ namespace OA.Ultima
             const int LAND_SIDELENGTH = 8 * DataFile.CELL_PACK;
             var heights = new float[LAND_SIDELENGTH, LAND_SIDELENGTH];
             // Read in the heights in units.
-            const int VHGTIncrementToUnits = 8*3;
+            const int VHGTIncrementToUnits = 8;
             for (var y = 0; y < LAND_SIDELENGTH; y++)
                 for (var x = 0; x < LAND_SIDELENGTH; x++)
                 {
                     var height = land.Tiles[(y * LAND_SIDELENGTH) + x].Z;
                     heights[y, x] = height * VHGTIncrementToUnits;
                 }
-            //var rowOffset = 0;
-            //for (var y = 0; y < LAND_SIDELENGTH; y++)
-            //{
-            //    rowOffset += land.Tiles[y * LAND_SIDELENGTH].Z;
-            //    heights[y, 0] = rowOffset * VHGTIncrementToUnits;
-            //    var colOffset = rowOffset;
-            //    for (var x = 1; x < LAND_SIDELENGTH; x++)
-            //    {
-            //        colOffset += land.Tiles[(y * LAND_SIDELENGTH) + x].Z;
-            //        heights[y, x] = colOffset * VHGTIncrementToUnits;
-            //    }
-            //}
-
             // Change the heights to percentages.
             ArrayUtils.GetExtrema(heights, out float minHeight, out float maxHeight);
             for (var y = 0; y < LAND_SIDELENGTH; y++)
