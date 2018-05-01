@@ -147,7 +147,7 @@ namespace OA.Tes.Formats
             if (visual)
             {
                 obj.AddComponent<MeshFilter>().mesh = mesh;
-                var materialProps = NiAVObjectPropertiesToMWMaterialProperties(triShape);
+                var materialProps = NiAVObjectPropertiesToMaterialProperties(triShape);
                 var meshRenderer = obj.AddComponent<MeshRenderer>();
                 meshRenderer.material = materialManager.BuildMaterialFromProperties(materialProps);
                 if (Utils.ContainsBitFlags(triShape.flags, (uint)NiAVObject.Flags.Hidden))
@@ -232,7 +232,7 @@ namespace OA.Tes.Formats
             return mesh;
         }
 
-        private MaterialProps NiAVObjectPropertiesToMWMaterialProperties(NiAVObject obj)
+        private MaterialProps NiAVObjectPropertiesToMaterialProperties(NiAVObject obj)
         {
             // Find relevant properties.
             NiTexturingProperty texturingProperty = null;

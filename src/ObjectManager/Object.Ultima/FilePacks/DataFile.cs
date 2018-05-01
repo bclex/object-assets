@@ -31,7 +31,6 @@ namespace OA.Ultima.FilePacks
             _tileData = new TileMatrixData(map);
             ReadRecords();
             PostProcessRecords();
-            //Utils.Info("Loaded");
         }
 
         void IDisposable.Dispose()
@@ -60,8 +59,8 @@ namespace OA.Ultima.FilePacks
             var recordList = new List<Record>();
             // add items
             if (loadItems)
-                for (short i = 0; i < TileData.ItemData.Length; i++)
-                    recordList.Add(new STATRecord(i));
+                for (short itemId = 0; itemId < TileData.ItemData.Length; itemId++)
+                    recordList.Add(new STATRecord(itemId));
             // add tiles
             for (uint chunkY = 0; chunkY < _tileData.ChunkHeight / CELL_PACK; chunkY++)
                 for (uint chunkX = 0; chunkX < _tileData.ChunkWidth / CELL_PACK; chunkX++)
@@ -97,7 +96,7 @@ namespace OA.Ultima.FilePacks
                 //else if (record is SOUNRecord) objectsByIDString.Add(((SOUNRecord)record).NAME.value, record);
                 //else if (record is REGNRecord) objectsByIDString.Add(((REGNRecord)record).NAME.value, record);
                 //else if (record is LTEXRecord) objectsByIDString.Add(((LTEXRecord)record).NAME.value, record);
-                //else if (record is STATRecord) objectsByIDString.Add(((STATRecord)record).NAME.value, record);
+                if (record is STATRecord) objectsByIDString.Add(((STATRecord)record).Name, record);
                 //else if (record is DOORRecord) objectsByIDString.Add(((DOORRecord)record).NAME.value, record);
                 //else if (record is MISCRecord) objectsByIDString.Add(((MISCRecord)record).NAME.value, record);
                 //else if (record is WEAPRecord) objectsByIDString.Add(((WEAPRecord)record).NAME.value, record);

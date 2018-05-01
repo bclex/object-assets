@@ -18,7 +18,8 @@ namespace OA.Ultima.Formats
         {
             Debug.Assert(_file.Name != null);
 
-            var gameObject = InstantiateStObject();
+            var rootStObject = _file.Blocks[0];
+            var gameObject = InstantiateRootStaObject(rootStObject);
             // If the file doesn't contain any StObjects we are looking for, return an empty GameObject.
             if (gameObject == null)
             {
@@ -28,11 +29,55 @@ namespace OA.Ultima.Formats
             return gameObject;
         }
 
-        private GameObject InstantiateStObject()
+        private GameObject InstantiateRootStaObject(StObject obj)
         {
-            var gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            gameObject.name = _file.Name;
+            var gameObject = InstantiateStShape(obj, true, false);
+            //ProcessExtraData(obj, out bool shouldAddMissingColliders, out bool isMarker);
+            //if (file.name != null && IsMarkerFileName(file.name))
+            //{
+            //    shouldAddMissingColliders = false;
+            //    isMarker = true;
+            //}
+            //// Add colliders to the object if it doesn't already contain one.
+            //if (shouldAddMissingColliders && gameObject.GetComponentInChildren<Collider>() == null)
+            //    GameObjectUtils.AddMissingMeshCollidersRecursively(gameObject);
             return gameObject;
+        }
+
+        private GameObject InstantiateStShape(StObject na, bool visual, bool collidable)
+        {
+            var game = UltimaSettings.Game;
+            Debug.Assert(visual || collidable);
+            var obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            obj.name = _file.Name;
+            if (visual)
+            {
+                var materialProps = StAVObjectPropertiesToMaterialProperties(na);
+                var meshRenderer = obj.AddComponent<MeshRenderer>();
+                meshRenderer.material = _materialManager.BuildMaterialFromProperties(materialProps);
+                meshRenderer.enabled = false;
+                obj.isStatic = true;
+            }
+            if (collidable)
+            {
+                if (game.KinematicRigidbodies)
+                    obj.AddComponent<Rigidbody>().isKinematic = true;
+            }
+            return obj;
+        }
+
+        private MaterialProps StAVObjectPropertiesToMaterialProperties(StObject na)
+        {
+            var mp = new MaterialProps
+            {
+                alphaBlended = false,
+                alphaTest = false,
+                textures = new MaterialTextures
+                {
+                    mainFilePath = _file.Name,
+                }
+            };
+            return mp;
         }
     }
 }

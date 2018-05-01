@@ -13,7 +13,7 @@ namespace OA.Ultima.FilePacks
             switch (texturePath.Substring(0, 3))
             {
                 case "lnd": texture = _artmulResource.GetLandTexture(int.Parse(texturePath.Substring(3))); break;
-                case "stx": texture = _artmulResource.GetStaticTexture(int.Parse(texturePath.Substring(3))); break;
+                case "sta": texture = _artmulResource.GetStaticTexture(int.Parse(texturePath.Substring(3))); break;
                 case "gmp": texture = _gumpMulResource.GetGumpTexture(int.Parse(texturePath.Substring(3))); break;
                 case "tex": texture = _texmapResource.GetTexmapTexture(int.Parse(texturePath.Substring(3))); break;
                 default: throw new ArgumentOutOfRangeException("texturePath", texturePath);

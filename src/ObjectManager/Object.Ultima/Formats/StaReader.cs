@@ -7,6 +7,8 @@
         public StFile(string name)
         {
             Name = name;
+            Blocks = new[] { new StObject {
+            } };
         }
 
         public StObject[] Blocks;

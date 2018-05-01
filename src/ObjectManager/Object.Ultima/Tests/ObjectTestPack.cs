@@ -32,7 +32,7 @@ namespace OA.Ultima
                 //textures = new MaterialTextures { mainFilePath = "lnd1" },
                 //textures = new MaterialTextures { mainFilePath = "lnd516" },
                 //textures = new MaterialTextures { mainFilePath = "lnd1137" },
-                //textures = new MaterialTextures { mainFilePath = "stx69" },
+                //textures = new MaterialTextures { mainFilePath = "sta69" },
                 textures = new MaterialTextures { mainFilePath = "gmp65" },
                 //textures = new MaterialTextures { mainFilePath = "tex789" },
             };
