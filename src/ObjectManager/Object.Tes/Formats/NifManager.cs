@@ -1,5 +1,4 @@
 ﻿using OA.Tes.FilePacks;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -11,18 +10,18 @@ namespace OA.Tes.Formats
     /// </summary>
     public class NifManager
     {
-        readonly BsaMultiFile r;
-        readonly MaterialManager materialManager;
-        GameObject prefabContainerObj;
-        readonly Dictionary<string, Task<object>> nifFilePreloadTasks = new Dictionary<string, Task<object>>();
-        readonly Dictionary<string, GameObject> nifPrefabs = new Dictionary<string, GameObject>();
-        readonly int markerLayer;
+        readonly BsaMultiFile _asset;
+        readonly MaterialManager _materialManager;
+        GameObject _prefabContainerObj;
+        readonly Dictionary<string, Task<object>> _nifFilePreloadTasks = new Dictionary<string, Task<object>>();
+        readonly Dictionary<string, GameObject> _nifPrefabs = new Dictionary<string, GameObject>();
+        readonly int _markerLayer;
 
-        public NifManager(BsaMultiFile r, MaterialManager materialManager, int markerLayer)
+        public NifManager(BsaMultiFile asset, MaterialManager materialManager, int markerLayer)
         {
-            this.r = r;
-            this.materialManager = materialManager;
-            this.markerLayer = markerLayer;
+            _asset = asset;
+            _materialManager = materialManager;
+            _markerLayer = markerLayer;
         }
 
         /// <summary>
@@ -32,11 +31,11 @@ namespace OA.Tes.Formats
         {
             EnsurePrefabContainerObjectExists();
             // Get the prefab.
-            if (!nifPrefabs.TryGetValue(filePath, out GameObject prefab))
+            if (!_nifPrefabs.TryGetValue(filePath, out GameObject prefab))
             {
                 // Load & cache the NIF prefab.
                 prefab = LoadNifPrefabDontAddToPrefabCache(filePath);
-                nifPrefabs[filePath] = prefab;
+                _nifPrefabs[filePath] = prefab;
             }
             // Instantiate the prefab.
             return GameObject.Instantiate(prefab);
@@ -45,41 +44,38 @@ namespace OA.Tes.Formats
         public void PreloadNifFileAsync(string filePath)
         {
             // If the NIF prefab has already been created we don't have to load the file again.
-            if (nifPrefabs.ContainsKey(filePath)) return;
+            if (_nifPrefabs.ContainsKey(filePath)) return;
             // Start loading the NIF asynchronously if we haven't already started.
-            if (!nifFilePreloadTasks.TryGetValue(filePath, out Task<object> nifFileLoadingTask))
+            if (!_nifFilePreloadTasks.TryGetValue(filePath, out Task<object> nifFileLoadingTask))
             {
-                nifFileLoadingTask = r.LoadObjectInfoAsync(filePath);
-                nifFilePreloadTasks[filePath] = nifFileLoadingTask;
+                nifFileLoadingTask = _asset.LoadObjectInfoAsync(filePath);
+                _nifFilePreloadTasks[filePath] = nifFileLoadingTask;
             }
         }
 
         private void EnsurePrefabContainerObjectExists()
         {
-            if (prefabContainerObj == null)
+            if (_prefabContainerObj == null)
             {
-                prefabContainerObj = new GameObject("NIF Prefabs");
-                prefabContainerObj.SetActive(false);
+                _prefabContainerObj = new GameObject("NIF Prefabs");
+                _prefabContainerObj.SetActive(false);
             }
         }
 
         private GameObject LoadNifPrefabDontAddToPrefabCache(string filePath)
         {
-            Debug.Assert(!nifPrefabs.ContainsKey(filePath));
+            Debug.Assert(!_nifPrefabs.ContainsKey(filePath));
             PreloadNifFileAsync(filePath);
-            var file = (NiFile)nifFilePreloadTasks[filePath].Result;
-            nifFilePreloadTasks.Remove(filePath);
+            var file = (NiFile)_nifFilePreloadTasks[filePath].Result;
+            _nifFilePreloadTasks.Remove(filePath);
             // Start pre-loading all the NIF's textures.
-            foreach (var anNiObject in file.blocks)
-                if (anNiObject is NiSourceTexture)
-                {
-                    var anNiSourceTexture = (NiSourceTexture)anNiObject;
-                    if (anNiSourceTexture.fileName != null && anNiSourceTexture.fileName != "")
-                        materialManager.TextureManager.PreloadTextureFileAsync(anNiSourceTexture.fileName);
-                }
-            var objBuilder = new NifObjectBuilder(file, materialManager, markerLayer);
+            foreach (var niObject in file.Blocks)
+                if (niObject is NiSourceTexture niSourceTexture)
+                    if (!string.IsNullOrEmpty(niSourceTexture.FileName))
+                        _materialManager.TextureManager.PreloadTextureFileAsync(niSourceTexture.FileName);
+            var objBuilder = new NifObjectBuilder(file, _materialManager, _markerLayer);
             var prefab = objBuilder.BuildObject();
-            prefab.transform.parent = prefabContainerObj.transform;
+            prefab.transform.parent = _prefabContainerObj.transform;
             // Add LOD support to the prefab.
             var LODComponent = prefab.AddComponent<LODGroup>();
             var LODs = new LOD[1]

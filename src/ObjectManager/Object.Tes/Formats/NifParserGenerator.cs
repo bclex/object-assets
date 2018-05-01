@@ -11,28 +11,26 @@ namespace OA.Tes.Formats
     public class NifParserGenerator
     {
         public const uint MORROWIND_NIF_VERSION = 0x04000002;
+        const int SPACES_PER_INDENT = 4;
+        uint _nifVersion;
+        XDocument _nifXmlDoc;
+        StringBuilder _b;
+        int _indentLevel;
 
         public void GenerateParser(string nifXmlFilePath, uint nifVersion, string generatedParserFilePath)
         {
-            nifXmlDoc = XDocument.Load(nifXmlFilePath);
-            this.nifVersion = nifVersion;
-            b = new StringBuilder();
-            indentLevel = 0;
+            _nifXmlDoc = XDocument.Load(nifXmlFilePath);
+            _nifVersion = nifVersion;
+            _b = new StringBuilder();
+            _indentLevel = 0;
             GenerateEnums();
-            File.WriteAllBytes(generatedParserFilePath, Encoding.UTF8.GetBytes(b.ToString()));
+            File.WriteAllBytes(generatedParserFilePath, Encoding.UTF8.GetBytes(_b.ToString()));
         }
-
-        private const int SPACES_PER_INDENT = 4;
-
-        uint nifVersion;
-        private XDocument nifXmlDoc;
-        private StringBuilder b;
-        private int indentLevel;
 
         private string GetConvertedOptionName(XElement enumElement, XElement optionElement)
         {
             var optionNamePrefix = enumElement.Attribute("prefix")?.Value;
-            optionNamePrefix = (optionNamePrefix != null) ? (optionNamePrefix + '_') : "";
+            optionNamePrefix = optionNamePrefix != null ? optionNamePrefix + '_' : string.Empty;
             var optionNameTail = optionElement.Attribute("name").Value.Replace(' ', '_').ToUpper();
             return optionNamePrefix + optionNameTail;
         }
@@ -50,7 +48,7 @@ namespace OA.Tes.Formats
 
         private string CleanDescription(string description)
         {
-            if (description == null) { return description; }
+            if (description == null) return description;
             return Regex.Replace(description.Trim(), "\r?\n", "");
         }
 
@@ -58,7 +56,7 @@ namespace OA.Tes.Formats
         {
             Debug.Assert(versionString != null);
             var versionNumberStrings = versionString.Split('.');
-            Debug.Assert((versionNumberStrings.Length >= 1) && (versionNumberStrings.Length <= 4));
+            Debug.Assert(versionNumberStrings.Length >= 1 && versionNumberStrings.Length <= 4);
             uint versionInt = 0;
             for (var i = 0; i < versionNumberStrings.Length; i++)
                 versionInt |= uint.Parse(versionNumberStrings[i]) << (32 - (8 * (i + 1)));
@@ -68,43 +66,43 @@ namespace OA.Tes.Formats
         private bool IsElementInVersion(XElement element)
         {
             var minVersionStr = element.Attribute("ver1")?.Value;
-            var minVersion = (minVersionStr != null) ? VersionStringToInt(minVersionStr) : 0;
+            var minVersion = minVersionStr != null ? VersionStringToInt(minVersionStr) : 0;
             var maxVersionStr = element.Attribute("ver2")?.Value;
-            var maxVersion = (maxVersionStr != null) ? VersionStringToInt(maxVersionStr) : uint.MaxValue;
-            return nifVersion >= minVersion && nifVersion <= maxVersion;
+            var maxVersion = maxVersionStr != null ? VersionStringToInt(maxVersionStr) : uint.MaxValue;
+            return _nifVersion >= minVersion && _nifVersion <= maxVersion;
         }
 
         private void Generate(char aChar)
         {
-            b.Append(aChar);
+            _b.Append(aChar);
         }
 
         private void Generate(string str)
         {
-            b.Append(str);
+            _b.Append(str);
         }
 
         private void GenerateLine(string line, int deltaIndentLevel = 0)
         {
-            b.Append(line);
+            _b.Append(line);
             EndLine(deltaIndentLevel);
         }
 
         private void EndLine(int deltaIndentLevel = 0)
         {
-            indentLevel += deltaIndentLevel;
-            b.AppendLine();
-            b.Append(' ', SPACES_PER_INDENT * indentLevel);
+            _indentLevel += deltaIndentLevel;
+            _b.AppendLine();
+            _b.Append(' ', SPACES_PER_INDENT * _indentLevel);
         }
 
         private void GenerateEnums()
         {
-            foreach (var enumElement in nifXmlDoc.Descendants("enum").Where(IsElementInVersion))
+            foreach (var enumElement in _nifXmlDoc.Descendants("enum").Where(IsElementInVersion))
             {
                 var enumName = enumElement.Attribute("name").Value;
                 var enumElementType = ConvertTypeName(enumElement.Attribute("storage").Value);
                 var enumDescription = CleanDescription(enumElement.Nodes().OfType<XText>().FirstOrDefault()?.Value);
-                if (!string.IsNullOrWhiteSpace(enumDescription)) { GenerateLine($"// {enumDescription}"); }
+                if (!string.IsNullOrWhiteSpace(enumDescription)) GenerateLine($"// {enumDescription}");
                 GenerateLine($"public enum {enumName} : {enumElementType}");
                 GenerateLine("{", 1);
                 GenerateEnumValues(enumElement);
@@ -123,9 +121,9 @@ namespace OA.Tes.Formats
                 var optionValue = optionElement.Attribute("value").Value;
                 var optionDescription = CleanDescription(optionElement.Nodes().OfType<XText>().FirstOrDefault()?.Value);
                 Generate($"{optionName} = {optionValue}");
-                if (i < lastOptionElementIndex) { Generate(','); }
-                if (!string.IsNullOrWhiteSpace(optionDescription)) { Generate($" // {optionDescription}"); }
-                EndLine((i < lastOptionElementIndex) ? 0 : -1);
+                if (i < lastOptionElementIndex) Generate(',');
+                if (!string.IsNullOrWhiteSpace(optionDescription)) Generate($" // {optionDescription}");
+                EndLine(i < lastOptionElementIndex ? 0 : -1);
             }
         }
     }

@@ -7,7 +7,6 @@
         public STATRecord(short itemId)
         {
             ItemId = itemId;
-            //var itemData = TileData.ItemData[i];
         }
 
         public string Name

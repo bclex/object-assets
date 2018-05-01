@@ -8,33 +8,33 @@ namespace OA.Tes.Formats
     // TODO: Investigate merging collision nodes with visual nodes.
     public class NifObjectBuilder
     {
-        readonly NiFile file;
-        readonly MaterialManager materialManager;
-        readonly int markerLayer;
+        readonly NiFile _file;
+        readonly MaterialManager _materialManager;
+        readonly int _markerLayer;
 
         public NifObjectBuilder(NiFile file, MaterialManager materialManager, int markerLayer)
         {
-            this.file = file;
-            this.materialManager = materialManager;
-            this.markerLayer = markerLayer;
+            _file = file;
+            _materialManager = materialManager;
+            _markerLayer = markerLayer;
         }
 
         public GameObject BuildObject()
         {
-            Debug.Assert(file.name != null && file.footer.roots.Length > 0);
+            Debug.Assert(_file.Name != null && _file.Footer.Roots.Length > 0);
 
             // NIF files can have any number of root NiObjects.
             // If there is only one root, instantiate that directly.
             // If there are multiple roots, create a container GameObject and parent it to the roots.
-            if (file.footer.roots.Length == 1)
+            if (_file.Footer.Roots.Length == 1)
             {
-                var rootNiObject = file.blocks[file.footer.roots[0]];
+                var rootNiObject = _file.Blocks[_file.Footer.Roots[0]];
                 var gameObject = InstantiateRootNiObject(rootNiObject);
                 // If the file doesn't contain any NiObjects we are looking for, return an empty GameObject.
                 if (gameObject == null)
                 {
-                    Utils.Log($"{file.name} resulted in a null GameObject when instantiated.");
-                    gameObject = new GameObject(file.name);
+                    Utils.Log($"{_file.Name} resulted in a null GameObject when instantiated.");
+                    gameObject = new GameObject(_file.Name);
                 }
                 // If gameObject != null and the root NiObject is an NiNode, discard any transformations (Morrowind apparently does).
                 else if (rootNiObject is NiNode)
@@ -47,11 +47,11 @@ namespace OA.Tes.Formats
             }
             else
             {
-                Utils.Log(file.name + " has multiple roots.");
-                var gameObject = new GameObject(file.name);
-                foreach (var rootRef in file.footer.roots)
+                Utils.Log(_file.Name + " has multiple roots.");
+                var gameObject = new GameObject(_file.Name);
+                foreach (var rootRef in _file.Footer.Roots)
                 {
-                    var child = InstantiateRootNiObject(file.blocks[rootRef]);
+                    var child = InstantiateRootNiObject(_file.Blocks[rootRef]);
                     if (child != null)
                         child.transform.SetParent(gameObject.transform, false);
                 }
@@ -63,7 +63,7 @@ namespace OA.Tes.Formats
         {
             var gameObject = InstantiateNiObject(obj);
             ProcessExtraData(obj, out bool shouldAddMissingColliders, out bool isMarker);
-            if (file.name != null && IsMarkerFileName(file.name))
+            if (_file.Name != null && IsMarkerFileName(_file.Name))
             {
                 shouldAddMissingColliders = false;
                 isMarker = true;
@@ -72,7 +72,7 @@ namespace OA.Tes.Formats
             if (shouldAddMissingColliders && gameObject.GetComponentInChildren<Collider>() == null)
                 GameObjectUtils.AddMissingMeshCollidersRecursively(gameObject);
             if (isMarker)
-                GameObjectUtils.SetLayerRecursively(gameObject, markerLayer);
+                GameObjectUtils.SetLayerRecursively(gameObject, _markerLayer);
             return gameObject;
         }
 
@@ -80,25 +80,23 @@ namespace OA.Tes.Formats
         {
             shouldAddMissingColliders = true;
             isMarker = false;
-            if (obj is NiObjectNET)
+            if (obj is NiObjectNET objNET)
             {
-                var objNET = (NiObjectNET)obj;
-                var extraData = objNET.extraData.value >= 0 ? (NiExtraData)file.blocks[objNET.extraData.value] : null;
+                var extraData = objNET.ExtraData.Value >= 0 ? (NiExtraData)_file.Blocks[objNET.ExtraData.Value] : null;
                 while (extraData != null)
                 {
-                    if (extraData is NiStringExtraData)
+                    if (extraData is NiStringExtraData strExtraData)
                     {
-                        var strExtraData = (NiStringExtraData)extraData;
-                        if (strExtraData.str == "NCO" || strExtraData.str == "NCC")
+                        if (strExtraData.Str == "NCO" || strExtraData.Str == "NCC")
                             shouldAddMissingColliders = false;
-                        else if (strExtraData.str == "MRK")
+                        else if (strExtraData.Str == "MRK")
                         {
                             shouldAddMissingColliders = false;
                             isMarker = true;
                         }
                     }
                     // Move to the next NiExtraData.
-                    if (extraData.nextExtraData.value >= 0) extraData = (NiExtraData)file.blocks[extraData.nextExtraData.value];
+                    if (extraData.NextExtraData.Value >= 0) extraData = (NiExtraData)_file.Blocks[extraData.NextExtraData.Value];
                     else extraData = null;
                 }
             }
@@ -120,17 +118,17 @@ namespace OA.Tes.Formats
             else if (obj.GetType() == typeof(NiRotatingParticles)) return null;
             else if (obj.GetType() == typeof(NiAutoNormalParticles)) return null;
             else if (obj.GetType() == typeof(NiBillboardNode)) return null;
-            else throw new NotImplementedException("Tried to instantiate an unsupported NiObject (" + obj.GetType().Name + ").");
+            else throw new NotImplementedException($"Tried to instantiate an unsupported NiObject ({obj.GetType().Name}).");
         }
 
         private GameObject InstantiateNiNode(NiNode node)
         {
-            var obj = new GameObject(node.name);
-            foreach (var childIndex in node.children)
+            var obj = new GameObject(node.Name);
+            foreach (var childIndex in node.Children)
                 // NiNodes can have child references < 0 meaning null.
-                if (!childIndex.isNull)
+                if (!childIndex.IsNull)
                 {
-                    var child = InstantiateNiObject(file.blocks[childIndex.value]);
+                    var child = InstantiateNiObject(_file.Blocks[childIndex.Value]);
                     if (child != null)
                         child.transform.SetParent(obj.transform, false);
                 }
@@ -142,15 +140,15 @@ namespace OA.Tes.Formats
         {
             var game = TesSettings.Game;
             Debug.Assert(visual || collidable);
-            var mesh = NiTriShapeDataToMesh((NiTriShapeData)file.blocks[triShape.data.value]);
-            var obj = new GameObject(triShape.name);
+            var mesh = NiTriShapeDataToMesh((NiTriShapeData)_file.Blocks[triShape.Data.Value]);
+            var obj = new GameObject(triShape.Name);
             if (visual)
             {
                 obj.AddComponent<MeshFilter>().mesh = mesh;
                 var materialProps = NiAVObjectPropertiesToMaterialProperties(triShape);
                 var meshRenderer = obj.AddComponent<MeshRenderer>();
-                meshRenderer.material = materialManager.BuildMaterialFromProperties(materialProps);
-                if (Utils.ContainsBitFlags(triShape.flags, (uint)NiAVObject.Flags.Hidden))
+                meshRenderer.material = _materialManager.BuildMaterialFromProperties(materialProps);
+                if (Utils.ContainsBitFlags(triShape.Flags, (uint)NiAVObject.NiFlags.Hidden))
                     meshRenderer.enabled = false;
                 obj.isStatic = true;
             }
@@ -167,38 +165,38 @@ namespace OA.Tes.Formats
         private GameObject InstantiateRootCollisionNode(RootCollisionNode collisionNode)
         {
             var obj = new GameObject("Root Collision Node");
-            foreach (var childIndex in collisionNode.children)
+            foreach (var childIndex in collisionNode.Children)
                 // NiNodes can have child references < 0 meaning null.
-                if (!childIndex.isNull)
-                    AddColliderFromNiObject(file.blocks[childIndex.value], obj);
+                if (!childIndex.IsNull)
+                    AddColliderFromNiObject(_file.Blocks[childIndex.Value], obj);
             ApplyNiAVObject(collisionNode, obj);
             return obj;
         }
 
-        private void ApplyNiAVObject(NiAVObject anNiAVObject, GameObject obj)
+        private void ApplyNiAVObject(NiAVObject niAVObject, GameObject obj)
         {
-            obj.transform.position = NifUtils.NifPointToUnityPoint(anNiAVObject.translation);
-            obj.transform.rotation = NifUtils.NifRotationMatrixToUnityQuaternion(anNiAVObject.rotation);
-            obj.transform.localScale = anNiAVObject.scale * Vector3.one;
+            obj.transform.position = NifUtils.NifPointToUnityPoint(niAVObject.Translation);
+            obj.transform.rotation = NifUtils.NifRotationMatrixToUnityQuaternion(niAVObject.Rotation);
+            obj.transform.localScale = niAVObject.Scale * Vector3.one;
         }
 
         private Mesh NiTriShapeDataToMesh(NiTriShapeData data)
         {
             // vertex positions
-            var vertices = new Vector3[data.vertices.Length];
+            var vertices = new Vector3[data.Vertices.Length];
             for (var i = 0; i < vertices.Length; i++)
-                vertices[i] = NifUtils.NifPointToUnityPoint(data.vertices[i]);
+                vertices[i] = NifUtils.NifPointToUnityPoint(data.Vertices[i]);
             // vertex normals
             Vector3[] normals = null;
-            if (data.hasNormals)
+            if (data.HasNormals)
             {
                 normals = new Vector3[vertices.Length];
                 for (var i = 0; i < normals.Length; i++)
-                    normals[i] = NifUtils.NifVectorToUnityVector(data.normals[i]);
+                    normals[i] = NifUtils.NifVectorToUnityVector(data.Normals[i]);
             }
             // vertex UV coordinates
             Vector2[] UVs = null;
-            if (data.hasUV)
+            if (data.HasUV)
             {
                 UVs = new Vector2[vertices.Length];
                 for (var i = 0; i < UVs.Length; i++)
@@ -208,14 +206,14 @@ namespace OA.Tes.Formats
                 }
             }
             // triangle vertex indices
-            var triangles = new int[data.numTrianglePoints];
-            for (var i = 0; i < data.triangles.Length; i++)
+            var triangles = new int[data.NumTrianglePoints];
+            for (var i = 0; i < data.Triangles.Length; i++)
             {
                 var baseI = 3 * i;
                 // Reverse triangle winding order.
-                triangles[baseI] = data.triangles[i].v1;
-                triangles[baseI + 1] = data.triangles[i].v3;
-                triangles[baseI + 2] = data.triangles[i].v2;
+                triangles[baseI] = data.Triangles[i].v1;
+                triangles[baseI + 1] = data.Triangles[i].v3;
+                triangles[baseI + 2] = data.Triangles[i].v2;
             }
 
             // Create the mesh.
@@ -226,7 +224,7 @@ namespace OA.Tes.Formats
                 uv = UVs,
                 triangles = triangles
             };
-            if (!data.hasNormals)
+            if (!data.HasNormals)
                 mesh.RecalculateNormals();
             mesh.RecalculateBounds();
             return mesh;
@@ -238,9 +236,9 @@ namespace OA.Tes.Formats
             NiTexturingProperty texturingProperty = null;
             NiMaterialProperty materialProperty = null;
             NiAlphaProperty alphaProperty = null;
-            foreach (var propRef in obj.properties)
+            foreach (var propRef in obj.Properties)
             {
-                var prop = file.blocks[propRef.value];
+                var prop = _file.Blocks[propRef.Value];
                 if (prop is NiTexturingProperty) texturingProperty = (NiTexturingProperty)prop;
                 else if (prop is NiMaterialProperty) materialProperty = (NiMaterialProperty)prop;
                 else if (prop is NiAlphaProperty) alphaProperty = (NiAlphaProperty)prop;
@@ -293,7 +291,7 @@ namespace OA.Tes.Formats
 
             if (alphaProperty != null)
             {
-                var flags = alphaProperty.flags;
+                var flags = alphaProperty.Flags;
                 var oldflags = flags;
                 var srcbm = (byte)(BitConverter.GetBytes(flags >> 1)[0] & 15);
                 var dstbm = (byte)(BitConverter.GetBytes(flags >> 5)[0] & 15);
@@ -307,7 +305,7 @@ namespace OA.Tes.Formats
                 else if (Utils.ContainsBitFlags(flags, 0x100)) // if flags contain the alpha test flag
                 {
                     mp.alphaTest = true;
-                    mp.alphaCutoff = (float)alphaProperty.threshold / 255;
+                    mp.alphaCutoff = (float)alphaProperty.Threshold / 255;
                 }
             }
             else
@@ -323,13 +321,13 @@ namespace OA.Tes.Formats
         private MaterialTextures ConfigureTextureProperties(NiTexturingProperty ntp)
         {
             var tp = new MaterialTextures();
-            if (ntp.textureCount < 1) return tp;
-            if (ntp.hasBaseTexture) { var src = (NiSourceTexture)file.blocks[ntp.baseTexture.source.value]; tp.mainFilePath = src.fileName; }
-            if (ntp.hasDarkTexture) { var src = (NiSourceTexture)file.blocks[ntp.darkTexture.source.value]; tp.darkFilePath = src.fileName; }
-            if (ntp.hasDetailTexture) { var src = (NiSourceTexture)file.blocks[ntp.detailTexture.source.value]; tp.detailFilePath = src.fileName; }
-            if (ntp.hasGlossTexture) { var src = (NiSourceTexture)file.blocks[ntp.glossTexture.source.value]; tp.glossFilePath = src.fileName; }
-            if (ntp.hasGlowTexture) { var src = (NiSourceTexture)file.blocks[ntp.glowTexture.source.value]; tp.glowFilePath = src.fileName; }
-            if (ntp.hasBumpMapTexture) { var src = (NiSourceTexture)file.blocks[ntp.bumpMapTexture.source.value]; tp.bumpFilePath = src.fileName; }
+            if (ntp.TextureCount < 1) return tp;
+            if (ntp.HasBaseTexture) { var src = (NiSourceTexture)_file.Blocks[ntp.BaseTexture.source.Value]; tp.mainFilePath = src.FileName; }
+            if (ntp.HasDarkTexture) { var src = (NiSourceTexture)_file.Blocks[ntp.DarkTexture.source.Value]; tp.darkFilePath = src.FileName; }
+            if (ntp.HasDetailTexture) { var src = (NiSourceTexture)_file.Blocks[ntp.DetailTexture.source.Value]; tp.detailFilePath = src.FileName; }
+            if (ntp.HasGlossTexture) { var src = (NiSourceTexture)_file.Blocks[ntp.GlossTexture.source.Value]; tp.glossFilePath = src.FileName; }
+            if (ntp.HasGlowTexture) { var src = (NiSourceTexture)_file.Blocks[ntp.GlowTexture.source.Value]; tp.glowFilePath = src.FileName; }
+            if (ntp.HasBumpMapTexture) { var src = (NiSourceTexture)_file.Blocks[ntp.BumpMapTexture.source.Value]; tp.bumpFilePath = src.FileName; }
             return tp;
         }
 

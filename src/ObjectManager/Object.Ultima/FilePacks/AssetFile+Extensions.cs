@@ -27,7 +27,7 @@ namespace OA.Ultima.FilePacks
         {
             return Task.Run(() =>
             {
-                var file = new StFile(filePath);
+                var file = new SiFile(filePath);
                 return (object)file;
             });
         }

@@ -82,7 +82,7 @@ namespace OA.Ultima.FilePacks.Records
                     ItemId = itemId,
                     Hue = hue,
                     SortInfluence = i,
-                    Position = new Vector3((int)chunkY * 8 + itemX, itemZ, (int)chunkY * 8 + itemY),
+                    Position = new Vector3((int)chunkY * 8 + itemX, (int)chunkY * 8 + itemY, itemZ),
                 });
             }
         }

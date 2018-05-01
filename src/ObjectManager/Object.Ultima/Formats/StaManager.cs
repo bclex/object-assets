@@ -58,11 +58,14 @@ namespace OA.Ultima.Formats
         {
             Debug.Assert(!_staPrefabs.ContainsKey(filePath));
             PreloadStaFileAsync(filePath);
-            var file = (StFile)_staPreloadTasks[filePath].Result;
+            var file = (SiFile)_staPreloadTasks[filePath].Result;
             _staPreloadTasks.Remove(filePath);
             // Start pre-loading all the STA's textures.
-            _materialManager.TextureManager.PreloadTextureFileAsync(filePath);
-            var objBuilder = new StaObjectBuilder(file, _materialManager);
+            foreach (var saObject in file.Blocks)
+                if (saObject is SiSourceTexture stSourceTexture)
+                    if (!string.IsNullOrEmpty(stSourceTexture.FilePath))
+                        _materialManager.TextureManager.PreloadTextureFileAsync(stSourceTexture.FilePath);
+            var objBuilder = new StaObjectBuilder(file, _materialManager, 0);
             var prefab = objBuilder.BuildObject();
             prefab.transform.parent = _prefabContainerObj.transform;
             // Add LOD support to the prefab.
