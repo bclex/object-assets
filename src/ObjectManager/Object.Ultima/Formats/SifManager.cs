@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace OA.Ultima.Formats
 {
-    public class StaManager
+    public class SifManager
     {
         readonly AssetFile _asset;
         readonly MaterialManager _materialManager;
@@ -13,7 +13,7 @@ namespace OA.Ultima.Formats
         readonly Dictionary<string, Task<object>> _staPreloadTasks = new Dictionary<string, Task<object>>();
         readonly Dictionary<string, GameObject> _staPrefabs = new Dictionary<string, GameObject>();
 
-        public StaManager(AssetFile asset, MaterialManager materialManager)
+        public SifManager(AssetFile asset, MaterialManager materialManager)
         {
             _asset = asset;
             _materialManager = materialManager;
@@ -65,14 +65,15 @@ namespace OA.Ultima.Formats
                 if (saObject is SiSourceTexture stSourceTexture)
                     if (!string.IsNullOrEmpty(stSourceTexture.FilePath))
                         _materialManager.TextureManager.PreloadTextureFileAsync(stSourceTexture.FilePath);
-            var objBuilder = new StaObjectBuilder(file, _materialManager, 0);
+            var objBuilder = new SifObjectBuilder(file, _materialManager, 0);
             var prefab = objBuilder.BuildObject();
             prefab.transform.parent = _prefabContainerObj.transform;
             // Add LOD support to the prefab.
             var LODComponent = prefab.AddComponent<LODGroup>();
             var LODs = new LOD[1]
             {
-                new LOD(0.015f, prefab.GetComponentsInChildren<Renderer>())
+                //new LOD(0.015F, prefab.GetComponentsInChildren<Renderer>())
+                new LOD(0F, prefab.GetComponentsInChildren<Renderer>())
             };
             LODComponent.SetLODs(LODs);
             return prefab;

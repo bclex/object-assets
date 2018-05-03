@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace OA.Ultima.Formats
 {
-    public class StaObjectBuilder
+    public class SifObjectBuilder
     {
         readonly SiFile _file;
         readonly MaterialManager _materialManager;
         readonly int _markerLayer;
 
-        public StaObjectBuilder(SiFile file, MaterialManager materialManager, int markerLayer)
+        public SifObjectBuilder(SiFile file, MaterialManager materialManager, int markerLayer)
         {
             _file = file;
             _materialManager = materialManager;
@@ -130,6 +130,7 @@ namespace OA.Ultima.Formats
                     obj.AddComponent<Rigidbody>().isKinematic = true;
             }
             ApplySiAVObject(primitive, obj);
+            //obj.transform.localScale = new Vector3(5F, 5F, 5F);
             return obj;
         }
 
@@ -161,8 +162,8 @@ namespace OA.Ultima.Formats
 
         private void ApplySiAVObject(SiAVObject siAVObject, GameObject obj)
         {
-            obj.transform.position = StaUtils.StaPointToUnityPoint(siAVObject.Translation);
-            obj.transform.rotation = StaUtils.StaRotationMatrixToUnityQuaternion(siAVObject.Rotation);
+            obj.transform.position = SifUtils.SifPointToUnityPoint(siAVObject.Translation);
+            obj.transform.rotation = SifUtils.SifRotationMatrixToUnityQuaternion(siAVObject.Rotation);
             obj.transform.localScale = siAVObject.Scale * Vector3.one;
         }
 
@@ -175,8 +176,6 @@ namespace OA.Ultima.Formats
         {
             var mp = new MaterialProps
             {
-                alphaBlended = false,
-                alphaTest = false,
                 textures = new MaterialTextures
                 {
                     mainFilePath = _file.Name,

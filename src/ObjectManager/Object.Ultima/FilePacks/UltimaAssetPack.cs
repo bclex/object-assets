@@ -7,13 +7,13 @@ namespace OA.Ultima.FilePacks
     {
         TextureManager _textureManager;
         MaterialManager _materialManager;
-        StaManager _staManager;
+        SifManager _staManager;
 
         public UltimaAssetPack()
         {
             _textureManager = new TextureManager(this);
             _materialManager = new MaterialManager(_textureManager);
-            _staManager = new StaManager(this, _materialManager);
+            _staManager = new SifManager(this, _materialManager);
         }
 
         public Texture2D LoadTexture(string texturePath, int method = 0)

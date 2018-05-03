@@ -295,7 +295,7 @@ namespace OA.Ultima
             // Handle object transforms.
             //if (refObj.XSCL != null)
             //    gameObject.transform.localScale = Vector3.one * refObj.XSCL.value;
-            gameObject.transform.position += StaUtils.StaPointToUnityPoint(refObj.Position);
+            gameObject.transform.position += SifUtils.SifPointToUnityPoint(refObj.Position);
             //gameObject.transform.rotation *= StaUtils.NifEulerAnglesToUnityQuaternion(refObj.DATA.eulerAngles);
             //var tagTarget = gameObject;
             //var coll = gameObject.GetComponentInChildren<Collider>(); // if the collider is on a child object and not on the object with the component, we need to set that object's tag instead.

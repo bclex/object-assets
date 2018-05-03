@@ -1,22 +1,22 @@
 ﻿using OA.Core;
 using UnityEngine;
 
-namespace OA.Tes.Formats
+namespace OA.Ultima.Formats
 {
-    public static class NifUtils
+    public static class SifUtils
     {
-        public static Vector3 NifVectorToUnityVector(Vector3 vector)
+        public static Vector3 SifVectorToUnityVector(Vector3 vector)
         {
             Utils.Swap(ref vector.y, ref vector.z);
             return vector;
         }
 
-        public static Vector3 NifPointToUnityPoint(Vector3 point)
+        public static Vector3 SifPointToUnityPoint(Vector3 point)
         {
-            return NifVectorToUnityVector(point) / ConvertUtils.MeterInUnits;
+            return SifVectorToUnityVector(point) * 1; // ConvertUtils.MeterInUnits;
         }
 
-        public static Matrix4x4 NifRotationMatrixToUnityRotationMatrix(Matrix4x4 rotationMatrix)
+        public static Matrix4x4 SifRotationMatrixToUnityRotationMatrix(Matrix4x4 rotationMatrix)
         {
             var matrix = new Matrix4x4
             {
@@ -40,14 +40,14 @@ namespace OA.Tes.Formats
             return matrix;
         }
 
-        public static Quaternion NifRotationMatrixToUnityQuaternion(Matrix4x4 rotationMatrix)
+        public static Quaternion SifRotationMatrixToUnityQuaternion(Matrix4x4 rotationMatrix)
         {
-            return ConvertUtils.RotationMatrixToQuaternion(NifRotationMatrixToUnityRotationMatrix(rotationMatrix));
+            return ConvertUtils.RotationMatrixToQuaternion(SifRotationMatrixToUnityRotationMatrix(rotationMatrix));
         }
 
-        public static Quaternion NifEulerAnglesToUnityQuaternion(Vector3 nifEulerAngles)
+        public static Quaternion SifEulerAnglesToUnityQuaternion(Vector3 eulerAngles)
         {
-            var eulerAngles2 = NifVectorToUnityVector(nifEulerAngles);
+            var eulerAngles2 = SifVectorToUnityVector(eulerAngles);
             var xRot = Quaternion.AngleAxis(Mathf.Rad2Deg * eulerAngles2.x, Vector3.right);
             var yRot = Quaternion.AngleAxis(Mathf.Rad2Deg * eulerAngles2.y, Vector3.up);
             var zRot = Quaternion.AngleAxis(Mathf.Rad2Deg * eulerAngles2.z, Vector3.forward);
