@@ -59,8 +59,8 @@ namespace OA.Ultima.FilePacks.Records
             // load the ground data into the tiles.
             var groundData = _tileData.GetLandChunk(chunkX, chunkY);
             var groundDataIndex = 0;
-            for (uint y = 0; y < 8; y++)
-                for (uint x = 0; x < 8; x++)
+            for (uint x = 0; x < 8; x++)
+                for (uint y = 0; y < 8; y++)
                 {
                     var tileId = (short)(groundData[groundDataIndex++] + (groundData[groundDataIndex++] << 8));
                     var tileZ = (sbyte)groundData[groundDataIndex++];

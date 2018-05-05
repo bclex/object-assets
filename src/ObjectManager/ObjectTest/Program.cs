@@ -1,4 +1,5 @@
-﻿using OA.Ultima;
+﻿using OA.Configuration;
+using OA.Ultima;
 
 namespace OA
 {
@@ -6,6 +7,7 @@ namespace OA
     {
         public static void Main()
         {
+            BaseSettings.Game.MaterialType = MaterialType.None;
             ObjectTestDataPack.Start();
         }
     }

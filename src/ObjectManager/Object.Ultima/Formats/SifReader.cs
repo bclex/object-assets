@@ -7,8 +7,12 @@ namespace OA.Ultima.Formats
     // Refers to an object after the current one in the hierarchy.
     public struct Ref<T>
     {
+        public Ref(int value)
+        {
+            Value = value;
+        }
         public int Value;
-        public bool IsNull => Value < 0;
+        public bool IsNull => Value <= 0;
     }
 
     public class SiFile
@@ -17,14 +21,14 @@ namespace OA.Ultima.Formats
         {
             switch (filePath.Substring(0, 3))
             {
-                case "sta": StaBlocks(filePath, int.Parse(filePath.Substring(3))); break;
+                case "sta": StaBlocks(filePath, short.Parse(filePath.Substring(3))); break;
                 default: throw new ArgumentOutOfRangeException("filePath", filePath);
             }
         }
 
         public readonly string Name;
 
-        private void StaBlocks(string filePath, int itemId)
+        private void StaBlocks(string filePath, short itemId)
         {
             var itemData = TileData.ItemData[itemId];
             var Name = itemData.Name;
@@ -34,14 +38,26 @@ namespace OA.Ultima.Formats
                 {
                     Name = Name,
                     //Translation = new Vector3(0F, 0.5F, 0F),
-                    Scale = 2
+                    Scale = 1,
+                    Properties = new[] { new Ref<SiProperty>(1) },
+                    Height = itemData.CalcHeight,
                 },
+                new SiTexturingProperty { TextureCount = 1, BaseTexture = new TexDesc { Source = new Ref<SiSourceTexture>(2) } },
                 new SiSourceTexture { FilePath = filePath },
             };
         }
 
         public SiObject[] Blocks;
     }
+
+    #region Misc
+
+    public class TexDesc
+    {
+        public Ref<SiSourceTexture> Source;
+    }
+
+    #endregion
 
     /// <summary>
     /// These are the main units of data that STA files are arranged in.
@@ -56,7 +72,7 @@ namespace OA.Ultima.Formats
     public abstract class SiObjectNET : SiObject
     {
         public string Name;
-        public Ref<SiExtraData> ExtraData = new Ref<SiExtraData> { Value = -1 };
+        public Ref<SiExtraData> ExtraData;
     }
 
     public abstract class SiAVObject : SiObjectNET
@@ -70,6 +86,7 @@ namespace OA.Ultima.Formats
         public Vector3 Translation;
         public Matrix4x4 Rotation = Matrix4x4.identity;
         public float Scale = 1;
+        public Ref<SiProperty>[] Properties;
     }
 
     // Nodes
@@ -77,6 +94,10 @@ namespace OA.Ultima.Formats
     {
         public Ref<SiAVObject>[] Children;
     }
+
+    public class RootCollisionNode : SiNode { }
+
+    public class AvoidNode : SiNode { }
 
     // Geometry
     public abstract class SiGeometry : SiAVObject
@@ -102,6 +123,7 @@ namespace OA.Ultima.Formats
 
     public class SiPrimitive : SiGeometry
     {
+        public int Height;
     }
 
     public class SiTriShape : SiGeometry
@@ -115,6 +137,23 @@ namespace OA.Ultima.Formats
     // Properties
     public abstract class SiProperty : SiObjectNET
     {
+    }
+
+    public class SiTexturingProperty : SiProperty
+    {
+        public uint TextureCount;
+        public TexDesc BaseTexture;
+        public TexDesc DarkTexture;
+        public TexDesc DetailTexture;
+        public TexDesc GlossTexture;
+        public TexDesc GlowTexture;
+        public TexDesc BumpMapTexture;
+    }
+
+    public class SiAlphaProperty : SiProperty
+    {
+        public ushort Flags;
+        public byte Threshold;
     }
 
     // Data

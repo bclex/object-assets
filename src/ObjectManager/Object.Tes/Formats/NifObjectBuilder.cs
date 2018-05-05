@@ -234,87 +234,87 @@ namespace OA.Tes.Formats
         {
             // Find relevant properties.
             NiTexturingProperty texturingProperty = null;
-            NiMaterialProperty materialProperty = null;
+            //NiMaterialProperty materialProperty = null;
             NiAlphaProperty alphaProperty = null;
             foreach (var propRef in obj.Properties)
             {
                 var prop = _file.Blocks[propRef.Value];
                 if (prop is NiTexturingProperty) texturingProperty = (NiTexturingProperty)prop;
-                else if (prop is NiMaterialProperty) materialProperty = (NiMaterialProperty)prop;
+                //else if (prop is NiMaterialProperty) materialProperty = (NiMaterialProperty)prop;
                 else if (prop is NiAlphaProperty) alphaProperty = (NiAlphaProperty)prop;
             }
+
             // Create the material properties.
             var mp = new MaterialProps();
 
-            #region AlphaProperty Cheat Sheet
-            /*
-			14 bits used:
-
-			1 bit for alpha blend bool
-			4 bits for src blend mode
-			4 bits for dest blend mode
-			1 bit for alpha test bool
-			3 bits for alpha test mode
-			1 bit for zwrite bool ( opposite value )
-
-			Bit 0 : alpha blending enable
-            Bits 1-4 : source blend mode 
-            Bits 5-8 : destination blend mode
-            Bit 9 : alpha test enable
-            Bit 10-12 : alpha test mode
-            Bit 13 : no sorter flag ( disables triangle sorting ) ( Unity ZWrite )
-
-			blend modes (glBlendFunc):
-            0000 GL_ONE
-            0001 GL_ZERO
-            0010 GL_SRC_COLOR
-            0011 GL_ONE_MINUS_SRC_COLOR
-            0100 GL_DST_COLOR
-            0101 GL_ONE_MINUS_DST_COLOR
-            0110 GL_SRC_ALPHA
-            0111 GL_ONE_MINUS_SRC_ALPHA
-            1000 GL_DST_ALPHA
-            1001 GL_ONE_MINUS_DST_ALPHA
-            1010 GL_SRC_ALPHA_SATURATE
-
-            test modes (glAlphaFunc):
-            000 GL_ALWAYS
-            001 GL_LESS
-            010 GL_EQUAL
-            011 GL_LEQUAL
-            100 GL_GREATER
-            101 GL_NOTEQUAL
-            110 GL_GEQUAL
-            111 GL_NEVER
-			*/
-            #endregion
-
             if (alphaProperty != null)
             {
+                #region AlphaProperty Cheat Sheet
+                /*
+                14 bits used:
+
+                1 bit for alpha blend bool
+                4 bits for src blend mode
+                4 bits for dest blend mode
+                1 bit for alpha test bool
+                3 bits for alpha test mode
+                1 bit for zwrite bool ( opposite value )
+
+                Bit 0 : alpha blending enable
+                Bits 1-4 : source blend mode 
+                Bits 5-8 : destination blend mode
+                Bit 9 : alpha test enable
+                Bit 10-12 : alpha test mode
+                Bit 13 : no sorter flag ( disables triangle sorting ) ( Unity ZWrite )
+
+                blend modes (glBlendFunc):
+                0000 GL_ONE
+                0001 GL_ZERO
+                0010 GL_SRC_COLOR
+                0011 GL_ONE_MINUS_SRC_COLOR
+                0100 GL_DST_COLOR
+                0101 GL_ONE_MINUS_DST_COLOR
+                0110 GL_SRC_ALPHA
+                0111 GL_ONE_MINUS_SRC_ALPHA
+                1000 GL_DST_ALPHA
+                1001 GL_ONE_MINUS_DST_ALPHA
+                1010 GL_SRC_ALPHA_SATURATE
+
+                test modes (glAlphaFunc):
+                000 GL_ALWAYS
+                001 GL_LESS
+                010 GL_EQUAL
+                011 GL_LEQUAL
+                100 GL_GREATER
+                101 GL_NOTEQUAL
+                110 GL_GEQUAL
+                111 GL_NEVER
+                */
+                #endregion
                 var flags = alphaProperty.Flags;
                 var oldflags = flags;
                 var srcbm = (byte)(BitConverter.GetBytes(flags >> 1)[0] & 15);
                 var dstbm = (byte)(BitConverter.GetBytes(flags >> 5)[0] & 15);
-                mp.zWrite = BitConverter.GetBytes(flags >> 15)[0] == 1;//smush
+                mp.ZWrite = BitConverter.GetBytes(flags >> 15)[0] == 1; // smush
                 if (Utils.ContainsBitFlags(flags, 0x01)) // if flags contain the alpha blend flag at bit 0 in byte 0
                 {
-                    mp.alphaBlended = true;
-                    mp.srcBlendMode = FigureBlendMode(srcbm);
-                    mp.dstBlendMode = FigureBlendMode(dstbm);
+                    mp.AlphaBlended = true;
+                    mp.SrcBlendMode = FigureBlendMode(srcbm);
+                    mp.DstBlendMode = FigureBlendMode(dstbm);
                 }
                 else if (Utils.ContainsBitFlags(flags, 0x100)) // if flags contain the alpha test flag
                 {
-                    mp.alphaTest = true;
-                    mp.alphaCutoff = (float)alphaProperty.Threshold / 255;
+                    mp.AlphaTest = true;
+                    mp.AlphaCutoff = (float)alphaProperty.Threshold / 255;
                 }
             }
             else
             {
-                mp.alphaBlended = false;
-                mp.alphaTest = false;
+                mp.AlphaBlended = false;
+                mp.AlphaTest = false;
             }
             // Apply textures.
-            if (texturingProperty != null) mp.textures = ConfigureTextureProperties(texturingProperty);
+            if (texturingProperty != null) mp.Textures = ConfigureTextureProperties(texturingProperty);
             return mp;
         }
 
@@ -322,12 +322,12 @@ namespace OA.Tes.Formats
         {
             var tp = new MaterialTextures();
             if (ntp.TextureCount < 1) return tp;
-            if (ntp.HasBaseTexture) { var src = (NiSourceTexture)_file.Blocks[ntp.BaseTexture.source.Value]; tp.mainFilePath = src.FileName; }
-            if (ntp.HasDarkTexture) { var src = (NiSourceTexture)_file.Blocks[ntp.DarkTexture.source.Value]; tp.darkFilePath = src.FileName; }
-            if (ntp.HasDetailTexture) { var src = (NiSourceTexture)_file.Blocks[ntp.DetailTexture.source.Value]; tp.detailFilePath = src.FileName; }
-            if (ntp.HasGlossTexture) { var src = (NiSourceTexture)_file.Blocks[ntp.GlossTexture.source.Value]; tp.glossFilePath = src.FileName; }
-            if (ntp.HasGlowTexture) { var src = (NiSourceTexture)_file.Blocks[ntp.GlowTexture.source.Value]; tp.glowFilePath = src.FileName; }
-            if (ntp.HasBumpMapTexture) { var src = (NiSourceTexture)_file.Blocks[ntp.BumpMapTexture.source.Value]; tp.bumpFilePath = src.FileName; }
+            if (ntp.BaseTexture != null) { var src = (NiSourceTexture)_file.Blocks[ntp.BaseTexture.source.Value]; tp.MainFilePath = src.FileName; }
+            if (ntp.DarkTexture != null) { var src = (NiSourceTexture)_file.Blocks[ntp.DarkTexture.source.Value]; tp.DarkFilePath = src.FileName; }
+            if (ntp.DetailTexture != null) { var src = (NiSourceTexture)_file.Blocks[ntp.DetailTexture.source.Value]; tp.DetailFilePath = src.FileName; }
+            if (ntp.GlossTexture != null) { var src = (NiSourceTexture)_file.Blocks[ntp.GlossTexture.source.Value]; tp.GlossFilePath = src.FileName; }
+            if (ntp.GlowTexture != null) { var src = (NiSourceTexture)_file.Blocks[ntp.GlowTexture.source.Value]; tp.GlowFilePath = src.FileName; }
+            if (ntp.BumpMapTexture != null) { var src = (NiSourceTexture)_file.Blocks[ntp.BumpMapTexture.source.Value]; tp.BumpFilePath = src.FileName; }
             return tp;
         }
 
@@ -341,11 +341,11 @@ namespace OA.Tes.Formats
             return (MatTestMode)Mathf.Min(b, 7);
         }
 
-        private void AddColliderFromNiObject(NiObject anNiObject, GameObject gameObject)
+        private void AddColliderFromNiObject(NiObject niObject, GameObject gameObject)
         {
-            if (anNiObject.GetType() == typeof(NiTriShape)) { var colliderObj = InstantiateNiTriShape((NiTriShape)anNiObject, false, true); colliderObj.transform.SetParent(gameObject.transform, false); }
-            else if (anNiObject.GetType() == typeof(AvoidNode)) { }
-            else Utils.Log("Unsupported collider NiObject: " + anNiObject.GetType().Name);
+            if (niObject.GetType() == typeof(NiTriShape)) { var colliderObj = InstantiateNiTriShape((NiTriShape)niObject, false, true); colliderObj.transform.SetParent(gameObject.transform, false); }
+            else if (niObject.GetType() == typeof(AvoidNode)) { }
+            else Utils.Log("Unsupported collider NiObject: " + niObject.GetType().Name);
         }
 
         private bool IsMarkerFileName(string name)

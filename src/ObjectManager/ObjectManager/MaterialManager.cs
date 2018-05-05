@@ -9,28 +9,28 @@ namespace OA
 
     public enum MaterialType
     {
-        Default, Standard, BumpedDiffuse, Unlit
+        None, Default, Standard, BumpedDiffuse, Unlit
     }
 
     public struct MaterialTextures
     {
-        public string mainFilePath;
-        public string darkFilePath;
-        public string detailFilePath;
-        public string glossFilePath;
-        public string glowFilePath;
-        public string bumpFilePath;
+        public string MainFilePath;
+        public string DarkFilePath;
+        public string DetailFilePath;
+        public string GlossFilePath;
+        public string GlowFilePath;
+        public string BumpFilePath;
     }
 
     public struct MaterialProps
     {
-        public MaterialTextures textures;
-        public bool alphaBlended;
-        public BlendMode srcBlendMode;
-        public BlendMode dstBlendMode;
-        public bool alphaTest;
-        public float alphaCutoff;
-        public bool zWrite;
+        public MaterialTextures Textures;
+        public bool AlphaBlended;
+        public BlendMode SrcBlendMode;
+        public BlendMode DstBlendMode;
+        public bool AlphaTest;
+        public float AlphaCutoff;
+        public bool ZWrite;
     }
 
     /// <summary>
@@ -42,12 +42,13 @@ namespace OA
 
         public TextureManager TextureManager { get; }
 
-        public MaterialManager(TextureManager textureManager)
+        public MaterialManager(TextureManager textureManager, MaterialType? materialType = null)
         {
-            var game = BaseSettings.Game;
             TextureManager = textureManager;
-            switch (game.MaterialType)
+            var game = BaseSettings.Game;
+            switch (materialType ?? game.MaterialType)
             {
+                case MaterialType.None: _material = null; break;
                 case MaterialType.Default: _material = new DefaultMaterial(textureManager); break;
                 case MaterialType.Standard: _material = new StandardMaterial(textureManager); break;
                 case MaterialType.Unlit: _material = new UnliteMaterial(textureManager); break;

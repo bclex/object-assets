@@ -241,7 +241,7 @@ namespace OA.Ultima
                     // If the object also has a model, parent the model to the light.
                     if (modelObj != null)
                     {
-                        // Some NIF files have nodes named "AttachLight". Parent it to the light if it exists.
+                        // Some SIF files have nodes named "AttachLight". Parent it to the light if it exists.
                         var attachLightObj = GameObjectUtils.FindChildRecursively(modelObj, "AttachLight");
                         if (attachLightObj == null)
                         {
@@ -293,14 +293,14 @@ namespace OA.Ultima
         {
             var refObj = (CELLRecord.RefObj)refCellObjInfo.RefObj;
             // Handle object transforms.
-            //if (refObj.XSCL != null)
-            //    gameObject.transform.localScale = Vector3.one * refObj.XSCL.value;
+            if (refObj.Scale != null)
+                gameObject.transform.localScale = Vector3.one * refObj.Scale.Value;
             gameObject.transform.position += SifUtils.SifPointToUnityPoint(refObj.Position);
-            //gameObject.transform.rotation *= StaUtils.NifEulerAnglesToUnityQuaternion(refObj.DATA.eulerAngles);
-            //var tagTarget = gameObject;
-            //var coll = gameObject.GetComponentInChildren<Collider>(); // if the collider is on a child object and not on the object with the component, we need to set that object's tag instead.
-            //if (coll != null)
-            //    tagTarget = coll.gameObject;
+            gameObject.transform.rotation *= SifUtils.SifEulerAnglesToUnityQuaternion(refObj.EulerAngles);
+            var tagTarget = gameObject;
+            var coll = gameObject.GetComponentInChildren<Collider>(); // if the collider is on a child object and not on the object with the component, we need to set that object's tag instead.
+            if (coll != null)
+                tagTarget = coll.gameObject;
             //ProcessObjectType<DOORRecord>(tagTarget, refCellObjInfo, "Door");
             //ProcessObjectType<ACTIRecord>(tagTarget, refCellObjInfo, "Activator");
             //ProcessObjectType<CONTRecord>(tagTarget, refCellObjInfo, "Container");
@@ -362,7 +362,7 @@ namespace OA.Ultima
             const int LAND_SIDELENGTH = 8 * DataFile.CELL_PACK;
             var heights = new float[LAND_SIDELENGTH, LAND_SIDELENGTH];
             // Read in the heights in units.
-            const int VHGTIncrementToUnits = 16;
+            const int VHGTIncrementToUnits = 2;
             for (var y = 0; y < LAND_SIDELENGTH; y++)
                 for (var x = 0; x < LAND_SIDELENGTH; x++)
                 {

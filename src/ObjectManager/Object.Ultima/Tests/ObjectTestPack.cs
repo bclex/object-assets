@@ -7,38 +7,51 @@ namespace OA.Ultima
     {
         static IAssetPack Asset;
         static IDataPack Data;
-        static GameObject PlayerPrefab;
 
         public static void Awake()
         {
             Utils.InUnity = true;
-            PlayerPrefab = GameObject.Find("Cube00");
         }
 
         public static void Start()
         {
-            Utils.Log("UltimaAsset");
             var assetManager = AssetManager.GetAssetManager(EngineId.Ultima);
             Asset = assetManager.GetAssetPack(null).Result;
             Data = assetManager.GetDataPack(null).Result;
 
+            //MakeObject("sta10");
+            MakeObject("sta3");
+
+            //MakeTexture("lnd1");
+            //MakeTexture("lnd516");
+            //MakeTexture("lnd1137");
+            //MakeTexture("sta69");
+            //MakeTexture("gmp65");
+            //MakeTexture("tex789");
+            //MakeCursor("gmp65");
+        }
+
+        static void MakeObject(string path)
+        {
+            var obj = Asset.CreateObject(path);
+        }
+
+        static void MakeTexture(string path)
+        {
             var textureManager = new TextureManager(Asset);
             var materialManager = new MaterialManager(textureManager);
-
             var obj = GameObject.Find("Cube"); // CreatePrimitive(PrimitiveType.Cube);
             var meshRenderer = obj.GetComponent<MeshRenderer>();
             var materialProps = new MaterialProps
             {
-                //textures = new MaterialTextures { mainFilePath = "lnd1" },
-                //textures = new MaterialTextures { mainFilePath = "lnd516" },
-                //textures = new MaterialTextures { mainFilePath = "lnd1137" },
-                //textures = new MaterialTextures { mainFilePath = "sta69" },
-                textures = new MaterialTextures { mainFilePath = "gmp65" },
-                //textures = new MaterialTextures { mainFilePath = "tex789" },
+                Textures = new MaterialTextures { MainFilePath = path },
             };
             meshRenderer.material = materialManager.BuildMaterialFromProperties(materialProps);
+        }
 
-            var cursor = Asset.LoadTexture("gmp65");
+        static void MakeCursor(string path)
+        {
+            var cursor = Asset.LoadTexture(path);
             Cursor.SetCursor(cursor, Vector2.zero, CursorMode.Auto);
         }
 

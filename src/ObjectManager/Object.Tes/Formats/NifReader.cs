@@ -810,19 +810,19 @@ namespace OA.Tes.Formats
         public ushort Flags;
         public ApplyMode ApplyMode;
         public uint TextureCount;
-        public bool HasBaseTexture;
+        //public bool HasBaseTexture;
         public TexDesc BaseTexture;
-        public bool HasDarkTexture;
+        //public bool HasDarkTexture;
         public TexDesc DarkTexture;
-        public bool HasDetailTexture;
+        //public bool HasDetailTexture;
         public TexDesc DetailTexture;
-        public bool HasGlossTexture;
+        //public bool HasGlossTexture;
         public TexDesc GlossTexture;
-        public bool HasGlowTexture;
+        //public bool HasGlowTexture;
         public TexDesc GlowTexture;
-        public bool HasBumpMapTexture;
+        //public bool HasBumpMapTexture;
         public TexDesc BumpMapTexture;
-        public bool HasDecal0Texture;
+        //public bool HasDecal0Texture;
         public TexDesc Decal0Texture;
 
         public override void Deserialize(UnityBinaryReader r)
@@ -831,50 +831,51 @@ namespace OA.Tes.Formats
             Flags = NiReaderUtils.ReadFlags(r);
             ApplyMode = (ApplyMode)r.ReadLEUInt32();
             TextureCount = r.ReadLEUInt32();
-            HasBaseTexture = r.ReadLEBool32();
-            if (HasBaseTexture)
+            var hasBaseTexture = r.ReadLEBool32();
+            if (hasBaseTexture)
             {
                 BaseTexture = new TexDesc();
                 BaseTexture.Deserialize(r);
             }
-            HasDarkTexture = r.ReadLEBool32();
-            if (HasDarkTexture)
+            var hasDarkTexture = r.ReadLEBool32();
+            if (hasDarkTexture)
             {
                 DarkTexture = new TexDesc();
                 DarkTexture.Deserialize(r);
             }
-            HasDetailTexture = r.ReadLEBool32();
-            if (HasDetailTexture)
+            var hasDetailTexture = r.ReadLEBool32();
+            if (hasDetailTexture)
             {
                 DetailTexture = new TexDesc();
                 DetailTexture.Deserialize(r);
             }
-            HasGlossTexture = r.ReadLEBool32();
-            if (HasGlossTexture)
+            var hasGlossTexture = r.ReadLEBool32();
+            if (hasGlossTexture)
             {
                 GlossTexture = new TexDesc();
                 GlossTexture.Deserialize(r);
             }
-            HasGlowTexture = r.ReadLEBool32();
-            if (HasGlowTexture)
+            var hasGlowTexture = r.ReadLEBool32();
+            if (hasGlowTexture)
             {
                 GlowTexture = new TexDesc();
                 GlowTexture.Deserialize(r);
             }
-            HasBumpMapTexture = r.ReadLEBool32();
-            if (HasBumpMapTexture)
+            var hasBumpMapTexture = r.ReadLEBool32();
+            if (hasBumpMapTexture)
             {
                 BumpMapTexture = new TexDesc();
                 BumpMapTexture.Deserialize(r);
             }
-            HasDecal0Texture = r.ReadLEBool32();
-            if (HasDecal0Texture)
+            var hasDecal0Texture = r.ReadLEBool32();
+            if (hasDecal0Texture)
             {
                 Decal0Texture = new TexDesc();
                 Decal0Texture.Deserialize(r);
             }
         }
     }
+
     public class NiAlphaProperty : NiProperty
     {
         public ushort Flags;
@@ -887,6 +888,7 @@ namespace OA.Tes.Formats
             Threshold = r.ReadByte();
         }
     }
+
     public class NiZBufferProperty : NiProperty
     {
         public ushort Flags;

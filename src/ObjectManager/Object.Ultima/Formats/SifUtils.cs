@@ -13,7 +13,7 @@ namespace OA.Ultima.Formats
 
         public static Vector3 SifPointToUnityPoint(Vector3 point)
         {
-            return SifVectorToUnityVector(point) * 1; // ConvertUtils.MeterInUnits;
+            return SifVectorToUnityVector(point); // / ConvertUtils.MeterInUnits;
         }
 
         public static Matrix4x4 SifRotationMatrixToUnityRotationMatrix(Matrix4x4 rotationMatrix)

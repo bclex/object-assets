@@ -62,7 +62,7 @@ namespace OA.Ultima.Formats
             isMarker = false;
             if (obj is SiObjectNET objNET)
             {
-                var extraData = objNET.ExtraData.Value >= 0 ? (SiExtraData)_file.Blocks[objNET.ExtraData.Value] : null;
+                var extraData = !objNET.ExtraData.IsNull ? (SiExtraData)_file.Blocks[objNET.ExtraData.Value] : null;
                 while (extraData != null)
                 {
                     if (extraData is SiStringExtraData strExtraData)
@@ -76,7 +76,7 @@ namespace OA.Ultima.Formats
                         }
                     }
                     // Move to the next NiExtraData.
-                    if (extraData.NextExtraData.Value >= 0) extraData = (SiExtraData)_file.Blocks[extraData.NextExtraData.Value];
+                    if (!extraData.NextExtraData.IsNull) extraData = (SiExtraData)_file.Blocks[extraData.NextExtraData.Value];
                     else extraData = null;
                 }
             }
@@ -130,7 +130,7 @@ namespace OA.Ultima.Formats
                     obj.AddComponent<Rigidbody>().isKinematic = true;
             }
             ApplySiAVObject(primitive, obj);
-            //obj.transform.localScale = new Vector3(5F, 5F, 5F);
+            //obj.transform.localScale = primitive.Scale * new Vector3(1, primitive.Height, 1);
             return obj;
         }
 
@@ -160,6 +160,17 @@ namespace OA.Ultima.Formats
             return obj;
         }
 
+        private GameObject InstantiateRootCollisionNode(RootCollisionNode collisionNode)
+        {
+            var obj = new GameObject("Root Collision Node");
+            foreach (var childIndex in collisionNode.Children)
+                // SiNodes can have child references < 0 meaning null.
+                if (!childIndex.IsNull)
+                    AddColliderFromSiObject(_file.Blocks[childIndex.Value], obj);
+            ApplySiAVObject(collisionNode, obj);
+            return obj;
+        }
+
         private void ApplySiAVObject(SiAVObject siAVObject, GameObject obj)
         {
             obj.transform.position = SifUtils.SifPointToUnityPoint(siAVObject.Translation);
@@ -172,16 +183,41 @@ namespace OA.Ultima.Formats
             return null;
         }
 
-        private MaterialProps SiAVObjectPropertiesToMaterialProperties(SiObject na)
+        private MaterialProps SiAVObjectPropertiesToMaterialProperties(SiAVObject obj)
         {
-            var mp = new MaterialProps
+            // Find relevant properties.
+            SiTexturingProperty texturingProperty = null;
+            foreach (var propRef in obj.Properties)
             {
-                textures = new MaterialTextures
-                {
-                    mainFilePath = _file.Name,
-                }
-            };
+                var prop = _file.Blocks[propRef.Value];
+                if (prop is SiTexturingProperty) texturingProperty = (SiTexturingProperty)prop;
+            }
+
+            // Create the material properties.
+            var mp = new MaterialProps();
+            // Apply textures.
+            if (texturingProperty != null) mp.Textures = ConfigureTextureProperties(texturingProperty);
             return mp;
+        }
+
+        private MaterialTextures ConfigureTextureProperties(SiTexturingProperty ntp)
+        {
+            var tp = new MaterialTextures();
+            if (ntp.TextureCount < 1) return tp;
+            if (ntp.BaseTexture != null) { var src = (SiSourceTexture)_file.Blocks[ntp.BaseTexture.Source.Value]; tp.MainFilePath = src.FilePath; }
+            if (ntp.DarkTexture != null) { var src = (SiSourceTexture)_file.Blocks[ntp.DarkTexture.Source.Value]; tp.DarkFilePath = src.FilePath; }
+            if (ntp.DetailTexture != null) { var src = (SiSourceTexture)_file.Blocks[ntp.DetailTexture.Source.Value]; tp.DetailFilePath = src.FilePath; }
+            if (ntp.GlossTexture != null) { var src = (SiSourceTexture)_file.Blocks[ntp.GlossTexture.Source.Value]; tp.GlossFilePath = src.FilePath; }
+            if (ntp.GlowTexture != null) { var src = (SiSourceTexture)_file.Blocks[ntp.GlowTexture.Source.Value]; tp.GlowFilePath = src.FilePath; }
+            if (ntp.BumpMapTexture != null) { var src = (SiSourceTexture)_file.Blocks[ntp.BumpMapTexture.Source.Value]; tp.BumpFilePath = src.FilePath; }
+            return tp;
+        }
+
+        private void AddColliderFromSiObject(SiObject siObject, GameObject gameObject)
+        {
+            if (siObject.GetType() == typeof(SiTriShape)) { var colliderObj = InstantiateSiTriShape((SiTriShape)siObject, false, true); colliderObj.transform.SetParent(gameObject.transform, false); }
+            else if (siObject.GetType() == typeof(AvoidNode)) { }
+            else Utils.Log("Unsupported collider SiObject: " + siObject.GetType().Name);
         }
 
         private bool IsMarkerFileName(string name)

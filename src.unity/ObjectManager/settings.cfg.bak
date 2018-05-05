@@ -10,7 +10,7 @@ DataDirectory=
 KinematicRigidbodies=True
 PlayMusic=False
 EnableLog=False
-MaterialType=BumpedDiffuse
+MaterialType=Standard
 RenderPath=Forward
 CameraFarClip=500
 WaterBackSideTransparent=False
@@ -37,7 +37,7 @@ RenderScale=1
 
 [UltimaOnlineSettings]
 PatchVersion=[6,0,6,2]
-DataDirectory=C:\Program Files (x86)\EA Games\Ultima Online Mondain's Legacy
+DataDirectory=C:\Program Files (x86)\Ultima Online Mondain's Legacy
 AllowCornerMovement=False
 [/UltimaOnlineSettings]
 

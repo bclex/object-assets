@@ -9,8 +9,8 @@ namespace OA.Ultima.Resources
 {
     public class TileData
     {
-        public static LandData[] LandData = new LandData[0x4000];
-        public static ItemData[] ItemData = new ItemData[0x4000];
+        public static LandData[] LandData;
+        public static ItemData[] ItemData;
 
         public static ItemData ItemData_ByAnimID(int animID)
         {

@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using OA.Ultima.FilePacks;
 using UnityEngine;
 
 namespace OA.Ultima
@@ -25,7 +24,9 @@ namespace OA.Ultima
             Engine = new UltimaEngine(assetManager, Asset, Data, null);
 
             var scale = ConvertUtils.ExteriorCellSideLengthInMeters;
-            Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(4 * scale, 5, 25 * scale));
+            //Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(4 * scale, 20, 25 * scale));
+            //Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(15 * scale, 20, 25 * scale));
+            Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(11 * scale, 20, 29 * scale));
         }
 
         public static void OnDestroy()

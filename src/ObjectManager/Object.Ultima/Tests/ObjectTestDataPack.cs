@@ -15,7 +15,7 @@ namespace OA.Ultima
         public static void Start()
         {
             var assetManager = AssetManager.GetAssetManager(EngineId.Ultima);
-            //Asset = assetManager.GetAssetPack(null).Result;
+            Asset = assetManager.GetAssetPack(null).Result;
             Data = assetManager.GetDataPack(null).Result;
         }
 

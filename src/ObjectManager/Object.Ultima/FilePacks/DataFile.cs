@@ -54,19 +54,19 @@ namespace OA.Ultima.FilePacks
 
         public List<IRecord> GetRecordsOfType<T>() where T : Record { return recordsByType.TryGetValue(typeof(T), out List<IRecord> records) ? records : null; }
 
-        private void ReadRecords(bool loadItems = true)
+        private void ReadRecords()
         {
             var recordList = new List<Record>();
             // add items
-            if (loadItems)
-                for (short itemId = 0; itemId < TileData.ItemData.Length; itemId++)
-                    recordList.Add(new STATRecord(itemId));
+            for (short itemId = 0; itemId < TileData.ItemData.Length; itemId++)
+                recordList.Add(new STATRecord(itemId));
             // add tiles
             for (uint chunkY = 0; chunkY < _tileData.ChunkHeight / CELL_PACK; chunkY++)
                 for (uint chunkX = 0; chunkX < _tileData.ChunkWidth / CELL_PACK; chunkX++)
                 {
-                    recordList.Add(new CELLRecord(_tileData, chunkX, chunkY));
-                    recordList.Add(new LANDRecord(_tileData, chunkX, chunkY));
+                    var land = new LANDRecord(_tileData, chunkX, chunkY);
+                    recordList.Add(land);
+                    recordList.Add(new CELLRecord(_tileData, land, chunkX, chunkY));
                 }
             records = recordList.ToArray();
         }

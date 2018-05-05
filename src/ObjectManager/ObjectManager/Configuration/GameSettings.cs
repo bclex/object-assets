@@ -37,7 +37,7 @@ namespace OA.Configuration
         }
 
         // RENDERING
-        MaterialType _materialType = MaterialType.BumpedDiffuse;
+        MaterialType _materialType = MaterialType.Standard; // BumpedDiffuse;
         public MaterialType MaterialType
         {
             get { return _materialType; }

@@ -12,15 +12,14 @@ namespace OA.Materials
 
         public override Material BuildMaterialFromProperties(MaterialProps mp)
         {
-            Material material;
-            //check if the material is already cached
-            if (!_existingMaterials.TryGetValue(mp, out material))
+            // check if the material is already cached
+            if (!_existingMaterials.TryGetValue(mp, out Material material))
             {
-                //otherwise create a new material and cache it
-                if (mp.alphaBlended) material = BuildMaterialBlended(mp.srcBlendMode, mp.dstBlendMode);
-                else if (mp.alphaTest) material = BuildMaterialTested(mp.alphaCutoff);
+                // otherwise create a new material and cache it
+                if (mp.AlphaBlended) material = BuildMaterialBlended(mp.SrcBlendMode, mp.DstBlendMode);
+                else if (mp.AlphaTest) material = BuildMaterialTested(mp.AlphaCutoff);
                 else material = BuildMaterial();
-                if (mp.textures.mainFilePath != null) material.mainTexture = _textureManager.LoadTexture(mp.textures.mainFilePath);
+                if (mp.Textures.MainFilePath != null) material.mainTexture = _textureManager.LoadTexture(mp.Textures.MainFilePath);
                 _existingMaterials[mp] = material;
             }
             return material;

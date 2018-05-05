@@ -22,18 +22,17 @@ namespace OA.Materials
         public override Material BuildMaterialFromProperties(MaterialProps mp)
         {
             var game = BaseSettings.Game;
-            Material material;
-            //check if the material is already cached
-            if (!_existingMaterials.TryGetValue(mp, out material))
+            // check if the material is already cached
+            if (!_existingMaterials.TryGetValue(mp, out Material material))
             {
-                //otherwise create a new material and cache it
-                if (mp.alphaBlended)
-                    material = BuildMaterialBlended(mp.srcBlendMode, mp.dstBlendMode);
-                else if (mp.alphaTest) material = BuildMaterialTested(mp.alphaCutoff);
+                // otherwise create a new material and cache it
+                if (mp.AlphaBlended)
+                    material = BuildMaterialBlended(mp.SrcBlendMode, mp.DstBlendMode);
+                else if (mp.AlphaTest) material = BuildMaterialTested(mp.AlphaCutoff);
                 else material = BuildMaterial();
-                if (mp.textures.mainFilePath != null)
+                if (mp.Textures.MainFilePath != null)
                 {
-                    material.mainTexture = _textureManager.LoadTexture(mp.textures.mainFilePath);
+                    material.mainTexture = _textureManager.LoadTexture(mp.Textures.MainFilePath);
                     if (game.GenerateNormalMap)
                     {
                         material.EnableKeyword("_NORMALMAP");
@@ -41,10 +40,10 @@ namespace OA.Materials
                     }
                 }
                 else material.DisableKeyword("_NORMALMAP");
-                if (mp.textures.bumpFilePath != null)
+                if (mp.Textures.BumpFilePath != null)
                 {
                     material.EnableKeyword("_NORMALMAP");
-                    material.SetTexture("_NORMALMAP", _textureManager.LoadTexture(mp.textures.bumpFilePath));
+                    material.SetTexture("_NORMALMAP", _textureManager.LoadTexture(mp.Textures.BumpFilePath));
                 }
                 _existingMaterials[mp] = material;
             }
