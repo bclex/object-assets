@@ -38,7 +38,7 @@ namespace OA.Ultima.Formats
                 {
                     Name = Name,
                     Properties = new[] { new Ref<SiProperty>(1) },
-                    Height = itemData.CalcHeight / ConvertUtils.MeterInUnits / 2,
+                    Height = Math.Max(itemData.CalcHeight / ConvertUtils.MeterInUnits, 0.01F),
                 },
                 new SiTexturingProperty { TextureCount = 1, BaseTexture = new TexDesc { Source = new Ref<SiSourceTexture>(2) } },
                 new SiSourceTexture { FilePath = filePath },

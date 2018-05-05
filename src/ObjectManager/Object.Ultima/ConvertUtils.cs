@@ -12,7 +12,7 @@ namespace OA.Ultima
         //const int exteriorCellSideLengthInUnits = 8 * DataFile.CELL_PACK * yardInUnits;
         //public const float ExteriorCellSideLengthInMeters = (float)exteriorCellSideLengthInUnits / MeterInUnits;
 
-        public const float MeterInUnits = 5;
+        public const float MeterInUnits = 10;
         public const float ExteriorCellSideLengthInMeters = (float)8 * DataFile.CELL_PACK;
 
         public static Quaternion RotationMatrixToQuaternion(Matrix4x4 matrix)

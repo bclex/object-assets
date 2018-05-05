@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 612438593}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -410,7 +410,7 @@ GameObject:
   - component: {fileID: 1122091514}
   m_Layer: 0
   m_Name: Cube00
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -496,7 +496,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!20 &1122091513
 Camera:
@@ -549,10 +549,10 @@ MonoBehaviour:
   m_Script: {fileID: -511401321, guid: 62117ed09489aea4f9a99151f97054f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slowSpeed: 3
-  normalSpeed: 20
-  fastSpeed: 30
-  flightSpeedMultiplier: 20
+  slowSpeed: 10
+  normalSpeed: 10
+  fastSpeed: 10
+  flightSpeedMultiplier: 10
   airborneForceMultiplier: 5
   mouseSensitivity: 3
   minVerticalAngle: -90

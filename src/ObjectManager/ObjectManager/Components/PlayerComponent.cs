@@ -83,13 +83,13 @@ namespace OA.Components
             }
             if (InputManager.GetButtonDown("Light"))
                 lantern.enabled = !lantern.enabled;
-            // clamp
-            var lastPostion = _transform.position;
-            if (lastPostion.y < 0)
-            {
-                lastPostion.y = 0;
-                _transform.position = lastPostion;
-            }
+            //// clamp
+            //var lastPostion = _transform.position;
+            //if (lastPostion.y < 0)
+            //{
+            //    lastPostion.y = 0;
+            //    _transform.position = lastPostion;
+            //}
         }
 
         void FixedUpdate()
