@@ -62,17 +62,17 @@ namespace OA.Ultima.FilePacks.Records
                 if (RefObjs != null) return;
                 //Utils.Log($"CELL: {GridX}x{GridY}");
                 var refObjs = new List<RefObj>();
-                _land.Load();
-                var heights = _land.Heights;
+                //_land.Load();
+                //var heights = _land.Heights;
                 for (uint y = 0; y < DataFile.CELL_PACK; y++)
                     for (uint x = 0; x < DataFile.CELL_PACK; x++)
-                        LoadTile(heights, refObjs, x * DataFile.CELL_PACK, y * DataFile.CELL_PACK, GridX * DataFile.CELL_PACK + x, GridY * DataFile.CELL_PACK + y);
+                        LoadTile(refObjs, x * DataFile.CELL_PACK, y * DataFile.CELL_PACK, GridX * DataFile.CELL_PACK + x, GridY * DataFile.CELL_PACK + y);
                 RefObjs = refObjs.ToArray();
             }
         }
 
         const int STRIDE0 = 8 * DataFile.CELL_PACK;
-        public void LoadTile(sbyte[] heights, List<RefObj> refObjs, uint offsetX, uint offsetY, uint chunkX, uint chunkY)
+        public void LoadTile(List<RefObj> refObjs, uint offsetX, uint offsetY, uint chunkX, uint chunkY)
         {
             // load the statics data into the tiles
             var staticsData = _tileData.GetStaticChunk(chunkX, chunkY, out int staticLength);
@@ -86,11 +86,11 @@ namespace OA.Ultima.FilePacks.Records
                 var z = (sbyte)staticsData[staticDataIndex++];
                 var hue = staticsData[staticDataIndex++] + (staticsData[staticDataIndex++] * 256);
                 //
-                var itemData = TileData.ItemData[itemId];
-                if (itemData.IsFoliage)
-                    continue;
-                var idx = ((offsetY + y) * STRIDE0) + offsetX + x;
-                z += heights[idx];
+                //var itemData = TileData.ItemData[itemId];
+                //if (itemData.IsBackground)
+                //    continue;
+                //var idx = ((offsetY + y) * STRIDE0) + offsetX + x;
+                //z += heights[idx];
                 refObjs.Add(new RefObj
                 {
                     ItemId = itemId,

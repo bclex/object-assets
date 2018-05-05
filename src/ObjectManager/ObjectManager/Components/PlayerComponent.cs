@@ -15,13 +15,13 @@ namespace OA.Components
         UICrosshair _crosshair;
         bool _paused = false;
         bool _isGrounded = false;
-        bool _isFlying = false;
+        bool _isFlying = true;
 
         [Header("Movement Settings")]
         public float slowSpeed = 3;
         public float normalSpeed = 5;
         public float fastSpeed = 10;
-        public float flightSpeedMultiplier = 3;
+        public float flightSpeedMultiplier = 3 * 5;
         public float airborneForceMultiplier = 5;
         public float mouseSensitivity = 3;
         public float minVerticalAngle = -90;
@@ -83,6 +83,13 @@ namespace OA.Components
             }
             if (InputManager.GetButtonDown("Light"))
                 lantern.enabled = !lantern.enabled;
+            // clamp
+            var lastPostion = _transform.position;
+            if (lastPostion.y < 0)
+            {
+                lastPostion.y = 0;
+                _transform.position = lastPostion;
+            }
         }
 
         void FixedUpdate()
@@ -92,6 +99,7 @@ namespace OA.Components
                 SetVelocity();
             else if (!_isGrounded || !IsFlying)
                 ApplyAirborneForce();
+
         }
 
         void Rotate()
@@ -179,7 +187,7 @@ namespace OA.Components
         {
             var playerCenter = _transform.position + _capsuleCollider.center;
             var castedSphereRadius = 0.8f * _capsuleCollider.radius;
-            var sphereCastDistance = (_capsuleCollider.height / 2);
+            var sphereCastDistance = _capsuleCollider.height / 2;
             return Physics.SphereCast(new Ray(playerCenter, -_transform.up), castedSphereRadius, sphereCastDistance);
         }
 

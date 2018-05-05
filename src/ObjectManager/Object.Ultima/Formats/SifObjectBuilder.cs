@@ -129,8 +129,9 @@ namespace OA.Ultima.Formats
                 if (game.KinematicRigidbodies)
                     obj.AddComponent<Rigidbody>().isKinematic = true;
             }
-            ApplySiAVObject(primitive, obj);
-            //obj.transform.localScale = primitive.Scale * new Vector3(1, primitive.Height, 1);
+            //ApplySiAVObject(primitive, obj);
+            obj.transform.position = new Vector3(0, primitive.Height / 2, 0);
+            obj.transform.localScale = primitive.Scale * new Vector3(1, primitive.Height, 1);
             return obj;
         }
 

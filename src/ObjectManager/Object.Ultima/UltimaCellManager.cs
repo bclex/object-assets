@@ -11,8 +11,8 @@ namespace OA.Ultima
 {
     public class UltimaCellManager : ICellManager
     {
-        const int _cellRadius = 1;
-        const int _detailRadius = 1;
+        const int _cellRadius = 2;
+        const int _detailRadius = 2;
 
         UltimaAssetPack _asset;
         UltimaDataPack _data;
@@ -130,7 +130,7 @@ namespace OA.Ultima
             LANDRecord land = null;
             if (!cell.IsInterior)
             {
-                cellObjName = "cell " + cell.GridCoords.ToString();
+                cellObjName = string.Format("cell.{0:00}x{1:00}", cell.GridCoords.x, cell.GridCoords.y);
                 land = _data.FindLANDRecord(cell.GridCoords);
             }
             else cellObjName = cell.Name;
@@ -362,7 +362,7 @@ namespace OA.Ultima
             const int LAND_SIDELENGTH = 8 * DataFile.CELL_PACK;
             var heights = new float[LAND_SIDELENGTH, LAND_SIDELENGTH];
             // Read in the heights in units.
-            const int VHGTIncrementToUnits = 2;
+            const int VHGTIncrementToUnits = 1;
             for (var y = 0; y < LAND_SIDELENGTH; y++)
                 for (var x = 0; x < LAND_SIDELENGTH; x++)
                 {

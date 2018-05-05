@@ -37,10 +37,8 @@ namespace OA.Ultima.Formats
                 new SiPrimitive
                 {
                     Name = Name,
-                    //Translation = new Vector3(0F, 0.5F, 0F),
-                    Scale = 1,
                     Properties = new[] { new Ref<SiProperty>(1) },
-                    Height = itemData.CalcHeight,
+                    Height = itemData.CalcHeight / ConvertUtils.MeterInUnits / 2,
                 },
                 new SiTexturingProperty { TextureCount = 1, BaseTexture = new TexDesc { Source = new Ref<SiSourceTexture>(2) } },
                 new SiSourceTexture { FilePath = filePath },
@@ -123,7 +121,7 @@ namespace OA.Ultima.Formats
 
     public class SiPrimitive : SiGeometry
     {
-        public int Height;
+        public float Height;
     }
 
     public class SiTriShape : SiGeometry
