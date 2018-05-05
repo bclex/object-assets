@@ -62,7 +62,7 @@ namespace OA.Ultima.UI.WorldGumps
                     _gumpTexture = null;
                 var provider = Service.Get<IResourceProvider>();
                 _gumpTexture = provider.GetUITexture(_useLargeMap ? 5011 : 5010, true);
-                Size = new Vector2Int(_gumpTexture.width, _gumpTexture.height);
+                Size = new Vector2Int(_gumpTexture.Width, _gumpTexture.Height);
             }
             base.Update(totalMS, frameMS);
         }
@@ -73,8 +73,8 @@ namespace OA.Ultima.UI.WorldGumps
             var x = (float)Math.Round((player.Position.X % 256) + player.Position.X_offset) / 256f;
             var y = (float)Math.Round((player.Position.Y % 256) + player.Position.Y_offset) / 256f;
             var playerPosition = new Vector3(x - y, x + y, 0f);
-            var minimapU = (_gumpTexture.width / 256f) / 2f;
-            var minimapV = (_gumpTexture.height / 256f) / 2f;
+            var minimapU = (_gumpTexture.Width / 256f) / 2f;
+            var minimapV = (_gumpTexture.Height / 256f) / 2f;
 
             VertexPositionNormalTextureHue[] v = 
             {

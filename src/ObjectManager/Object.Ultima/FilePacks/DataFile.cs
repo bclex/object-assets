@@ -58,8 +58,12 @@ namespace OA.Ultima.FilePacks
         {
             var recordList = new List<Record>();
             // add items
+#if false
+            for (short itemId = 0; itemId < TileData.LandData.Length; itemId++)
+                recordList.Add(new STATRecord(true, itemId));
+#endif
             for (short itemId = 0; itemId < TileData.ItemData.Length; itemId++)
-                recordList.Add(new STATRecord(itemId));
+                recordList.Add(new STATRecord(false, itemId));
             // add tiles
             for (uint chunkY = 0; chunkY < _tileData.ChunkHeight / CELL_PACK; chunkY++)
                 for (uint chunkX = 0; chunkX < _tileData.ChunkWidth / CELL_PACK; chunkX++)

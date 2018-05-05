@@ -36,7 +36,7 @@ namespace OA.Ultima.World.EntityViews
             {
                 _displayItemID = displayItemdID;
                 DrawTexture = Provider.GetItemTexture(_displayItemID);
-                DrawArea = new RectInt(DrawTexture.width / 2 - 22, DrawTexture.height - IsometricRenderer.TILE_SIZE_INTEGER + (Entity.Z * 4), DrawTexture.width, DrawTexture.height);
+                DrawArea = new RectInt(DrawTexture.Width / 2 - 22, DrawTexture.Height - IsometricRenderer.TILE_SIZE_INTEGER + (Entity.Z * 4), DrawTexture.Width, DrawTexture.Height);
                 PickType = PickType.PickNothing;
                 DrawFlip = false;
             }

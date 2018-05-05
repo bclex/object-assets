@@ -57,7 +57,9 @@ namespace OA.Ultima.Resources
                             r.ReadInt32();
                         var flags = (TileFlag)r.ReadInt64();
                         var textureID = r.ReadInt16();
-                        r.BaseStream.Seek(20, SeekOrigin.Current);
+                        landData.Name = Encoding.ASCII.GetString(r.ReadBytes(20));
+                        landData.Name = landData.Name.Trim('\0');
+                        //r.BaseStream.Seek(20, SeekOrigin.Current);
                         landData.Flags = flags;
                         landData.TextureID = textureID;
                         LandData[i] = landData;
@@ -66,6 +68,7 @@ namespace OA.Ultima.Resources
                     for (var i = 0; i < 0x10000; ++i)
                     {
                         itemData = new ItemData();
+                        itemData.ItemId = i;
                         if ((i & 0x1F) == 0)
                             r.ReadInt32();
                         itemData.Flags = (TileFlag)r.ReadInt64();
@@ -80,7 +83,7 @@ namespace OA.Ultima.Resources
                         itemData.Unknown4 = r.ReadByte();
                         itemData.Value = r.ReadByte();
                         itemData.Height = r.ReadByte();
-                        itemData.Name = Encoding.ASCII.GetString((r.ReadBytes(20)));
+                        itemData.Name = Encoding.ASCII.GetString(r.ReadBytes(20));
                         itemData.Name = itemData.Name.Trim('\0');
                         // r.BaseStream.Seek(20, SeekOrigin.Current);
                         // Issue 5 - Statics (bridge, stairs, etc) should be walkable - http://code.google.com/p/ultimaxna/issues/detail?id=5 - Smjert
@@ -100,7 +103,9 @@ namespace OA.Ultima.Resources
                             r.ReadInt32();
                         var flags = (TileFlag)r.ReadInt32();
                         var textureID = r.ReadInt16();
-                        r.BaseStream.Seek(20, SeekOrigin.Current);
+                        landData.Name = Encoding.ASCII.GetString(r.ReadBytes(20));
+                        landData.Name = landData.Name.Trim('\0');
+                        //r.BaseStream.Seek(20, SeekOrigin.Current);
                         landData.Flags = flags;
                         landData.TextureID = textureID;
                         LandData[i] = landData;
@@ -111,6 +116,7 @@ namespace OA.Ultima.Resources
                         for (var i = 0; i < 0x8000; ++i)
                         {
                             itemData = new ItemData();
+                            itemData.ItemId = i;
                             if ((i & 0x1F) == 0)
                                 r.ReadInt32();
                             itemData.Flags = (TileFlag)r.ReadInt32();
@@ -125,7 +131,7 @@ namespace OA.Ultima.Resources
                             itemData.Unknown4 = r.ReadByte();
                             itemData.Value = r.ReadByte();
                             itemData.Height = r.ReadByte();
-                            itemData.Name = Encoding.ASCII.GetString((r.ReadBytes(20)));
+                            itemData.Name = Encoding.ASCII.GetString(r.ReadBytes(20));
                             itemData.Name = itemData.Name.Trim('\0');
                             // r.BaseStream.Seek(20, SeekOrigin.Current);
                             // Issue 5 - Statics (bridge, stairs, etc) should be walkable - http://code.google.com/p/ultimaxna/issues/detail?id=5 - Smjert
@@ -141,6 +147,7 @@ namespace OA.Ultima.Resources
                         for (var i = 0; i < 0x4000; ++i)
                         {
                             itemData = new ItemData();
+                            itemData.ItemId = i;
                             if ((i & 0x1F) == 0)
                                 r.ReadInt32();
                             itemData.Flags = (TileFlag)r.ReadInt32();
@@ -155,7 +162,7 @@ namespace OA.Ultima.Resources
                             itemData.Unknown4 = r.ReadByte();
                             itemData.Value = r.ReadByte();
                             itemData.Height = r.ReadByte();
-                            itemData.Name = Encoding.ASCII.GetString((r.ReadBytes(20)));
+                            itemData.Name = Encoding.ASCII.GetString(r.ReadBytes(20));
                             itemData.Name = itemData.Name.Trim('\0');
                             // r.BaseStream.Seek(20, SeekOrigin.Current);
                             // Issue 5 - Statics (bridge, stairs, etc) should be walkable - http://code.google.com/p/ultimaxna/issues/detail?id=5 - Smjert
@@ -173,6 +180,7 @@ namespace OA.Ultima.Resources
 
     public struct ItemData
     {
+        public int ItemId; //? added
         public int Weight;
         public TileFlag Flags;
         public int Height;
@@ -185,104 +193,34 @@ namespace OA.Ultima.Resources
 
         public byte Unknown1, Unknown2, Unknown3, Unknown4;
 
-        public bool IsBackground
-        {
-            get { return (Flags & TileFlag.Background) != 0; }
-        }
+        public bool Ignored => (ItemId >= 0x0C45 && ItemId <= 0x0DAF);
 
-        public bool IsBridge
-        {
-            get { return (Flags & TileFlag.Bridge) != 0; }
-        }
-
-        public int CalcHeight
-        {
-            get
-            {
-                if ((Flags & TileFlag.Bridge) != 0) return Height; // / 2;
-                else return Height;
-            }
-        }
-
-        public bool IsAnimation
-        {
-            get { return (Flags & TileFlag.Animation) != 0; }
-        }
-
-        public bool IsContainer
-        {
-            get { return (Flags & TileFlag.Container) != 0; }
-        }
-
-        public bool IsFoliage
-        {
-            get { return (Flags & TileFlag.Foliage) != 0; }
-        }
-
-        public bool IsGeneric
-        {
-            get { return (Flags & TileFlag.Generic) != 0; }
-        }
-
-        public bool IsImpassable
-        {
-            get { return (Flags & TileFlag.Impassable) != 0; }
-        }
-
-        public bool IsLightSource
-        {
-            get { return (Flags & TileFlag.LightSource) != 0; }
-        }
-
-        public bool IsPartialHue
-        {
-            get { return (Flags & TileFlag.PartialHue) != 0; }
-        }
-
-        public bool IsRoof
-        {
-            get { return (Flags & TileFlag.Roof) != 0; }
-        }
-
-        public bool IsDoor
-        {
-            get { return (Flags & TileFlag.Door) != 0; }
-        }
-
-        public bool IsSurface
-        {
-            get { return (Flags & TileFlag.Surface) != 0; }
-        }
-
-        public bool IsWall
-        {
-            get { return (Flags & TileFlag.Wall) != 0; }
-        }
-
-        public bool IsWearable
-        {
-            get { return (Flags & TileFlag.Wearable) != 0; }
-        }
-
-        public bool IsWet
-        {
-            get { return (Flags & TileFlag.Wet) != 0; }
-        }
+        public bool IsBackground => (Flags & TileFlag.Background) != 0;
+        public bool IsBridge => (Flags & TileFlag.Bridge) != 0;
+        public int CalcHeight => Height;
+        //public int CalcHeight => ((Flags & TileFlag.Bridge) != 0 ? Height / 2 : Height;
+        public bool IsAnimation => (Flags & TileFlag.Animation) != 0;
+        public bool IsContainer => (Flags & TileFlag.Container) != 0;
+        public bool IsFoliage => (Flags & TileFlag.Foliage) != 0;
+        public bool IsGeneric => (Flags & TileFlag.Generic) != 0;
+        public bool IsImpassable => (Flags & TileFlag.Impassable) != 0;
+        public bool IsLightSource => (Flags & TileFlag.LightSource) != 0;
+        public bool IsPartialHue => (Flags & TileFlag.PartialHue) != 0;
+        public bool IsRoof => (Flags & TileFlag.Roof) != 0;
+        public bool IsDoor => (Flags & TileFlag.Door) != 0;
+        public bool IsSurface => (Flags & TileFlag.Surface) != 0;
+        public bool IsWall => (Flags & TileFlag.Wall) != 0;
+        public bool IsWearable => (Flags & TileFlag.Wearable) != 0;
+        public bool IsWet => (Flags & TileFlag.Wet) != 0;
     }
 
     public struct LandData
     {
         public TileFlag Flags;
         public short TextureID;
+        public string Name;
 
-        public bool IsWet
-        {
-            get { return (Flags & TileFlag.Wet) != 0; }
-        }
-
-        public bool IsImpassible
-        {
-            get { return (Flags & TileFlag.Impassable) != 0; }
-        }
+        public bool IsWet => (Flags & TileFlag.Wet) != 0;
+        public bool IsImpassible => (Flags & TileFlag.Impassable) != 0;
     }
 }

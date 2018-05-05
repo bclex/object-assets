@@ -19,7 +19,7 @@ namespace OA.Ultima.FilePacks.Records
 
         public class Tile
         {
-            public int TileId;
+            public short TileId;
             public TileFlag Flags;
             public short TextureId;
             public bool Ignored;
@@ -71,10 +71,11 @@ namespace OA.Ultima.FilePacks.Records
                     {
                         //X = (int)chunkX * 8 + x,
                         //Y = (int)chunkY * 8 + y,
+                        TileId = tileId,
                         Flags = data.Flags,
                         TextureId = data.TextureID,
                         Ignored = tileId == 2 || tileId == 0x1DB || (tileId >= 0x1AE && tileId <= 0x1B5),
-                };
+                    };
                 }
         }
     }

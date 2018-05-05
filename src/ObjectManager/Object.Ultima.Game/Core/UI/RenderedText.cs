@@ -172,10 +172,10 @@ namespace OA.Core.UI
                     }
                     if (texture == null)
                         texture = img.Texture;
-                    if (srcImage.width > texture.width)
-                        srcImage.width = texture.width;
-                    if (srcImage.height > texture.height)
-                        srcImage.height = texture.height;
+                    if (srcImage.width > texture.Width)
+                        srcImage.width = texture.Width;
+                    if (srcImage.height > texture.Height)
+                        srcImage.height = texture.Height;
                     sb.Draw2D(texture, new Vector3(position.x, position.y, 0), srcImage, Utility.GetHueVector(0, false, false, true));
                 }
             }

@@ -52,7 +52,7 @@ namespace OA.Ultima.UI.Controls
             {
                 var provider = Service.Get<IResourceProvider>();
                 _texture = provider.GetItemTexture(_tileID);
-                Size = new Vector2Int(_texture.width, _texture.height);
+                Size = new Vector2Int(_texture.Width, _texture.Height);
             }
             base.Update(totalMS, frameMS);
         }

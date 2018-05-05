@@ -76,7 +76,7 @@ namespace OA.Ultima.UI.Controls
             {
                 var provider = Service.Get<IResourceProvider>();
                 _texture = provider.GetItemTexture(Item.DisplayItemID);
-                Size = new Vector2Int(_texture.width, _texture.height);
+                Size = new Vector2Int(_texture.Width, _texture.Height);
             }
             var hue = Utility.GetHueVector(IsMouseOver && HighlightOnMouseOver ? WorldView.MouseOverHue : Item.Hue);
             if (Item.Amount > 1 && Item.ItemData.IsGeneric && Item.DisplayItemID == Item.ItemID)

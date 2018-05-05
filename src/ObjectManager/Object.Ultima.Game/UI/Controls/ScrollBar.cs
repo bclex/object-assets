@@ -110,7 +110,7 @@ namespace OA.Ultima.UI.Controls
             _gumpBackground[1] = provider.GetUITexture(256);
             _gumpBackground[2] = provider.GetUITexture(255);
             _gumpSlider = provider.GetUITexture(254);
-            Size = new Vector2Int(_gumpBackground[0].width, Height);
+            Size = new Vector2Int(_gumpBackground[0].Width, Height);
         }
 
         public override void Update(double totalMS, double frameMS)
@@ -136,25 +136,25 @@ namespace OA.Ultima.UI.Controls
             if (Height <= 0)
                 return;
             // draw scrollbar background
-            var middleHeight = Height - _gumpUpButton[0].height - _gumpDownButton[0].height - _gumpBackground[0].height - _gumpBackground[2].height;
+            var middleHeight = Height - _gumpUpButton[0].Height - _gumpDownButton[0].Height - _gumpBackground[0].Height - _gumpBackground[2].Height;
             if (middleHeight > 0)
             {
-                spriteBatch.Draw2D(_gumpBackground[0], new Vector3(position.x, position.y + _gumpUpButton[0].height, 0), Vector3.zero);
-                spriteBatch.Draw2DTiled(_gumpBackground[1], new RectInt(position.x, position.y + _gumpUpButton[0].height + _gumpBackground[0].height, _gumpBackground[0].width, middleHeight), Vector3.zero);
-                spriteBatch.Draw2D(_gumpBackground[2], new Vector3(position.x, position.y + Height - _gumpDownButton[0].height - _gumpBackground[2].height, 0), Vector3.zero);
+                spriteBatch.Draw2D(_gumpBackground[0], new Vector3(position.x, position.y + _gumpUpButton[0].Height, 0), Vector3.zero);
+                spriteBatch.Draw2DTiled(_gumpBackground[1], new RectInt(position.x, position.y + _gumpUpButton[0].Height + _gumpBackground[0].Height, _gumpBackground[0].Width, middleHeight), Vector3.zero);
+                spriteBatch.Draw2D(_gumpBackground[2], new Vector3(position.x, position.y + Height - _gumpDownButton[0].Height - _gumpBackground[2].Height, 0), Vector3.zero);
             }
             else
             {
-                middleHeight = Height - _gumpUpButton[0].height - _gumpDownButton[0].height;
-                spriteBatch.Draw2DTiled(_gumpBackground[1], new RectInt(position.x, position.y + _gumpUpButton[0].height, _gumpBackground[0].width, middleHeight), Vector3.zero);
+                middleHeight = Height - _gumpUpButton[0].Height - _gumpDownButton[0].Height;
+                spriteBatch.Draw2DTiled(_gumpBackground[1], new RectInt(position.x, position.y + _gumpUpButton[0].Height, _gumpBackground[0].Width, middleHeight), Vector3.zero);
             }
             // draw up button
             spriteBatch.Draw2D(_btnUpClicked ? _gumpUpButton[1] : _gumpUpButton[0], new Vector3(position.x, position.y, 0), Vector3.zero);
             // draw down button
-            spriteBatch.Draw2D(_btnDownClicked ? _gumpDownButton[1] : _gumpDownButton[0], new Vector3(position.x, position.y + Height - _gumpDownButton[0].height, 0), Vector3.zero);
+            spriteBatch.Draw2D(_btnDownClicked ? _gumpDownButton[1] : _gumpDownButton[0], new Vector3(position.x, position.y + Height - _gumpDownButton[0].Height, 0), Vector3.zero);
             // draw slider
             if (MaxValue > MinValue && middleHeight > 0)
-                spriteBatch.Draw2D(_gumpSlider, new Vector3(position.x + (_gumpBackground[0].width - _gumpSlider.width) / 2, position.y + _gumpUpButton[0].height + _sliderPosition, 0), Vector3.zero);
+                spriteBatch.Draw2D(_gumpSlider, new Vector3(position.x + (_gumpBackground[0].Width - _gumpSlider.Width) / 2, position.y + _gumpUpButton[0].Height + _sliderPosition, 0), Vector3.zero);
             base.Draw(spriteBatch, position, frameMS);
         }
 
@@ -171,23 +171,23 @@ namespace OA.Ultima.UI.Controls
         {
             if (!IsInitialized)
                 return 0f;
-            return Height - _gumpUpButton[0].height - _gumpDownButton[0].height - _gumpSlider.height;
+            return Height - _gumpUpButton[0].Height - _gumpDownButton[0].Height - _gumpSlider.Height;
         }
 
         protected override void OnMouseDown(int x, int y, MouseButton button)
         {
             _timeUntilNextClick = 0f;
-            if (new RectInt(0, Height - _gumpDownButton[0].height, _gumpDownButton[0].width, _gumpDownButton[0].height).Contains(new Vector2Int(x, y)))
+            if (new RectInt(0, Height - _gumpDownButton[0].Height, _gumpDownButton[0].Width, _gumpDownButton[0].Height).Contains(new Vector2Int(x, y)))
             {
                 // clicked on the down button
                 _btnDownClicked = true;
             }
-            else if (new RectInt(0, 0, _gumpUpButton[0].width, _gumpUpButton[0].height).Contains(new Vector2Int(x, y)))
+            else if (new RectInt(0, 0, _gumpUpButton[0].Width, _gumpUpButton[0].Height).Contains(new Vector2Int(x, y)))
             {
                 // clicked on the up button
                 _btnUpClicked = true;
             }
-            else if (new RectInt((_gumpBackground[0].width - _gumpSlider.width) / 2, _gumpUpButton[0].height + (int)_sliderPosition, _gumpSlider.width, _gumpSlider.height).Contains(new Vector2Int(x, y)))
+            else if (new RectInt((_gumpBackground[0].Width - _gumpSlider.Width) / 2, _gumpUpButton[0].Height + (int)_sliderPosition, _gumpSlider.Width, _gumpSlider.Height).Contains(new Vector2Int(x, y)))
             {
                 // clicked on the slider
                 _btnSliderClicked = true;
@@ -220,10 +220,10 @@ namespace OA.Ultima.UI.Controls
                     if (sliderY > scrollableArea)
                         sliderY = scrollableArea;
                     ClickPosition = new Vector2Int(x, y);
-                    if (sliderY == 0 && ClickPosition.y < _gumpUpButton[0].height + _gumpSlider.height / 2)
-                        ClickPosition.y = _gumpUpButton[0].height + _gumpSlider.height / 2;
-                    if (sliderY == (scrollableArea) && ClickPosition.y > Height - _gumpDownButton[0].height - _gumpSlider.height / 2)
-                        ClickPosition.y = Height - _gumpDownButton[0].height - _gumpSlider.height / 2;
+                    if (sliderY == 0 && ClickPosition.y < _gumpUpButton[0].Height + _gumpSlider.Height / 2)
+                        ClickPosition.y = _gumpUpButton[0].Height + _gumpSlider.Height / 2;
+                    if (sliderY == (scrollableArea) && ClickPosition.y > Height - _gumpDownButton[0].Height - _gumpSlider.Height / 2)
+                        ClickPosition.y = Height - _gumpDownButton[0].Height - _gumpSlider.Height / 2;
                     _value = ((sliderY / scrollableArea) * (float)((MaxValue - MinValue))) + MinValue;
                     _sliderPosition = sliderY;
                 }

@@ -36,7 +36,7 @@ namespace OA.Ultima.UI.Controls
                 _lastFrameGumpID = GumpID;
                 var provider = Service.Get<IResourceProvider>();
                 _texture = provider.GetUITexture(GumpID);
-                Size = new Vector2Int(_texture.width, _texture.height);
+                Size = new Vector2Int(_texture.Width, _texture.Height);
             }
             base.Update(totalMS, frameMS);
         }

@@ -88,7 +88,7 @@ namespace OA.Ultima.UI.Controls
             base.OnInitialize();
             var provider = Service.Get<IResourceProvider>();
             _gumpSlider = provider.GetUITexture(0x0828);
-            Size = new Vector2Int(_gumpSlider.width, _gumpSlider.height);
+            Size = new Vector2Int(_gumpSlider.Width, _gumpSlider.Height);
         }
 
         public override void Update(double totalMS, double frameMS)
@@ -120,13 +120,13 @@ namespace OA.Ultima.UI.Controls
         {
             if (!IsInitialized)
                 return 0f;
-            return Height - _gumpSlider.height;
+            return Height - _gumpSlider.Height;
         }
 
         protected override bool IsPointWithinControl(int x, int y)
         {
             x -= 5;
-            var slider = new RectInt(0, (int)_sliderPosition, _gumpSlider.width, _gumpSlider.height);
+            var slider = new RectInt(0, (int)_sliderPosition, _gumpSlider.Width, _gumpSlider.Height);
             return slider.Contains(new Vector2Int(x, y));
         }
 

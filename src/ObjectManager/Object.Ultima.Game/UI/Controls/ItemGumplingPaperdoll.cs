@@ -40,7 +40,7 @@ namespace OA.Ultima.UI.Controls
                     _hueOverride = hueTranslated;
                 }
                 _texture = provider.GetUITexture(_gumpIndex);
-                Size = new Vector2Int(_texture.width, _texture.height);
+                Size = new Vector2Int(_texture.Width, _texture.Height);
             }
             var hue = Item.Hue == 0 & _hueOverride != 0 ? _hueOverride : Item.Hue;
             spriteBatch.Draw2D(_texture, new Vector3(position.x, position.y, 0), Utility.GetHueVector(hue));

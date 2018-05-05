@@ -42,7 +42,7 @@ namespace OA.Ultima.UI.Controls
             var worldTexture = (_model.GetView() as WorldView).Isometric.Texture;
             if (worldTexture == null)
                 return;
-            _inputMultiplier = new Vector2((float)worldTexture.width / Width, (float)worldTexture.height / Height);
+            _inputMultiplier = new Vector2((float)worldTexture.Width / Width, (float)worldTexture.Height / Height);
             spriteBatch.Draw2D(worldTexture, new RectInt(position.x, position.y, Width, Height), Vector3.zero);
             base.Draw(spriteBatch, position, frameMS);
         }

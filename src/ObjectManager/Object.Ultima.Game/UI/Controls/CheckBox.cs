@@ -65,7 +65,7 @@ namespace OA.Ultima.UI.Controls
             _inactive = provider.GetUITexture(inactiveID);
             _active = provider.GetUITexture(activeID);
             Position = new Vector2Int(x, y);
-            Size = new Vector2Int(_inactive.width, _inactive.height);
+            Size = new Vector2Int(_inactive.Width, _inactive.Height);
             IsChecked = initialState;
             GumpLocalID = switchID;
         }

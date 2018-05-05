@@ -19,21 +19,32 @@ namespace OA.Ultima
             Asset = assetManager.GetAssetPack(null).Result;
             Data = assetManager.GetDataPack(null).Result;
 
-            //MakeObject("sta10");
-            MakeObject("sta3");
+            //MakeObject("sta010").transform.Translate(Vector3.left * 1 + Vector3.up);
+            //MakeObject("sta069").transform.Translate(Vector3.left * 1 + Vector3.down);
 
-            //MakeTexture("lnd1");
+            MakeObject("lnd001").transform.Translate(Vector3.right * 1);
+            MakeObject("lnd002").transform.Translate(Vector3.right * 1 + Vector3.up);
+            MakeObject("lnd516").transform.Translate(Vector3.right * 1 + Vector3.down);
+
+            //MakeObject("gmp065").transform.Translate(Vector3.back * 5);
+
+            //MakeTexture("sta010");
+            //MakeTexture("sta069");
+
+            //MakeTexture("lnd001");
+            //MakeTexture("lnd002");
             //MakeTexture("lnd516");
             //MakeTexture("lnd1137");
-            //MakeTexture("sta69");
-            //MakeTexture("gmp65");
+
+            //MakeTexture("gmp065");
+
             //MakeTexture("tex789");
-            //MakeCursor("gmp65");
         }
 
-        static void MakeObject(string path)
+        static GameObject MakeObject(string path)
         {
             var obj = Asset.CreateObject(path);
+            return obj;
         }
 
         static void MakeTexture(string path)

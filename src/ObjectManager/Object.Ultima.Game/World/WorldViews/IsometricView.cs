@@ -48,7 +48,7 @@ namespace OA.Ultima.World.WorldViews
         public void Update(Map map, Position3D center, MousePicking mousePick)
         {
             var pixelScale = UltimaGameSettings.UserInterface.PlayWindowPixelDoubling ? 2 : 1;
-            if (_renderTargetSprites == null || _renderTargetSprites.width != UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Width / pixelScale || _renderTargetSprites.height != UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Height / pixelScale)
+            if (_renderTargetSprites == null || _renderTargetSprites.Width != UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Width / pixelScale || _renderTargetSprites.Height != UltimaGameSettings.UserInterface.PlayWindowGumpResolution.Height / pixelScale)
             {
                 if (_renderTargetSprites != null)
                     _renderTargetSprites.Dispose();

@@ -97,6 +97,7 @@ namespace OA.Ultima.Resources
                 }
             }
             var texture = new Texture2DInfo(44, 44, TextureFormat.BGRA32, false, pixels);
+            //texture.Rotate2D(45);
             return texture;
         }
 

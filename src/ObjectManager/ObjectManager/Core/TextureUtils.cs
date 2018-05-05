@@ -4,13 +4,21 @@ namespace OA.Core
 {
     public static class TextureUtils
     {
-        public static void FlipTexture2DVertically(Texture2D texture2D)
-        {
-            var pixels = texture2D.GetPixels32();
-            ArrayUtils.Flip2DArrayVertically(pixels, texture2D.height, texture2D.width);
-            texture2D.SetPixels32(pixels);
-            texture2D.Apply();
-        }
+        //public static void FlipTexture2DVertically(Texture2D texture2D)
+        //{
+        //    var pixels = texture2D.GetPixels32();
+        //    ArrayUtils.Flip2DArrayVertically(pixels, texture2D.height, texture2D.width);
+        //    texture2D.SetPixels32(pixels);
+        //    texture2D.Apply();
+        //}
+
+        //public static void RotateTexture2D(Texture2D texture2D)
+        //{
+        //    var pixels = texture2D.GetPixels32();
+        //    ArrayUtils.Rotate2DArray(pixels, texture2D.width);
+        //    texture2D.SetPixels32(pixels);
+        //    texture2D.Apply();
+        //}
 
         public static int CalculateMipMapCount(int baseTextureWidth, int baseTextureHeight)
         {

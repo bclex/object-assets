@@ -242,7 +242,7 @@ namespace OA.Ultima.World.Input
                         _itemSprite = null;
                     else
                     {
-                        var sourceRect = new RectInt(0, 0, art.width, art.height);
+                        var sourceRect = new RectInt(0, 0, art.Width, art.Height);
                         _itemSprite = new HuedTexture(art, Vector2Int.zero, sourceRect, 0);
                     }
                 }
@@ -603,12 +603,12 @@ namespace OA.Ultima.World.Input
             var itemTexture = provider.GetItemTexture(HeldItem.DisplayItemID);
             if (x < bounds.Left)
                 x = bounds.Left;
-            if (x > bounds.Right - itemTexture.width)
-                x = bounds.Right - itemTexture.width;
+            if (x > bounds.Right - itemTexture.Width)
+                x = bounds.Right - itemTexture.Width;
             if (y < bounds.Top)
                 y = bounds.Top;
-            if (y > bounds.Bottom - itemTexture.height)
-                y = bounds.Bottom - itemTexture.height;
+            if (y > bounds.Bottom - itemTexture.Height)
+                y = bounds.Bottom - itemTexture.Height;
             _network.Send(new DropItemPacket(HeldItem.Serial, (ushort)x, (ushort)y, 0, 0, container.Serial));
             ClearHolding();
         }

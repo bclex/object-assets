@@ -97,8 +97,8 @@ namespace OA.Ultima.UI.Controls
             if (IsChild && IsMouseOver)
             {
                 spriteBatch.Draw2D(_selectedIndicator, new Vector3(
-                    (int)(position.x + (float)(Width / _hueWidth) * ((Index % _hueWidth) + 0.5f) - _selectedIndicator.width / 2),
-                    (int)(position.y + (float)(Height / _hueHeight) * ((Index / _hueWidth) + 0.5f) - _selectedIndicator.height / 2),
+                    (int)(position.x + (float)(Width / _hueWidth) * ((Index % _hueWidth) + 0.5f) - _selectedIndicator.Width / 2),
+                    (int)(position.y + (float)(Height / _hueHeight) * ((Index / _hueWidth) + 0.5f) - _selectedIndicator.Height / 2),
                     0), Vector3.zero);
             }
             base.Draw(spriteBatch, position, frameMS);

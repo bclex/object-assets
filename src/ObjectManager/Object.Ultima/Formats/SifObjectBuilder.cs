@@ -113,8 +113,13 @@ namespace OA.Ultima.Formats
         {
             var game = UltimaSettings.Game;
             Debug.Assert(visual || collidable);
-            var obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var width = Math.Max(primitive.Width, 1F);
+            var height = Math.Max(primitive.Height, 0.01F);
+            var obj = GameObject.CreatePrimitive(primitive.Type);
             obj.name = primitive.Name;
+            obj.transform.position = new Vector3(0, height / 2, 0);
+            obj.transform.localScale = primitive.Scale * new Vector3(width, height, 1);
+            //    obj.transform.Rotate(0.5F, 0, 0);
             if (visual)
             {
                 var materialProps = SiAVObjectPropertiesToMaterialProperties(primitive);
@@ -130,8 +135,6 @@ namespace OA.Ultima.Formats
                     obj.AddComponent<Rigidbody>().isKinematic = true;
             }
             //ApplySiAVObject(primitive, obj);
-            obj.transform.position = new Vector3(0, primitive.Height / 2, 0);
-            obj.transform.localScale = primitive.Scale * new Vector3(1, primitive.Height, 1);
             return obj;
         }
 

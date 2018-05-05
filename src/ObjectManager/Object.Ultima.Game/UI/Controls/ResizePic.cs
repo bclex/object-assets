@@ -66,22 +66,22 @@ namespace OA.Ultima.UI.Controls
 
         public override void Draw(SpriteBatchUI spriteBatch, Vector2Int position, double frameMS)
         {
-            var centerWidth = Width - _gumps[0].width - _gumps[2].width;
-            var centerHeight = Height - _gumps[0].height - _gumps[6].height;
-            var line2Y = position.y + _gumps[0].height;
-            var line3Y = position.y + Height - _gumps[6].height;
+            var centerWidth = Width - _gumps[0].Width - _gumps[2].Width;
+            var centerHeight = Height - _gumps[0].Height - _gumps[6].Height;
+            var line2Y = position.y + _gumps[0].Height;
+            var line3Y = position.y + Height - _gumps[6].Height;
             // top row
             spriteBatch.Draw2D(_gumps[0], new Vector3(position.x, position.y, 0), Vector3.zero);
-            spriteBatch.Draw2DTiled(_gumps[1], new RectInt(position.x + _gumps[0].width, position.y, centerWidth, _gumps[0].height), Vector3.zero);
-            spriteBatch.Draw2D(_gumps[2], new Vector3(position.x + Width - _gumps[2].width, position.y, 0), Vector3.zero);
+            spriteBatch.Draw2DTiled(_gumps[1], new RectInt(position.x + _gumps[0].Width, position.y, centerWidth, _gumps[0].Height), Vector3.zero);
+            spriteBatch.Draw2D(_gumps[2], new Vector3(position.x + Width - _gumps[2].Width, position.y, 0), Vector3.zero);
             // middle
-            spriteBatch.Draw2DTiled(_gumps[3], new RectInt(position.x, line2Y, _gumps[3].width, centerHeight), Vector3.zero);
-            spriteBatch.Draw2DTiled(_gumps[4], new RectInt(position.x + _gumps[3].width, line2Y, centerWidth, centerHeight), Vector3.zero);
-            spriteBatch.Draw2DTiled(_gumps[5], new RectInt(position.x + Width - _gumps[5].width, line2Y, _gumps[5].width, centerHeight), Vector3.zero);
+            spriteBatch.Draw2DTiled(_gumps[3], new RectInt(position.x, line2Y, _gumps[3].Width, centerHeight), Vector3.zero);
+            spriteBatch.Draw2DTiled(_gumps[4], new RectInt(position.x + _gumps[3].Width, line2Y, centerWidth, centerHeight), Vector3.zero);
+            spriteBatch.Draw2DTiled(_gumps[5], new RectInt(position.x + Width - _gumps[5].Width, line2Y, _gumps[5].Width, centerHeight), Vector3.zero);
             // bottom
             spriteBatch.Draw2D(_gumps[6], new Vector3(position.x, line3Y, 0), Vector3.zero);
-            spriteBatch.Draw2DTiled(_gumps[7], new RectInt(position.x + _gumps[6].width, line3Y, centerWidth, _gumps[6].height), Vector3.zero);
-            spriteBatch.Draw2D(_gumps[8], new Vector3(position.x + Width - _gumps[8].width, line3Y, 0), Vector3.zero);
+            spriteBatch.Draw2DTiled(_gumps[7], new RectInt(position.x + _gumps[6].Width, line3Y, centerWidth, _gumps[6].Height), Vector3.zero);
+            spriteBatch.Draw2D(_gumps[8], new Vector3(position.x + Width - _gumps[8].Width, line3Y, 0), Vector3.zero);
 
             base.Draw(spriteBatch, position, frameMS);
         }

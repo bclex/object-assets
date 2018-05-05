@@ -73,7 +73,7 @@ namespace OA.Core
             Debug.Assert(startIndex >= 0 && rowCount >= 0 && columnCount >= 0 && (startIndex + (rowCount * columnCount)) <= arr.Length);
             var tmpRow = new T[columnCount];
             var lastRowIndex = rowCount - 1;
-            for (int rowIndex = 0; rowIndex < (rowCount / 2); rowIndex++)
+            for (var rowIndex = 0; rowIndex < (rowCount / 2); rowIndex++)
             {
                 var otherRowIndex = lastRowIndex - rowIndex;
                 var rowStartIndex = startIndex + (rowIndex * columnCount);

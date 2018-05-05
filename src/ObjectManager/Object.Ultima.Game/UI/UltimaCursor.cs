@@ -28,7 +28,7 @@ namespace OA.Ultima.UI
                         _cursorSprite = null; // shouldn't we have a debug texture to show that we are missing this cursor art? !!!
                     else
                     {
-                        var sourceRect = new RectInt(1, 1, art.width - 2, art.height - 2);
+                        var sourceRect = new RectInt(1, 1, art.Width - 2, art.Height - 2);
                         _cursorSprite = new HuedTexture(art, Vector2Int.zero, sourceRect, 0);
                     }
                 }

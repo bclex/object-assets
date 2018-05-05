@@ -130,7 +130,7 @@ namespace OA.Ultima
             LANDRecord land = null;
             if (!cell.IsInterior)
             {
-                cellObjName = string.Format("cell.{0:00}x{1:00}", cell.GridCoords.x, cell.GridCoords.y);
+                cellObjName = string.Format("cell-{0:00}x{1:00}", cell.GridCoords.x, cell.GridCoords.y);
                 land = _data.FindLANDRecord(cell.GridCoords);
             }
             else cellObjName = cell.Name;

@@ -45,13 +45,13 @@ namespace OA.Ultima.World.EntityViews
                 DrawTexture = Provider.GetItemTexture(_displayItemID);
                 if (DrawTexture == null) // ' no draw ' item.
                     return false;
-                DrawArea = new RectInt(DrawTexture.width / 2 - IsometricRenderer.TILE_SIZE_INTEGER_HALF, DrawTexture.height - IsometricRenderer.TILE_SIZE_INTEGER + (Entity.Z * 4), DrawTexture.width, DrawTexture.height);
+                DrawArea = new RectInt(DrawTexture.Width / 2 - IsometricRenderer.TILE_SIZE_INTEGER_HALF, DrawTexture.Height - IsometricRenderer.TILE_SIZE_INTEGER + (Entity.Z * 4), DrawTexture.Width, DrawTexture.Height);
                 PickType = PickType.PickObjects;
                 DrawFlip = false;
             }
             if (DrawTexture == null) // ' no draw ' item.
                 return false;
-            DrawArea.y = DrawTexture.height - IsometricRenderer.TILE_SIZE_INTEGER + (Entity.Z * 4);
+            DrawArea.y = DrawTexture.Height - IsometricRenderer.TILE_SIZE_INTEGER + (Entity.Z * 4);
             HueVector = Utility.GetHueVector(Entity.Hue, Entity.ItemData.IsPartialHue, false, false);
             if (Entity.Amount > 1 && Entity.ItemData.IsGeneric && Entity.DisplayItemID == Entity.ItemID)
             {

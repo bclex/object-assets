@@ -34,7 +34,7 @@ namespace OA.Ultima.World.EntityViews
                 _displayItemID = displayItemdID;
                 DrawTexture = Provider.GetUITexture(displayItemdID);
                 var offset = _offsets[_displayItemID - 20000];
-                DrawArea = new RectInt(offset.x, DrawTexture.height - 33 + (Entity.Z * 4) + offset.y, DrawTexture.width, DrawTexture.height);
+                DrawArea = new RectInt(offset.x, DrawTexture.Height - 33 + (Entity.Z * 4) + offset.y, DrawTexture.Width, DrawTexture.Height);
                 PickType = PickType.PickNothing;
                 DrawFlip = false;
             }

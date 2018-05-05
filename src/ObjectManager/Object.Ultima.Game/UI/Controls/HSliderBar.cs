@@ -87,7 +87,7 @@ namespace OA.Ultima.UI.Controls
                         _gumpWidget = provider.GetUITexture(0x845);
                         break;
                 }
-                Size = new Vector2Int(BarWidth, _gumpWidget.height);
+                Size = new Vector2Int(BarWidth, _gumpWidget.Height);
                 RecalculateSliderX();
             }
             modifyPairedValues(_newValue - Value);
@@ -100,8 +100,8 @@ namespace OA.Ultima.UI.Controls
             if (_gumpSliderBackground != null)
             {
                 spriteBatch.Draw2D(_gumpSliderBackground[0], new Vector3(position.x, position.y, 0), Vector3.zero);
-                spriteBatch.Draw2DTiled(_gumpSliderBackground[1], new RectInt(position.x + _gumpSliderBackground[0].width, position.y, BarWidth - _gumpSliderBackground[2].width - _gumpSliderBackground[0].width, _gumpSliderBackground[1].height), Vector3.zero);
-                spriteBatch.Draw2D(_gumpSliderBackground[2], new Vector3(position.x + BarWidth - _gumpSliderBackground[2].width, position.y, 0), Vector3.zero);
+                spriteBatch.Draw2DTiled(_gumpSliderBackground[1], new RectInt(position.x + _gumpSliderBackground[0].Width, position.y, BarWidth - _gumpSliderBackground[2].Width - _gumpSliderBackground[0].Width, _gumpSliderBackground[1].Height), Vector3.zero);
+                spriteBatch.Draw2D(_gumpSliderBackground[2], new Vector3(position.x + BarWidth - _gumpSliderBackground[2].Width, position.y, 0), Vector3.zero);
             }
             spriteBatch.Draw2D(_gumpWidget, new Vector3(position.x + _sliderX, position.y, 0), Vector3.zero);
             base.Draw(spriteBatch, position, frameMS);
@@ -109,7 +109,7 @@ namespace OA.Ultima.UI.Controls
 
         protected override bool IsPointWithinControl(int x, int y)
         {
-            if (new RectInt(_sliderX, 0, _gumpWidget.width, _gumpWidget.height).Contains(new Vector2Int(x, y)))
+            if (new RectInt(_sliderX, 0, _gumpWidget.Width, _gumpWidget.Height).Contains(new Vector2Int(x, y)))
                 return true;
             return false;
         }
@@ -135,14 +135,14 @@ namespace OA.Ultima.UI.Controls
                 _sliderX = _sliderX + (x - _clickPosition.x);
                 if (_sliderX < 0)
                     _sliderX = 0;
-                if (_sliderX > BarWidth - _gumpWidget.width)
-                    _sliderX = BarWidth - _gumpWidget.width;
+                if (_sliderX > BarWidth - _gumpWidget.Width)
+                    _sliderX = BarWidth - _gumpWidget.Width;
                 _clickPosition = new Vector2Int(x, y);
-                if (_clickPosition.x < _gumpWidget.width / 2)
-                    _clickPosition.x = _gumpWidget.width / 2;
-                if (_clickPosition.x > BarWidth - _gumpWidget.width / 2)
-                    _clickPosition.x = BarWidth - _gumpWidget.width / 2;
-                _newValue = (int)(((float)_sliderX / (float)(BarWidth - _gumpWidget.width)) * (float)((MaxValue - MinValue))) + MinValue;
+                if (_clickPosition.x < _gumpWidget.Width / 2)
+                    _clickPosition.x = _gumpWidget.Width / 2;
+                if (_clickPosition.x > BarWidth - _gumpWidget.Width / 2)
+                    _clickPosition.x = BarWidth - _gumpWidget.Width / 2;
+                _newValue = (int)(((float)_sliderX / (float)(BarWidth - _gumpWidget.Width)) * (float)((MaxValue - MinValue))) + MinValue;
             }
         }
 

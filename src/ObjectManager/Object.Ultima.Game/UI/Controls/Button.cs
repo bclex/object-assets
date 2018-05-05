@@ -103,7 +103,7 @@ namespace OA.Ultima.UI.Controls
                     _gumpTextures[i] = provider.GetUITexture(_gumpID[i]);
                 }
             if (Width == 0 && Height == 0 && _gumpTextures[Gump_Up] != null)
-                Size = new Vector2Int(_gumpTextures[Gump_Up].width, _gumpTextures[Gump_Up].height);
+                Size = new Vector2Int(_gumpTextures[Gump_Up].Width, _gumpTextures[Gump_Up].Height);
             base.Update(totalMS, frameMS);
         }
 

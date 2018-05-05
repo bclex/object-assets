@@ -27,9 +27,28 @@ namespace OA.Ultima.FilePacks
         {
             return Task.Run(() =>
             {
-                var file = new SiFile(filePath);
+                var file = new SiFile(this, filePath);
                 return (object)file;
             });
+        }
+
+        internal void GetStaticDimensions(short index, out int width, out int height)
+        {
+            var texture = _artmulResource.GetStaticTexture(index);
+            if (texture == null)
+                throw new IndexOutOfRangeException("texture not found");
+            width = texture.Width;
+            height = texture.Height;
+            //_artmulResource.GetStaticDimensions(index, out width, out height);
+        }
+
+        internal void GetGumpDimensions(short index, out int width, out int height)
+        {
+            var texture = _gumpMulResource.GetGumpTexture(index);
+            if (texture == null)
+                throw new IndexOutOfRangeException("texture not found");
+            width = texture.Width;
+            height = texture.Height;
         }
     }
 }

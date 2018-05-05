@@ -148,11 +148,11 @@ namespace OA.Ultima.World.EntityViews
                 {
                     var frame = _mobileLayers[i].Frame;
                     var x = (drawX + frame.Center.x);
-                    var y = -drawY - (frame.Texture.height + frame.Center.y) + drawCenterY;
+                    var y = -drawY - (frame.Texture.Height + frame.Center.y) + drawCenterY;
                     if (yOffset > y)
                         yOffset = y;
                     DrawTexture = frame.Texture;
-                    DrawArea = new RectInt(x, -y, DrawTexture.width, DrawTexture.height);
+                    DrawArea = new RectInt(x, -y, DrawTexture.Width, DrawTexture.Height);
                     HueVector = Utility.GetHueVector(_mobileLayers[i].Hue);
                     base.Draw(spriteBatch, drawPosition, mouseOver, map, roofHideFlag);
                     MobilePick(mouseOver, drawPosition, DrawArea, frame);
@@ -160,7 +160,7 @@ namespace OA.Ultima.World.EntityViews
             var overheadDrawPosition = new Vector3(drawPosition.x + (int)((Entity.Position.X_offset - Entity.Position.Y_offset) * IsometricRenderer.TILE_SIZE_INTEGER_HALF),
                 drawPosition.y - (int)((Entity.Position.Z_offset + Entity.Z) * 4),
                 drawPosition.z);
-            if (_mobileLayers[0].Frame != null) yOffset = _mobileLayers[0].Frame.Texture.height + drawY - (int)((Entity.Z + Entity.Position.Z_offset) * 4);
+            if (_mobileLayers[0].Frame != null) yOffset = _mobileLayers[0].Frame.Texture.Height + drawY - (int)((Entity.Z + Entity.Position.Z_offset) * 4);
             else yOffset = -(yOffset + IsometricRenderer.TILE_SIZE_INTEGER);
             // this is where we would draw the reverse of the chair texture.
             var isMounted = Entity is Mobile && (Entity as Mobile).IsMounted;

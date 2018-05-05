@@ -1,4 +1,5 @@
-﻿using OA.Ultima.Resources;
+﻿using OA.Ultima.FilePacks;
+using OA.Ultima.Resources;
 using System;
 using UnityEngine;
 
@@ -17,29 +18,53 @@ namespace OA.Ultima.Formats
 
     public class SiFile
     {
-        public SiFile(string filePath)
+        readonly AssetFile _asset;
+
+        public SiFile(AssetFile asset, string filePath)
         {
+            _asset = asset;
             switch (filePath.Substring(0, 3))
             {
+                case "lnd": LndBlocks(filePath, short.Parse(filePath.Substring(3))); break;
                 case "sta": StaBlocks(filePath, short.Parse(filePath.Substring(3))); break;
+                case "gmp": GmpBlocks(filePath, short.Parse(filePath.Substring(3))); break;
                 default: throw new ArgumentOutOfRangeException("filePath", filePath);
             }
         }
 
-        public readonly string Name;
+        public string Name;
+
+        private void LndBlocks(string filePath, short itemId)
+        {
+            var landData = TileData.LandData[itemId];
+            Name = filePath + " " + landData.Name;
+            Blocks = new SiObject[]
+            {
+                new SiPrimitive { Type = PrimitiveType.Cube, Name = Name, Properties = new[] { new Ref<SiProperty>(1) }, Width = 1, Height = 0.01F },
+                new SiTexturingProperty { TextureCount = 1, BaseTexture = new TexDesc { Source = new Ref<SiSourceTexture>(2) } },
+                new SiSourceTexture { FilePath = filePath },
+            };
+        }
 
         private void StaBlocks(string filePath, short itemId)
         {
             var itemData = TileData.ItemData[itemId];
-            var Name = itemData.Name;
+            Name = filePath + " " + itemData.Name;
             Blocks = new SiObject[]
             {
-                new SiPrimitive
-                {
-                    Name = Name,
-                    Properties = new[] { new Ref<SiProperty>(1) },
-                    Height = Math.Max(itemData.CalcHeight / ConvertUtils.MeterInUnits, 0.01F),
-                },
+                new SiPrimitive { Type = PrimitiveType.Cube, Name = Name, Properties = new[] { new Ref<SiProperty>(1) }, Width = 1, Height = itemData.CalcHeight / ConvertUtils.MeterInUnits },
+                new SiTexturingProperty { TextureCount = 1, BaseTexture = new TexDesc { Source = new Ref<SiSourceTexture>(2) } },
+                new SiSourceTexture { FilePath = filePath },
+            };
+        }
+
+        private void GmpBlocks(string filePath, short itemId)
+        {
+            _asset.GetGumpDimensions(itemId, out int width, out int height);
+            Name = filePath;
+            Blocks = new SiObject[]
+            {
+                new SiPrimitive { Type = PrimitiveType.Cube, Name = Name, Properties = new[] { new Ref<SiProperty>(1) }, Width = width / ConvertUtils.MeterInUnits, Height = height / ConvertUtils.MeterInUnits },
                 new SiTexturingProperty { TextureCount = 1, BaseTexture = new TexDesc { Source = new Ref<SiSourceTexture>(2) } },
                 new SiSourceTexture { FilePath = filePath },
             };
@@ -121,6 +146,8 @@ namespace OA.Ultima.Formats
 
     public class SiPrimitive : SiGeometry
     {
+        public PrimitiveType Type;
+        public float Width;
         public float Height;
     }
 

@@ -31,19 +31,19 @@ namespace OA.Ultima.Resources
 
         private unsafe Texture2DInfo ReadTexmapTexture(int index)
         {
-            var reader = _index.Seek(index, out int length, out int extra, out bool isPatched);
-            if (reader == null)
+            var r = _index.Seek(index, out int length, out int extra, out bool isPatched);
+            if (r == null)
                 return null;
-            if (reader.Stream.Length == 0)
+            if (r.Stream.Length == 0)
             {
                 Utils.Warning($"Requested texmap texture #{index} does not exist. Replacing with 'unused' graphic.");
                 return GetTexmapTexture(DEFAULT_TEXTURE);
             }
-            var metrics_dataread_start = (int)reader.Position;
+            var metrics_dataread_start = (int)r.Position;
             var textureSize = extra == 0 ? 64 : 128;
             var fileSize = textureSize * textureSize;
             var pixels = new byte[fileSize * 4];
-            var fileData = reader.ReadUShorts(fileSize);
+            var fileData = r.ReadUShorts(fileSize);
             fixed (byte* pData = pixels)
             {
                 uint* pDataRef = (uint*)pData;
@@ -57,7 +57,7 @@ namespace OA.Ultima.Resources
                 }
             }
             var texture = new Texture2DInfo(textureSize, textureSize, TextureFormat.BGRA32, false, pixels);
-            Metrics.ReportDataRead((int)reader.Position - metrics_dataread_start);
+            Metrics.ReportDataRead((int)r.Position - metrics_dataread_start);
             return texture;
         }
     }

@@ -175,9 +175,9 @@ namespace OA.Ultima.World.EntityViews
             for (int i = 0; i < Entity.Overheads.Count; i++)
             {
                 AEntityView view = Entity.Overheads[i].GetView();
-                view.DrawArea = new RectInt((view.DrawTexture.width / 2) - 22, yOffset + view.DrawTexture.height, view.DrawTexture.width, view.DrawTexture.height);
+                view.DrawArea = new RectInt((view.DrawTexture.Width / 2) - 22, yOffset + view.DrawTexture.Height, view.DrawTexture.Width, view.DrawTexture.Height);
                 OverheadsView.AddView(view, drawPosition);
-                yOffset += view.DrawTexture.height;
+                yOffset += view.DrawTexture.Height;
             }
         }
 

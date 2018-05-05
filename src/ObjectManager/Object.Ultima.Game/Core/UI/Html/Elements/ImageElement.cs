@@ -19,7 +19,7 @@ namespace OA.Core.UI.Html.Elements
             {
                 if (_width != 0)
                     return _width;
-                return AssociatedImage.Texture.width;
+                return AssociatedImage.Texture.Width;
             }
         }
 
@@ -30,7 +30,7 @@ namespace OA.Core.UI.Html.Elements
             {
                 if (_height != 0)
                     return _height;
-                return AssociatedImage.Texture.height;
+                return AssociatedImage.Texture.Height;
             }
         }
 
