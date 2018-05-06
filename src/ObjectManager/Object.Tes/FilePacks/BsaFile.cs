@@ -275,7 +275,6 @@ namespace OA.Tes.FilePacks
                     FileMetadatas[i] = new FileMetadata
                     {
                         Path = path,
-                        //PathHash = Tes4HashFilePath(path),
                     };
                 }
                 if (_r.BaseStream.Position != filenamesSectionStartPos + header_FileNameLength)
@@ -283,7 +282,7 @@ namespace OA.Tes.FilePacks
 
                 // read-all folders
                 _r.BaseStream.Position = header_FolderRecordOffset;
-                var folder = new object[header_FolderCount];
+                var folders = new Tuple<uint>[header_FolderCount];
                 for (var i = 0; i < header_FolderCount; i++)
                 {
                     var folder_Hash = _r.ReadLEUInt64(); // Hash of the folder name
@@ -291,6 +290,27 @@ namespace OA.Tes.FilePacks
                     var folder_Unk = 0U; var folder_Offset = 0UL;
                     if (Version == SSE_BSAHEADER_VERSION) { folder_Unk = _r.ReadLEUInt32(); folder_Offset = _r.ReadLEUInt64(); }
                     else folder_Offset = _r.ReadLEUInt32();
+                    folders[i] = new Tuple<uint>(folder_FileCount);
+                }
+
+                // add file
+                var fileNameIndex = 0U;
+                for (var i = 0; i < header_FolderCount; i++)
+                {
+                    var folder_name = _r.ReadPossiblyNullTerminatedASCIIString(_r.ReadByte()); // BSAReadSizedString
+                    var folder = folders[i];
+                    for (var j = 0; j < folder.Item1; j++)
+                    {
+                        var file_Hash = _r.ReadLEUInt64(); // Hash of the filename
+                        var file_SizeFlags = _r.ReadLEUInt32(); // Size of the data, possibly with OB_BSAFILE_FLAG_COMPRESS set
+                        var file_Offset = _r.ReadLEUInt32(); // Offset to raw file data
+                        var fileMetadata = FileMetadatas[fileNameIndex++];
+                        fileMetadata.Size = file_SizeFlags;
+                        fileMetadata.OffsetInDataSection = file_Offset;
+                        var path = folder_name + "\\" + fileMetadata.Path;
+                        fileMetadata.Path = path;
+                        fileMetadata.PathHash = Tes4HashFilePath(path);
+                    }
                 }
             }
             else if (Magic == MW_BSAHEADER_FILEID)
