@@ -41,7 +41,7 @@ namespace OA.Tes.UI
         public void Show(BOOKRecord book)
         {
             _bookRecord = book;
-            var words = _bookRecord.TEXT.value;
+            var words = _bookRecord.TEXT.Value;
             words = words.Replace("\r\n", "");
             words = words.Replace("<BR><BR>", "");
             words = words.Replace("<BR>", "\n");

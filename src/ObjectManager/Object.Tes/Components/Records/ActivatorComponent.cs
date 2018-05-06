@@ -9,7 +9,7 @@ namespace OA.Tes.Components.Records
             usable = true;
             pickable = false;
             var ACTI = (ACTIRecord)record; 
-            objData.name = ACTI.FNAM.value;
+            objData.name = ACTI.FNAM.Value;
             objData.interactionPrefix = "Use ";
         }
     }

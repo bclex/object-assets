@@ -9,7 +9,7 @@ namespace OA.Tes.Components.Records
         {
             var MISC = (MISCRecord)record;
             //objData.icon = TESUnity.instance.Engine.textureManager.LoadTexture(MISC.ITEX.value, "icons"); 
-            objData.name = MISC.FNAM.value;
+            objData.name = MISC.FNAM.Value;
             objData.weight = MISC.MCDT.Weight.ToString();
             objData.value = MISC.MCDT.Value.ToString();
             objData.interactionPrefix = "Take ";

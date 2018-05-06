@@ -36,7 +36,7 @@ namespace OA.Tes.Components.Records
             pickable = false;
             var book = (BOOKRecord)record;
             objData.interactionPrefix = "Read ";
-            objData.name = book.FNAM != null ? book.FNAM.value : book.NAME.value;
+            objData.name = book.FNAM != null ? book.FNAM.Value : book.NAME.Value;
             //objData.icon = TESUnity.instance.Engine.textureManager.LoadTexture(BOOK.ITEX.value, "icons");
             objData.weight = book.BKDT.Weight.ToString();
             objData.value = book.BKDT.Value.ToString();

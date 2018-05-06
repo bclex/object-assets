@@ -42,33 +42,28 @@ namespace OA.Tes.FilePacks
         {
             var r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             var header = new Header(r, gameId);
-            if ((gameId == GameId.Morrowind && header.type != "TES3") || (gameId != GameId.Morrowind && header.type != "TES4"))
-                throw new InvalidOperationException($"{filePath} is not a valid plugin.");
-            var record = header.CreateUninitializedRecord();
+            if ((gameId == GameId.Morrowind && header.Type != "TES3") || (gameId != GameId.Morrowind && header.Type != "TES4"))
+                throw new FormatException($"{filePath} record header {header.Type} is not valid for this {gameId}");
+            var record = header.CreateUninitializedRecord(0);
             record.DeserializeData(r, gameId);
             if (loadHeaderOnly)
                 return;
             var recordList = new List<Record>();
             while (r.BaseStream.Position < r.BaseStream.Length)
             {
-                var recordStartStreamPosition = r.BaseStream.Position;
+                var position = r.BaseStream.Position;
                 header = new Header(r, gameId);
-                record = header.CreateUninitializedRecord();
+                var recordPosition = r.BaseStream.Position;
+                record = header.CreateUninitializedRecord(recordPosition);
                 // Read or skip the record.
                 if (record != null)
                 {
-                    var recordDataStreamPosition = r.BaseStream.Position;
                     record.DeserializeData(r, gameId);
-                    if (r.BaseStream.Position != (recordDataStreamPosition + record.header.dataSize))
-                        throw new FormatException("Failed reading " + header.type + " record at offset " + recordStartStreamPosition + " in " + filePath);
+                    if (r.BaseStream.Position != recordPosition + record.Header.DataSize)
+                        throw new FormatException($"Failed reading {header.Type} record at offset {position} in {filePath}");
                     recordList.Add(record);
                 }
-                else
-                {
-                    // Skip the record.
-                    r.BaseStream.Position += header.dataSize;
-                    //recordList.Add(null);
-                }
+                else r.BaseStream.Position += header.DataSize; // Skip the record.
             }
             records = recordList.ToArray();
         }
@@ -95,29 +90,29 @@ namespace OA.Tes.FilePacks
                     recordsByType.Add(recordType, recordsOfSameType);
                 }
                 // Add the record to the object dictionary if applicable.
-                if (record is GMSTRecord) objectsByIDString.Add(((GMSTRecord)record).NAME.value, record);
-                else if (record is GLOBRecord) objectsByIDString.Add(((GLOBRecord)record).NAME.value, record);
-                else if (record is SOUNRecord) objectsByIDString.Add(((SOUNRecord)record).NAME.value, record);
-                else if (record is REGNRecord) objectsByIDString.Add(((REGNRecord)record).NAME.value, record);
-                else if (record is LTEXRecord) objectsByIDString.Add(((LTEXRecord)record).NAME.value, record);
-                else if (record is STATRecord) objectsByIDString.Add(((STATRecord)record).NAME.value, record);
-                else if (record is DOORRecord) objectsByIDString.Add(((DOORRecord)record).NAME.value, record);
-                else if (record is MISCRecord) objectsByIDString.Add(((MISCRecord)record).NAME.value, record);
-                else if (record is WEAPRecord) objectsByIDString.Add(((WEAPRecord)record).NAME.value, record);
-                else if (record is CONTRecord) objectsByIDString.Add(((CONTRecord)record).NAME.value, record);
-                else if (record is LIGHRecord) objectsByIDString.Add(((LIGHRecord)record).NAME.value, record);
-                else if (record is ARMORecord) objectsByIDString.Add(((ARMORecord)record).NAME.value, record);
-                else if (record is CLOTRecord) objectsByIDString.Add(((CLOTRecord)record).NAME.value, record);
-                else if (record is REPARecord) objectsByIDString.Add(((REPARecord)record).NAME.value, record);
-                else if (record is ACTIRecord) objectsByIDString.Add(((ACTIRecord)record).NAME.value, record);
-                else if (record is APPARecord) objectsByIDString.Add(((APPARecord)record).NAME.value, record);
-                else if (record is LOCKRecord) objectsByIDString.Add(((LOCKRecord)record).NAME.value, record);
-                else if (record is PROBRecord) objectsByIDString.Add(((PROBRecord)record).NAME.value, record);
-                else if (record is INGRRecord) objectsByIDString.Add(((INGRRecord)record).NAME.value, record);
-                else if (record is BOOKRecord) objectsByIDString.Add(((BOOKRecord)record).NAME.value, record);
-                else if (record is ALCHRecord) objectsByIDString.Add(((ALCHRecord)record).NAME.value, record);
-                else if (record is CREARecord) objectsByIDString.Add(((CREARecord)record).NAME.value, record);
-                else if (record is NPC_Record) objectsByIDString.Add(((NPC_Record)record).NAME.value, record);
+                if (record is GMSTRecord) objectsByIDString.Add(((GMSTRecord)record).NAME.Value, record);
+                else if (record is GLOBRecord) objectsByIDString.Add(((GLOBRecord)record).NAME.Value, record);
+                else if (record is SOUNRecord) objectsByIDString.Add(((SOUNRecord)record).NAME.Value, record);
+                else if (record is REGNRecord) objectsByIDString.Add(((REGNRecord)record).NAME.Value, record);
+                else if (record is LTEXRecord) objectsByIDString.Add(((LTEXRecord)record).NAME.Value, record);
+                else if (record is STATRecord) objectsByIDString.Add(((STATRecord)record).NAME.Value, record);
+                else if (record is DOORRecord) objectsByIDString.Add(((DOORRecord)record).NAME.Value, record);
+                else if (record is MISCRecord) objectsByIDString.Add(((MISCRecord)record).NAME.Value, record);
+                else if (record is WEAPRecord) objectsByIDString.Add(((WEAPRecord)record).NAME.Value, record);
+                else if (record is CONTRecord) objectsByIDString.Add(((CONTRecord)record).NAME.Value, record);
+                else if (record is LIGHRecord) objectsByIDString.Add(((LIGHRecord)record).NAME.Value, record);
+                else if (record is ARMORecord) objectsByIDString.Add(((ARMORecord)record).NAME.Value, record);
+                else if (record is CLOTRecord) objectsByIDString.Add(((CLOTRecord)record).NAME.Value, record);
+                else if (record is REPARecord) objectsByIDString.Add(((REPARecord)record).NAME.Value, record);
+                else if (record is ACTIRecord) objectsByIDString.Add(((ACTIRecord)record).NAME.Value, record);
+                else if (record is APPARecord) objectsByIDString.Add(((APPARecord)record).NAME.Value, record);
+                else if (record is LOCKRecord) objectsByIDString.Add(((LOCKRecord)record).NAME.Value, record);
+                else if (record is PROBRecord) objectsByIDString.Add(((PROBRecord)record).NAME.Value, record);
+                else if (record is INGRRecord) objectsByIDString.Add(((INGRRecord)record).NAME.Value, record);
+                else if (record is BOOKRecord) objectsByIDString.Add(((BOOKRecord)record).NAME.Value, record);
+                else if (record is ALCHRecord) objectsByIDString.Add(((ALCHRecord)record).NAME.Value, record);
+                else if (record is CREARecord) objectsByIDString.Add(((CREARecord)record).NAME.Value, record);
+                else if (record is NPC_Record) objectsByIDString.Add(((NPC_Record)record).NAME.Value, record);
                 // Add the record to exteriorCELLRecordsByIndices if applicable.
                 if (record is CELLRecord)
                 {

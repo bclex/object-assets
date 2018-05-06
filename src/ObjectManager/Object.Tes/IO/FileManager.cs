@@ -108,20 +108,19 @@ namespace OA.Tes.IO
 
         public static string GetFilePath(string path, GameId gameId)
         {
-            if (_fileDirectories.TryGetValue(gameId, out string fileDirectory))
-            {
-                path = Path.Combine(fileDirectory, path);
-                if (File.Exists(path))
-                    return path;
-            }
-            return null;
+            if (!_fileDirectories.TryGetValue(gameId, out string fileDirectory))
+                return null;
+            path = Path.Combine(fileDirectory, path);
+            return File.Exists(path) ? path : null;
         }
 
-        //public static string[] GetFilePaths(string searchPattern)
-        //{
-        //    var files = Directory.GetFiles(_fileDirectory, searchPattern);
-        //    return files;
-        //}
+        public static string[] GetFilePaths(string searchPattern, GameId gameId)
+        {
+            if (!_fileDirectories.TryGetValue(gameId, out string fileDirectory))
+                return null;
+            var files = Directory.GetFiles(fileDirectory, searchPattern);
+            return files;
+        }
 
         //public static bool Exists(string name)
         //{

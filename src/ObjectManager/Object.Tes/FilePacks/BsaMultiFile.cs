@@ -9,9 +9,10 @@ namespace OA.Tes.FilePacks
     {
         readonly List<BsaFile> _packs = new List<BsaFile>();
 
-        public BsaMultiFile(string searchPath)
+        public BsaMultiFile(string[] filePaths)
         {
-            var files = Directory.GetFiles(Path.GetDirectoryName(searchPath), Path.GetFileName(searchPath)).Where(x => Path.GetExtension(x) == ".bsa").ToList();
+            //var files = Directory.GetFiles(Path.GetDirectoryName(searchPath), Path.GetFileName(searchPath)).Where(x => Path.GetExtension(x) == ".bsa").ToList();
+            var files = filePaths.Where(x => Path.GetExtension(x) == ".bsa" || Path.GetExtension(x) == ".ba2");
             _packs.AddRange(files.Select(x => new BsaFile(x)));
         }
 

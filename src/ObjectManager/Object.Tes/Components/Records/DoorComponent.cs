@@ -34,15 +34,15 @@ namespace OA.Tes.Components.Records
             doorData.moving = false;
             var DOOR = record as DOORRecord;
             if (DOOR.FNAM != null)
-                doorData.doorName = DOOR.FNAM.value;
+                doorData.doorName = DOOR.FNAM.Value;
             doorData.leadsToAnotherCell = refObjDataGroup.DNAM != null || refObjDataGroup.DODT != null;
             doorData.leadsToInteriorCell = refObjDataGroup.DNAM != null;
             if (doorData.leadsToInteriorCell)
-                doorData.doorExitName = refObjDataGroup.DNAM.value;
+                doorData.doorExitName = refObjDataGroup.DNAM.Value;
             if (doorData.leadsToAnotherCell && !doorData.leadsToInteriorCell)
             {
                 var doorExitCell = TesEngine.Instance.Data.FindExteriorCellRecord(TesEngine.Instance.CellManager.GetExteriorCellIndices(doorData.doorExitPos));
-                doorData.doorExitName = doorExitCell != null ? (((CELLRecord)doorExitCell).RGNN?.value ?? "Unknown Region") : doorData.doorName;
+                doorData.doorExitName = doorExitCell != null ? (((CELLRecord)doorExitCell).RGNN?.Value ?? "Unknown Region") : doorData.doorName;
             }
             if (refObjDataGroup.DODT != null)
             {

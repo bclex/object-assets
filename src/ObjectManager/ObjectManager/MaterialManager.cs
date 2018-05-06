@@ -42,11 +42,11 @@ namespace OA
 
         public TextureManager TextureManager { get; }
 
-        public MaterialManager(TextureManager textureManager, MaterialType? materialType = null)
+        public MaterialManager(TextureManager textureManager)
         {
             TextureManager = textureManager;
             var game = BaseSettings.Game;
-            switch (materialType ?? game.MaterialType)
+            switch (game.MaterialType)
             {
                 case MaterialType.None: _material = null; break;
                 case MaterialType.Default: _material = new DefaultMaterial(textureManager); break;

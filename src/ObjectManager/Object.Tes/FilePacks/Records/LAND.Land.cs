@@ -16,7 +16,7 @@ namespace OA.Tes.FilePacks.Records
             // XYZ 8 bit floats
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                var vertexCount = header.dataSize / 3;
+                var vertexCount = Header.DataSize / 3;
                 for (var i = 0; i < vertexCount; i++)
                 {
                     var xByte = r.ReadByte();
@@ -33,7 +33,7 @@ namespace OA.Tes.FilePacks.Records
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
                 ReferenceHeight = r.ReadLESingle();
-                var heightOffsetCount = header.dataSize - 4 - 2 - 1;
+                var heightOffsetCount = Header.DataSize - 4 - 2 - 1;
                 HeightOffsets = new sbyte[heightOffsetCount];
                 for (var i = 0; i < heightOffsetCount; i++)
                     HeightOffsets[i] = r.ReadSByte();
@@ -48,7 +48,7 @@ namespace OA.Tes.FilePacks.Records
             // Low-LOD heightmap (signed chars)
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                var heightCount = header.dataSize;
+                var heightCount = Header.DataSize;
                 for (var i = 0; i < heightCount; i++)
                 {
                     var height = r.ReadByte();
@@ -60,7 +60,7 @@ namespace OA.Tes.FilePacks.Records
             // 24 bit RGB
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                var vertexCount = header.dataSize / 3;
+                var vertexCount = Header.DataSize / 3;
                 for (var i = 0; i < vertexCount; i++)
                 {
                     var rByte = r.ReadByte();
@@ -75,7 +75,7 @@ namespace OA.Tes.FilePacks.Records
 
             public override void DeserializeData(UnityBinaryReader r, uint dataSize)
             {
-                var textureIndexCount = header.dataSize / 2;
+                var textureIndexCount = Header.DataSize / 2;
                 TextureIndices = new ushort[textureIndexCount];
                 for (var i = 0; i < textureIndexCount; i++)
                     TextureIndices[i] = r.ReadLEUInt16();
@@ -84,7 +84,7 @@ namespace OA.Tes.FilePacks.Records
 
         public Vector2i GridCoords
         {
-            get { return new Vector2i(INTV.value0, INTV.value1); }
+            get { return new Vector2i(INTV.Value0, INTV.Value1); }
         }
 
         public INTVTwoI32SubRecord INTV;

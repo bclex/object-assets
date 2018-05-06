@@ -18,21 +18,21 @@ namespace OA.Tes
                     {
                         var localPath = uri.LocalPath.Substring(1);
                         var gameId = StringToGameId(uri.Host);
-                        var filePath = FileManager.GetFilePath(localPath, gameId);
-                        var pack = (IAssetPack)new TesAssetPack(filePath, null);
+                        var filePaths = FileManager.GetFilePaths(localPath, gameId);
+                        var pack = (IAssetPack)new TesAssetPack(filePaths, null);
                         return Task.FromResult(pack);
                     }
                 case "file":
                     {
                         var localPath = uri.LocalPath;
-                        //if (!File.Exists(localPath) && !Directory.Exists(localPath))
-                        //    throw new IndexOutOfRangeException("file or directory not found");
-                        var pack = (IAssetPack)new TesAssetPack(localPath, null);
+                        var gameId = StringToGameId(uri.Host);
+                        var filePaths = FileManager.GetFilePaths(localPath, gameId);
+                        var pack = (IAssetPack)new TesAssetPack(filePaths, null);
                         return Task.FromResult(pack);
                     }
                 default:
                     {
-                        var pack = (IAssetPack)new TesAssetPack(null, null);
+                        var pack = (IAssetPack)new TesAssetPack((string[])null, null);
                         return Task.FromResult(pack);
                     }
             }

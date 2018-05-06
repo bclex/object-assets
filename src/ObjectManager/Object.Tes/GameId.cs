@@ -2,14 +2,16 @@
 {
     public enum GameId
     {
-        Oblivion = 1,
+        // tes
+        Morrowind = 1,
+        Oblivion,
         Skyrim,
+        SkyrimSE,
+        SkyrimVR,
+        // fallout
         Fallout3,
         FalloutNV,
-        Morrowind,
         Fallout4,
-        SkyrimSE,
         Fallout4VR,
-        SkyrimVR,
     }
 }

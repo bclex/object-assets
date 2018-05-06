@@ -1,7 +1,5 @@
-﻿using OA.Tes.FilePacks;
-using OA.Tes.Formats;
+﻿using OA.Tes.Formats;
 using System.IO;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace OA.Tes.FilePacks
@@ -14,8 +12,10 @@ namespace OA.Tes.FilePacks
         string _directory;
         string _webPath;
 
-        public TesAssetPack(string searchPath, string webPath)
-            : base(searchPath) //: base(filePath != null && File.Exists(filePath) ? filePath : null)
+        public TesAssetPack(string filePath, string webPath)
+            : this(new[] { filePath }, webPath) { }
+        public TesAssetPack(string[] filePaths, string webPath)
+            : base(filePaths)
         {
             //_directory = searchPath != null && Directory.Exists(searchPath) ? searchPath : null;
             _directory = null;

@@ -7,7 +7,7 @@ namespace OA.Tes.Components.Records
         void Start()
         {
             pickable = false;
-            objData.name = ((CONTRecord)record).FNAM.value;
+            objData.name = ((CONTRecord)record).FNAM.Value;
             objData.interactionPrefix = "Open ";
         }
     }

@@ -1,9 +1,11 @@
 ﻿using OA.Core;
-using UnityEngine;
+using OA.Tes.FilePacks;
+using OA.Tes.FilePacks.Records;
+using System;
 
 namespace OA.Tes
 {
-    public static class ObjectTestPack
+    public static class ObjectTestDataPack
     {
         static IAssetPack Asset;
         static IDataPack Data;
@@ -13,30 +15,28 @@ namespace OA.Tes
             Utils.InUnity = true;
         }
 
-        //var assetUri = "file:///C:/Program%20Files%20(x86)/Steam/steamapps/common/Morrowind/Data%20Files/Morrowind.*";
-        //var dataUri = "file:///C:/Program%20Files%20(x86)/Steam/steamapps/common/Morrowind/Data%20Files/Morrowind.esm#Morrowind";
-        //var file2Uri = "file://192.168.1.3/User/_ASSETS/Fallout4/Textures1";
-        //var file4Uri = "http://192.168.1.3/assets/Morrowind/Morrowind.bsa";
-        //var file4Uri = "http://192.168.1.3/assets/Morrowind/Morrowind.bsa";
         public static void Start()
         {
             //var assetUri = "game://Morrowind/Morrowind.bsa";
             //var dataUri = "game://Morrowind/Morrowind.esm";
-            //var assetUri = "game://SkyrimVR/Skyrim*";
-            //var dataUri = "game://SkyrimVR/Skyrim.esm";
-            var assetUri = "game://Fallout4VR/Fallout4*";
-            var dataUri = "game://Fallout4VR/Fallout4.esm";
+            var assetUri = "game://SkyrimVR/Skyrim*";
+            var dataUri = "game://SkyrimVR/Skyrim.esm";
+            //var assetUri = "game://Fallout4VR/Fallout4*";
+            //var dataUri = "game://Fallout4VR/Fallout4.esm";
 
             var assetManager = AssetManager.GetAssetManager(EngineId.Tes);
             Asset = assetManager.GetAssetPack(assetUri).Result;
             Data = assetManager.GetDataPack(dataUri).Result;
 
-            MakeObject("meshes/x/ex_common_balcony_01.nif");
+            TestAllCells();
         }
 
-        static void MakeObject(string path)
+        static void TestAllCells()
         {
-            var obj = Asset.CreateObject(path);
+            foreach (CELLRecord record in ((TesDataPack)Data).GetRecordsOfType<CELLRecord>())
+            {
+                Console.WriteLine(record.NAME.Value);
+            }
         }
 
         public static void OnDestroy()

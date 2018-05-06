@@ -36,7 +36,7 @@ namespace OA.Tes.Components.Records
             lightData = new LightData();
             lightData.lightComponent = gameObject.GetComponentInChildren<Light>(true);
             if (LIGH.FNAM != null)
-                objData.name = LIGH.FNAM.value;
+                objData.name = LIGH.FNAM.Value;
             objData.interactionPrefix = "Take ";
             if (LIGH.LHDT != null)
             {

@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Test = OA.Ultima.ObjectTestEngine;
+using Test = OA.Tes.ObjectTestEngine;
 
 public class MakeBox : MonoBehaviour
 {

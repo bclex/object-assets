@@ -94,7 +94,7 @@ namespace OA.Core
             Debug.Assert(lengthIncludingPossibleNullTerminator > 0);
             var bytes = r.ReadBytes(lengthIncludingPossibleNullTerminator);
             // Ignore the null terminator.
-            var charCount = (ArrayUtils.Last(bytes) != 0) ? bytes.Length : (bytes.Length - 1);
+            var charCount = ArrayUtils.Last(bytes) != 0 ? bytes.Length : bytes.Length - 1;
             return Encoding.Default.GetString(bytes, 0, charCount);
         }
 

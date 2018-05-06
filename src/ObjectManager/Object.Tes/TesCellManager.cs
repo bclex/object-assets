@@ -11,8 +11,8 @@ namespace OA.Tes
 {
     public class TesCellManager : ICellManager
     {
-        const int _cellRadius = 1; //4;
-        const int _detailRadius = 1; //3;
+        const int _cellRadius = 4;
+        const int _detailRadius = 3;
         const string _defaultLandTextureFilePath = "textures/_land_default.dds";
 
         TesAssetPack _asset;
@@ -134,7 +134,7 @@ namespace OA.Tes
                 cellObjName = "cell " + cell.GridCoords.ToString();
                 land = _data.FindLANDRecord(cell.GridCoords);
             }
-            else cellObjName = cell.NAME.value;
+            else cellObjName = cell.NAME.Value;
             var cellObj = new GameObject(cellObjName) { tag = "Cell" };
             var cellObjectsContainer = new GameObject("objects");
             cellObjectsContainer.transform.parent = cellObj.transform;
@@ -205,7 +205,7 @@ namespace OA.Tes
                 };
                 // Get the record the RefObjDataGroup references.
                 var refObj = (CELLRecord.RefObj)refObjInfo.RefObj;
-                _data.objectsByIDString.TryGetValue(refObj.NAME.value, out refObjInfo.ReferencedRecord);
+                _data.objectsByIDString.TryGetValue(refObj.NAME.Value, out refObjInfo.ReferencedRecord);
                 if (refObjInfo.ReferencedRecord != null)
                 {
                     var modelFileName = RecordUtils.GetModelFileName(refObjInfo.ReferencedRecord);
@@ -267,7 +267,7 @@ namespace OA.Tes
                     }
                 }
             }
-            else Utils.Log("Unknown Object: " + ((CELLRecord.RefObj)refCellObjInfo.RefObj).NAME.value);
+            else Utils.Log("Unknown Object: " + ((CELLRecord.RefObj)refCellObjInfo.RefObj).NAME.Value);
         }
 
         private GameObject InstantiateLight(LIGHRecord LIGH, bool indoors)
@@ -293,7 +293,7 @@ namespace OA.Tes
             var refObj = (CELLRecord.RefObj)refCellObjInfo.RefObj;
             // Handle object transforms.
             if (refObj.XSCL != null)
-                gameObject.transform.localScale = Vector3.one * refObj.XSCL.value;
+                gameObject.transform.localScale = Vector3.one * refObj.XSCL.Value;
             gameObject.transform.position += NifUtils.NifPointToUnityPoint(refObj.DATA.Position);
             gameObject.transform.rotation *= NifUtils.NifEulerAnglesToUnityQuaternion(refObj.DATA.EulerAngles);
             var tagTarget = gameObject;
@@ -348,7 +348,7 @@ namespace OA.Tes
                     continue;
                 }
                 var ltex = _data.FindLTEXRecord(textureIndex);
-                var textureFilePath = ltex.DATA.value;
+                var textureFilePath = ltex.DATA.Value;
                 textureFilePaths.Add(textureFilePath);
             }
             return textureFilePaths;
@@ -406,7 +406,7 @@ namespace OA.Tes
                     else
                     {
                         var LTEX = _data.FindLTEXRecord(textureIndex);
-                        textureFilePath = LTEX.DATA.value;
+                        textureFilePath = LTEX.DATA.Value;
                     }
                     var texture = _asset.LoadTexture(textureFilePath);
                     // Yield after loading each texture to avoid doing too much work on one frame.

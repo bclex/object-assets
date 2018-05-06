@@ -50,6 +50,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FilePacks\BsaFile+Extensions.cs" />
+    <Compile Include="Tests\ObjectTestDataPack.cs" />
     <Compile Include="Tests\ObjectTestEngine.cs" />
     <Compile Include="Tests\ObjectTestPack.cs" />
     <Compile Include="TesCellManager.cs" />

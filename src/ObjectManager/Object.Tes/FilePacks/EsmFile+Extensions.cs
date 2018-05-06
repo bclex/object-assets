@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks
             for (int i = 0, l = records.Count; i < l; i++)
             {
                 ltex = (LTEXRecord)records[i];
-                if (ltex.INTV.value == index)
+                if (ltex.INTV.Value == index)
                     return ltex;
             }
             return null;
@@ -37,7 +37,7 @@ namespace OA.Tes.FilePacks
             for (int i = 0, l = records.Count; i < l; i++)
             {
                 cell = (CELLRecord)records[i];
-                if (cell.NAME.value == cellName)
+                if (cell.NAME.Value == cellName)
                     return cell;
             }
             return null;

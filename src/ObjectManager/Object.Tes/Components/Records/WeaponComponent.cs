@@ -17,7 +17,7 @@ namespace OA.Tes.Components.Records
         {
             var WEAP = (WEAPRecord)record;
             //objData.icon = TESUnity.instance.Engine.textureManager.LoadTexture(WPDT.ITEX.value, "icons"); 
-            objData.name = WEAP.FNAM.value;
+            objData.name = WEAP.FNAM.Value;
             objData.weight = WEAP.WPDT.Weight.ToString();
             objData.value = WEAP.WPDT.Value.ToString();
             objData.interactionPrefix = "Take ";

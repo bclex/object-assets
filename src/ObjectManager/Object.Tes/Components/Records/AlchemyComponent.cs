@@ -8,7 +8,7 @@ namespace OA.Tes.Components.Records
         {
             var ALCH = (ALCHRecord)record;
             //objData.icon = TESUnity.instance.Engine.textureManager.LoadTexture(WPDT.ITEX.value, "icons"); 
-            objData.name = ALCH.FNAM.value;
+            objData.name = ALCH.FNAM.Value;
             objData.weight = ALCH.ALDT.Weight.ToString();
             objData.value = ALCH.ALDT.Value.ToString();
             objData.interactionPrefix = "Take ";
