@@ -8,13 +8,44 @@ namespace OA.Core
     /// </summary>
     public class Texture2DInfo
     {
+        public enum RawDataFormat
+        {
+            Raw,
+            DXT,
+        }
+
+        public RawDataFormat DataFormat;
         public int Width, Height;
         public TextureFormat Format;
         public bool HasMipmaps;
         public byte[] RawData;
 
+        const int DDS_HEADER_SIZE = 128;
+        public Texture2DInfo(RawDataFormat dataFormat, TextureFormat format, byte[] rawData)
+        {
+            DataFormat = dataFormat;
+            switch (dataFormat)
+            {
+                // https://answers.unity.com/questions/555984/can-you-load-dds-textures-during-runtime.html#answer-707772
+                case RawDataFormat.DXT:
+                    if (format != TextureFormat.DXT1 && format != TextureFormat.DXT5)
+                        throw new ArgumentOutOfRangeException("format", "Invalid TextureFormat. Only DXT1 and DXT5 formats are supported by this method.");
+                    Format = format;
+                    var ddsSizeCheck = rawData[4];
+                    if (ddsSizeCheck != 124)
+                        throw new ArgumentOutOfRangeException("ddsBytes", "Invalid DDS DXTn texture. Unable to read");  // this header byte should be 124 for DDS image files
+                    Height = (rawData[13] << 8) | rawData[12];
+                    Width = (rawData[17] << 8) | rawData[16];
+                    var dxtBytes = new byte[rawData.Length - DDS_HEADER_SIZE];
+                    Buffer.BlockCopy(dxtBytes, DDS_HEADER_SIZE, dxtBytes, 0, rawData.Length - DDS_HEADER_SIZE);
+                    RawData = dxtBytes;
+                    return;
+            }
+        }
+
         public Texture2DInfo(int width, int height, TextureFormat format, bool hasMipmaps, byte[] rawData)
         {
+            DataFormat = RawDataFormat.Raw;
             Width = width;
             Height = height;
             Format = format;
@@ -38,6 +69,8 @@ namespace OA.Core
 
         public void Rotate2D(int angle)
         {
+            if (DataFormat != RawDataFormat.Raw)
+                throw new InvalidOperationException("Invalid DataFormat. Only Raw formats are supported by this method.");
             if (Format == TextureFormat.BGRA32) Rotate2DBGRA32(Mathf.Deg2Rad * angle);
         }
 

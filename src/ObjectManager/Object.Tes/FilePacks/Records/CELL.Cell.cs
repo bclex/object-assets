@@ -14,7 +14,7 @@ namespace OA.Tes.FilePacks.Records
             public int GridX;
             public int GridY;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Flags = r.ReadLEUInt32();
                 GridX = r.ReadLEInt32();
@@ -32,7 +32,7 @@ namespace OA.Tes.FilePacks.Records
             public uint FogColor;
             public float FogDensity;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 AmbientColor = r.ReadLEUInt32();
                 SunlightColor = r.ReadLEUInt32();
@@ -50,7 +50,7 @@ namespace OA.Tes.FilePacks.Records
                 public Vector3 Position;
                 public Vector3 EulerAngles;
 
-                public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+                public override void Read(UnityBinaryReader r, uint dataSize)
                 {
                     Position = r.ReadLEVector3();
                     EulerAngles = r.ReadLEVector3();
@@ -69,7 +69,7 @@ namespace OA.Tes.FilePacks.Records
                 public Vector3 Position;
                 public Vector3 EulerAngles;
 
-                public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+                public override void Read(UnityBinaryReader r, uint dataSize)
                 {
                     Position = r.ReadLEVector3();
                     EulerAngles = r.ReadLEVector3();
@@ -95,7 +95,7 @@ namespace OA.Tes.FilePacks.Records
 
         public bool IsInterior
         {
-            get { return Utils.ContainsBitFlags(DATA.Flags, 0x01); }
+            get { return Utils.ContainsBitFlags(DATA.Flags, 0x01U); }
         }
 
         public Vector2i GridCoords

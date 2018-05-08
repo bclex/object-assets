@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks.Records
             public float Weight;
             public int Value;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Type = r.ReadLEInt32();
                 Quality = r.ReadLESingle();

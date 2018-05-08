@@ -13,7 +13,7 @@ namespace OA.Tes.FilePacks.Records
             public uint ItemCount;
             public string ItemName;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 ItemCount = r.ReadLEUInt32();
                 ItemName = r.ReadPossiblyNullTerminatedASCIIString(32);

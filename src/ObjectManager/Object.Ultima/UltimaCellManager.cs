@@ -157,11 +157,11 @@ namespace OA.Ultima
         /// </summary>
         private IEnumerator InstantiateCellObjectsCoroutine(CELLRecord cell, LANDRecord land, GameObject cellObj, GameObject cellObjectsContainer)
         {
-            cell.Load();
+            cell.Read();
             // Start pre-loading all required textures for the terrain.
             if (land != null)
             {
-                land.Load();
+                land.Read();
                 var landTextureFilePaths = GetLANDTextureFilePaths(land);
                 if (landTextureFilePaths != null)
                     foreach (var landTextureFilePath in landTextureFilePaths)

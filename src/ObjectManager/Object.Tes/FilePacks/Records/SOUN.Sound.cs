@@ -11,7 +11,7 @@ namespace OA.Tes.FilePacks.Records
             public byte MinRange;
             public byte MaxRange;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Volume = r.ReadByte();
                 MinRange = r.ReadByte();

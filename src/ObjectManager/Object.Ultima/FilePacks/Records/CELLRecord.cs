@@ -40,7 +40,7 @@ namespace OA.Ultima.FilePacks.Records
 
         public RefObj[] RefObjs;
 
-        public void Load()
+        public void Read()
         {
             if (RefObjs != null) return;
             lock (this)
@@ -48,18 +48,18 @@ namespace OA.Ultima.FilePacks.Records
                 if (RefObjs != null) return;
                 //Utils.Log($"CELL: {GridX}x{GridY}");
                 var refObjs = new List<RefObj>();
-                _land.Load();
+                _land.Read();
                 var heights = _land.Heights;
                 var tiles = _land.Tiles;
                 for (uint y = 0; y < DataFile.CELL_PACK; y++)
                     for (uint x = 0; x < DataFile.CELL_PACK; x++)
-                        LoadTile(heights, tiles, refObjs, x * DataFile.CELL_PACK, y * DataFile.CELL_PACK, GridX * DataFile.CELL_PACK + x, GridY * DataFile.CELL_PACK + y);
+                        ReadTile(heights, tiles, refObjs, x * DataFile.CELL_PACK, y * DataFile.CELL_PACK, GridX * DataFile.CELL_PACK + x, GridY * DataFile.CELL_PACK + y);
                 RefObjs = refObjs.ToArray();
             }
         }
 
         const int STRIDE0 = 8 * DataFile.CELL_PACK;
-        public void LoadTile(sbyte[] heights, LANDRecord.Tile[] tiles, List<RefObj> refObjs, uint offsetX, uint offsetY, uint chunkX, uint chunkY)
+        public void ReadTile(sbyte[] heights, LANDRecord.Tile[] tiles, List<RefObj> refObjs, uint offsetX, uint offsetY, uint chunkX, uint chunkY)
         {
 #if false
             // load land tiles

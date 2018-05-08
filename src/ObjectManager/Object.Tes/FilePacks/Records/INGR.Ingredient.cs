@@ -13,7 +13,7 @@ namespace OA.Tes.FilePacks.Records
             public int[] SkillId;
             public int[] AttributeId;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Weight = r.ReadLESingle();
                 Value = r.ReadLEInt32();

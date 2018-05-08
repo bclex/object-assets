@@ -35,7 +35,7 @@ namespace OA.Ultima.FilePacks.Records
         public sbyte[] Heights;
         public Tile[] Tiles;
 
-        public void Load()
+        public void Read()
         {
             if (Heights != null) return;
             lock (this)
@@ -46,7 +46,7 @@ namespace OA.Ultima.FilePacks.Records
                 var tiles = new Tile[STRIDE0 * STRIDE0];
                 for (uint y = 0; y < DataFile.CELL_PACK; y++)
                     for (uint x = 0; x < DataFile.CELL_PACK; x++)
-                        LoadTile(heights, tiles, x * DataFile.CELL_PACK, y * DataFile.CELL_PACK, (GridX * DataFile.CELL_PACK) + x, (GridY * DataFile.CELL_PACK) + y);
+                        ReadTile(heights, tiles, x * DataFile.CELL_PACK, y * DataFile.CELL_PACK, (GridX * DataFile.CELL_PACK) + x, (GridY * DataFile.CELL_PACK) + y);
                 Heights = heights;
                 Tiles = tiles;
             }
@@ -54,7 +54,7 @@ namespace OA.Ultima.FilePacks.Records
 
         //const int STRIDE1 = (8 * DataFile.CELL_PACK) + 1;
         const int STRIDE0 = 8 * DataFile.CELL_PACK;
-        public void LoadTile(sbyte[] heights, Tile[] tiles, uint offsetX, uint offsetY, uint chunkX, uint chunkY)
+        public void ReadTile(sbyte[] heights, Tile[] tiles, uint offsetX, uint offsetY, uint chunkX, uint chunkY)
         {
             // load the ground data into the tiles.
             var groundData = _tileData.GetLandChunk(chunkX, chunkY);

@@ -14,7 +14,7 @@ namespace OA.Tes.FilePacks.Records
         public class VNMLSubRecord : SubRecord
         {
             // XYZ 8 bit floats
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 var vertexCount = Header.DataSize / 3;
                 for (var i = 0; i < vertexCount; i++)
@@ -30,7 +30,7 @@ namespace OA.Tes.FilePacks.Records
             public float ReferenceHeight;
             public sbyte[] HeightOffsets;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 ReferenceHeight = r.ReadLESingle();
                 var heightOffsetCount = Header.DataSize - 4 - 2 - 1;
@@ -46,7 +46,7 @@ namespace OA.Tes.FilePacks.Records
         public class WNAMSubRecord : SubRecord
         {
             // Low-LOD heightmap (signed chars)
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 var heightCount = Header.DataSize;
                 for (var i = 0; i < heightCount; i++)
@@ -58,7 +58,7 @@ namespace OA.Tes.FilePacks.Records
         public class VCLRSubRecord : SubRecord
         {
             // 24 bit RGB
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 var vertexCount = Header.DataSize / 3;
                 for (var i = 0; i < vertexCount; i++)
@@ -73,7 +73,7 @@ namespace OA.Tes.FilePacks.Records
         {
             public ushort[] TextureIndices;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 var textureIndexCount = Header.DataSize / 2;
                 TextureIndices = new ushort[textureIndexCount];

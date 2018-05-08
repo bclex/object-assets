@@ -147,7 +147,7 @@ namespace OA.Tes.FilePacks
         /// <returns>Return an uninitialized subrecord to deserialize, or null to skip.</returns>
         public abstract SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId);
 
-        public void DeserializeData(UnityBinaryReader r, GameId gameId)
+        public void Read(UnityBinaryReader r, GameId gameId)
         {
             var dataEndPos = r.BaseStream.Position + Header.DataSize;
             while (r.BaseStream.Position < dataEndPos)
@@ -160,7 +160,7 @@ namespace OA.Tes.FilePacks
                 {
                     subRecord.Header = subRecordHeader;
                     var subRecordDataStreamPosition = r.BaseStream.Position;
-                    subRecord.DeserializeData(r, subRecordHeader.DataSize);
+                    subRecord.Read(r, subRecordHeader.DataSize);
                     if (r.BaseStream.Position != subRecordDataStreamPosition + subRecord.Header.DataSize)
                         throw new FormatException($"Failed reading {subRecord.Header.Type} subrecord at offset {subRecordStartStreamPosition}");
                 }
@@ -173,7 +173,7 @@ namespace OA.Tes.FilePacks
     {
         public SubRecordHeader Header;
 
-        public abstract void DeserializeData(UnityBinaryReader reader, uint dataSize);
+        public abstract void Read(UnityBinaryReader reader, uint dataSize);
     }
 
     // Common sub-records.
@@ -181,7 +181,7 @@ namespace OA.Tes.FilePacks
     {
         public string Value;
 
-        public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+        public override void Read(UnityBinaryReader r, uint dataSize)
         {
             Value = r.ReadPossiblyNullTerminatedASCIIString((int)Header.DataSize);
         }
@@ -192,7 +192,7 @@ namespace OA.Tes.FilePacks
     {
         public long Value;
 
-        public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+        public override void Read(UnityBinaryReader r, uint dataSize)
         {
             switch (Header.DataSize)
             {
@@ -208,7 +208,7 @@ namespace OA.Tes.FilePacks
     {
         public int Value0, Value1;
 
-        public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+        public override void Read(UnityBinaryReader r, uint dataSize)
         {
             Debug.Assert(Header.DataSize == 8);
             Value0 = r.ReadLEInt32();
@@ -221,7 +221,7 @@ namespace OA.Tes.FilePacks
     {
         public float Value;
 
-        public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+        public override void Read(UnityBinaryReader r, uint dataSize)
         {
             Value = r.ReadLESingle();
         }
@@ -231,7 +231,7 @@ namespace OA.Tes.FilePacks
     {
         public byte Value;
 
-        public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+        public override void Read(UnityBinaryReader r, uint dataSize)
         {
             Value = r.ReadByte();
         }
@@ -240,7 +240,7 @@ namespace OA.Tes.FilePacks
     {
         public int Value;
 
-        public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+        public override void Read(UnityBinaryReader r, uint dataSize)
         {
             Value = r.ReadLEInt32();
         }
@@ -249,7 +249,7 @@ namespace OA.Tes.FilePacks
     {
         public uint Value;
 
-        public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+        public override void Read(UnityBinaryReader r, uint dataSize)
         {
             Value = r.ReadLEUInt32();
         }

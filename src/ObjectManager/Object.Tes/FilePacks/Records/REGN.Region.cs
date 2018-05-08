@@ -17,7 +17,7 @@ namespace OA.Tes.FilePacks.Records
             public byte Ash;
             public byte Blight;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Clear = r.ReadByte();
                 Cloudy = r.ReadByte();
@@ -42,7 +42,7 @@ namespace OA.Tes.FilePacks.Records
             byte Blue;
             byte NullByte;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Red = r.ReadByte();
                 Green = r.ReadByte();
@@ -55,7 +55,7 @@ namespace OA.Tes.FilePacks.Records
             byte[] SoundName;
             byte Chance;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 SoundName = r.ReadBytes(32);
                 Chance = r.ReadByte();

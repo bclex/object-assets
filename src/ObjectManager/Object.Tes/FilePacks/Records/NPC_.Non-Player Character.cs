@@ -40,7 +40,7 @@ namespace OA.Tes.FilePacks.Records
             public byte Unknown3;
             //public long Gold;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 if (dataSize == 52)
                 {
@@ -84,7 +84,7 @@ namespace OA.Tes.FilePacks.Records
             public int Count;
             public char[] Name;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Count = r.ReadLEInt32();
                 var bytes = r.ReadBytes(Count);
@@ -97,7 +97,7 @@ namespace OA.Tes.FilePacks.Records
         {
             public char[] Name;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 var bytes = r.ReadBytes(32);
                 Name = new char[32];
@@ -139,7 +139,7 @@ namespace OA.Tes.FilePacks.Records
             public byte Unknown4;
             public int Flags;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Hello = r.ReadByte();
                 Unknown1 = r.ReadByte();
@@ -160,7 +160,7 @@ namespace OA.Tes.FilePacks.Records
             public byte[] Idle;
             public byte Unknow;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Distance = r.ReadLEInt16();
                 Duration = r.ReadLEInt16();
@@ -176,7 +176,7 @@ namespace OA.Tes.FilePacks.Records
             public float Z;
             public float Unknown;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 X = r.ReadLESingle();
                 Y = r.ReadLESingle();
@@ -193,7 +193,7 @@ namespace OA.Tes.FilePacks.Records
             public char[] Id;
             public float Unknown;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 X = r.ReadLESingle();
                 Y = r.ReadLESingle();
@@ -215,7 +215,7 @@ namespace OA.Tes.FilePacks.Records
             public char[] Id;
             public float Unknown;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 X = r.ReadLESingle();
                 Y = r.ReadLESingle();
@@ -234,7 +234,7 @@ namespace OA.Tes.FilePacks.Records
             public char[] Name;
             public byte Unknown;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
             }
         }
@@ -247,7 +247,7 @@ namespace OA.Tes.FilePacks.Records
             public float YRot;
             public float ZRot;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 XPos = r.ReadLESingle();
                 YPos = r.ReadLESingle();

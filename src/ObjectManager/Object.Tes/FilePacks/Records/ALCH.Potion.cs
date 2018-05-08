@@ -11,7 +11,7 @@ namespace OA.Tes.FilePacks.Records
             public int Value;
             public int AutoCalc;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Weight = r.ReadLESingle();
                 Value = r.ReadLEInt32();
@@ -30,7 +30,7 @@ namespace OA.Tes.FilePacks.Records
             public int Magnitude;
             public int Unknown4;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 EffectId = r.ReadLEInt16();
                 SkillId = r.ReadByte();

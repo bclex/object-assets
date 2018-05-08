@@ -45,7 +45,7 @@ namespace OA.Tes.FilePacks
             if ((gameId == GameId.Morrowind && header.Type != "TES3") || (gameId != GameId.Morrowind && header.Type != "TES4"))
                 throw new FormatException($"{filePath} record header {header.Type} is not valid for this {gameId}");
             var record = header.CreateUninitializedRecord(0);
-            record.DeserializeData(r, gameId);
+            record.Read(r, gameId);
             if (loadHeaderOnly)
                 return;
             var recordList = new List<Record>();
@@ -58,7 +58,7 @@ namespace OA.Tes.FilePacks
                 // Read or skip the record.
                 if (record != null)
                 {
-                    record.DeserializeData(r, gameId);
+                    record.Read(r, gameId);
                     if (r.BaseStream.Position != recordPosition + record.Header.DataSize)
                         throw new FormatException($"Failed reading {header.Type} record at offset {position} in {filePath}");
                     recordList.Add(record);
@@ -80,8 +80,7 @@ namespace OA.Tes.FilePacks
                     continue;
                 // Add the record to the list for it's type.
                 var recordType = record.GetType();
-                List<IRecord> recordsOfSameType;
-                if (recordsByType.TryGetValue(recordType, out recordsOfSameType))
+                if (recordsByType.TryGetValue(recordType, out List<IRecord> recordsOfSameType))
                     recordsOfSameType.Add(record);
                 else
                 {
@@ -114,16 +113,14 @@ namespace OA.Tes.FilePacks
                 else if (record is CREARecord) objectsByIDString.Add(((CREARecord)record).NAME.Value, record);
                 else if (record is NPC_Record) objectsByIDString.Add(((NPC_Record)record).NAME.Value, record);
                 // Add the record to exteriorCELLRecordsByIndices if applicable.
-                if (record is CELLRecord)
+                if (record is CELLRecord cell)
                 {
-                    var cell = (CELLRecord)record;
                     if (!cell.IsInterior)
                         exteriorCELLRecordsByIndices[cell.GridCoords] = cell;
                 }
                 // Add the record to LANDRecordsByIndices if applicable.
-                if (record is LANDRecord)
+                if (record is LANDRecord land)
                 {
-                    var land = (LANDRecord)record;
                     LANDRecordsByIndices[land.GridCoords] = land;
                 }
             }

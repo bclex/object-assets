@@ -32,7 +32,7 @@ namespace OA.Tes.FilePacks.Records
             public int AttackMax3;
             public int Gold;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Type = r.ReadLEInt32();
                 Level = r.ReadLEInt32();
@@ -73,7 +73,7 @@ namespace OA.Tes.FilePacks.Records
                 Name = new char[32];
             }
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Count = r.ReadLEInt32();
                 var bytes = r.ReadBytes(32);
@@ -89,7 +89,7 @@ namespace OA.Tes.FilePacks.Records
             public byte TimeOfDay;
             public byte[] Idle;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Distance = r.ReadLEInt16();
                 Duration = r.ReadByte();
@@ -102,7 +102,7 @@ namespace OA.Tes.FilePacks.Records
         {
             public byte[] value1;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 value1 = r.ReadBytes(12);
             }

@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks.Records
             public int NumRecords;
             public uint NextObjectId;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Version = r.ReadLESingle();
                 NumRecords = r.ReadLEInt32();

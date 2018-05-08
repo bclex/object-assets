@@ -14,7 +14,7 @@ namespace OA.Tes.FilePacks.Records
             public string FileDescription; // 256 bytes
             public uint NumRecords;
 
-            public override void DeserializeData(UnityBinaryReader r, uint dataSize)
+            public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 Version = r.ReadLESingle();
                 FileType = r.ReadLEUInt32();

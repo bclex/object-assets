@@ -1,17 +1,20 @@
-﻿using OA.Core;
+﻿using ICSharpCode.SharpZipLib.LZW;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using OA.Core;
+using OA.Formats;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace OA.Tes.FilePacks
 {
     // https://github.com/jonwd7/bae/blob/master/src/bsa.cpp
+    // https://github.com/AlexxEG/BSA_Browser/tree/master/Sharp.BSA.BA2
     public partial class BsaFile : IDisposable
     {
-        UnityBinaryReader _r;
-        long _hashTablePosition;
-        long _fileDataSectionPostion;
+        #region Types
 
         // Default header data
         const uint MW_BSAHEADER_FILEID = 0x00000100; // Magic for Morrowind BSA
@@ -51,31 +54,57 @@ namespace OA.Tes.FilePacks
 
         public class FileMetadata
         {
-            public uint Size;
-            public long OffsetInDataSection;
+            // Skyrim and earlier
+            public uint SizeFlags; // The size of the file in the BSA
+            // Fallout 4
+            public uint PackedSize;
+            public uint UnpackedSize;
+            //
+            public long Offset; // The offset of the file in the BSA
+            public F4Tex Tex;
+            //
             public string Path;
             public ulong PathHash;
+            // The size of the file inside the BSA
+            public uint Size => (uint)(SizeFlags > 0 ?
+                        // Skyrim and earlier
+                        SizeFlags & OB_BSAFILE_SIZEMASK :
+                        // TODO: Not correct for texture BA2s
+                        PackedSize == 0 ? UnpackedSize : PackedSize);
+            // Whether the file is compressed inside the BSA
+            public bool Compressed => (SizeFlags & OB_BSAFILE_FLAG_COMPRESS) != 0;
         }
 
-        public class F4FileMetadata : FileMetadata
+        public struct F4Tex
         {
-            public F4TexInfo TexInfo;
-            public F4TexChunk[] TexChunks;
+            public ushort Height;
+            public ushort Width;
+            public byte NumMips;
+            public DXGIFormat Format;
+            public ushort Unk16;
+            public F4TexChunk[] Chunks;
         }
 
-        public class OBFileMetadata : FileMetadata
+        public struct F4TexChunk
         {
+            public ulong Offset;
+            public uint PackedSize;
+            public uint UnpackedSize;
+            public ushort StartMip;
+            public ushort EndMip;
+            public uint Unk14;
         }
 
-        public class MWFileMetadata : FileMetadata
-        {
-        }
+        #endregion
 
-        public uint Magic; // 4 bytes
-        public uint Version; // 4 bytes
-        public bool HasNamePrefix;
-        public FileMetadata[] FileMetadatas;
-        public Dictionary<ulong, FileMetadata> FileMetadataHashTable;
+        UnityBinaryReader _r;
+        uint Magic; // 4 bytes
+        uint Version; // 4 bytes
+        bool _compressToggle; // Whether the %BSA is compressed
+        bool _hasNamePrefix; // Whether Fallout 3 names are prefixed with an extra string
+        FileMetadata[] _files;
+        ILookup<ulong, FileMetadata> _filesByHash;
+        public string FilePath;
         public VirtualFileSystem.Directory RootDir;
 
         public bool IsAtEof => _r.BaseStream.Position >= _r.BaseStream.Length;
@@ -84,10 +113,11 @@ namespace OA.Tes.FilePacks
         {
             if (filePath == null)
                 return;
+            FilePath = filePath;
             _r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             ReadMetadata();
-            TestContainsFile();
-            //TestLoadFileData();
+            //TestContainsFile();
+            TestLoadFileData();
         }
 
         void IDisposable.Dispose()
@@ -114,7 +144,7 @@ namespace OA.Tes.FilePacks
         /// </summary>
         public bool ContainsFile(string filePath)
         {
-            return FileMetadataHashTable.ContainsKey(HashFilePath(filePath));
+            return _filesByHash.Contains(HashFilePath(filePath));
         }
 
         /// <summary>
@@ -122,38 +152,139 @@ namespace OA.Tes.FilePacks
         /// </summary>
         public byte[] LoadFileData(string filePath)
         {
-            var hash = HashFilePath(filePath);
-            if (FileMetadataHashTable.TryGetValue(hash, out FileMetadata metadata))
-                return LoadFileData(metadata);
+            var file = _filesByHash[HashFilePath(filePath)].FirstOrDefault(x => x.Path == filePath);
+            if (file != null)
+                return LoadFileData(file);
             throw new FileNotFoundException($"Could not find file \"{filePath}\" in a BSA file.");
         }
 
         /// <summary>
         /// Loads an archived file's data.
         /// </summary>
-        public byte[] LoadFileData(FileMetadata fileMetadata)
+        public byte[] LoadFileData(FileMetadata file)
         {
-            _r.BaseStream.Position = _fileDataSectionPostion + fileMetadata.OffsetInDataSection;
-            //
-            return _r.ReadBytes((int)fileMetadata.Size);
-        }
+            _r.BaseStream.Position = file.Offset;
+            var fileSize = (int)file.Size;
+            if (_hasNamePrefix)
+            {
+                var len = _r.ReadByte();
+                fileSize -= len + 1;
+                _r.BaseStream.Position = file.Offset + 1 + len;
+            }
+            var newFileSize = fileSize;
+            if (Version == SSE_BSAHEADER_VERSION && file.SizeFlags > 0 && file.Compressed ^ _compressToggle)
+                newFileSize = _r.ReadLEInt32() - 4;
+            var fileData = _r.ReadBytes(fileSize);
+            // BSA
+            if (file.SizeFlags > 0 && file.Compressed ^ _compressToggle)
+            {
+                var newFileData = new byte[newFileSize];
+                if (Version != SSE_BSAHEADER_VERSION)
+                {
+                    using (var s = new MemoryStream(fileData, 4, fileSize - 4))
+                    using (var gs = new InflaterInputStream(s))
+                        if (gs.Read(newFileData, 0, newFileData.Length) != newFileData.Length)
+                            throw new InvalidOperationException("ZLIB FAILED");
+                }
+                else
+                {
+                    using (var s = new MemoryStream(fileData))
+                    using (var gs = new Lzw​Input​Stream(s))
+                        if (gs.Read(newFileData, 0, newFileData.Length) != newFileData.Length)
+                            throw new InvalidOperationException("ZLIB FAILED");
+                    fileData = newFileData;
+                }
+                fileData = newFileData;
+            }
+            // General BA2
+            else if (file.PackedSize > 0 && file.Tex.Chunks == null)
+            {
+                var newFileData = new byte[file.UnpackedSize];
+                using (var s = new MemoryStream(fileData))
+                using (var gs = new InflaterInputStream(s))
+                    if (gs.Read(newFileData, 0, newFileData.Length) != newFileData.Length)
+                        throw new InvalidOperationException("ZLIB FAILED");
+                fileData = newFileData;
+            }
+            // Fill DDS Header
+            else if (file.Tex.Chunks != null)
+            {
+                // Fill DDS Header
+                var ddsHeader = new DDSHeader
+                {
+                    dwFlags = DDSFlags.HEADER_FLAGS_TEXTURE | DDSFlags.HEADER_FLAGS_LINEARSIZE | DDSFlags.HEADER_FLAGS_MIPMAP,
+                    dwHeight = file.Tex.Height,
+                    dwWidth = file.Tex.Width,
+                    dwMipMapCount = file.Tex.NumMips,
+                    dwCaps = DDSCaps.SURFACE_FLAGS_TEXTURE | DDSCaps.SURFACE_FLAGS_MIPMAP,
+                    dwCaps2 = file.Tex.Unk16 == 2049 ? DDSCaps2.CUBEMAP_ALLFACES : 0,
+                };
+                var dx10Header = new DDSHeader_DXT10();
+                var dx10 = false;
 
-        public struct F4TexInfo
-        {
-            public ushort Height;
-            public ushort Width;
-            public byte NumMips;
-            public byte Format;
-        }
+                // map tex format
+                switch (file.Tex.Format)
+                {
+                    case DXGIFormat.BC1_UNORM:
+                        ddsHeader.ddspf.dwFlags = DDSPixelFormats.FourCC;
+                        ddsHeader.ddspf.dwFourCC = Encoding.ASCII.GetBytes("DXT1");
+                        ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height / 2U; // 4bpp
+                        break;
+                    case DXGIFormat.BC2_UNORM:
+                        ddsHeader.ddspf.dwFlags = DDSPixelFormats.FourCC;
+                        ddsHeader.ddspf.dwFourCC = Encoding.ASCII.GetBytes("DXT3");
+                        ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height; // 8bpp
+                        break;
+                    case DXGIFormat.BC3_UNORM:
+                        ddsHeader.ddspf.dwFlags = DDSPixelFormats.FourCC;
+                        ddsHeader.ddspf.dwFourCC = Encoding.ASCII.GetBytes("DXT5");
+                        ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height; // 8bpp
+                        break;
+                    case DXGIFormat.BC5_UNORM:
+                        ddsHeader.ddspf.dwFlags = DDSPixelFormats.FourCC;
+                        ddsHeader.ddspf.dwFourCC = Encoding.ASCII.GetBytes("ATI2");
+                        ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height; // 8bpp
+                        break;
+                    case DXGIFormat.BC7_UNORM:
+                        ddsHeader.ddspf.dwFlags = DDSPixelFormats.FourCC;
+                        ddsHeader.ddspf.dwFourCC = Encoding.ASCII.GetBytes("DX10");
+                        ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height; // 8bpp
+                        dx10 = true;
+                        dx10Header.dxgiFormat = (int)DXGIFormat.BC7_UNORM;
+                        break;
+                    case DXGIFormat.DXGI_FORMAT_B8G8R8A8_UNORM:
+                        ddsHeader.ddspf.dwFlags = DDSPixelFormats.RGB | DDSPixelFormats.AlphaPixels;
+                        ddsHeader.ddspf.dwRGBBitCount = 32;
+                        ddsHeader.ddspf.dwRBitMask = 0x00FF0000;
+                        ddsHeader.ddspf.dwGBitMask = 0x0000FF00;
+                        ddsHeader.ddspf.dwBBitMask = 0x000000FF;
+                        ddsHeader.ddspf.dwABitMask = 0xFF000000;
+                        ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height * 4; // 32bpp
+                        break;
+                    case DXGIFormat.DXGI_FORMAT_R8_UNORM:
+                        ddsHeader.ddspf.dwFlags = DDSPixelFormats.RGB;
+                        ddsHeader.ddspf.dwRGBBitCount = 8;
+                        ddsHeader.ddspf.dwRBitMask = 0xFF;
+                        ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height; // 8bpp
+                        break;
+                    default: throw new InvalidOperationException("DDS FAILED");
+                }
 
-        public struct F4TexChunk
-        {
-            public ulong Offset;
-            public uint PackedSize;
-            public uint UnpackedSize;
-            public ushort StartMip;
-            public ushort EndMip;
-            public uint Unk14;
+                //
+                if (dx10)
+                {
+                    dx10Header.resourceDimension = DDSDimension.Texture2D;
+                    dx10Header.miscFlag = 0;
+                    dx10Header.arraySize = 1;
+                    dx10Header.miscFlags2 = 0;
+                    dx10Header.Write(null);
+                    //char dds2[sizeof(dx10Header)];
+                    //memcpy(dds2, &dx10Header, sizeof(dx10Header));
+                    //content.append(QByteArray::fromRawData(dds2, sizeof(dx10Header)));
+                }
+
+            }
+            return fileData;
         }
 
         private void ReadMetadata()
@@ -172,12 +303,12 @@ namespace OA.Tes.FilePacks
 
                 // Create file metadatas
                 _r.BaseStream.Position = (long)header_NameTableOffset;
-                FileMetadatas = new F4FileMetadata[header_NumFiles];
+                _files = new FileMetadata[header_NumFiles];
                 for (var i = 0; i < header_NumFiles; i++)
                 {
                     var length = _r.ReadLEUInt16();
                     var path = _r.ReadASCIIString(length);
-                    FileMetadatas[i] = new F4FileMetadata
+                    _files[i] = new FileMetadata
                     {
                         Path = path,
                         PathHash = Tes4HashFilePath(path),
@@ -196,8 +327,9 @@ namespace OA.Tes.FilePacks
                         var info_PackedSize = _r.ReadLEUInt32();    // 18 - packed length (zlib)
                         var info_UnpackedSize = _r.ReadLEUInt32();  // 1C - unpacked length
                         var info_Unk20 = _r.ReadLEUInt32();         // 20 - BAADF00D
-                        FileMetadatas[i].OffsetInDataSection = (long)info_Offset;
-                        FileMetadatas[i].Size = info_UnpackedSize;
+                        _files[i].PackedSize = info_PackedSize;
+                        _files[i].UnpackedSize = info_UnpackedSize;
+                        _files[i].Offset = (long)info_Offset;
                     }
                 }
                 else if (header_Type == "DX10") // Texture BA2 Format
@@ -205,7 +337,7 @@ namespace OA.Tes.FilePacks
                     _r.BaseStream.Position = 16 + 8; // sizeof(header) + 8
                     for (var i = 0; i < header_NumFiles; i++)
                     {
-                        var fileMetadata = (F4FileMetadata)FileMetadatas[i];
+                        var fileMetadata = _files[i];
                         var info_NameHash = _r.ReadLEUInt32();      // 00
                         var info_Ext = _r.ReadASCIIString(4);       // 04
                         var info_DirHash = _r.ReadLEUInt32();       // 08
@@ -217,13 +349,6 @@ namespace OA.Tes.FilePacks
                         var info_NumMips = _r.ReadByte();           // 14
                         var info_Format = _r.ReadByte();            // 15 - DXGI_FORMAT
                         var info_Unk16 = _r.ReadLEUInt16();         // 16 - 0800
-                        fileMetadata.TexInfo = new F4TexInfo
-                        {
-                            Height = info_Height,
-                            Width = info_Width,
-                            NumMips = info_NumMips,
-                            Format = info_Format,
-                        };
                         // read tex-chunks
                         var texChunks = new F4TexChunk[info_NumChunks];
                         for (var j = 0; j < info_NumChunks; j++)
@@ -236,7 +361,19 @@ namespace OA.Tes.FilePacks
                                 EndMip = _r.ReadLEUInt16(),         // 12
                                 Unk14 = _r.ReadLEUInt32(),          // 14 - BAADFOOD
                             };
-                        fileMetadata.TexChunks = texChunks;
+                        var firstChunk = texChunks[0];
+                        _files[i].PackedSize = firstChunk.PackedSize;
+                        _files[i].UnpackedSize = firstChunk.UnpackedSize;
+                        _files[i].Offset = (long)firstChunk.Offset;
+                        fileMetadata.Tex = new F4Tex
+                        {
+                            Height = info_Height,
+                            Width = info_Width,
+                            NumMips = info_NumMips,
+                            Format = (DXGIFormat)info_Format,
+                            Unk16 = info_Unk16,
+                            Chunks = texChunks,
+                        };
                     }
                 }
             }
@@ -257,13 +394,13 @@ namespace OA.Tes.FilePacks
                 // Calculate some useful values
                 if ((header_ArchiveFlags & OB_BSAARCHIVE_PATHNAMES) == 0 || (header_ArchiveFlags & OB_BSAARCHIVE_FILENAMES) == 0)
                     throw new InvalidOperationException("HEADER FLAGS");
-                var compressToggle = header_ArchiveFlags & OB_BSAARCHIVE_COMPRESSFILES;
+                _compressToggle = (header_ArchiveFlags & OB_BSAARCHIVE_COMPRESSFILES) != 0;
                 if (Version == F3_BSAHEADER_VERSION || Version == SSE_BSAHEADER_VERSION)
-                    HasNamePrefix = (header_ArchiveFlags & F3_BSAARCHIVE_PREFIXFULLFILENAMES) != 0;
+                    _hasNamePrefix = (header_ArchiveFlags & F3_BSAARCHIVE_PREFIXFULLFILENAMES) != 0;
                 var folderSize = Version != SSE_BSAHEADER_VERSION ? 16 : 24;
 
                 // Create file metadatas
-                FileMetadatas = new FileMetadata[header_FileCount];
+                _files = new FileMetadata[header_FileCount];
                 var filenamesSectionStartPos = _r.BaseStream.Position = header_FolderRecordOffset + header_FolderNameLength + header_FolderCount * (folderSize + 1) + header_FileCount * 16;
                 var buf = new List<byte>(64);
                 for (var i = 0; i < header_FileCount; i++)
@@ -272,7 +409,7 @@ namespace OA.Tes.FilePacks
                     byte curCharAsByte; while ((curCharAsByte = _r.ReadByte()) != 0)
                         buf.Add(curCharAsByte);
                     var path = Encoding.ASCII.GetString(buf.ToArray());
-                    FileMetadatas[i] = new FileMetadata
+                    _files[i] = new FileMetadata
                     {
                         Path = path,
                     };
@@ -282,7 +419,7 @@ namespace OA.Tes.FilePacks
 
                 // read-all folders
                 _r.BaseStream.Position = header_FolderRecordOffset;
-                var folders = new Tuple<uint>[header_FolderCount];
+                var foldersFiles = new uint[header_FolderCount];
                 for (var i = 0; i < header_FolderCount; i++)
                 {
                     var folder_Hash = _r.ReadLEUInt64(); // Hash of the folder name
@@ -290,7 +427,7 @@ namespace OA.Tes.FilePacks
                     var folder_Unk = 0U; var folder_Offset = 0UL;
                     if (Version == SSE_BSAHEADER_VERSION) { folder_Unk = _r.ReadLEUInt32(); folder_Offset = _r.ReadLEUInt64(); }
                     else folder_Offset = _r.ReadLEUInt32();
-                    folders[i] = new Tuple<uint>(folder_FileCount);
+                    foldersFiles[i] = folder_FileCount;
                 }
 
                 // add file
@@ -298,15 +435,15 @@ namespace OA.Tes.FilePacks
                 for (var i = 0; i < header_FolderCount; i++)
                 {
                     var folder_name = _r.ReadPossiblyNullTerminatedASCIIString(_r.ReadByte()); // BSAReadSizedString
-                    var folder = folders[i];
-                    for (var j = 0; j < folder.Item1; j++)
+                    var folderFiles = foldersFiles[i];
+                    for (var j = 0; j < folderFiles; j++)
                     {
                         var file_Hash = _r.ReadLEUInt64(); // Hash of the filename
                         var file_SizeFlags = _r.ReadLEUInt32(); // Size of the data, possibly with OB_BSAFILE_FLAG_COMPRESS set
                         var file_Offset = _r.ReadLEUInt32(); // Offset to raw file data
-                        var fileMetadata = FileMetadatas[fileNameIndex++];
-                        fileMetadata.Size = file_SizeFlags;
-                        fileMetadata.OffsetInDataSection = file_Offset;
+                        var fileMetadata = _files[fileNameIndex++];
+                        fileMetadata.SizeFlags = file_SizeFlags;
+                        fileMetadata.Offset = file_Offset;
                         var path = folder_name + "\\" + fileMetadata.Path;
                         fileMetadata.Path = path;
                         fileMetadata.PathHash = Tes4HashFilePath(path);
@@ -321,17 +458,17 @@ namespace OA.Tes.FilePacks
 
                 // Calculate some useful values
                 var headerSize = _r.BaseStream.Position;
-                _hashTablePosition = headerSize + header_HashOffset;
-                _fileDataSectionPostion = _hashTablePosition + (8 * header_FileCount);
+                var hashTablePosition = headerSize + header_HashOffset;
+                var fileDataSectionPostion = hashTablePosition + (8 * header_FileCount);
 
                 // Create file metadatas
-                FileMetadatas = new FileMetadata[header_FileCount];
+                _files = new FileMetadata[header_FileCount];
                 for (var i = 0; i < header_FileCount; i++)
-                    FileMetadatas[i] = new FileMetadata
+                    _files[i] = new FileMetadata
                     {
                         // Read file sizes/offsets
-                        Size = _r.ReadLEUInt32(),
-                        OffsetInDataSection = _r.ReadLEUInt32(),
+                        SizeFlags = _r.ReadLEUInt32(),
+                        Offset = fileDataSectionPostion + _r.ReadLEUInt32(),
                     };
 
                 // Read filename offsets
@@ -348,27 +485,23 @@ namespace OA.Tes.FilePacks
                     buf.Clear();
                     byte curCharAsByte; while ((curCharAsByte = _r.ReadByte()) != 0)
                         buf.Add(curCharAsByte);
-                    FileMetadatas[i].Path = Encoding.ASCII.GetString(buf.ToArray());
+                    _files[i].Path = Encoding.ASCII.GetString(buf.ToArray());
                 }
 
                 // Read filename hashes
-                _r.BaseStream.Position = _hashTablePosition;
+                _r.BaseStream.Position = hashTablePosition;
                 for (var i = 0; i < header_FileCount; i++)
-                    FileMetadatas[i].PathHash = (_r.ReadLEUInt32() << 32) | (ulong)_r.ReadLEUInt32();
+                    _files[i].PathHash = (_r.ReadLEUInt32() << 32) | (ulong)_r.ReadLEUInt32();
             }
             else throw new InvalidOperationException("BAD MAGIC");
 
             // Create the file metadata hash table
-            FileMetadataHashTable = new Dictionary<ulong, FileMetadata>();
-            for (var i = 0; i < FileMetadatas.Length; i++)
-                FileMetadataHashTable[FileMetadatas[i].PathHash] = FileMetadatas[i];
+            _filesByHash = _files.ToLookup(x => x.PathHash);
 
             // Create a virtual directory tree.
             RootDir = new VirtualFileSystem.Directory();
-            foreach (var fileMetadata in FileMetadatas)
+            foreach (var fileMetadata in _files)
                 RootDir.CreateDescendantFile(fileMetadata.Path);
-            // Skip to the file data section.
-            _r.BaseStream.Position = _fileDataSectionPostion;
         }
 
         private ulong HashFilePath(string filePath)

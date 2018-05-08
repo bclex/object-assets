@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace OA.Tes.FilePacks
 {
@@ -6,20 +7,22 @@ namespace OA.Tes.FilePacks
     {
         void TestContainsFile()
         {
-            foreach (var fileMetadata in FileMetadatas)
-                if (!ContainsFile(fileMetadata.Path))
+            foreach (var file in _files)
+            {
+                Console.WriteLine(file.Path);
+                if (!ContainsFile(file.Path))
                     throw new FormatException("Hash Invalid");
-                else if (FileMetadataHashTable[HashFilePath(fileMetadata.Path)].Path != fileMetadata.Path)
+                else if (!_filesByHash[HashFilePath(file.Path)].Any(x => x.Path == file.Path))
                     throw new FormatException("Hash Invalid");
+            }
         }
 
         void TestLoadFileData()
         {
-            foreach (var fileMetadata in FileMetadatas)
+            foreach (var file in _files)
             {
-                var contents = LoadFileData(fileMetadata);
-                if (contents == null)
-                    throw new FormatException("Data Invalid");
+                Console.WriteLine(file.Path);
+                LoadFileData(file);
             }
         }
     }
