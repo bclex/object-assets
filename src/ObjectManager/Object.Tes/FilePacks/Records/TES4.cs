@@ -3,10 +3,9 @@ using System;
 
 namespace OA.Tes.FilePacks.Records
 {
-    // TODO: implement MAST and DATA subrecords
     public class TES4Record : Record
     {
-        public class HEDRSubRecord : SubRecord
+        public class HEDRField : Field
         {
             public float Version;
             public int NumRecords;
@@ -20,17 +19,17 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public HEDRSubRecord HEDR;
-        public CNAMSubRecord CNAM;
+        public HEDRField HEDR;
+        public STRVField CNAM;
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName) => throw new NotImplementedException();
+        public override Field CreateField(string type) => throw new NotImplementedException();
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId)
+        public override Field CreateField(string type, GameFormatId gameFormatId)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "HEDR": HEDR = new HEDRSubRecord(); return HEDR;
-                case "CNAM": CNAM = new CNAMSubRecord(); return CNAM;
+                case "HEDR": HEDR = new HEDRField(); return HEDR;
+                case "CNAM": CNAM = new STRVField(); return CNAM;
                 default: return null;
             }
         }

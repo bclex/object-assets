@@ -4,23 +4,21 @@ namespace OA.Tes.FilePacks.Records
 {
     public class GLOBRecord : Record
     {
-        public class FNAMSubRecord : ByteSubRecord { }
+        public STRVField NAME;
+        public ByteField FNAM;
+        public FLTVField FLTV;
 
-        public NAMESubRecord NAME;
-        public FNAMSubRecord FNAM;
-        public FLTVSubRecord FLTV;
-
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "FNAM": FNAM = new FNAMSubRecord(); return FNAM;
-                case "FLTV": FLTV = new FLTVSubRecord(); return FLTV;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "FNAM": FNAM = new ByteField(); return FNAM;
+                case "FLTV": FLTV = new FLTVField(); return FLTV;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

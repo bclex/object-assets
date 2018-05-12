@@ -1,9 +1,11 @@
-﻿using OA.Tes.FilePacks.Records;
-using OA.Core;
+﻿using OA.Core;
+using OA.Tes.FilePacks.Records;
 using System;
-using UnityEngine;
 
+//http://en.uesp.net/wiki/Tes3Mod:File_Format
 //http://en.uesp.net/wiki/Tes4Mod:Mod_File_Format
+//http://en.uesp.net/wiki/Tes5Mod:Mod_File_Format
+//https://github.com/TES5Edit/TES5Edit/blob/dev/wbDefinitionsTES5.pas 
 namespace OA.Tes.FilePacks
 {
     public static class RecordUtils
@@ -27,38 +29,83 @@ namespace OA.Tes.FilePacks
             else if (record is BOOKRecord) return ((BOOKRecord)record).MODL.Value;
             else if (record is ALCHRecord) return ((ALCHRecord)record).MODL.Value;
             else if (record is CREARecord) return ((CREARecord)record).MODL.Value;
-            else if (record is NPC_Record) { var npc = (NPC_Record)record; return npc.MODL != null ? npc.MODL.Value : null; }
+            else if (record is NPC_Record npc) { return npc.MODL != null ? npc.MODL.Value : null; }
             else return null;
         }
+    }
+
+    [Flags]
+    public enum HeaderFlags : uint
+    {
+        EsmFile = 0x00000001,               // ESM file. (TES4.HEDR record only.)
+        Deleted = 0x00000020,               // Deleted
+        R00 = 0x00000040,                   // Constant / (REFR) Hidden From Local Map (Needs Confirmation: Related to shields)
+        R01 = 0x00000100,                   // Must Update Anims / (REFR) Inaccessible
+        R02 = 0x00000200,                   // (REFR) Hidden from local map / (ACHR) Starts dead / (REFR) MotionBlurCastsShadows
+        R03 = 0x00000400,                   // Quest item / Persistent reference / (LSCR) Displays in Main Menu
+        InitiallyDisabled = 0x00000800,     // Initially disabled
+        Ignored = 0x00001000,               // Ignored
+        VisibleWhenDistant = 0x00008000,    // Visible when distant
+        R04 = 0x00010000,                   // (ACTI) Random Animation Start
+        R05 = 0x00020000,                   // (ACTI) Dangerous / Off limits (Interior cell) Dangerous Can't be set withough Ignore Object Interaction
+        Compressed = 0x00040000,            // Data is compressed
+        CantWait = 0x00080000,              // Can't wait
+        // tes5
+        R06 = 0x00100000,                   // (ACTI) Ignore Object Interaction Ignore Object Interaction Sets Dangerous Automatically
+        IsMarker = 0x00800000,              // Is Marker
+        R07 = 0x02000000,                   // (ACTI) Obstacle / (REFR) No AI Acquire
+        NavMesh01 = 0x04000000,             // NavMesh Gen - Filter
+        NavMesh02 = 0x08000000,             // NavMesh Gen - Bounding Box
+        R08 = 0x10000000,                   // (FURN) Must Exit to Talk / (REFR) Reflected By Auto Water
+        R09 = 0x20000000,                   // (FURN/IDLM) Child Can Use / (REFR) Don't Havok Settle
+        R10 = 0x40000000,                   // NavMesh Gen - Ground / (REFR) NoRespawn
+        R11 = 0x80000000,                   // (REFR) MultiBound
     }
 
     public class Header
     {
         public string Type; // 4 bytes
         public uint DataSize;
-        public uint Flags;
-        public bool Compressed => (Flags & 0x00040000) != 0;
+        public HeaderFlags Flags;
+        public bool Compressed => (Flags & HeaderFlags.Compressed) != 0;
         public uint FormId;
+        // group
+        public string Label;
+        public int GroupType;
 
-        public Header(UnityBinaryReader r, GameId gameId)
+        public Header(UnityBinaryReader r, GameFormatId formatId)
         {
             Type = r.ReadASCIIString(4);
-            DataSize = r.ReadLEUInt32();
-            if (gameId == GameId.Morrowind)
-                r.ReadLEUInt32();
-            Flags = r.ReadLEUInt32();
-            if (gameId == GameId.Morrowind)
+            if (Type == "GRUP")
+            {
+                if (formatId == GameFormatId.Tes4) DataSize = (uint)r.ReadLEUInt64() - 20;
+                else if (formatId == GameFormatId.Tes5) DataSize = r.ReadLEUInt32() - 24;
+                Label = r.ReadASCIIString(4);
+                if (formatId == GameFormatId.Tes4) GroupType = (int)r.ReadLEInt64();
+                else if (formatId == GameFormatId.Tes5) GroupType = r.ReadLEInt32();
+                r.ReadLEUInt32(); // stamp | stamp + uknown
+                if (formatId == GameFormatId.Tes4)
+                    return;
+                r.ReadLEUInt32(); // version + uknown
                 return;
+            }
+            DataSize = r.ReadLEUInt32();
+            if (formatId == GameFormatId.Tes3)
+                r.ReadLEUInt32(); // Unknown
+            Flags = (HeaderFlags)r.ReadLEUInt32();
+            if (formatId == GameFormatId.Tes3)
+                return;
+            // tes4
             FormId = r.ReadLEUInt32();
             r.ReadLEUInt32();
-            if (gameId == GameId.Oblivion)
+            if (formatId == GameFormatId.Tes4)
                 return;
+            // tes5
             r.ReadLEUInt32();
         }
 
-        public Record CreateUninitializedRecord(long position)
+        public Record CreateRecord(long position)
         {
-            var game = TesSettings.Game;
             Record r;
             switch (Type)
             {
@@ -87,8 +134,8 @@ namespace OA.Tes.FilePacks
                 case "ALCH": r = new ALCHRecord(); break;
                 case "CELL": r = new CELLRecord(); break;
                 case "LAND": r = new LANDRecord(); break;
-                case "CREA": r = game.CreaturesEnabled ? new CREARecord() : null; break;
-                case "NPC_": r = game.NpcsEnabled ? new NPC_Record() : null; break;
+                case "CREA": r = TesSettings.Game.CreaturesEnabled ? new CREARecord() : null; break;
+                case "NPC_": r = TesSettings.Game.NpcsEnabled ? new NPC_Record() : null; break;
                 //
                 case "CLAS":
                 case "SPEL":
@@ -117,18 +164,6 @@ namespace OA.Tes.FilePacks
         }
     }
 
-    public class SubRecordHeader
-    {
-        public string Type; // 4 bytes
-        public uint DataSize;
-
-        public SubRecordHeader(UnityBinaryReader r, GameId gameId)
-        {
-            Type = r.ReadASCIIString(4);
-            if (gameId == GameId.Morrowind) DataSize = r.ReadLEUInt32();
-            else DataSize = r.ReadLEUInt16();
-        }
-    }
 
     public abstract class Record : IRecord
     {
@@ -139,139 +174,56 @@ namespace OA.Tes.FilePacks
         /// Return an uninitialized subrecord to deserialize, or null to skip.
         /// </summary>
         /// <returns>Return an uninitialized subrecord to deserialize, or null to skip.</returns>
-        public abstract SubRecord CreateUninitializedSubRecord(string subRecordName);
+        public abstract Field CreateField(string type);
 
         /// <summary>
         /// Return an uninitialized subrecord to deserialize, or null to skip.
         /// </summary>
         /// <returns>Return an uninitialized subrecord to deserialize, or null to skip.</returns>
-        public abstract SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId);
+        public abstract Field CreateField(string type, GameFormatId formatId);
 
-        public void Read(UnityBinaryReader r, GameId gameId)
+        public void Read(UnityBinaryReader r, string filePath, GameFormatId formatId)
         {
-            var dataEndPos = r.BaseStream.Position + Header.DataSize;
-            while (r.BaseStream.Position < dataEndPos)
+            var endPosition = r.BaseStream.Position + Header.DataSize;
+            while (r.BaseStream.Position < endPosition)
             {
-                var subRecordStartStreamPosition = r.BaseStream.Position;
-                var subRecordHeader = new SubRecordHeader(r, gameId);
-                var subRecord = gameId > GameId.Morrowind ? CreateUninitializedSubRecord(subRecordHeader.Type, gameId) : CreateUninitializedSubRecord(subRecordHeader.Type);
-                // Read or skip the record.
-                if (subRecord != null)
+                var header = new FieldHeader(r, formatId);
+                var field = formatId != GameFormatId.Tes3 ? CreateField(header.Type, formatId) : CreateField(header.Type);
+                // skip the record if null
+                if (field == null)
                 {
-                    subRecord.Header = subRecordHeader;
-                    var subRecordDataStreamPosition = r.BaseStream.Position;
-                    subRecord.Read(r, subRecordHeader.DataSize);
-                    if (r.BaseStream.Position != subRecordDataStreamPosition + subRecord.Header.DataSize)
-                        throw new FormatException($"Failed reading {subRecord.Header.Type} subrecord at offset {subRecordStartStreamPosition}");
+                    r.BaseStream.Position += header.DataSize;
+                    continue;
                 }
-                else r.BaseStream.Position += subRecordHeader.DataSize;
+                var position = r.BaseStream.Position;
+                field.Read(r, header.DataSize);
+                // check full read
+                if (r.BaseStream.Position != position + header.DataSize)
+                    throw new FormatException($"Failed reading {header.Type} field data at offset {position} in {filePath}");
             }
+            // check full read
+            if (r.BaseStream.Position != Position + Header.DataSize)
+                throw new FormatException($"Failed reading {Header.Type} record data at offset {Position} in {filePath}");
         }
     }
 
-    public abstract class SubRecord
+    public class FieldHeader
     {
-        public SubRecordHeader Header;
+        public string Type; // 4 bytes
+        public uint DataSize;
+
+        public FieldHeader(UnityBinaryReader r, GameFormatId formatId)
+        {
+            Type = r.ReadASCIIString(4);
+            if (formatId == GameFormatId.Tes3) DataSize = r.ReadLEUInt32();
+            else DataSize = r.ReadLEUInt16();
+        }
+    }
+
+    public abstract class Field
+    {
+        //public FieldHeader Header;
 
         public abstract void Read(UnityBinaryReader reader, uint dataSize);
-    }
-
-    // Common sub-records.
-    public class STRVSubRecord : SubRecord
-    {
-        public string Value;
-
-        public override void Read(UnityBinaryReader r, uint dataSize)
-        {
-            Value = r.ReadPossiblyNullTerminatedASCIIString((int)Header.DataSize);
-        }
-    }
-
-    // variable size
-    public class INTVSubRecord : SubRecord
-    {
-        public long Value;
-
-        public override void Read(UnityBinaryReader r, uint dataSize)
-        {
-            switch (Header.DataSize)
-            {
-                case 1: Value = r.ReadByte(); break;
-                case 2: Value = r.ReadLEInt16(); break;
-                case 4: Value = r.ReadLEInt32(); break;
-                case 8: Value = r.ReadLEInt64(); break;
-                default: throw new NotImplementedException($"Tried to read an INTV subrecord with an unsupported size ({Header.DataSize})");
-            }
-        }
-    }
-    public class INTVTwoI32SubRecord : SubRecord
-    {
-        public int Value0, Value1;
-
-        public override void Read(UnityBinaryReader r, uint dataSize)
-        {
-            Debug.Assert(Header.DataSize == 8);
-            Value0 = r.ReadLEInt32();
-            Value1 = r.ReadLEInt32();
-        }
-    }
-    public class INDXSubRecord : INTVSubRecord { }
-
-    public class FLTVSubRecord : SubRecord
-    {
-        public float Value;
-
-        public override void Read(UnityBinaryReader r, uint dataSize)
-        {
-            Value = r.ReadLESingle();
-        }
-    }
-
-    public class ByteSubRecord : SubRecord
-    {
-        public byte Value;
-
-        public override void Read(UnityBinaryReader r, uint dataSize)
-        {
-            Value = r.ReadByte();
-        }
-    }
-    public class Int32SubRecord : SubRecord
-    {
-        public int Value;
-
-        public override void Read(UnityBinaryReader r, uint dataSize)
-        {
-            Value = r.ReadLEInt32();
-        }
-    }
-    public class UInt32SubRecord : SubRecord
-    {
-        public uint Value;
-
-        public override void Read(UnityBinaryReader r, uint dataSize)
-        {
-            Value = r.ReadLEUInt32();
-        }
-    }
-
-    public class NAMESubRecord : STRVSubRecord { }
-    public class FNAMSubRecord : STRVSubRecord { }
-    public class SNAMSubRecord : STRVSubRecord { }
-    public class ANAMSubRecord : STRVSubRecord { }
-    public class ITEXSubRecord : STRVSubRecord { }
-    public class ENAMSubRecord : STRVSubRecord { }
-    public class BNAMSubRecord : STRVSubRecord { }
-    public class CNAMSubRecord : STRVSubRecord { }
-    public class SCRISubRecord : STRVSubRecord { }
-    public class SCPTSubRecord : STRVSubRecord { }
-    public class MODLSubRecord : STRVSubRecord { }
-    public class TEXTSubRecord : STRVSubRecord { }
-
-    public class INDXBNAMCNAMGroup
-    {
-        public INDXSubRecord INDX;
-        public BNAMSubRecord BNAM;
-        public CNAMSubRecord CNAM;
     }
 }

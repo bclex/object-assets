@@ -5,7 +5,7 @@ namespace OA.Tes.FilePacks.Records
 {
     public class MISCRecord : Record
     {
-        public class MCDTSubRecord : SubRecord
+        public class MCDTField : Field
         {
             public float Weight;
             public uint Value;
@@ -19,29 +19,29 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public NAMESubRecord NAME; // door ID
-        public MODLSubRecord MODL; // model filename
-        public FNAMSubRecord FNAM; // item name
-        public MCDTSubRecord MCDT; // misc data
-        public ITEXSubRecord ITEX; // inventory icon filename
-        public ENAMSubRecord ENAM; // enchantment ID string
-        public SCRISubRecord SCRI; // script ID string
+        public STRVField NAME; // door ID
+        public STRVField MODL; // model filename
+        public STRVField FNAM; // item name
+        public MCDTField MCDT; // misc data
+        public STRVField ITEX; // inventory icon filename
+        public STRVField ENAM; // enchantment ID string
+        public STRVField SCRI; // script ID string
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "MODL": MODL = new MODLSubRecord(); return MODL;
-                case "FNAM": FNAM = new FNAMSubRecord(); return FNAM;
-                case "MCDT": MCDT = new MCDTSubRecord(); return MCDT;
-                case "ITEX": ITEX = new ITEXSubRecord(); return ITEX;
-                case "ENAM": ENAM = new ENAMSubRecord(); return ENAM;
-                case "SCRI": SCRI = new SCRISubRecord(); return SCRI;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "MODL": MODL = new STRVField(); return MODL;
+                case "FNAM": FNAM = new STRVField(); return FNAM;
+                case "MCDT": MCDT = new MCDTField(); return MCDT;
+                case "ITEX": ITEX = new STRVField(); return ITEX;
+                case "ENAM": ENAM = new STRVField(); return ENAM;
+                case "SCRI": SCRI = new STRVField(); return SCRI;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

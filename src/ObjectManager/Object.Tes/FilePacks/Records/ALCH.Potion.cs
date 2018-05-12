@@ -5,7 +5,7 @@ namespace OA.Tes.FilePacks.Records
 {
     public class ALCHRecord : Record
     {
-        public class ALDTSubRecord : SubRecord
+        public class ALDTField : Field
         {
             public float Weight;
             public int Value;
@@ -19,7 +19,7 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public class ENAMSubRecord : SubRecord
+        public class ENAMField : Field
         {
             public short EffectId;
             public byte SkillId;
@@ -43,29 +43,29 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public NAMESubRecord NAME;
-        public MODLSubRecord MODL;
-        public FNAMSubRecord FNAM;
-        public ALDTSubRecord ALDT;
-        public ENAMSubRecord ENAM;
-        public TEXTSubRecord TEXT;
-        public SCRISubRecord SCRI;
+        public STRVField NAME;
+        public STRVField MODL;
+        public STRVField FNAM;
+        public ALDTField ALDT;
+        public ENAMField ENAM;
+        public STRVField TEXT;
+        public STRVField SCRI;
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "MODL": MODL = new MODLSubRecord(); return MODL;
-                case "FNAM": FNAM = new FNAMSubRecord(); return FNAM;
-                case "ALDT": ALDT = new ALDTSubRecord(); return ALDT;
-                case "ENAM": ENAM = new ENAMSubRecord(); return ENAM;
-                case "TEXT": TEXT = new TEXTSubRecord(); return TEXT;
-                case "SCRI": SCRI = new SCRISubRecord(); return SCRI;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "MODL": MODL = new STRVField(); return MODL;
+                case "FNAM": FNAM = new STRVField(); return FNAM;
+                case "ALDT": ALDT = new ALDTField(); return ALDT;
+                case "ENAM": ENAM = new ENAMField(); return ENAM;
+                case "TEXT": TEXT = new STRVField(); return TEXT;
+                case "SCRI": SCRI = new STRVField(); return SCRI;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

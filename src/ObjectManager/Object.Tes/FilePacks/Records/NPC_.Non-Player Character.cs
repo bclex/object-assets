@@ -5,9 +5,7 @@ namespace OA.Tes.FilePacks.Records
 {
     public class NPC_Record : Record
     {
-        public class RNAMSubRecord : STRVSubRecord { }
-        public class KNAMSubRecord : STRVSubRecord { }
-        public class NPDTSubRecord : SubRecord
+        public class NPDTField : Field
         {
             public short Level;
             public byte Strength;
@@ -78,8 +76,7 @@ namespace OA.Tes.FilePacks.Records
                 }
             }
         }
-        public class FLAGSubRecord : INTVSubRecord { }
-        public class NPCOSubRecord : SubRecord
+        public class NPCOField : Field
         {
             public int Count;
             public char[] Name;
@@ -93,7 +90,7 @@ namespace OA.Tes.FilePacks.Records
                     Name[i] = System.Convert.ToChar(bytes[i]);
             }
         }
-        public class NPCSSubRecord : SubRecord
+        public class NPCSField : Field
         {
             public char[] Name;
 
@@ -105,7 +102,7 @@ namespace OA.Tes.FilePacks.Records
                     Name[i] = System.Convert.ToChar(bytes[i]);
             }
         }
-        public class AIDTSubRecord : SubRecord
+        public class AIDTField : Field
         {
             public enum FlagsType
             {
@@ -152,7 +149,7 @@ namespace OA.Tes.FilePacks.Records
                 Flags = r.ReadLEInt32();
             }
         }
-        public class AI_WSubRecord : SubRecord
+        public class AI_WField : Field
         {
             public short Distance;
             public short Duration;
@@ -169,7 +166,7 @@ namespace OA.Tes.FilePacks.Records
                 Unknow = r.ReadByte();
             }
         }
-        public class AI_TSubRecord : SubRecord
+        public class AI_TField : Field
         {
             public float X;
             public float Y;
@@ -184,29 +181,7 @@ namespace OA.Tes.FilePacks.Records
                 Unknown = r.ReadLESingle();
             }
         }
-        public class AI_FSubRecord : SubRecord
-        {
-            public float X;
-            public float Y;
-            public float Z;
-            public short Duration;
-            public char[] Id;
-            public float Unknown;
-
-            public override void Read(UnityBinaryReader r, uint dataSize)
-            {
-                X = r.ReadLESingle();
-                Y = r.ReadLESingle();
-                Z = r.ReadLESingle();
-                Duration = r.ReadLEInt16();
-                var bytes = r.ReadBytes(32);
-                Id = new char[32];
-                for (var i = 0; i < 32; i++)
-                    Id[i] = System.Convert.ToChar(bytes[i]);
-                Unknown = r.ReadLESingle();
-            }
-        }
-        public class AI_ESubRecord : SubRecord
+        public class AI_FField : Field
         {
             public float X;
             public float Y;
@@ -228,8 +203,29 @@ namespace OA.Tes.FilePacks.Records
                 Unknown = r.ReadLESingle();
             }
         }
-        public class CNDTSubRecord : STRVSubRecord { }
-        public class AI_ASubRecord : SubRecord
+        public class AI_EField : Field
+        {
+            public float X;
+            public float Y;
+            public float Z;
+            public short Duration;
+            public char[] Id;
+            public float Unknown;
+
+            public override void Read(UnityBinaryReader r, uint dataSize)
+            {
+                X = r.ReadLESingle();
+                Y = r.ReadLESingle();
+                Z = r.ReadLESingle();
+                Duration = r.ReadLEInt16();
+                var bytes = r.ReadBytes(32);
+                Id = new char[32];
+                for (var i = 0; i < 32; i++)
+                    Id[i] = System.Convert.ToChar(bytes[i]);
+                Unknown = r.ReadLESingle();
+            }
+        }
+        public class AI_AField : Field
         {
             public char[] Name;
             public byte Unknown;
@@ -238,7 +234,7 @@ namespace OA.Tes.FilePacks.Records
             {
             }
         }
-        public class DODTSubRecord : SubRecord
+        public class DODTField : Field
         {
             public float XPos;
             public float YPos;
@@ -257,60 +253,58 @@ namespace OA.Tes.FilePacks.Records
                 ZRot = r.ReadLESingle();
             }
         }
-        public class DNAMSubRecord : STRVSubRecord { }
-        public class XSCLSubRecord : FLTVSubRecord { }
 
-        public NAMESubRecord NAME;
-        public FNAMSubRecord FNAM;
-        public MODLSubRecord MODL;
-        public RNAMSubRecord RNAM;
-        public ANAMSubRecord ANAM;
-        public BNAMSubRecord BNAM;
-        public CNAMSubRecord CNAM;
-        public KNAMSubRecord KNAM;
-        public NPDTSubRecord NPDT;
-        public FLAGSubRecord FLAG;
-        public NPCOSubRecord NPCO;
-        public AIDTSubRecord AIDT;
-        public AI_WSubRecord AI_W;
-        public AI_TSubRecord AI_T;
-        public AI_FSubRecord AI_F;
-        public AI_ESubRecord AI_E;
-        public CNDTSubRecord CNDT;
-        public AI_ASubRecord AI_A;
-        public DODTSubRecord DODT;
-        public DNAMSubRecord DNAM;
-        public XSCLSubRecord XSCL;
+        public STRVField NAME;
+        public STRVField FNAM;
+        public STRVField MODL;
+        public STRVField RNAM;
+        public STRVField ANAM;
+        public STRVField BNAM;
+        public STRVField CNAM;
+        public STRVField KNAM;
+        public NPDTField NPDT;
+        public INTVField FLAG;
+        public NPCOField NPCO;
+        public AIDTField AIDT;
+        public AI_WField AI_W;
+        public AI_TField AI_T;
+        public AI_FField AI_F;
+        public AI_EField AI_E;
+        public STRVField CNDT;
+        public AI_AField AI_A;
+        public DODTField DODT;
+        public STRVField DNAM;
+        public FLTVField XSCL;
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "FNAM": FNAM = new FNAMSubRecord(); return FNAM;
-                case "MODL": MODL = new MODLSubRecord(); return MODL;
-                case "RNAM": RNAM = new RNAMSubRecord(); return RNAM;
-                case "ANAM": ANAM = new ANAMSubRecord(); return ANAM;
-                case "BNAM": BNAM = new BNAMSubRecord(); return BNAM;
-                case "CNAM": CNAM = new CNAMSubRecord(); return CNAM;
-                case "KNAM": KNAM = new KNAMSubRecord(); return KNAM;
-                case "NPDT": NPDT = new NPDTSubRecord(); return NPDT;
-                case "FLAG": FLAG = new FLAGSubRecord(); return FLAG;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "FNAM": FNAM = new STRVField(); return FNAM;
+                case "MODL": MODL = new STRVField(); return MODL;
+                case "RNAM": RNAM = new STRVField(); return RNAM;
+                case "ANAM": ANAM = new STRVField(); return ANAM;
+                case "BNAM": BNAM = new STRVField(); return BNAM;
+                case "CNAM": CNAM = new STRVField(); return CNAM;
+                case "KNAM": KNAM = new STRVField(); return KNAM;
+                case "NPDT": NPDT = new NPDTField(); return NPDT;
+                case "FLAG": FLAG = new INTVField(); return FLAG;
                 //case "NPCO": NPCO = new NPCOSubRecord(); return NPCO;
-                case "AIDT": AIDT = new AIDTSubRecord(); return AIDT;
-                case "AI_W": AI_W = new AI_WSubRecord(); return AI_W;
+                case "AIDT": AIDT = new AIDTField(); return AIDT;
+                case "AI_W": AI_W = new AI_WField(); return AI_W;
                 //case "AI_T": AI_T = new AI_TSubRecord(); return AI_T;
                 //case "AI_F": AI_F = new AI_FSubRecord(); return AI_F;
-                case "AI_E": AI_E = new AI_ESubRecord(); return AI_E;
-                case "CNDT": CNDT = new CNDTSubRecord(); return CNDT;
-                case "AI_A": AI_A = new AI_ASubRecord(); return AI_A;
-                case "DODT": DODT = new DODTSubRecord(); return DODT;
-                case "DNAM": DNAM = new DNAMSubRecord(); return DNAM;
-                case "XSCL": XSCL = new XSCLSubRecord(); return XSCL;
+                case "AI_E": AI_E = new AI_EField(); return AI_E;
+                case "CNDT": CNDT = new STRVField(); return CNDT;
+                case "AI_A": AI_A = new AI_AField(); return AI_A;
+                case "DODT": DODT = new DODTField(); return DODT;
+                case "DNAM": DNAM = new STRVField(); return DNAM;
+                case "XSCL": XSCL = new FLTVField(); return XSCL;
             }
             return null;
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

@@ -20,8 +20,26 @@ namespace OA.Tes.FilePacks
 
         public EsmFile(string filePath, GameId gameId)
         {
-            ReadRecords(filePath, gameId);
+            Read(filePath, GetFormatId());
             PostProcessRecords();
+            GameFormatId GetFormatId()
+            {
+                switch (gameId)
+                {
+                    // tes
+                    case GameId.Morrowind: return GameFormatId.Tes3;
+                    case GameId.Oblivion: return GameFormatId.Tes4;
+                    case GameId.Skyrim:
+                    case GameId.SkyrimSE:
+                    case GameId.SkyrimVR: return GameFormatId.Tes5;
+                    // fallout
+                    case GameId.Fallout3:
+                    case GameId.FalloutNV: return GameFormatId.Tes4;
+                    case GameId.Fallout4:
+                    case GameId.Fallout4VR: return GameFormatId.Tes5;
+                    default: throw new InvalidOperationException();
+                }
+            }
         }
 
         void IDisposable.Dispose()
@@ -38,37 +56,61 @@ namespace OA.Tes.FilePacks
 
         public List<IRecord> GetRecordsOfType<T>() where T : Record { return recordsByType.TryGetValue(typeof(T), out List<IRecord> records) ? records : null; }
 
-        private void ReadRecords(string filePath, GameId gameId, bool loadHeaderOnly = false)
+        void Read(string filePath, GameFormatId formatId)
         {
             var r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
-            var header = new Header(r, gameId);
-            if ((gameId == GameId.Morrowind && header.Type != "TES3") || (gameId != GameId.Morrowind && header.Type != "TES4"))
-                throw new FormatException($"{filePath} record header {header.Type} is not valid for this {gameId}");
-            var record = header.CreateUninitializedRecord(0);
-            record.Read(r, gameId);
-            if (loadHeaderOnly)
-                return;
+            var header = new Header(r, formatId);
+            if ((formatId == GameFormatId.Tes3 && header.Type != "TES3") || (formatId != GameFormatId.Tes3 && header.Type != "TES4"))
+                throw new FormatException($"{filePath} record header {header.Type} is not valid for this {formatId}");
+            var rootRecord = header.CreateRecord(r.BaseStream.Position);
+            rootRecord.Read(r, filePath, formatId);
+            // read stream
             var recordList = new List<Record>();
-            while (r.BaseStream.Position < r.BaseStream.Length)
+            var endPosition = r.BaseStream.Length;
+            while (r.BaseStream.Position < endPosition)
             {
-                var position = r.BaseStream.Position;
-                header = new Header(r, gameId);
-                var recordPosition = r.BaseStream.Position;
-                record = header.CreateUninitializedRecord(recordPosition);
-                // Read or skip the record.
-                if (record != null)
+                header = new Header(r, formatId);
+                if (header.Type == "GRUP")
                 {
-                    record.Read(r, gameId);
-                    if (r.BaseStream.Position != recordPosition + record.Header.DataSize)
-                        throw new FormatException($"Failed reading {header.Type} record at offset {position} in {filePath}");
-                    recordList.Add(record);
+                    var groupRecords = ReadGroup(r, header, filePath, formatId);
                 }
-                else r.BaseStream.Position += header.DataSize; // Skip the record.
+                else
+                {
+                    var record = header.CreateRecord(r.BaseStream.Position);
+                    // skip the record if null
+                    if (record == null)
+                    {
+                        r.BaseStream.Position += header.DataSize;
+                        continue;
+                    }
+                    record.Read(r, filePath, formatId);
+                    //recordList.Add(record);
+                }
             }
             records = recordList.ToArray();
         }
 
-        private void PostProcessRecords()
+        Record[] ReadGroup(UnityBinaryReader r, Header groupHeader, string filePath, GameFormatId formatId)
+        {
+            var recordList = new List<Record>();
+            var endPosition = r.BaseStream.Position + groupHeader.DataSize;
+            while (r.BaseStream.Position < endPosition)
+            {
+                var header = new Header(r, formatId);
+                var record = header.CreateRecord(r.BaseStream.Position);
+                if (record == null)
+                {
+                    // Skip the record.
+                    r.BaseStream.Position += header.DataSize;
+                    continue;
+                }
+                record.Read(r, filePath, formatId);
+                recordList.Add(record);
+            }
+            return recordList.ToArray();
+        }
+
+        void PostProcessRecords()
         {
             recordsByType = new Dictionary<Type, List<IRecord>>();
             objectsByIDString = new Dictionary<string, IRecord>();
@@ -84,8 +126,7 @@ namespace OA.Tes.FilePacks
                     recordsOfSameType.Add(record);
                 else
                 {
-                    recordsOfSameType = new List<IRecord>();
-                    recordsOfSameType.Add(record);
+                    recordsOfSameType = new List<IRecord> { record };
                     recordsByType.Add(recordType, recordsOfSameType);
                 }
                 // Add the record to the object dictionary if applicable.
@@ -114,15 +155,11 @@ namespace OA.Tes.FilePacks
                 else if (record is NPC_Record) objectsByIDString.Add(((NPC_Record)record).NAME.Value, record);
                 // Add the record to exteriorCELLRecordsByIndices if applicable.
                 if (record is CELLRecord cell)
-                {
                     if (!cell.IsInterior)
                         exteriorCELLRecordsByIndices[cell.GridCoords] = cell;
-                }
                 // Add the record to LANDRecordsByIndices if applicable.
                 if (record is LANDRecord land)
-                {
                     LANDRecordsByIndices[land.GridCoords] = land;
-                }
             }
         }
     }

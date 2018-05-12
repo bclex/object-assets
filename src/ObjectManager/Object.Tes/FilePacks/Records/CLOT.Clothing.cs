@@ -6,7 +6,7 @@ namespace OA.Tes.FilePacks.Records
 {
     public class CLOTRecord : Record
     {
-        public class CTDTSubRecord : SubRecord
+        public class CTDTField : Field
         {
             public int Type;
             public float Weight;
@@ -22,35 +22,35 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public NAMESubRecord NAME;
-        public MODLSubRecord MODL;
-        public FNAMSubRecord FNAM;
-        public CTDTSubRecord CTDT;
-        public ITEXSubRecord ITEX;
+        public STRVField NAME;
+        public STRVField MODL;
+        public STRVField FNAM;
+        public CTDTField CTDT;
+        public STRVField ITEX;
 
         public List<INDXBNAMCNAMGroup> INDXBNAMCNAMGroups = new List<INDXBNAMCNAMGroup>();
 
-        public ENAMSubRecord ENAM;
-        public SCRISubRecord SCRI;
+        public STRVField ENAM;
+        public STRVField SCRI;
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "MODL": MODL = new MODLSubRecord(); return MODL;
-                case "FNAM": FNAM = new FNAMSubRecord(); return FNAM;
-                case "CTDT": CTDT = new CTDTSubRecord(); return CTDT;
-                case "ITEX": ITEX = new ITEXSubRecord(); return ITEX;
-                case "INDX": var INDX = new INDXSubRecord(); var group = new INDXBNAMCNAMGroup(); group.INDX = INDX; INDXBNAMCNAMGroups.Add(group); return INDX;
-                case "BNAM": var BNAM = new BNAMSubRecord(); ArrayUtils.Last(INDXBNAMCNAMGroups).BNAM = BNAM; return BNAM;
-                case "CNAM": var CNAM = new CNAMSubRecord(); ArrayUtils.Last(INDXBNAMCNAMGroups).CNAM = CNAM; return CNAM;
-                case "ENAM": ENAM = new ENAMSubRecord(); return ENAM;
-                case "SCRI": SCRI = new SCRISubRecord(); return SCRI;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "MODL": MODL = new STRVField(); return MODL;
+                case "FNAM": FNAM = new STRVField(); return FNAM;
+                case "CTDT": CTDT = new CTDTField(); return CTDT;
+                case "ITEX": ITEX = new STRVField(); return ITEX;
+                case "INDX": var INDX = new INTVField(); var group = new INDXBNAMCNAMGroup { INDX = INDX }; INDXBNAMCNAMGroups.Add(group); return INDX;
+                case "BNAM": var BNAM = new STRVField(); ArrayUtils.Last(INDXBNAMCNAMGroups).BNAM = BNAM; return BNAM;
+                case "CNAM": var CNAM = new STRVField(); ArrayUtils.Last(INDXBNAMCNAMGroups).CNAM = CNAM; return CNAM;
+                case "ENAM": ENAM = new STRVField(); return ENAM;
+                case "SCRI": SCRI = new STRVField(); return SCRI;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

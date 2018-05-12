@@ -6,17 +6,17 @@ namespace OA.Tes.FilePacks.Records
     // TODO: implement DATA subrecord
     public class LANDRecord : Record
     {
-        /*public class DATASubRecord : SubRecord
+        /*public class DATAField : Field
         {
-            public override void DeserializeData(UnityBinaryReader r) {}
+            public override void Read(UnityBinaryReader r, uint dataSize) {}
         }*/
 
-        public class VNMLSubRecord : SubRecord
+        public class VNMLField : Field
         {
             // XYZ 8 bit floats
             public override void Read(UnityBinaryReader r, uint dataSize)
             {
-                var vertexCount = Header.DataSize / 3;
+                var vertexCount = dataSize / 3;
                 for (var i = 0; i < vertexCount; i++)
                 {
                     var xByte = r.ReadByte();
@@ -25,7 +25,7 @@ namespace OA.Tes.FilePacks.Records
                 }
             }
         }
-        public class VHGTSubRecord : SubRecord
+        public class VHGTField : Field
         {
             public float ReferenceHeight;
             public sbyte[] HeightOffsets;
@@ -33,7 +33,7 @@ namespace OA.Tes.FilePacks.Records
             public override void Read(UnityBinaryReader r, uint dataSize)
             {
                 ReferenceHeight = r.ReadLESingle();
-                var heightOffsetCount = Header.DataSize - 4 - 2 - 1;
+                var heightOffsetCount = dataSize - 4 - 2 - 1;
                 HeightOffsets = new sbyte[heightOffsetCount];
                 for (var i = 0; i < heightOffsetCount; i++)
                     HeightOffsets[i] = r.ReadSByte();
@@ -43,24 +43,24 @@ namespace OA.Tes.FilePacks.Records
                 r.ReadSByte();
             }
         }
-        public class WNAMSubRecord : SubRecord
+        public class WNAMField : Field
         {
             // Low-LOD heightmap (signed chars)
             public override void Read(UnityBinaryReader r, uint dataSize)
             {
-                var heightCount = Header.DataSize;
+                var heightCount = dataSize;
                 for (var i = 0; i < heightCount; i++)
                 {
                     var height = r.ReadByte();
                 }
             }
         }
-        public class VCLRSubRecord : SubRecord
+        public class VCLRField : Field
         {
             // 24 bit RGB
             public override void Read(UnityBinaryReader r, uint dataSize)
             {
-                var vertexCount = Header.DataSize / 3;
+                var vertexCount = dataSize / 3;
                 for (var i = 0; i < vertexCount; i++)
                 {
                     var rByte = r.ReadByte();
@@ -69,13 +69,13 @@ namespace OA.Tes.FilePacks.Records
                 }
             }
         }
-        public class VTEXSubRecord : SubRecord
+        public class VTEXField : Field
         {
             public ushort[] TextureIndices;
 
             public override void Read(UnityBinaryReader r, uint dataSize)
             {
-                var textureIndexCount = Header.DataSize / 2;
+                var textureIndexCount = dataSize / 2;
                 TextureIndices = new ushort[textureIndexCount];
                 for (var i = 0; i < textureIndexCount; i++)
                     TextureIndices[i] = r.ReadLEUInt16();
@@ -87,29 +87,29 @@ namespace OA.Tes.FilePacks.Records
             get { return new Vector2i(INTV.Value0, INTV.Value1); }
         }
 
-        public INTVTwoI32SubRecord INTV;
-        //public DATASubRecord DATA;
-        public VNMLSubRecord VNML;
-        public VHGTSubRecord VHGT;
-        public WNAMSubRecord WNAM;
-        public VCLRSubRecord VCLR;
-        public VTEXSubRecord VTEX;
+        public INTVTwoI32Field INTV;
+        //public DATAField DATA;
+        public VNMLField VNML;
+        public VHGTField VHGT;
+        public WNAMField WNAM;
+        public VCLRField VCLR;
+        public VTEXField VTEX;
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "INTV": INTV = new INTVTwoI32SubRecord(); return INTV;
+                case "INTV": INTV = new INTVTwoI32Field(); return INTV;
                 /*case "DATA": DATA = new DATASubRecord(); return DATA;*/
-                case "VNML": VNML = new VNMLSubRecord(); return VNML;
-                case "VHGT": VHGT = new VHGTSubRecord(); return VHGT;
-                case "WNAM": WNAM = new WNAMSubRecord(); return WNAM;
-                case "VCLR": VCLR = new VCLRSubRecord(); return VCLR;
-                case "VTEX": VTEX = new VTEXSubRecord(); return VTEX;
+                case "VNML": VNML = new VNMLField(); return VNML;
+                case "VHGT": VHGT = new VHGTField(); return VHGT;
+                case "WNAM": WNAM = new WNAMField(); return WNAM;
+                case "VCLR": VCLR = new VCLRField(); return VCLR;
+                case "VTEX": VTEX = new VTEXField(); return VTEX;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

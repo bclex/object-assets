@@ -4,23 +4,21 @@ namespace OA.Tes.FilePacks.Records
 {
     public class LTEXRecord : Record
     {
-        public class DATASubRecord : STRVSubRecord { }
+        public STRVField NAME;
+        public INTVField INTV;
+        public STRVField DATA;
 
-        public NAMESubRecord NAME;
-        public INTVSubRecord INTV;
-        public DATASubRecord DATA;
-
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "INTV": INTV = new INTVSubRecord(); return INTV;
-                case "DATA": DATA = new DATASubRecord(); return DATA;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "INTV": INTV = new INTVField(); return INTV;
+                case "DATA": DATA = new STRVField(); return DATA;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

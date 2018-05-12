@@ -5,7 +5,7 @@ namespace OA.Tes.FilePacks.Records
 {
     public class LIGHRecord : Record
     {
-        public class LHDTSubRecord : SubRecord
+        public class LHDTField : Field
         {
             public float Weight;
             public int Value;
@@ -31,29 +31,29 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public NAMESubRecord NAME;
-        public FNAMSubRecord FNAM;
-        public LHDTSubRecord LHDT;
-        public SCPTSubRecord SCPT;
-        public ITEXSubRecord ITEX;
-        public MODLSubRecord MODL;
-        public SNAMSubRecord SNAM;
+        public STRVField NAME;
+        public STRVField FNAM;
+        public LHDTField LHDT;
+        public STRVField SCPT;
+        public STRVField ITEX;
+        public STRVField MODL;
+        public STRVField SNAM;
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "FNAM": FNAM = new FNAMSubRecord(); return FNAM;
-                case "LHDT": LHDT = new LHDTSubRecord(); return LHDT;
-                case "SCPT": SCPT = new SCPTSubRecord(); return SCPT;
-                case "ITEX": ITEX = new ITEXSubRecord(); return ITEX;
-                case "MODL": MODL = new MODLSubRecord(); return MODL;
-                case "SNAM": SNAM = new SNAMSubRecord(); return SNAM;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "FNAM": FNAM = new STRVField(); return FNAM;
+                case "LHDT": LHDT = new LHDTField(); return LHDT;
+                case "SCPT": SCPT = new STRVField(); return SCPT;
+                case "ITEX": ITEX = new STRVField(); return ITEX;
+                case "MODL": MODL = new STRVField(); return MODL;
+                case "SNAM": SNAM = new STRVField(); return SNAM;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

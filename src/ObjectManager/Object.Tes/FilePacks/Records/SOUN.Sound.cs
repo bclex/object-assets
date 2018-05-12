@@ -5,7 +5,7 @@ namespace OA.Tes.FilePacks.Records
 {
     public class SOUNRecord : Record
     {
-        public class DATASubRecord : SubRecord
+        public class DATAField : Field
         {
             public byte Volume;
             public byte MinRange;
@@ -19,21 +19,21 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public NAMESubRecord NAME;
-        public FNAMSubRecord FNAM;
-        public DATASubRecord DATA;
+        public STRVField NAME;
+        public STRVField FNAM;
+        public DATAField DATA;
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "FNAM": FNAM = new FNAMSubRecord(); return FNAM;
-                case "DATA": DATA = new DATASubRecord(); return DATA;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "FNAM": FNAM = new STRVField(); return FNAM;
+                case "DATA": DATA = new DATAField(); return DATA;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

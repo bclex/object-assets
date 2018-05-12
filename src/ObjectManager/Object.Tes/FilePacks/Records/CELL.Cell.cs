@@ -8,7 +8,7 @@ namespace OA.Tes.FilePacks.Records
     // TODO: add support for strange INTV before object data?
     public class CELLRecord : Record, ICellRecord
     {
-        public class CELLDATASubRecord : SubRecord
+        public class CELLDATAField : Field
         {
             public uint Flags;
             public int GridX;
@@ -21,11 +21,7 @@ namespace OA.Tes.FilePacks.Records
                 GridY = r.ReadLEInt32();
             }
         }
-        public class RGNNSubRecord : NAMESubRecord { }
-        public class NAM0SubRecord : UInt32SubRecord { }
-        public class NAM5SubRecord : Int32SubRecord { } // map color (COLORREF)
-        public class WHGTSubRecord : FLTVSubRecord { }
-        public class AMBISubRecord : SubRecord
+        public class AMBIField : Field
         {
             public uint AmbientColor;
             public uint SunlightColor;
@@ -43,9 +39,7 @@ namespace OA.Tes.FilePacks.Records
 
         public class RefObj
         {
-            public class FRMRSubRecord : UInt32SubRecord { }
-            public class XSCLSubRecord : FLTVSubRecord { }
-            public class DODTSubRecord : SubRecord
+            public class DODTField : Field
             {
                 public Vector3 Position;
                 public Vector3 EulerAngles;
@@ -56,15 +50,7 @@ namespace OA.Tes.FilePacks.Records
                     EulerAngles = r.ReadLEVector3();
                 }
             }
-            public class DNAMSubRecord : NAMESubRecord { }
-            public class KNAMSubRecord : NAMESubRecord { }
-            public class TNAMSubRecord : NAMESubRecord { }
-            public class UNAMSubRecord : ByteSubRecord { }
-            public class ANAMSubRecord : NAMESubRecord { }
-            public class BNAMSubRecord : NAMESubRecord { }
-            public class NAM9SubRecord : UInt32SubRecord { }
-            public class XSOLSubRecord : NAMESubRecord { }
-            public class DATASubRecord : SubRecord
+            public class DATAField : Field
             {
                 public Vector3 Position;
                 public Vector3 EulerAngles;
@@ -76,21 +62,21 @@ namespace OA.Tes.FilePacks.Records
                 }
             }
 
-            public FRMRSubRecord FRMR;
-            public NAMESubRecord NAME;
-            public XSCLSubRecord XSCL;
-            public DODTSubRecord DODT;
-            public DNAMSubRecord DNAM;
-            public FLTVSubRecord FLTV;
-            public KNAMSubRecord KNAM;
-            public TNAMSubRecord TNAM;
-            public UNAMSubRecord UNAM;
-            public ANAMSubRecord ANAM;
-            public BNAMSubRecord BNAM;
-            public INTVSubRecord INTV;
-            public NAM9SubRecord NAM9;
-            public XSOLSubRecord XSOL;
-            public DATASubRecord DATA;
+            public UInt32Field FRMR;
+            public STRVField NAME;
+            public FLTVField XSCL;
+            public DODTField DODT;
+            public STRVField DNAM;
+            public FLTVField FLTV;
+            public STRVField KNAM;
+            public STRVField TNAM;
+            public ByteField UNAM;
+            public STRVField ANAM;
+            public STRVField BNAM;
+            public INTVField INTV;
+            public UInt32Field NAM9;
+            public STRVField XSOL;
+            public DATAField DATA;
         }
 
         public bool IsInterior
@@ -108,61 +94,61 @@ namespace OA.Tes.FilePacks.Records
             get { return AMBI != null ? (Color?)ColorUtils.B8G8R8ToColor32(AMBI.AmbientColor) : null; }
         }
 
-        public NAMESubRecord NAME;
+        public STRVField NAME;
 
         public bool IsReadingObjectDataGroups = false;
-        public CELLDATASubRecord DATA;
+        public CELLDATAField DATA;
 
-        public RGNNSubRecord RGNN;
-        public NAM0SubRecord NAM0;
+        public STRVField RGNN;
+        public UInt32Field NAM0;
 
         // Exterior Cells
-        public NAM5SubRecord NAM5;
+        public Int32Field NAM5; // map color (COLORREF)
 
         // Interior Cells
-        public WHGTSubRecord WHGT;
-        public AMBISubRecord AMBI;
+        public FLTVField WHGT;
+        public AMBIField AMBI;
 
         public List<RefObj> RefObjs = new List<RefObj>();
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            if (!IsReadingObjectDataGroups && subRecordName == "FRMR")
+            if (!IsReadingObjectDataGroups && type == "FRMR")
                 IsReadingObjectDataGroups = true;
             if (!IsReadingObjectDataGroups)
-                switch (subRecordName)
+                switch (type)
                 {
-                    case "NAME": NAME = new NAMESubRecord(); return NAME;
-                    case "DATA": DATA = new CELLDATASubRecord(); return DATA;
-                    case "RGNN": RGNN = new RGNNSubRecord(); return RGNN;
-                    case "NAM0": NAM0 = new NAM0SubRecord(); return NAM0;
-                    case "NAM5": NAM5 = new NAM5SubRecord(); return NAM5;
-                    case "WHGT": WHGT = new WHGTSubRecord(); return WHGT;
-                    case "AMBI": AMBI = new AMBISubRecord(); return AMBI;
+                    case "NAME": NAME = new STRVField(); return NAME;
+                    case "DATA": DATA = new CELLDATAField(); return DATA;
+                    case "RGNN": RGNN = new STRVField(); return RGNN;
+                    case "NAM0": NAM0 = new UInt32Field(); return NAM0;
+                    case "NAM5": NAM5 = new Int32Field(); return NAM5;
+                    case "WHGT": WHGT = new FLTVField(); return WHGT;
+                    case "AMBI": AMBI = new AMBIField(); return AMBI;
                     default: return null;
                 }
-            else switch (subRecordName)
+            else switch (type)
                 {
                     // RefObjDataGroup sub-records
-                    case "FRMR": RefObjs.Add(new RefObj()); ArrayUtils.Last(RefObjs).FRMR = new RefObj.FRMRSubRecord(); return ArrayUtils.Last(RefObjs).FRMR;
-                    case "NAME": ArrayUtils.Last(RefObjs).NAME = new NAMESubRecord(); return ArrayUtils.Last(RefObjs).NAME;
-                    case "XSCL": ArrayUtils.Last(RefObjs).XSCL = new RefObj.XSCLSubRecord(); return ArrayUtils.Last(RefObjs).XSCL;
-                    case "DODT": ArrayUtils.Last(RefObjs).DODT = new RefObj.DODTSubRecord(); return ArrayUtils.Last(RefObjs).DODT;
-                    case "DNAM": ArrayUtils.Last(RefObjs).DNAM = new RefObj.DNAMSubRecord(); return ArrayUtils.Last(RefObjs).DNAM;
-                    case "FLTV": ArrayUtils.Last(RefObjs).FLTV = new FLTVSubRecord(); return ArrayUtils.Last(RefObjs).FLTV;
-                    case "KNAM": ArrayUtils.Last(RefObjs).KNAM = new RefObj.KNAMSubRecord(); return ArrayUtils.Last(RefObjs).KNAM;
-                    case "TNAM": ArrayUtils.Last(RefObjs).TNAM = new RefObj.TNAMSubRecord(); return ArrayUtils.Last(RefObjs).TNAM;
-                    case "UNAM": ArrayUtils.Last(RefObjs).UNAM = new RefObj.UNAMSubRecord(); return ArrayUtils.Last(RefObjs).UNAM;
-                    case "ANAM": ArrayUtils.Last(RefObjs).ANAM = new RefObj.ANAMSubRecord(); return ArrayUtils.Last(RefObjs).ANAM;
-                    case "BNAM": ArrayUtils.Last(RefObjs).BNAM = new RefObj.BNAMSubRecord(); return ArrayUtils.Last(RefObjs).BNAM;
-                    case "INTV": ArrayUtils.Last(RefObjs).INTV = new INTVSubRecord(); return ArrayUtils.Last(RefObjs).INTV;
-                    case "NAM9": ArrayUtils.Last(RefObjs).NAM9 = new RefObj.NAM9SubRecord(); return ArrayUtils.Last(RefObjs).NAM9;
-                    case "XSOL": ArrayUtils.Last(RefObjs).XSOL = new RefObj.XSOLSubRecord(); return ArrayUtils.Last(RefObjs).XSOL;
-                    case "DATA": ArrayUtils.Last(RefObjs).DATA = new RefObj.DATASubRecord(); return ArrayUtils.Last(RefObjs).DATA;
+                    case "FRMR": RefObjs.Add(new RefObj()); ArrayUtils.Last(RefObjs).FRMR = new UInt32Field(); return ArrayUtils.Last(RefObjs).FRMR;
+                    case "NAME": ArrayUtils.Last(RefObjs).NAME = new STRVField(); return ArrayUtils.Last(RefObjs).NAME;
+                    case "XSCL": ArrayUtils.Last(RefObjs).XSCL = new FLTVField(); return ArrayUtils.Last(RefObjs).XSCL;
+                    case "DODT": ArrayUtils.Last(RefObjs).DODT = new RefObj.DODTField(); return ArrayUtils.Last(RefObjs).DODT;
+                    case "DNAM": ArrayUtils.Last(RefObjs).DNAM = new STRVField(); return ArrayUtils.Last(RefObjs).DNAM;
+                    case "FLTV": ArrayUtils.Last(RefObjs).FLTV = new FLTVField(); return ArrayUtils.Last(RefObjs).FLTV;
+                    case "KNAM": ArrayUtils.Last(RefObjs).KNAM = new STRVField(); return ArrayUtils.Last(RefObjs).KNAM;
+                    case "TNAM": ArrayUtils.Last(RefObjs).TNAM = new STRVField(); return ArrayUtils.Last(RefObjs).TNAM;
+                    case "UNAM": ArrayUtils.Last(RefObjs).UNAM = new ByteField(); return ArrayUtils.Last(RefObjs).UNAM;
+                    case "ANAM": ArrayUtils.Last(RefObjs).ANAM = new STRVField(); return ArrayUtils.Last(RefObjs).ANAM;
+                    case "BNAM": ArrayUtils.Last(RefObjs).BNAM = new STRVField(); return ArrayUtils.Last(RefObjs).BNAM;
+                    case "INTV": ArrayUtils.Last(RefObjs).INTV = new INTVField(); return ArrayUtils.Last(RefObjs).INTV;
+                    case "NAM9": ArrayUtils.Last(RefObjs).NAM9 = new UInt32Field(); return ArrayUtils.Last(RefObjs).NAM9;
+                    case "XSOL": ArrayUtils.Last(RefObjs).XSOL = new STRVField(); return ArrayUtils.Last(RefObjs).XSOL;
+                    case "DATA": ArrayUtils.Last(RefObjs).DATA = new RefObj.DATAField(); return ArrayUtils.Last(RefObjs).DATA;
                     default: return null;
                 }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

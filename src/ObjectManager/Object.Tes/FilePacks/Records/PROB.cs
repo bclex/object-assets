@@ -5,7 +5,7 @@ namespace OA.Tes.FilePacks.Records
 {
     public class PROBRecord : Record
     {
-        public class PBDTSubRecord : SubRecord
+        public class PBDTField : Field
         {
             public float Weight;
             public int Value;
@@ -21,27 +21,27 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public NAMESubRecord NAME;
-        public MODLSubRecord MODL;
-        public FNAMSubRecord FNAM;
-        public PBDTSubRecord PBDT;
-        public ITEXSubRecord ITEX;
-        public SCRISubRecord SCRI;
+        public STRVField NAME;
+        public STRVField MODL;
+        public STRVField FNAM;
+        public PBDTField PBDT;
+        public STRVField ITEX;
+        public STRVField SCRI;
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "MODL": MODL = new MODLSubRecord(); return MODL;
-                case "FNAM": FNAM = new FNAMSubRecord(); return FNAM;
-                case "PBDT": PBDT = new PBDTSubRecord(); return PBDT;
-                case "ITEX": ITEX = new ITEXSubRecord(); return ITEX;
-                case "SCRI": SCRI = new SCRISubRecord(); return SCRI;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "MODL": MODL = new STRVField(); return MODL;
+                case "FNAM": FNAM = new STRVField(); return FNAM;
+                case "PBDT": PBDT = new PBDTField(); return PBDT;
+                case "ITEX": ITEX = new STRVField(); return ITEX;
+                case "SCRI": SCRI = new STRVField(); return SCRI;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

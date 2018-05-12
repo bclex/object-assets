@@ -4,27 +4,27 @@ namespace OA.Tes.FilePacks.Records
 {
     public class DOORRecord : Record
     {
-        public NAMESubRecord NAME; // door ID
-        public FNAMSubRecord FNAM; // door name
-        public MODLSubRecord MODL; // model filename
-                                   // public SCIPSubRecord SCIP; // script
-        public SNAMSubRecord SNAM;
-        public ANAMSubRecord ANAM;
+        public STRVField NAME; // door ID
+        public STRVField FNAM; // door name
+        public STRVField MODL; // model filename
+        // public STRVField SCIP; // script
+        public STRVField SNAM;
+        public STRVField ANAM;
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "FNAM": FNAM = new FNAMSubRecord(); return FNAM;
-                case "MODL": MODL = new MODLSubRecord(); return MODL;
-                /*case "SCIP": SCIP = new SCIPSubRecord(); return SCIP;*/
-                case "SNAM": SNAM = new SNAMSubRecord(); return SNAM;
-                case "ANAM": ANAM = new ANAMSubRecord(); return ANAM;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "FNAM": FNAM = new STRVField(); return FNAM;
+                case "MODL": MODL = new STRVField(); return MODL;
+                /*case "SCIP": SCIP = new STRVSubRecord(); return SCIP;*/
+                case "SNAM": SNAM = new STRVField(); return SNAM;
+                case "ANAM": ANAM = new STRVField(); return ANAM;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

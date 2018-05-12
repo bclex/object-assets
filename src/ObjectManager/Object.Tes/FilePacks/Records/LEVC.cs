@@ -4,32 +4,27 @@ namespace OA.Tes.FilePacks.Records
 {
     public class LEVCRecord : Record
     {
-        public class DATASubRecord : INTVSubRecord { }
-        public class NNAMSubRecord : ByteSubRecord { }
-        public class INDXSubRecord : INTVSubRecord { }
-        public class CNAMSubRecord : STRVSubRecord { }
+        public STRVField NAME;
+        public INTVField DATA;
+        public ByteField NNAM;
+        public INTVField INDX;
+        public STRVField CNAM;
+        public INTVField INTV;
 
-        public NAMESubRecord NAME;
-        public DATASubRecord DATA;
-        public NNAMSubRecord NNAM;
-        public INDXSubRecord INDX;
-        public CNAMSubRecord CNAM;
-        public INTVSubRecord INTV;
-
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "DATA": DATA = new DATASubRecord(); return DATA;
-                case "NNAM": NNAM = new NNAMSubRecord(); break;
-                case "INDX": INDX = new INDXSubRecord(); break;
-                case "CNAM": CNAM = new CNAMSubRecord(); break;
-                case "INTV": INTV = new INTVSubRecord(); break;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "DATA": DATA = new INTVField(); return DATA;
+                case "NNAM": NNAM = new ByteField(); break;
+                case "INDX": INDX = new INTVField(); break;
+                case "CNAM": CNAM = new STRVField(); break;
+                case "INTV": INTV = new INTVField(); break;
             }
             return null;
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

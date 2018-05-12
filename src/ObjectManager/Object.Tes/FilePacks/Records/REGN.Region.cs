@@ -6,7 +6,7 @@ namespace OA.Tes.FilePacks.Records
 {
     public class REGNRecord : Record
     {
-        public class WEATSubRecord : SubRecord
+        public class WEATField : Field
         {
             public byte Clear;
             public byte Cloudy;
@@ -35,7 +35,7 @@ namespace OA.Tes.FilePacks.Records
                 }
             }
         }
-        public class CNAMSubRecord : SubRecord
+        public class CNAMField : Field
         {
             byte Red;
             byte Green;
@@ -50,7 +50,7 @@ namespace OA.Tes.FilePacks.Records
                 NullByte = r.ReadByte();
             }
         }
-        public class SNAMSubRecord : SubRecord
+        public class SNAMField : Field
         {
             byte[] SoundName;
             byte Chance;
@@ -62,27 +62,27 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public NAMESubRecord NAME;
-        public FNAMSubRecord FNAM;
-        public WEATSubRecord WEAT;
-        public BNAMSubRecord BNAM;
-        public CNAMSubRecord CNAM;
-        public List<SNAMSubRecord> SNAMs = new List<SNAMSubRecord>();
+        public STRVField NAME;
+        public STRVField FNAM;
+        public WEATField WEAT;
+        public STRVField BNAM;
+        public CNAMField CNAM;
+        public List<SNAMField> SNAMs = new List<SNAMField>();
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "FNAM": FNAM = new FNAMSubRecord(); return FNAM;
-                case "WEAT": WEAT = new WEATSubRecord(); return WEAT;
-                case "BNAM": BNAM = new BNAMSubRecord(); return BNAM;
-                case "CNAM": CNAM = new CNAMSubRecord(); return CNAM;
-                case "SNAM": var SNAM = new SNAMSubRecord(); SNAMs.Add(SNAM); return SNAM;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "FNAM": FNAM = new STRVField(); return FNAM;
+                case "WEAT": WEAT = new WEATField(); return WEAT;
+                case "BNAM": BNAM = new STRVField(); return BNAM;
+                case "CNAM": CNAM = new CNAMField(); return CNAM;
+                case "SNAM": var SNAM = new SNAMField(); SNAMs.Add(SNAM); return SNAM;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

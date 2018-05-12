@@ -54,6 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FilePacks\BsaFile+Extensions.cs" />
+    <Compile Include="FilePacks\EsmFile+Fields.cs" />
+    <Compile Include="FilePacks\GameFormatId.cs" />
     <Compile Include="Tests\ObjectTestDataPack.cs" />
     <Compile Include="Tests\ObjectTestEngine.cs" />
     <Compile Include="Tests\ObjectTestPack.cs" />

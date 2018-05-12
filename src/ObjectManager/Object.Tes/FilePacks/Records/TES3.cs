@@ -6,7 +6,7 @@ namespace OA.Tes.FilePacks.Records
     // TODO: implement MAST and DATA subrecords
     public class TES3Record : Record
     {
-        public class HEDRSubRecord : SubRecord
+        public class HEDRField : Field
         {
             public float Version;
             public uint FileType;
@@ -24,28 +24,28 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        /*public class MASTSubRecord : SubRecord
+        /*public class MASTField : Field
         {
-            public override void DeserializeData(UnityBinaryReader r) { }
+            public override void Read(UnityBinaryReader r, uint dataSize) { }
         }
-        public class DATASubRecord : SubRecord
+        public class DATAField : Field
         {
-            public override void DeserializeData(UnityBinaryReader r) { }
+            public override void Read(UnityBinaryReader r, uint dataSize) { }
         }*/
 
-        public HEDRSubRecord HEDR;
-        //public MASTSubRecord[] MASTSs;
-        //public DATASubRecord[] DATAs;
+        public HEDRField HEDR;
+        //public MASTField[] MASTSs;
+        //public DATAField[] DATAs;
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "HEDR": HEDR = new HEDRSubRecord(); return HEDR;
+                case "HEDR": HEDR = new HEDRField(); return HEDR;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

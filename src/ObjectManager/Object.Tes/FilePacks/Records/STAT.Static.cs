@@ -4,19 +4,19 @@ namespace OA.Tes.FilePacks.Records
 {
     public class STATRecord : Record
     {
-        public NAMESubRecord NAME;
-        public MODLSubRecord MODL;
+        public STRVField NAME;
+        public STRVField MODL;
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "MODL": MODL = new MODLSubRecord(); return MODL;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "MODL": MODL = new STRVField(); return MODL;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

@@ -5,7 +5,7 @@ namespace OA.Tes.FilePacks.Records
 {
     public class CREARecord : Record
     {
-        public class NPDTSubRecord : SubRecord
+        public class NPDTField : Field
         {
             public int Type;
             public int Level;
@@ -61,14 +61,12 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public class FLAGSubRecord : Int32SubRecord { }
-
-        public class NPCOSubRecord : SubRecord
+        public class NPCOField : Field
         {
             public int Count;
             public char[] Name;
 
-            public NPCOSubRecord()
+            public NPCOField()
             {
                 Name = new char[32];
             }
@@ -82,7 +80,7 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public class AI_WSubRecord : SubRecord
+        public class AI_WField : Field
         {
             public short Distance;
             public byte Duration;
@@ -98,7 +96,7 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public class AIDTSubRecord : SubRecord
+        public class AIDTField : Field
         {
             public byte[] value1;
 
@@ -108,7 +106,7 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public class XSCLSubRecord : FLTVSubRecord { }
+        public class XSCLField : FLTVField { }
 
         public enum Flags
         {
@@ -125,43 +123,43 @@ namespace OA.Tes.FilePacks.Records
             MetalBlood = 0x0800
         }
 
-        public NAMESubRecord NAME;
-        public MODLSubRecord MODL;
-        public FNAMSubRecord FNAM;
-        public NPDTSubRecord NPDT;
-        public FLAGSubRecord FLAG;
-        public SCRISubRecord SCRI;
-        public NPCOSubRecord NPCO;
-        public AIDTSubRecord AIDT;
-        public AI_WSubRecord AI_W;
-        public NPC_Record.AI_TSubRecord AI_T;
-        public NPC_Record.AI_FSubRecord AI_F;
-        public NPC_Record.AI_ESubRecord AI_E;
-        public NPC_Record.AI_ASubRecord AI_A;
-        public XSCLSubRecord XSCL;
+        public STRVField NAME;
+        public STRVField MODL;
+        public STRVField FNAM;
+        public NPDTField NPDT;
+        public Int32Field FLAG;
+        public STRVField SCRI;
+        public NPCOField NPCO;
+        public AIDTField AIDT;
+        public AI_WField AI_W;
+        public NPC_Record.AI_TField AI_T;
+        public NPC_Record.AI_FField AI_F;
+        public NPC_Record.AI_EField AI_E;
+        public NPC_Record.AI_AField AI_A;
+        public XSCLField XSCL;
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "MODL": MODL = new MODLSubRecord(); return MODL;
-                case "FNAM": FNAM = new FNAMSubRecord(); return FNAM;
-                case "NPDT": NPDT = new NPDTSubRecord(); return NPDT;
-                case "FLAG": FLAG = new FLAGSubRecord(); return FLAG;
-                case "SCRI": SCRI = new SCRISubRecord(); return SCRI;
-                case "NPCO": NPCO = new NPCOSubRecord(); return NPCO;
-                case "AIDT": AIDT = new AIDTSubRecord(); return AIDT;
-                case "AI_W": AI_W = new AI_WSubRecord(); return AI_W;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "MODL": MODL = new STRVField(); return MODL;
+                case "FNAM": FNAM = new STRVField(); return FNAM;
+                case "NPDT": NPDT = new NPDTField(); return NPDT;
+                case "FLAG": FLAG = new Int32Field(); return FLAG;
+                case "SCRI": SCRI = new STRVField(); return SCRI;
+                case "NPCO": NPCO = new NPCOField(); return NPCO;
+                case "AIDT": AIDT = new AIDTField(); return AIDT;
+                case "AI_W": AI_W = new AI_WField(); return AI_W;
                 /* case "AI_T": AI_T = new NPC_Record.AI_TSubRecord(); return AI_T;
                  case "AI_F": AI_F = new NPC_Record.AI_FSubRecord(); return AI_F;
                  case "AI_E": AI_E = new NPC_Record.AI_ESubRecord(); return AI_E;
                  case "AI_A": AI_A = new NPC_Record.AI_ASubRecord(); return AI_A;*/
-                case "XSCL": XSCL = new XSCLSubRecord(); return XSCL;
+                case "XSCL": XSCL = new XSCLField(); return XSCL;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }

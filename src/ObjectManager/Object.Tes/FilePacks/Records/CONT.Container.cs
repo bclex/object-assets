@@ -6,9 +6,7 @@ namespace OA.Tes.FilePacks.Records
 {
     public class CONTRecord : Record
     {
-        public class CNDTSubRecord : FLTVSubRecord { }
-        public class FLAGSubRecord : UInt32SubRecord { }
-        public class NPCOSubRecord : SubRecord
+        public class NPCOField : Field
         {
             public uint ItemCount;
             public string ItemName;
@@ -20,27 +18,27 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public NAMESubRecord NAME;
-        public MODLSubRecord MODL;
-        public FNAMSubRecord FNAM; // container name
-        public CNDTSubRecord CNDT; // weight
-        public FLAGSubRecord FLAG; // flags
-        public List<NPCOSubRecord> NPCOs = new List<NPCOSubRecord>();
+        public STRVField NAME;
+        public STRVField MODL;
+        public STRVField FNAM; // container name
+        public FLTVField CNDT; // weight
+        public UInt32Field FLAG; // flags
+        public List<NPCOField> NPCOs = new List<NPCOField>();
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName)
+        public override Field CreateField(string type)
         {
-            switch (subRecordName)
+            switch (type)
             {
-                case "NAME": NAME = new NAMESubRecord(); return NAME;
-                case "MODL": MODL = new MODLSubRecord(); return MODL;
-                case "FNAM": FNAM = new FNAMSubRecord(); return FNAM;
-                case "CNDT": CNDT = new CNDTSubRecord(); return CNDT;
-                case "FLAG": FLAG = new FLAGSubRecord(); return FLAG;
-                case "NPCO": var NPCO = new NPCOSubRecord(); NPCOs.Add(NPCO); return NPCO;
+                case "NAME": NAME = new STRVField(); return NAME;
+                case "MODL": MODL = new STRVField(); return MODL;
+                case "FNAM": FNAM = new STRVField(); return FNAM;
+                case "CNDT": CNDT = new FLTVField(); return CNDT;
+                case "FLAG": FLAG = new UInt32Field(); return FLAG;
+                case "NPCO": var NPCO = new NPCOField(); NPCOs.Add(NPCO); return NPCO;
                 default: return null;
             }
         }
 
-        public override SubRecord CreateUninitializedSubRecord(string subRecordName, GameId gameId) => throw new NotImplementedException();
+        public override Field CreateField(string type, GameFormatId gameFormatId) => throw new NotImplementedException();
     }
 }
