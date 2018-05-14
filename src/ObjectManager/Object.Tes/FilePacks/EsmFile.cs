@@ -11,7 +11,7 @@ namespace OA.Tes.FilePacks
     public partial class EsmFile : IDisposable
     {
         const int recordHeaderSizeInBytes = 16;
-        public Dictionary<string, Record[]> records = new Dictionary<string, Record[]>();
+        public Dictionary<string, List<Record>> Records = new Dictionary<string, List<Record>>();
         public Dictionary<Type, List<IRecord>> recordsByType;
         public Dictionary<string, IRecord> objectsByIDString;
         public Dictionary<Vector2i, CELLRecord> exteriorCELLRecordsByIndices;
@@ -74,40 +74,57 @@ namespace OA.Tes.FilePacks
             {
                 header = new Header(r, formatId);
                 if (header.Type == "GRUP")
-                    records.Add(header.Label, ReadGroup(r, header, filePath, formatId, level));
-                else
                 {
-                    var record = header.CreateRecord(r.BaseStream.Position, level);
-                    if (record == null)
+                    if (!Records.TryGetValue(header.Label, out List<Record> records))
                     {
-                        r.BaseStream.Position += header.DataSize;
-                        continue;
+                        records = new List<Record>();
+                        Records.Add(header.Label, records);
                     }
-                    record.Read(r, filePath, formatId);
-                    recordList.Add(record);
+                    ReadGroup(r, records, header, filePath, formatId, level);
+                    continue;
                 }
-            }
-            if (recordList.Count > 0)
-                records.Add(string.Empty, recordList.ToArray());
-        }
-
-        Record[] ReadGroup(UnityBinaryReader r, Header groupHeader, string filePath, GameFormatId formatId, byte level)
-        {
-            var recordList = new List<Record>();
-            var endPosition = r.BaseStream.Position + groupHeader.DataSize;
-            while (r.BaseStream.Position < endPosition)
-            {
-                var header = new Header(r, formatId);
                 var record = header.CreateRecord(r.BaseStream.Position, level);
                 if (record == null)
                 {
                     r.BaseStream.Position += header.DataSize;
                     continue;
                 }
-                record.Read(r, filePath, formatId);
+                ReadRecord(r, record, header.Compressed, filePath, formatId);
                 recordList.Add(record);
             }
-            return recordList.ToArray();
+            if (recordList.Count > 0)
+                Records.Add(string.Empty, recordList);
+        }
+
+        void ReadGroup(UnityBinaryReader r, List<Record> records, Header groupHeader, string filePath, GameFormatId formatId, byte level)
+        {
+            var endPosition = r.BaseStream.Position + groupHeader.DataSize;
+            while (r.BaseStream.Position < endPosition)
+            {
+                var header = new Header(r, formatId);
+                if (header.Type == "GRUP")
+                {
+                    ReadGroup(r, records, header, filePath, formatId, level);
+                    continue;
+                }
+                var record = header.CreateRecord(r.BaseStream.Position, level);
+                if (record == null)
+                {
+                    r.BaseStream.Position += header.DataSize;
+                    continue;
+                }
+                ReadRecord(r, record, header.Compressed, filePath, formatId);
+                records.Add(record);
+            }
+        }
+
+        void ReadRecord(UnityBinaryReader r, Record record, bool compressed, string filePath, GameFormatId formatId)
+        {
+            if (compressed)
+            {
+                return;
+            }
+            record.Read(r, filePath, formatId);
         }
 
         void PostProcessRecords()
@@ -116,7 +133,7 @@ namespace OA.Tes.FilePacks
             objectsByIDString = new Dictionary<string, IRecord>();
             exteriorCELLRecordsByIndices = new Dictionary<Vector2i, CELLRecord>();
             LANDRecordsByIndices = new Dictionary<Vector2i, LANDRecord>();
-            foreach (var record in records.SelectMany(x => x.Value))
+            foreach (var record in Records.SelectMany(x => x.Value))
             {
                 if (record == null)
                     continue;

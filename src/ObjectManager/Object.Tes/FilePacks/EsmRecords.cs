@@ -130,6 +130,50 @@ namespace OA.Tes.FilePacks
             { "LEVC", x => x > 3 ? new LEVCRecord() : null },
             { "BSGN", x => x > 3 ? new BSGNRecord() : null },
             { "FACT", x => x > 3 ? new FACTRecord() : null },
+            // 4 - Oblivion
+            { "ACRE", x => x > 4 ? new ACRERecord() : null }, //*
+            { "ACHR", x => x > 4 ? new ACHRRecord() : null },
+            { "AMMO", x => x > 4 ? new AMMORecord() : null },
+            { "ANIO", x => x > 4 ? new ANIORecord() : null },
+            { "CLMT", x => x > 4 ? new CLMTRecord() : null },
+            { "CSTY", x => x > 4 ? new CSTYRecord() : null },
+            { "EFSH", x => x > 4 ? new EFSHRecord() : null },
+            { "EYES", x => x > 4 ? new EYESRecord() : null },
+            { "FLOR", x => x > 4 ? new FLORRecord() : null },
+            { "FURN", x => x > 4 ? new FURNRecord() : null },
+            { "GRAS", x => x > 4 ? new GRASRecord() : null },
+            { "HAIR", x => x > 4 ? new HAIRRecord() : null }, //*
+            { "IDLE", x => x > 4 ? new IDLERecord() : null },
+            { "KEYM", x => x > 4 ? new KEYMRecord() : null }, //*
+            { "LSCR", x => x > 4 ? new LSCRRecord() : null }, //?
+            { "LVLC", x => x > 4 ? new LVLCRecord() : null },
+            { "LVLI", x => x > 4 ? new LVLIRecord() : null },
+            { "LVSP", x => x > 4 ? new LVSPRecord() : null },
+            { "PACK", x => x > 4 ? new PACKRecord() : null },
+            { "QUST", x => x > 4 ? new QUSTRecord() : null },
+            { "REFR", x => x > 4 ? new REFRRecord() : null },
+            { "ROAD", x => x > 4 ? new ROADRecord() : null }, //*
+            { "SBSP", x => x > 4 ? new SBSPRecord() : null }, //*
+            { "SGST", x => x > 4 ? new SGSTRecord() : null }, //*
+            { "SLGM", x => x > 4 ? new SLGMRecord() : null },
+            { "TREE", x => x > 4 ? new TREERecord() : null },
+            { "WATR", x => x > 4 ? new WATRRecord() : null },
+            { "WRLD", x => x > 4 ? new WRLDRecord() : null },
+            { "WTHR", x => x > 4 ? new WTHRRecord() : null },
+
+            // 5 - Skyrim
+            { "AACT", x => x > 5 ? new AACTRecord() : null },
+            { "ADDN", x => x > 5 ? new ADDNRecord() : null },
+            { "ARMA", x => x > 5 ? new ARMARecord() : null },
+            { "ARTO", x => x > 5 ? new ARTORecord() : null },
+            { "ASPC", x => x > 5 ? new ASPCRecord() : null },
+            { "ASTP", x => x > 5 ? new ASTPRecord() : null },
+            { "AVIF", x => x > 5 ? new AVIFRecord() : null },
+            { "DLBR", x => x > 5 ? new DLBRRecord() : null },
+            { "DLVW", x => x > 5 ? new DLVWRecord() : null },
+            { "SNDR", x => x > 5 ? new SNDRRecord() : null },
+            //
+
         };
 
         public Record CreateRecord(long position, byte level)
