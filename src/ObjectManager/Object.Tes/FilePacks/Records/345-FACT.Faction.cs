@@ -8,8 +8,6 @@ namespace OA.Tes.FilePacks.Records
     {
         public struct FADTField
         {
-            //public uint AttributeID1;
-            //public uint AttributeID2;
             public FADTField(UnityBinaryReader r, uint dataSize)
             {
                 r.ReadBytes((int)dataSize);

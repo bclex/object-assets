@@ -21,7 +21,7 @@ namespace OA.Tes.FilePacks
         {
             var watch = new Stopwatch();
             watch.Start();
-            Read(filePath, GetFormatId(), 5);
+            Read(filePath, GetFormatId(), 0);
             Utils.Info($"Loading: {watch.Elapsed}");
             PostProcessRecords();
             watch.Stop();
