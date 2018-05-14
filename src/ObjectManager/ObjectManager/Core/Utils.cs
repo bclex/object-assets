@@ -52,13 +52,12 @@ namespace OA.Core
         /// <summary>
         /// Checks if a bit string (an unsigned integer) contains a collection of bit flags.
         /// </summary>
-        public static bool ContainsBitFlags<T>(T bitString, params T[] bitFlags)
-            where T : struct
+        public static bool ContainsBitFlags(int bitString, params int[] bitFlags)
         {
             uint allBitFlags = 0;
             foreach (var bitFlag in bitFlags)
-                allBitFlags |= (uint)(object)bitFlag;
-            return ((uint)(object)bitString & allBitFlags) == allBitFlags;
+                allBitFlags |= (uint)bitFlag;
+            return ((uint)bitString & allBitFlags) == allBitFlags;
         }
 
         /// <summary>

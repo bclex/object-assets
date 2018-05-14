@@ -25,6 +25,12 @@ namespace OA.Tes
             UIManager.Active = true;
         }
 
+        public override void Update()
+        {
+            base.Update();
+            CastInteractRay();
+        }
+
         #region Player Spawn
 
         PlayerInventory _playerInventory;
@@ -41,7 +47,7 @@ namespace OA.Tes
         #region Raycast
 
         RaycastHit[] _interactRaycastHitBuffer = new RaycastHit[32];
-        protected override void CastInteractRay()
+        protected void CastInteractRay()
         {
             // Cast a ray to see what the camera is looking at.
             var ray = new Ray(_playerCameraObj.transform.position, _playerCameraObj.transform.forward);

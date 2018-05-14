@@ -17,7 +17,7 @@ namespace OA.Tes
 
         public static void Start()
         {
-            //var assetUri = "game://Morrowind/Morrowind.bsa";
+            var assetUri = "game://Morrowind/Morrowind.bsa";
             var dataUri = "game://Morrowind/Morrowind.esm";
             //var assetUri = "game://SkyrimVR/Skyrim*";
             //var dataUri = "game://SkyrimVR/Skyrim.esm";
@@ -25,7 +25,7 @@ namespace OA.Tes
             //var dataUri = "game://Fallout4VR/Fallout4.esm";
 
             var assetManager = AssetManager.GetAssetManager(EngineId.Tes);
-            //Asset = assetManager.GetAssetPack(assetUri).Result;
+            Asset = assetManager.GetAssetPack(assetUri).Result;
             Data = assetManager.GetDataPack(dataUri).Result;
 
             //TestAllCells();

@@ -187,21 +187,12 @@ namespace OA
 
         #endregion
 
-        public void Update()
+        public virtual void Update()
         {
             // The current cell can be null if the player is outside of the defined game world.
             if (_currentCell == null || !_currentCell.IsInterior)
                 CellManager.UpdateExteriorCells(_playerCameraObj.transform.position);
             LoadBalancer.RunTasks(DesiredWorkTimePerFrame);
-            CastInteractRay();
         }
-
-        #region Raycast
-
-        protected virtual void CastInteractRay()
-        {
-        }
-
-        #endregion
     }
 }

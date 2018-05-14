@@ -64,11 +64,11 @@ namespace OA.Tes.IO
             }
             if (_fileDirectories.Count == 0)
                 _isDataPresent = false;
-            else
-            {
-                Utils.Log(string.Empty);
-                Utils.Log($"Selected: {_fileDirectories.Count}");
-            }
+            //else
+            //{
+            //    Utils.Log(string.Empty);
+            //    Utils.Log($"Selected: {_fileDirectories.Count}");
+            //}
         }
 
         static void HardAdds()

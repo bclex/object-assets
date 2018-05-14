@@ -11,7 +11,6 @@ namespace OA.Tes.FilePacks
 
         public BsaMultiFile(string[] filePaths)
         {
-            //var files = Directory.GetFiles(Path.GetDirectoryName(searchPath), Path.GetFileName(searchPath)).Where(x => Path.GetExtension(x) == ".bsa").ToList();
             var files = filePaths.Where(x => Path.GetExtension(x) == ".bsa" || Path.GetExtension(x) == ".ba2");
             _packs.AddRange(files.Select(x => new BsaFile(x)));
         }
@@ -28,6 +27,8 @@ namespace OA.Tes.FilePacks
 
         public void Close()
         {
+            foreach (var pack in _packs)
+                pack.Close();
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace OA.Tes.FilePacks
         {
             var pack = _packs.FirstOrDefault(x => x.ContainsFile(filePath));
             if (pack == null)
-                throw new FileNotFoundException($"Could not find file \"{filePath}\" in a BSA file.");
+                throw new FileNotFoundException($"bCould not find file \"{filePath}\" in a BSA file.");
             return pack.LoadFileData(filePath);
         }
     }

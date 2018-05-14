@@ -18,13 +18,13 @@ namespace OA.Tes.FilePacks
                 return Task.Run(() =>
                 {
                     var fileExtension = Path.GetExtension(filePath);
-                    if (fileExtension?.ToLower() == ".dds") return DdsReader.LoadDDSTexture(new MemoryStream(fileData));
+                    if (fileExtension.ToLowerInvariant() == ".dds") return DdsReader.LoadDDSTexture(new MemoryStream(fileData));
                     else throw new NotSupportedException($"Unsupported texture type: {fileExtension}");
                 });
             }
             else
             {
-                Utils.Warning("Could not find file \"" + texturePath + "\" in a BSA file.");
+                Utils.Warning($"Could not find file \"{texturePath}\" in a BSA file.");
                 return Task.FromResult<Texture2DInfo>(null);
             }
         }
@@ -43,7 +43,7 @@ namespace OA.Tes.FilePacks
         /// <summary>
         /// Finds the actual path of a texture.
         /// </summary>
-        private string FindTexture(string texturePath)
+        string FindTexture(string texturePath)
         {
             var textureName = Path.GetFileNameWithoutExtension(texturePath);
             var textureNameInTexturesDir = "textures/" + textureName;

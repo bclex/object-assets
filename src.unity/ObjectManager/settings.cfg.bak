@@ -10,7 +10,7 @@ DataDirectory=
 KinematicRigidbodies=True
 PlayMusic=False
 EnableLog=False
-MaterialType=Standard
+MaterialType=BumpedDiffuse
 RenderPath=Forward
 CameraFarClip=500
 WaterBackSideTransparent=False
@@ -22,7 +22,7 @@ AnimateLights=False
 DayNightCycle=False
 GenerateNormalMap=True
 NormalGeneratorIntensity=0.75
-CreaturesEnabled=False
+CreaturesEnabled=True
 NpcsEnabled=False
 [/GameSettings]
 

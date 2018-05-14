@@ -148,7 +148,7 @@ namespace OA.Tes.Formats
                 var materialProps = NiAVObjectPropertiesToMaterialProperties(triShape);
                 var meshRenderer = obj.AddComponent<MeshRenderer>();
                 meshRenderer.material = _materialManager.BuildMaterialFromProperties(materialProps);
-                if (Utils.ContainsBitFlags(triShape.Flags, (uint)NiAVObject.NiFlags.Hidden))
+                if (Utils.ContainsBitFlags(triShape.Flags, (int)NiAVObject.NiFlags.Hidden))
                     meshRenderer.enabled = false;
                 obj.isStatic = true;
             }

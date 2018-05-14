@@ -79,7 +79,7 @@ namespace OA.Formats
             if (size != 124)
                 throw new FileFormatException($"Invalid DDS file header size: {size}.");
             dwFlags = (DDSFlags)r.ReadLEUInt32();
-            if (!Utils.ContainsBitFlags((uint)dwFlags, (uint)DDSFlags.Height, (uint)DDSFlags.Width))
+            if (!Utils.ContainsBitFlags((int)dwFlags, (int)DDSFlags.Height, (int)DDSFlags.Width))
                 throw new FileFormatException($"Invalid DDS file flags: {dwFlags}.");
             dwHeight = r.ReadLEUInt32();
             dwWidth = r.ReadLEUInt32();
@@ -92,7 +92,7 @@ namespace OA.Formats
             ddspf = new DDSPixelFormat();
             ddspf.Read(r);
             dwCaps = (DDSCaps)r.ReadLEUInt32();
-            if (!Utils.ContainsBitFlags((uint)dwCaps, (uint)DDSCaps.Texture))
+            if (!Utils.ContainsBitFlags((int)dwCaps, (int)DDSCaps.Texture))
                 throw new FileFormatException($"Invalid DDS file caps: {dwCaps}.");
             dwCaps2 = (DDSCaps2)r.ReadLEUInt32();
             dwCaps3 = r.ReadLEUInt32();
@@ -427,7 +427,7 @@ namespace OA.Formats
         /// </summary>
         static byte[] DecodeDXTToARGB(int DXTVersion, byte[] compressedData, uint width, uint height, DDSPixelFormat pixelFormat, uint mipmapCount)
         {
-            var alphaFlag = Utils.ContainsBitFlags(pixelFormat.dwFlags, DDSPixelFormats.AlphaPixels);
+            var alphaFlag = Utils.ContainsBitFlags((int)pixelFormat.dwFlags, (int)DDSPixelFormats.AlphaPixels);
             var containsAlpha = alphaFlag || ((pixelFormat.dwRGBBitCount == 32) && (pixelFormat.dwABitMask != 0));
             var reader = new UnityBinaryReader(new MemoryStream(compressedData));
             var argb = new byte[TextureUtils.CalculateMipMappedTextureDataSize((int)width, (int)height, 4)];
@@ -465,14 +465,14 @@ namespace OA.Formats
         /// </summary>
         static void ExtractDDSTextureFormatAndData(DDSHeader header, UnityBinaryReader r, out bool hasMipmaps, out uint DDSMipmapLevelCount, out TextureFormat textureFormat, out int bytesPerPixel, out byte[] textureData)
         {
-            hasMipmaps = Utils.ContainsBitFlags(header.dwCaps, DDSCaps.Mipmap);
+            hasMipmaps = Utils.ContainsBitFlags((int)header.dwCaps, (int)DDSCaps.Mipmap);
             // Non-mipmapped textures still have one mipmap level: the texture itself.
             DDSMipmapLevelCount = hasMipmaps ? header.dwMipMapCount : 1;
             // If the DDS file contains uncompressed data.
-            if (Utils.ContainsBitFlags(header.ddspf.dwFlags, DDSPixelFormats.RGB))
+            if (Utils.ContainsBitFlags((int)header.ddspf.dwFlags, (int)DDSPixelFormats.RGB))
             {
                 // some permutation of RGB
-                if (!Utils.ContainsBitFlags(header.ddspf.dwFlags, DDSPixelFormats.AlphaPixels))
+                if (!Utils.ContainsBitFlags((int)header.ddspf.dwFlags, (int)DDSPixelFormats.AlphaPixels))
                     throw new NotImplementedException("Unsupported DDS file pixel format.");
                 // some permutation of RGBA
                 else

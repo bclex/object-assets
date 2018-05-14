@@ -11,8 +11,8 @@ namespace OA.Tes
 {
     public class TesCellManager : ICellManager
     {
-        const int _cellRadius = 4;
-        const int _detailRadius = 3;
+        const int _cellRadius = 1; //4;
+        const int _detailRadius = 1; //3;
         const string _defaultLandTextureFilePath = "textures/_land_default.dds";
 
         TesAssetPack _asset;
@@ -27,10 +27,7 @@ namespace OA.Tes
             _loadBalancer = loadBalancer;
         }
 
-        public Vector2i GetExteriorCellIndices(Vector3 point)
-        {
-            return new Vector2i(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters));
-        }
+        public Vector2i GetExteriorCellIndices(Vector3 point) => new Vector2i(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters));
 
         public InRangeCellInfo StartCreatingExteriorCell(Vector2i cellIndices)
         {
@@ -341,7 +338,7 @@ namespace OA.Tes
             var distinctTextureIndices = land.VTEX.Value.TextureIndices.Distinct().ToList();
             for (var i = 0; i < distinctTextureIndices.Count; i++)
             {
-                var textureIndex = (short)((short)distinctTextureIndices[i] - 1);
+                var textureIndex = ((short)distinctTextureIndices[i] - 1);
                 if (textureIndex < 0)
                 {
                     textureFilePaths.Add(_defaultLandTextureFilePath);
@@ -396,7 +393,7 @@ namespace OA.Tes
             var texInd2SplatInd = new Dictionary<ushort, int>();
             for (var i = 0; i < textureIndices.Length; i++)
             {
-                var textureIndex = (short)((short)textureIndices[i] - 1);
+                var textureIndex = (textureIndices[i] - 1);
                 if (!texInd2SplatInd.ContainsKey((ushort)textureIndex))
                 {
                     // Load terrain texture.
@@ -438,7 +435,7 @@ namespace OA.Tes
                 {
                     var xMajor = x / 4;
                     var xMinor = x - (xMajor * 4);
-                    var texIndex = (short)((short)textureIndices[(yMajor * 64) + (xMajor * 16) + (yMinor * 4) + xMinor] - 1);
+                    var texIndex = ((short)textureIndices[(yMajor * 64) + (xMajor * 16) + (yMinor * 4) + xMinor] - 1);
                     if (texIndex >= 0) { var splatIndex = texInd2SplatInd[(ushort)texIndex]; alphaMap[y, x, splatIndex] = 1; }
                     else alphaMap[y, x, 0] = 1;
                 }
@@ -448,7 +445,6 @@ namespace OA.Tes
             // Create the terrain.
             var heightRange = maxHeight - minHeight;
             var terrainPosition = new Vector3(ConvertUtils.ExteriorCellSideLengthInMeters * land.GridCoords.x, minHeight / ConvertUtils.MeterInUnits, ConvertUtils.ExteriorCellSideLengthInMeters * land.GridCoords.y);
-            Debug.Log("a: " + terrainPosition.ToString());
             var heightSampleDistance = ConvertUtils.ExteriorCellSideLengthInMeters / (LAND_SIDELENGTH_IN_SAMPLES - 1);
             var terrain = GameObjectUtils.CreateTerrain(-1, heights, heightRange / ConvertUtils.MeterInUnits, heightSampleDistance, splatPrototypes, alphaMap, terrainPosition);
             terrain.GetComponent<Terrain>().materialType = Terrain.MaterialType.BuiltInLegacyDiffuse;

@@ -41,7 +41,7 @@ namespace OA.Tes.Components.Records
                 objData.name = LIGH.FNAM.Value.Value;
             objData.interactionPrefix = "Take ";
             lightData.flags = LIGH.LHDT.Flags;
-            if (Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.CanCarry))
+            if (Utils.ContainsBitFlags(lightData.flags, (int)LightData.LightFlags.CanCarry))
             {
                 gameObject.AddComponent<BoxCollider>().size *= 0.5f; //very weak-- adding a box collider to light objects so we can interact with them
                 if (TesSettings.Game.KinematicRigidbodies)
@@ -64,12 +64,12 @@ namespace OA.Tes.Components.Records
             {
                 // Only disable the light based on flags if the light component hasn't already been disabled due to settings.
                 if (lightData.lightComponent.enabled)
-                    lightData.lightComponent.enabled = !Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.OffDefault);
-                var flicker = Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.Flicker);
-                var flickerSlow = Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.FlickerSlow);
-                var pulse = Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.Pulse);
-                var pulseSlow = Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.PulseSlow);
-                var fire = Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.Fire);
+                    lightData.lightComponent.enabled = !Utils.ContainsBitFlags(lightData.flags, (int)LightData.LightFlags.OffDefault);
+                var flicker = Utils.ContainsBitFlags(lightData.flags, (int)LightData.LightFlags.Flicker);
+                var flickerSlow = Utils.ContainsBitFlags(lightData.flags, (int)LightData.LightFlags.FlickerSlow);
+                var pulse = Utils.ContainsBitFlags(lightData.flags, (int)LightData.LightFlags.Pulse);
+                var pulseSlow = Utils.ContainsBitFlags(lightData.flags, (int)LightData.LightFlags.PulseSlow);
+                var fire = Utils.ContainsBitFlags(lightData.flags, (int)LightData.LightFlags.Fire);
                 var animated = flicker || flickerSlow || pulse || pulseSlow || fire;
                 if (animated && TesSettings.Game.AnimateLights)
                 {

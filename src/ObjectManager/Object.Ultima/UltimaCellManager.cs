@@ -26,10 +26,7 @@ namespace OA.Ultima
             _loadBalancer = loadBalancer;
         }
 
-        public Vector2i GetExteriorCellIndices(Vector3 point)
-        {
-            return new Vector2i(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters));
-        }
+        public Vector2i GetExteriorCellIndices(Vector3 point) => new Vector2i(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters));
 
         public InRangeCellInfo StartCreatingExteriorCell(Vector2i cellIndices)
         {

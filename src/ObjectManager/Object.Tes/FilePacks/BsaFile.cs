@@ -117,7 +117,7 @@ namespace OA.Tes.FilePacks
             _r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             ReadMetadata();
             //TestContainsFile();
-            TestLoadFileData();
+            //TestLoadFileData();
         }
 
         void IDisposable.Dispose()
@@ -152,7 +152,12 @@ namespace OA.Tes.FilePacks
         /// </summary>
         public byte[] LoadFileData(string filePath)
         {
-            var file = _filesByHash[HashFilePath(filePath)].FirstOrDefault(x => x.Path == filePath);
+            var files = _filesByHash[HashFilePath(filePath)].ToArray();
+            if (files.Length == 0)
+                throw new NotSupportedException();
+            if (files.Length == 1)
+                return LoadFileData(files[0]);
+            var file = files.FirstOrDefault(x => string.Equals(x.Path, filePath.Replace('/', '\\'), StringComparison.OrdinalIgnoreCase));
             if (file != null)
                 return LoadFileData(file);
             throw new FileNotFoundException($"Could not find file \"{filePath}\" in a BSA file.");
@@ -287,7 +292,7 @@ namespace OA.Tes.FilePacks
             return fileData;
         }
 
-        private void ReadMetadata()
+        void ReadMetadata()
         {
             // Open
             Magic = BitConverter.ToUInt32(_r.ReadBytes(4), 0);
@@ -491,7 +496,7 @@ namespace OA.Tes.FilePacks
                 // Read filename hashes
                 _r.BaseStream.Position = hashTablePosition;
                 for (var i = 0; i < header_FileCount; i++)
-                    _files[i].PathHash = (_r.ReadLEUInt32() << 32) | (ulong)_r.ReadLEUInt32();
+                    _files[i].PathHash = (ulong)(_r.ReadLEUInt32() << 32) | _r.ReadLEUInt32();
             }
             else throw new InvalidOperationException("BAD MAGIC");
 
@@ -504,7 +509,7 @@ namespace OA.Tes.FilePacks
                 RootDir.CreateDescendantFile(fileMetadata.Path);
         }
 
-        private ulong HashFilePath(string filePath)
+        ulong HashFilePath(string filePath)
         {
             if (Magic == MW_BSAHEADER_FILEID) return Tes3HashFilePath(filePath);
             else return Tes4HashFilePath(filePath);
@@ -534,7 +539,7 @@ namespace OA.Tes.FilePacks
                 off += 8;
             }
             var value2 = sum;
-            return (value1 << 32) | (ulong)value2;
+            return (ulong)(value1 << 32) | value2;
         }
 
         // http://en.uesp.net/wiki/Tes4Mod:Hash_Calculation

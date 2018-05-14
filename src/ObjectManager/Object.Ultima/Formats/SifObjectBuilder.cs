@@ -125,7 +125,7 @@ namespace OA.Ultima.Formats
                 var materialProps = SiAVObjectPropertiesToMaterialProperties(primitive);
                 var meshRenderer = obj.GetComponent<MeshRenderer>();
                 meshRenderer.material = _materialManager.BuildMaterialFromProperties(materialProps);
-                if (Utils.ContainsBitFlags(primitive.Flags, (uint)SiAVObject.SiFlags.Hidden))
+                if (Utils.ContainsBitFlags(primitive.Flags, (int)SiAVObject.SiFlags.Hidden))
                     meshRenderer.enabled = false;
                 obj.isStatic = true;
             }
@@ -150,7 +150,7 @@ namespace OA.Ultima.Formats
                 var materialProps = SiAVObjectPropertiesToMaterialProperties(triShape);
                 var meshRenderer = obj.AddComponent<MeshRenderer>();
                 meshRenderer.material = _materialManager.BuildMaterialFromProperties(materialProps);
-                if (Utils.ContainsBitFlags(triShape.Flags, (uint)SiAVObject.SiFlags.Hidden))
+                if (Utils.ContainsBitFlags(triShape.Flags, (int)SiAVObject.SiFlags.Hidden))
                     meshRenderer.enabled = false;
                 obj.isStatic = true;
             }

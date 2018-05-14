@@ -101,7 +101,7 @@ namespace OA.Tes.FilePacks.Records
         public bool InObjectDataGroups = false;
         public List<RefObj> RefObjs = new List<RefObj>();
 
-        public bool IsInterior => Utils.ContainsBitFlags(DATA.Flags, 0x01U);
+        public bool IsInterior => Utils.ContainsBitFlags((int)DATA.Flags, 0x01);
         public Vector2i GridCoords => new Vector2i(DATA.GridX, DATA.GridY);
         public Color? AmbientLight => AMBI != null ? (Color?)ColorUtils.B8G8R8ToColor32(AMBI.Value.AmbientColor) : null;
 
