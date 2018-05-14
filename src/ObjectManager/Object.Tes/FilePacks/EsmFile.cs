@@ -1,18 +1,17 @@
-﻿using OA.Tes.FilePacks.Records;
-using OA.Core;
+﻿using OA.Core;
+using OA.Tes.FilePacks.Records;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using UnityEngine;
+using System.Linq;
 
-// https://github.com/WrinklyNinja/esplugin/tree/master/src
-// http://en.uesp.net/wiki/Tes4Mod:Mod_File_Format/Vs_Morrowind
 namespace OA.Tes.FilePacks
 {
     public partial class EsmFile : IDisposable
     {
         const int recordHeaderSizeInBytes = 16;
-        public Record[] records;
+        public Dictionary<string, Record[]> records = new Dictionary<string, Record[]>();
         public Dictionary<Type, List<IRecord>> recordsByType;
         public Dictionary<string, IRecord> objectsByIDString;
         public Dictionary<Vector2i, CELLRecord> exteriorCELLRecordsByIndices;
@@ -20,8 +19,12 @@ namespace OA.Tes.FilePacks
 
         public EsmFile(string filePath, GameId gameId)
         {
-            Read(filePath, GetFormatId());
+            var watch = new Stopwatch();
+            watch.Start();
+            Read(filePath, GetFormatId(), 5);
+            Utils.Info($"Loading: {watch.Elapsed}");
             PostProcessRecords();
+            watch.Stop();
             GameFormatId GetFormatId()
             {
                 switch (gameId)
@@ -56,13 +59,13 @@ namespace OA.Tes.FilePacks
 
         public List<IRecord> GetRecordsOfType<T>() where T : Record { return recordsByType.TryGetValue(typeof(T), out List<IRecord> records) ? records : null; }
 
-        void Read(string filePath, GameFormatId formatId)
+        void Read(string filePath, GameFormatId formatId, byte level)
         {
             var r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             var header = new Header(r, formatId);
             if ((formatId == GameFormatId.Tes3 && header.Type != "TES3") || (formatId != GameFormatId.Tes3 && header.Type != "TES4"))
                 throw new FormatException($"{filePath} record header {header.Type} is not valid for this {formatId}");
-            var rootRecord = header.CreateRecord(r.BaseStream.Position);
+            var rootRecord = header.CreateRecord(r.BaseStream.Position, level);
             rootRecord.Read(r, filePath, formatId);
             // read stream
             var recordList = new List<Record>();
@@ -71,36 +74,33 @@ namespace OA.Tes.FilePacks
             {
                 header = new Header(r, formatId);
                 if (header.Type == "GRUP")
-                {
-                    var groupRecords = ReadGroup(r, header, filePath, formatId);
-                }
+                    records.Add(header.Label, ReadGroup(r, header, filePath, formatId, level));
                 else
                 {
-                    var record = header.CreateRecord(r.BaseStream.Position);
-                    // skip the record if null
+                    var record = header.CreateRecord(r.BaseStream.Position, level);
                     if (record == null)
                     {
                         r.BaseStream.Position += header.DataSize;
                         continue;
                     }
                     record.Read(r, filePath, formatId);
-                    //recordList.Add(record);
+                    recordList.Add(record);
                 }
             }
-            records = recordList.ToArray();
+            if (recordList.Count > 0)
+                records.Add(string.Empty, recordList.ToArray());
         }
 
-        Record[] ReadGroup(UnityBinaryReader r, Header groupHeader, string filePath, GameFormatId formatId)
+        Record[] ReadGroup(UnityBinaryReader r, Header groupHeader, string filePath, GameFormatId formatId, byte level)
         {
             var recordList = new List<Record>();
             var endPosition = r.BaseStream.Position + groupHeader.DataSize;
             while (r.BaseStream.Position < endPosition)
             {
                 var header = new Header(r, formatId);
-                var record = header.CreateRecord(r.BaseStream.Position);
+                var record = header.CreateRecord(r.BaseStream.Position, level);
                 if (record == null)
                 {
-                    // Skip the record.
                     r.BaseStream.Position += header.DataSize;
                     continue;
                 }
@@ -116,7 +116,7 @@ namespace OA.Tes.FilePacks
             objectsByIDString = new Dictionary<string, IRecord>();
             exteriorCELLRecordsByIndices = new Dictionary<Vector2i, CELLRecord>();
             LANDRecordsByIndices = new Dictionary<Vector2i, LANDRecord>();
-            foreach (var record in records)
+            foreach (var record in records.SelectMany(x => x.Value))
             {
                 if (record == null)
                     continue;
@@ -130,29 +130,7 @@ namespace OA.Tes.FilePacks
                     recordsByType.Add(recordType, recordsOfSameType);
                 }
                 // Add the record to the object dictionary if applicable.
-                if (record is GMSTRecord) objectsByIDString.Add(((GMSTRecord)record).NAME.Value, record);
-                else if (record is GLOBRecord) objectsByIDString.Add(((GLOBRecord)record).NAME.Value, record);
-                else if (record is SOUNRecord) objectsByIDString.Add(((SOUNRecord)record).NAME.Value, record);
-                else if (record is REGNRecord) objectsByIDString.Add(((REGNRecord)record).NAME.Value, record);
-                else if (record is LTEXRecord) objectsByIDString.Add(((LTEXRecord)record).NAME.Value, record);
-                else if (record is STATRecord) objectsByIDString.Add(((STATRecord)record).NAME.Value, record);
-                else if (record is DOORRecord) objectsByIDString.Add(((DOORRecord)record).NAME.Value, record);
-                else if (record is MISCRecord) objectsByIDString.Add(((MISCRecord)record).NAME.Value, record);
-                else if (record is WEAPRecord) objectsByIDString.Add(((WEAPRecord)record).NAME.Value, record);
-                else if (record is CONTRecord) objectsByIDString.Add(((CONTRecord)record).NAME.Value, record);
-                else if (record is LIGHRecord) objectsByIDString.Add(((LIGHRecord)record).NAME.Value, record);
-                else if (record is ARMORecord) objectsByIDString.Add(((ARMORecord)record).NAME.Value, record);
-                else if (record is CLOTRecord) objectsByIDString.Add(((CLOTRecord)record).NAME.Value, record);
-                else if (record is REPARecord) objectsByIDString.Add(((REPARecord)record).NAME.Value, record);
-                else if (record is ACTIRecord) objectsByIDString.Add(((ACTIRecord)record).NAME.Value, record);
-                else if (record is APPARecord) objectsByIDString.Add(((APPARecord)record).NAME.Value, record);
-                else if (record is LOCKRecord) objectsByIDString.Add(((LOCKRecord)record).NAME.Value, record);
-                else if (record is PROBRecord) objectsByIDString.Add(((PROBRecord)record).NAME.Value, record);
-                else if (record is INGRRecord) objectsByIDString.Add(((INGRRecord)record).NAME.Value, record);
-                else if (record is BOOKRecord) objectsByIDString.Add(((BOOKRecord)record).NAME.Value, record);
-                else if (record is ALCHRecord) objectsByIDString.Add(((ALCHRecord)record).NAME.Value, record);
-                else if (record is CREARecord) objectsByIDString.Add(((CREARecord)record).NAME.Value, record);
-                else if (record is NPC_Record) objectsByIDString.Add(((NPC_Record)record).NAME.Value, record);
+                if (record is IHaveEDID edid) objectsByIDString.Add(edid.EDID.Value, record);
                 // Add the record to exteriorCELLRecordsByIndices if applicable.
                 if (record is CELLRecord cell)
                     if (!cell.IsInterior)

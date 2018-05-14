@@ -3,22 +3,44 @@ using System;
 
 namespace OA.Tes.FilePacks
 {
-    public class STRVField : Field
+    public interface IHaveEDID
     {
+        STRVField EDID { get; }
+    }
+
+    public interface IHaveMODL
+    {
+        FILEField MODL { get; }
+    }
+
+    public struct STRVField
+    {
+        public override string ToString() => $"{Value}";
         public string Value;
 
-        public override void Read(UnityBinaryReader r, uint dataSize)
+        public STRVField(UnityBinaryReader r, uint dataSize, ASCIIFormat format = ASCIIFormat.PossiblyNullTerminated)
         {
-            Value = r.ReadPossiblyNullTerminatedASCIIString((int)dataSize);
+            Value = r.ReadASCIIString((int)dataSize, format);
         }
     }
 
-    // variable size
-    public class INTVField : Field
+    public struct FILEField
     {
+        public override string ToString() => $"{Value}";
+        public string Value;
+
+        public FILEField(UnityBinaryReader r, uint dataSize)
+        {
+            Value = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
+        }
+    }
+
+    public struct INTVField
+    {
+        public override string ToString() => $"{Value}";
         public long Value;
 
-        public override void Read(UnityBinaryReader r, uint dataSize)
+        public INTVField(UnityBinaryReader r, uint dataSize)
         {
             switch (dataSize)
             {
@@ -31,76 +53,123 @@ namespace OA.Tes.FilePacks
         }
     }
 
-    public class INTVTwoI32Field : Field
+    //[StructLayout(LayoutKind.Explicit)]
+    public struct DATVField
     {
-        public int Value0, Value1;
-
-        public override void Read(UnityBinaryReader r, uint dataSize)
-        {
-            //Debug.Assert(Header.DataSize == 8);
-            Value0 = r.ReadLEInt32();
-            Value1 = r.ReadLEInt32();
-        }
-    }
-
-    public class DataField : Field
-    {
+        //[FieldOffset(0)]
         public bool ValueB;
+        //[FieldOffset(0)]
         public int ValueI;
+        //[FieldOffset(0)]
         public float ValueF;
+        //[FieldOffset(0)]
         public string ValueS;
 
-        public override void Read(UnityBinaryReader r, uint dataSize)
+        public static DATVField Create(UnityBinaryReader r, uint dataSize, char type)
         {
-            ValueB = r.ReadLEInt32() != 0;
-            ValueI = r.ReadLEInt32();
-            ValueF = r.ReadLESingle();
-            ValueS = r.ReadPossiblyNullTerminatedASCIIString((int)dataSize);
+            switch (type)
+            {
+                case 'b': return new DATVField { ValueB = r.ReadLEInt32() != 0 };
+                case 'i': return new DATVField { ValueI = r.ReadLEInt32() };
+                case 'f': return new DATVField { ValueF = r.ReadLESingle() };
+                case 's': return new DATVField { ValueS = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated) };
+                default: throw new InvalidOperationException();
+            }
         }
     }
 
-    public class FLTVField : Field
+    public struct FLTVField
     {
+        public override string ToString() => $"{Value}";
         public float Value;
 
-        public override void Read(UnityBinaryReader r, uint dataSize)
+        public FLTVField(UnityBinaryReader r, uint dataSize)
         {
             Value = r.ReadLESingle();
         }
     }
 
-    public class ByteField : Field
+    public struct BYTEField
     {
+        public override string ToString() => $"{Value}";
         public byte Value;
 
-        public override void Read(UnityBinaryReader r, uint dataSize)
+        public BYTEField(UnityBinaryReader r, uint dataSize)
         {
             Value = r.ReadByte();
         }
     }
-    public class Int32Field : Field
+
+    public struct IN16Field
     {
+        public override string ToString() => $"{Value}";
+        public short Value;
+
+        public IN16Field(UnityBinaryReader r, uint dataSize)
+        {
+            Value = r.ReadLEInt16();
+        }
+    }
+
+    public struct IN32Field
+    {
+        public override string ToString() => $"{Value}";
         public int Value;
 
-        public override void Read(UnityBinaryReader r, uint dataSize)
+        public IN32Field(UnityBinaryReader r, uint dataSize)
         {
             Value = r.ReadLEInt32();
         }
     }
-    public class UInt32Field : Field
+
+    public struct UI32Field
     {
+        public override string ToString() => $"{Value}";
         public uint Value;
 
-        public override void Read(UnityBinaryReader r, uint dataSize)
+        public UI32Field(UnityBinaryReader r, uint dataSize)
         {
             Value = r.ReadLEUInt32();
         }
     }
 
-    public class INDXBNAMCNAMGroup
+    public struct CREFField // COLORREF
     {
-        public INTVField INDX;
-        public STRVField BNAM;
-        public STRVField CNAM;
+        public byte Red;
+        public byte Green;
+        public byte Blue;
+        public byte NullByte;
+
+        public CREFField(UnityBinaryReader r, uint dataSize)
+        {
+            Red = r.ReadByte();
+            Green = r.ReadByte();
+            Blue = r.ReadByte();
+            NullByte = r.ReadByte();
+        }
+    }
+
+    public struct NPCOField
+    {
+        public override string ToString() => $"{ItemName}";
+        public uint ItemCount; // Number of the item
+        public string ItemName; // The ID of the item
+
+        public NPCOField(UnityBinaryReader r, uint dataSize)
+        {
+            ItemCount = r.ReadLEUInt32();
+            ItemName = r.ReadASCIIString(32, ASCIIFormat.ZeroPadded);
+        }
+    }
+
+    public struct UNKNField
+    {
+        public override string ToString() => $"UNKN";
+        public byte[] Value;
+
+        public UNKNField(UnityBinaryReader r, uint dataSize)
+        {
+            Value = r.ReadBytes((int)dataSize);
+        }
     }
 }

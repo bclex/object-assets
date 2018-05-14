@@ -33,22 +33,21 @@ namespace OA.Tes.Components.Records
         void Start()
         {
             var LIGH = (LIGHRecord)record;
-            lightData = new LightData();
-            lightData.lightComponent = gameObject.GetComponentInChildren<Light>(true);
-            if (LIGH.FNAM != null)
-                objData.name = LIGH.FNAM.Value;
-            objData.interactionPrefix = "Take ";
-            if (LIGH.LHDT != null)
+            lightData = new LightData
             {
-                lightData.flags = LIGH.LHDT.Flags;
-                if (Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.CanCarry))
-                {
-                    gameObject.AddComponent<BoxCollider>().size *= 0.5f; //very weak-- adding a box collider to light objects so we can interact with them
-                    if (TesSettings.Game.KinematicRigidbodies)
-                        gameObject.AddComponent<Rigidbody>().isKinematic = true;
-                }
-                StartCoroutine(ConfigureLightComponent());
+                lightComponent = gameObject.GetComponentInChildren<Light>(true)
+            };
+            if (LIGH.FNAM != null)
+                objData.name = LIGH.FNAM.Value.Value;
+            objData.interactionPrefix = "Take ";
+            lightData.flags = LIGH.LHDT.Flags;
+            if (Utils.ContainsBitFlags((uint)lightData.flags, (uint)LightData.LightFlags.CanCarry))
+            {
+                gameObject.AddComponent<BoxCollider>().size *= 0.5f; //very weak-- adding a box collider to light objects so we can interact with them
+                if (TesSettings.Game.KinematicRigidbodies)
+                    gameObject.AddComponent<Rigidbody>().isKinematic = true;
             }
+            StartCoroutine(ConfigureLightComponent());
         }
 
         public IEnumerator ConfigureLightComponent()

@@ -117,13 +117,13 @@ namespace OA.Configuration
         // PREFABS
 
         // DEBUG
-        bool _creaturesEnabled;
+        bool _creaturesEnabled = true;
         public bool CreaturesEnabled
         {
             get { return _creaturesEnabled; }
             set { SetProperty(ref _creaturesEnabled, value); }
         }
-        bool _npcsEnabled;
+        bool _npcsEnabled = true;
         public bool NpcsEnabled
         {
             get { return _npcsEnabled; }

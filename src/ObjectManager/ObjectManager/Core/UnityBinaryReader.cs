@@ -1,10 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
 
 namespace OA.Core
 {
+    public enum ASCIIFormat
+    {
+        Raw,
+        PossiblyNullTerminated,
+        ZeroPadded,
+    }
+
     /// <summary>
     /// An improved BinaryReader for Unity.
     /// </summary>
@@ -79,23 +87,39 @@ namespace OA.Core
         public void ReadRestOfBytes(byte[] buffer, int startIndex)
         {
             var remainingByteCount = r.BaseStream.Length - r.BaseStream.Position;
-            Debug.Assert((startIndex >= 0) && (remainingByteCount <= int.MaxValue) && ((startIndex + remainingByteCount) <= buffer.Length));
+            Debug.Assert(startIndex >= 0 && remainingByteCount <= int.MaxValue && startIndex + remainingByteCount <= buffer.Length);
             r.Read(buffer, startIndex, (int)remainingByteCount);
         }
 
-        public string ReadASCIIString(int length)
+        public string ReadASCIIString(int length, ASCIIFormat format = ASCIIFormat.Raw)
         {
             Debug.Assert(length >= 0);
-            return Encoding.ASCII.GetString(r.ReadBytes(length));
+            var bytes = r.ReadBytes(length);
+            switch (format)
+            {
+                case ASCIIFormat.Raw: return Encoding.ASCII.GetString(bytes);
+                case ASCIIFormat.PossiblyNullTerminated:
+                    var bytesIdx = ArrayUtils.Last(bytes) != 0 ? bytes.Length : bytes.Length - 1;
+                    return Encoding.ASCII.GetString(bytes, 0, bytesIdx);
+                case ASCIIFormat.ZeroPadded:
+                    var zeroIdx = bytes.Length - 1; for (; zeroIdx >= 0 && bytes[zeroIdx] == 0; zeroIdx--) { }
+                    return Encoding.ASCII.GetString(bytes, 0, zeroIdx + 1);
+                default: throw new ArgumentOutOfRangeException("format", format.ToString());
+            }
         }
 
-        public string ReadPossiblyNullTerminatedASCIIString(int lengthIncludingPossibleNullTerminator)
+        public string[] ReadASCIIMultiString(int length, int bufSize = 64)
         {
-            Debug.Assert(lengthIncludingPossibleNullTerminator > 0);
-            var bytes = r.ReadBytes(lengthIncludingPossibleNullTerminator);
-            // Ignore the null terminator.
-            var charCount = ArrayUtils.Last(bytes) != 0 ? bytes.Length : bytes.Length - 1;
-            return Encoding.Default.GetString(bytes, 0, charCount);
+            var list = new List<string>();
+            var buf = new List<byte>(bufSize);
+            while (length > 0)
+            {
+                buf.Clear();
+                byte curCharAsByte; while (length-- > 0 && (curCharAsByte = ReadByte()) != 0)
+                    buf.Add(curCharAsByte);
+                list.Add(Encoding.ASCII.GetString(buf.ToArray()));
+            }
+            return list.ToArray();
         }
 
         #region Little Endian

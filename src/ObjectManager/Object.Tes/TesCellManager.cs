@@ -134,7 +134,7 @@ namespace OA.Tes
                 cellObjName = "cell " + cell.GridCoords.ToString();
                 land = _data.FindLANDRecord(cell.GridCoords);
             }
-            else cellObjName = cell.NAME.Value;
+            else cellObjName = cell.EDID.Value;
             var cellObj = new GameObject(cellObjName) { tag = "Cell" };
             var cellObjectsContainer = new GameObject("objects");
             cellObjectsContainer.transform.parent = cellObj.transform;
@@ -205,10 +205,10 @@ namespace OA.Tes
                 };
                 // Get the record the RefObjDataGroup references.
                 var refObj = (CELLRecord.RefObj)refObjInfo.RefObj;
-                _data.objectsByIDString.TryGetValue(refObj.NAME.Value, out refObjInfo.ReferencedRecord);
+                _data.objectsByIDString.TryGetValue(refObj.EDID.Value, out refObjInfo.ReferencedRecord);
                 if (refObjInfo.ReferencedRecord != null)
                 {
-                    var modelFileName = RecordUtils.GetModelFileName(refObjInfo.ReferencedRecord);
+                    var modelFileName = (refObjInfo.ReferencedRecord is IHaveMODL modl ? modl.MODL.Value : null);
                     // If the model file name is valid, store the model file path.
                     if (!string.IsNullOrEmpty(modelFileName))
                         refObjInfo.ModelFilePath = "meshes\\" + modelFileName;
@@ -267,7 +267,7 @@ namespace OA.Tes
                     }
                 }
             }
-            else Utils.Log("Unknown Object: " + ((CELLRecord.RefObj)refCellObjInfo.RefObj).NAME.Value);
+            else Utils.Log("Unknown Object: " + ((CELLRecord.RefObj)refCellObjInfo.RefObj).EDID.Value);
         }
 
         private GameObject InstantiateLight(LIGHRecord LIGH, bool indoors)
@@ -293,7 +293,7 @@ namespace OA.Tes
             var refObj = (CELLRecord.RefObj)refCellObjInfo.RefObj;
             // Handle object transforms.
             if (refObj.XSCL != null)
-                gameObject.transform.localScale = Vector3.one * refObj.XSCL.Value;
+                gameObject.transform.localScale = Vector3.one * refObj.XSCL.Value.Value;
             gameObject.transform.position += NifUtils.NifPointToUnityPoint(refObj.DATA.Position);
             gameObject.transform.rotation *= NifUtils.NifEulerAnglesToUnityQuaternion(refObj.DATA.EulerAngles);
             var tagTarget = gameObject;
@@ -336,9 +336,9 @@ namespace OA.Tes
         private List<string> GetLANDTextureFilePaths(LANDRecord land)
         {
             // Don't return anything if the LAND doesn't have height data or texture data.
-            if (land.VHGT == null || land.VTEX == null) return null;
+            if (land.VTEX == null) return null;
             var textureFilePaths = new List<string>();
-            var distinctTextureIndices = land.VTEX.TextureIndices.Distinct().ToList();
+            var distinctTextureIndices = land.VTEX.Value.TextureIndices.Distinct().ToList();
             for (var i = 0; i < distinctTextureIndices.Count; i++)
             {
                 var textureIndex = (short)((short)distinctTextureIndices[i] - 1);
@@ -361,7 +361,7 @@ namespace OA.Tes
         {
             Debug.Assert(land != null);
             // Don't create anything if the LAND doesn't have height data.
-            if (land.VHGT == null)
+            if (land.VHGT.HeightData == null)
                 yield break;
             // Return before doing any work to provide an IEnumerator handle to the coroutine.
             yield return null;
@@ -372,12 +372,12 @@ namespace OA.Tes
             var rowOffset = land.VHGT.ReferenceHeight;
             for (var y = 0; y < LAND_SIDELENGTH_IN_SAMPLES; y++)
             {
-                rowOffset += land.VHGT.HeightOffsets[y * LAND_SIDELENGTH_IN_SAMPLES];
+                rowOffset += land.VHGT.HeightData[y * LAND_SIDELENGTH_IN_SAMPLES];
                 heights[y, 0] = rowOffset * VHGTIncrementToUnits;
                 var colOffset = rowOffset;
                 for (var x = 1; x < LAND_SIDELENGTH_IN_SAMPLES; x++)
                 {
-                    colOffset += land.VHGT.HeightOffsets[(y * LAND_SIDELENGTH_IN_SAMPLES) + x];
+                    colOffset += land.VHGT.HeightData[(y * LAND_SIDELENGTH_IN_SAMPLES) + x];
                     heights[y, x] = colOffset * VHGTIncrementToUnits;
                 }
             }
@@ -390,7 +390,7 @@ namespace OA.Tes
             SplatPrototype[] splatPrototypes = null;
             float[,,] alphaMap = null;
             const int LAND_TEXTUREINDICES = 256;
-            var textureIndices = land.VTEX != null ? land.VTEX.TextureIndices : new ushort[LAND_TEXTUREINDICES];
+            var textureIndices = land.VTEX != null ? land.VTEX.Value.TextureIndices : new ushort[LAND_TEXTUREINDICES];
             // Create splat prototypes.
             var splatPrototypeList = new List<SplatPrototype>();
             var texInd2SplatInd = new Dictionary<ushort, int>();

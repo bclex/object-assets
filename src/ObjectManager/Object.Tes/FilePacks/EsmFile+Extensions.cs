@@ -37,7 +37,7 @@ namespace OA.Tes.FilePacks
             for (int i = 0, l = records.Count; i < l; i++)
             {
                 cell = (CELLRecord)records[i];
-                if (cell.NAME.Value == cellName)
+                if (cell.EDID.Value == cellName)
                     return cell;
             }
             return null;

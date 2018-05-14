@@ -128,7 +128,7 @@ namespace OA.Tes
                     catch (Exception e) { w.Write($"Fail: {e.Message}"); }
                     if (!CELL.IsInterior)
                         w.WriteLine(CELL.GridCoords.ToString());
-                    else w.WriteLine(CELL.NAME.Value);
+                    else w.WriteLine(CELL.EDID.Value);
                     w.Flush();
                 }
         }

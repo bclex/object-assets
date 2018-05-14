@@ -36,7 +36,7 @@ namespace OA.Tes.Components.Records
             pickable = false;
             var book = (BOOKRecord)record;
             objData.interactionPrefix = "Read ";
-            objData.name = book.FNAM != null ? book.FNAM.Value : book.NAME.Value;
+            objData.name = book.FNAM.Value ?? book.EDID.Value;
             //objData.icon = TESUnity.instance.Engine.textureManager.LoadTexture(BOOK.ITEX.value, "icons");
             objData.weight = book.BKDT.Weight.ToString();
             objData.value = book.BKDT.Value.ToString();
@@ -45,7 +45,7 @@ namespace OA.Tes.Components.Records
         public override void Interact()
         {
             var book = (BOOKRecord)record;
-            if (book.TEXT == null)
+            if (book.TEXT.Value == null)
             {
                 if (book.BKDT.Scroll == 1) OnTakeScroll(book);
                 else OnTakeBook(book);

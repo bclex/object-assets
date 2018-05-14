@@ -1,39 +1,16 @@
 ﻿using OA.Core;
 using OA.Tes.FilePacks.Records;
 using System;
+using System.Collections.Generic;
 
+//https://github.com/WrinklyNinja/esplugin/tree/master/src
 //http://en.uesp.net/wiki/Tes3Mod:File_Format
 //http://en.uesp.net/wiki/Tes4Mod:Mod_File_Format
 //http://en.uesp.net/wiki/Tes5Mod:Mod_File_Format
 //https://github.com/TES5Edit/TES5Edit/blob/dev/wbDefinitionsTES5.pas 
+//http://en.uesp.net/morrow/tech/mw_esm.txt
 namespace OA.Tes.FilePacks
 {
-    public static class RecordUtils
-    {
-        public static string GetModelFileName(IRecord record)
-        {
-            if (record is STATRecord) return ((STATRecord)record).MODL.Value;
-            else if (record is DOORRecord) return ((DOORRecord)record).MODL.Value;
-            else if (record is MISCRecord) return ((MISCRecord)record).MODL.Value;
-            else if (record is WEAPRecord) return ((WEAPRecord)record).MODL.Value;
-            else if (record is CONTRecord) return ((CONTRecord)record).MODL.Value;
-            else if (record is LIGHRecord) return ((LIGHRecord)record).MODL.Value;
-            else if (record is ARMORecord) return ((ARMORecord)record).MODL.Value;
-            else if (record is CLOTRecord) return ((CLOTRecord)record).MODL.Value;
-            else if (record is REPARecord) return ((REPARecord)record).MODL.Value;
-            else if (record is ACTIRecord) return ((ACTIRecord)record).MODL.Value;
-            else if (record is APPARecord) return ((APPARecord)record).MODL.Value;
-            else if (record is LOCKRecord) return ((LOCKRecord)record).MODL.Value;
-            else if (record is PROBRecord) return ((PROBRecord)record).MODL.Value;
-            else if (record is INGRRecord) return ((INGRRecord)record).MODL.Value;
-            else if (record is BOOKRecord) return ((BOOKRecord)record).MODL.Value;
-            else if (record is ALCHRecord) return ((ALCHRecord)record).MODL.Value;
-            else if (record is CREARecord) return ((CREARecord)record).MODL.Value;
-            else if (record is NPC_Record npc) { return npc.MODL != null ? npc.MODL.Value : null; }
-            else return null;
-        }
-    }
-
     [Flags]
     public enum HeaderFlags : uint
     {
@@ -78,10 +55,10 @@ namespace OA.Tes.FilePacks
             Type = r.ReadASCIIString(4);
             if (Type == "GRUP")
             {
-                if (formatId == GameFormatId.Tes4) DataSize = (uint)r.ReadLEUInt64() - 20;
+                if (formatId == GameFormatId.Tes4) DataSize = r.ReadLEUInt32() - 20;
                 else if (formatId == GameFormatId.Tes5) DataSize = r.ReadLEUInt32() - 24;
                 Label = r.ReadASCIIString(4);
-                if (formatId == GameFormatId.Tes4) GroupType = (int)r.ReadLEInt64();
+                if (formatId == GameFormatId.Tes4) GroupType = r.ReadLEInt32();
                 else if (formatId == GameFormatId.Tes5) GroupType = r.ReadLEInt32();
                 r.ReadLEUInt32(); // stamp | stamp + uknown
                 if (formatId == GameFormatId.Tes4)
@@ -104,83 +81,90 @@ namespace OA.Tes.FilePacks
             r.ReadLEUInt32();
         }
 
-        public Record CreateRecord(long position)
+        static Dictionary<string, Func<byte, Record>> Create = new Dictionary<string, Func<byte, Record>>
         {
-            Record r;
-            switch (Type)
+            { "TES3", x => new TES3Record() },
+            { "TES4", x => new TES4Record() },
+            // 0      
+            { "LTEX", x => x > 0 ? new LTEXRecord() : null },
+            { "STAT", x => x > 0 ? new STATRecord() : null },
+            { "CELL", x => x > 0 ? new CELLRecord() : null },
+            { "LAND", x => x > 0 ? new LANDRecord() : null },
+            // 1      
+            { "DOOR", x => x > 1 ? new DOORRecord() : null },
+            { "MISC", x => x > 1 ? new MISCRecord() : null },
+            { "WEAP", x => x > 1 ? new WEAPRecord() : null },
+            { "CONT", x => x > 1 ? new CONTRecord() : null },
+            { "LIGH", x => x > 1 ? new LIGHRecord() : null },
+            { "ARMO", x => x > 1 ? new ARMORecord() : null },
+            { "CLOT", x => x > 1 ? new CLOTRecord() : null },
+            { "REPA", x => x > 1 ? new REPARecord() : null },
+            { "ACTI", x => x > 1 ? new ACTIRecord() : null },
+            { "APPA", x => x > 1 ? new APPARecord() : null },
+            { "LOCK", x => x > 1 ? new LOCKRecord() : null },
+            { "PROB", x => x > 1 ? new PROBRecord() : null },
+            { "INGR", x => x > 1 ? new INGRRecord() : null },
+            { "BOOK", x => x > 1 ? new BOOKRecord() : null },
+            { "ALCH", x => x > 1 ? new ALCHRecord() : null },
+            { "CREA", x => x > 1 && TesSettings.Game.CreaturesEnabled ? new CREARecord() : null },
+            { "NPC_", x => x > 1 && TesSettings.Game.NpcsEnabled ? new NPC_Record() : null },
+            // 2      
+            { "GMST", x => x > 2 ? new GMSTRecord() : null },
+            { "GLOB", x => x > 2 ? new GLOBRecord() : null },
+            { "SOUN", x => x > 2 ? new SOUNRecord() : null },
+            { "REGN", x => x > 2 ? new REGNRecord() : null },
+            // 3
+            { "CLAS", x => x > 3 ? new CLASRecord() : null },
+            { "SPEL", x => x > 3 ? new SPELRecord() : null },
+            { "BODY", x => x > 3 ? new BODYRecord() : null },
+            { "PGRD", x => x > 3 ? new PGRDRecord() : null },
+            { "INFO", x => x > 3 ? new INFORecord() : null },
+            { "DIAL", x => x > 3 ? new DIALRecord() : null },
+            { "SNDG", x => x > 3 ? new SNDGRecord() : null },
+            { "ENCH", x => x > 3 ? new ENCHRecord() : null },
+            { "SCPT", x => x > 3 ? new SCPTRecord() : null },
+            { "SKIL", x => x > 3 ? new SKILRecord() : null },
+            { "RACE", x => x > 3 ? new RACERecord() : null },
+            { "MGEF", x => x > 3 ? new MGEFRecord() : null },
+            { "LEVI", x => x > 3 ? new LEVIRecord() : null },
+            { "LEVC", x => x > 3 ? new LEVCRecord() : null },
+            { "BSGN", x => x > 3 ? new BSGNRecord() : null },
+            { "FACT", x => x > 3 ? new FACTRecord() : null },
+        };
+
+        public Record CreateRecord(long position, byte level)
+        {
+            if (Create.TryGetValue(Type, out var func))
             {
-                case "TES3": r = new TES3Record(); break;
-                case "TES4": r = new TES4Record(); break;
-                case "GMST": r = new GMSTRecord(); break;
-                case "GLOB": r = new GLOBRecord(); break;
-                case "SOUN": r = new SOUNRecord(); break;
-                case "REGN": r = new REGNRecord(); break;
-                case "LTEX": r = new LTEXRecord(); break;
-                case "STAT": r = new STATRecord(); break;
-                case "DOOR": r = new DOORRecord(); break;
-                case "MISC": r = new MISCRecord(); break;
-                case "WEAP": r = new WEAPRecord(); break;
-                case "CONT": r = new CONTRecord(); break;
-                case "LIGH": r = new LIGHRecord(); break;
-                case "ARMO": r = new ARMORecord(); break;
-                case "CLOT": r = new CLOTRecord(); break;
-                case "REPA": r = new REPARecord(); break;
-                case "ACTI": r = new ACTIRecord(); break;
-                case "APPA": r = new APPARecord(); break;
-                case "LOCK": r = new LOCKRecord(); break;
-                case "PROB": r = new PROBRecord(); break;
-                case "INGR": r = new INGRRecord(); break;
-                case "BOOK": r = new BOOKRecord(); break;
-                case "ALCH": r = new ALCHRecord(); break;
-                case "CELL": r = new CELLRecord(); break;
-                case "LAND": r = new LANDRecord(); break;
-                case "CREA": r = TesSettings.Game.CreaturesEnabled ? new CREARecord() : null; break;
-                case "NPC_": r = TesSettings.Game.NpcsEnabled ? new NPC_Record() : null; break;
-                //
-                case "CLAS":
-                case "SPEL":
-                case "BODY":
-                case "PGRD":
-                case "INFO":
-                case "DIAL":
-                case "SNDG":
-                case "ENCH":
-                case "SCPT":
-                case "SKIL":
-                case "RACE":
-                case "MGEF":
-                case "LEVI":
-                case "LEVC":
-                case "BSGN":
-                case "FACT": r = null; break;
-                default: Utils.Warning($"Unsupported ESM record type: {Type}"); r = null; break;
+                var r = func(level);
+                if (r != null)
+                {
+                    r.Position = position;
+                    r.Header = this;
+                }
+                return r;
             }
-            if (r != null)
-            {
-                r.Position = position;
-                r.Header = this;
-            }
-            return r;
+            Utils.Warning($"Unsupported ESM record type: {Type}");
+            return null;
         }
     }
 
-
     public abstract class Record : IRecord
     {
-        public long Position;
-        public Header Header;
+        internal long Position;
+        internal Header Header;
 
         /// <summary>
         /// Return an uninitialized subrecord to deserialize, or null to skip.
         /// </summary>
         /// <returns>Return an uninitialized subrecord to deserialize, or null to skip.</returns>
-        public abstract Field CreateField(string type);
+        public abstract bool CreateField(UnityBinaryReader r, string type, uint dataSize);
 
         /// <summary>
         /// Return an uninitialized subrecord to deserialize, or null to skip.
         /// </summary>
         /// <returns>Return an uninitialized subrecord to deserialize, or null to skip.</returns>
-        public abstract Field CreateField(string type, GameFormatId formatId);
+        public abstract bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize);
 
         public void Read(UnityBinaryReader r, string filePath, GameFormatId formatId)
         {
@@ -188,15 +172,14 @@ namespace OA.Tes.FilePacks
             while (r.BaseStream.Position < endPosition)
             {
                 var header = new FieldHeader(r, formatId);
-                var field = formatId != GameFormatId.Tes3 ? CreateField(header.Type, formatId) : CreateField(header.Type);
-                // skip the record if null
-                if (field == null)
+                var position = r.BaseStream.Position;
+                var skipField = formatId != GameFormatId.Tes3 ? !CreateField(r, formatId, header.Type, header.DataSize) : !CreateField(r, header.Type, header.DataSize);
+                if (skipField)
                 {
+                    Utils.Warning($"Unsupported ESM record type: {Header.Type} {header.Type}");
                     r.BaseStream.Position += header.DataSize;
                     continue;
                 }
-                var position = r.BaseStream.Position;
-                field.Read(r, header.DataSize);
                 // check full read
                 if (r.BaseStream.Position != position + header.DataSize)
                     throw new FormatException($"Failed reading {header.Type} field data at offset {position} in {filePath}");
@@ -218,12 +201,5 @@ namespace OA.Tes.FilePacks
             if (formatId == GameFormatId.Tes3) DataSize = r.ReadLEUInt32();
             else DataSize = r.ReadLEUInt16();
         }
-    }
-
-    public abstract class Field
-    {
-        //public FieldHeader Header;
-
-        public abstract void Read(UnityBinaryReader reader, uint dataSize);
     }
 }

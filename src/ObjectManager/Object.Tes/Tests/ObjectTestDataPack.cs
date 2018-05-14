@@ -18,9 +18,9 @@ namespace OA.Tes
         public static void Start()
         {
             //var assetUri = "game://Morrowind/Morrowind.bsa";
-            //var dataUri = "game://Morrowind/Morrowind.esm";
+            var dataUri = "game://Morrowind/Morrowind.esm";
             //var assetUri = "game://SkyrimVR/Skyrim*";
-            var dataUri = "game://SkyrimVR/Skyrim.esm";
+            //var dataUri = "game://SkyrimVR/Skyrim.esm";
             //var assetUri = "game://Fallout4VR/Fallout4*";
             //var dataUri = "game://Fallout4VR/Fallout4.esm";
 
@@ -28,14 +28,14 @@ namespace OA.Tes
             //Asset = assetManager.GetAssetPack(assetUri).Result;
             Data = assetManager.GetDataPack(dataUri).Result;
 
-            TestAllCells();
+            //TestAllCells();
         }
 
         static void TestAllCells()
         {
             foreach (CELLRecord record in ((TesDataPack)Data).GetRecordsOfType<CELLRecord>())
             {
-                Console.WriteLine(record.NAME.Value);
+                Console.WriteLine(record.EDID.Value);
             }
         }
 

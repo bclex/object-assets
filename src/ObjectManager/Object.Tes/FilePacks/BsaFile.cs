@@ -434,7 +434,7 @@ namespace OA.Tes.FilePacks
                 var fileNameIndex = 0U;
                 for (var i = 0; i < header_FolderCount; i++)
                 {
-                    var folder_name = _r.ReadPossiblyNullTerminatedASCIIString(_r.ReadByte()); // BSAReadSizedString
+                    var folder_name = _r.ReadASCIIString(_r.ReadByte(), ASCIIFormat.PossiblyNullTerminated); // BSAReadSizedString
                     var folderFiles = foldersFiles[i];
                     for (var j = 0; j < folderFiles; j++)
                     {
