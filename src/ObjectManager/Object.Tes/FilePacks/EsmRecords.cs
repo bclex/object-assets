@@ -1,4 +1,5 @@
-﻿using OA.Core;
+﻿using OA.Configuration;
+using OA.Core;
 using OA.Tes.FilePacks.Records;
 using System;
 using System.Collections.Generic;
@@ -50,6 +51,7 @@ namespace OA.Tes.FilePacks
         public string Label;
         public int GroupType;
 
+        public Header() { }
         public Header(UnityBinaryReader r, GameFormatId formatId)
         {
             Type = r.ReadASCIIString(4);
@@ -81,106 +83,109 @@ namespace OA.Tes.FilePacks
             r.ReadLEUInt32();
         }
 
-        static Dictionary<string, Func<byte, Record>> Create = new Dictionary<string, Func<byte, Record>>
+        struct RecordType
         {
-            { "TES3", x => new TES3Record() },
-            { "TES4", x => new TES4Record() },
-            // 0      
-            { "LTEX", x => x > 0 ? new LTEXRecord() : null },
-            { "STAT", x => x > 0 ? new STATRecord() : null },
-            { "CELL", x => x > 0 ? new CELLRecord() : null },
-            { "LAND", x => x > 0 ? new LANDRecord() : null },
-            // 1      
-            { "DOOR", x => x > 1 ? new DOORRecord() : null },
-            { "MISC", x => x > 1 ? new MISCRecord() : null },
-            { "WEAP", x => x > 1 ? new WEAPRecord() : null },
-            { "CONT", x => x > 1 ? new CONTRecord() : null },
-            { "LIGH", x => x > 1 ? new LIGHRecord() : null },
-            { "ARMO", x => x > 1 ? new ARMORecord() : null },
-            { "CLOT", x => x > 1 ? new CLOTRecord() : null },
-            { "REPA", x => x > 1 ? new REPARecord() : null },
-            { "ACTI", x => x > 1 ? new ACTIRecord() : null },
-            { "APPA", x => x > 1 ? new APPARecord() : null },
-            { "LOCK", x => x > 1 ? new LOCKRecord() : null },
-            { "PROB", x => x > 1 ? new PROBRecord() : null },
-            { "INGR", x => x > 1 ? new INGRRecord() : null },
-            { "BOOK", x => x > 1 ? new BOOKRecord() : null },
-            { "ALCH", x => x > 1 ? new ALCHRecord() : null },
-            { "CREA", x => x > 1 && TesSettings.Game.CreaturesEnabled ? new CREARecord() : null },
-            { "NPC_", x => x > 1 && TesSettings.Game.NpcsEnabled ? new NPC_Record() : null },
-            // 2      
-            { "GMST", x => x > 2 ? new GMSTRecord() : null },
-            { "GLOB", x => x > 2 ? new GLOBRecord() : null },
-            { "SOUN", x => x > 2 ? new SOUNRecord() : null },
-            { "REGN", x => x > 2 ? new REGNRecord() : null },
+            public Func<byte, Record> Func;
+            public bool Load;
+        }
+
+        static Dictionary<string, RecordType> Create = new Dictionary<string, RecordType>
+        {
+            { "TES3", new RecordType { Func = x => new TES3Record() }},
+            { "TES4", new RecordType { Func = x => new TES4Record() }},
+            // 0
+            { "LTEX", new RecordType { Func = x => x > 0 ? new LTEXRecord() : null, Load = true }},
+            { "STAT", new RecordType { Func = x => x > 0 ? new STATRecord() : null }},
+            { "CELL", new RecordType { Func = x => x > 0 ? new CELLRecord() : null }},
+            { "LAND", new RecordType { Func = x => x > 0 ? new LANDRecord() : null }},
+            // 1
+            { "DOOR", new RecordType { Func = x => x > 1 ? new DOORRecord() : null }},
+            { "MISC", new RecordType { Func = x => x > 1 ? new MISCRecord() : null }},
+            { "WEAP", new RecordType { Func = x => x > 1 ? new WEAPRecord() : null }},
+            { "CONT", new RecordType { Func = x => x > 1 ? new CONTRecord() : null }},
+            { "LIGH", new RecordType { Func = x => x > 1 ? new LIGHRecord() : null }},
+            { "ARMO", new RecordType { Func = x => x > 1 ? new ARMORecord() : null }},
+            { "CLOT", new RecordType { Func = x => x > 1 ? new CLOTRecord() : null }},
+            { "REPA", new RecordType { Func = x => x > 1 ? new REPARecord() : null }},
+            { "ACTI", new RecordType { Func = x => x > 1 ? new ACTIRecord() : null }},
+            { "APPA", new RecordType { Func = x => x > 1 ? new APPARecord() : null }},
+            { "LOCK", new RecordType { Func = x => x > 1 ? new LOCKRecord() : null }},
+            { "PROB", new RecordType { Func = x => x > 1 ? new PROBRecord() : null }},
+            { "INGR", new RecordType { Func = x => x > 1 ? new INGRRecord() : null }},
+            { "BOOK", new RecordType { Func = x => x > 1 ? new BOOKRecord() : null }},
+            { "ALCH", new RecordType { Func = x => x > 1 ? new ALCHRecord() : null }},
+            { "CREA", new RecordType { Func = x => x > 1 && BaseSettings.Game.CreaturesEnabled ? new CREARecord() : null } },
+            { "NPC_", new RecordType { Func = x => x > 1 && BaseSettings.Game.NpcsEnabled ? new NPC_Record() : null } },
+            // 2
+            { "GMST", new RecordType { Func = x => x > 2 ? new GMSTRecord() : null } },
+            { "GLOB", new RecordType { Func = x => x > 2 ? new GLOBRecord() : null }},
+            { "SOUN", new RecordType { Func = x => x > 2 ? new SOUNRecord() : null }},
+            { "REGN", new RecordType { Func = x => x > 2 ? new REGNRecord() : null }},
             // 3
-            { "CLAS", x => x > 3 ? new CLASRecord() : null },
-            { "SPEL", x => x > 3 ? new SPELRecord() : null },
-            { "BODY", x => x > 3 ? new BODYRecord() : null },
-            { "PGRD", x => x > 3 ? new PGRDRecord() : null },
-            { "INFO", x => x > 3 ? new INFORecord() : null },
-            { "DIAL", x => x > 3 ? new DIALRecord() : null },
-            { "SNDG", x => x > 3 ? new SNDGRecord() : null },
-            { "ENCH", x => x > 3 ? new ENCHRecord() : null },
-            { "SCPT", x => x > 3 ? new SCPTRecord() : null },
-            { "SKIL", x => x > 3 ? new SKILRecord() : null },
-            { "RACE", x => x > 3 ? new RACERecord() : null },
-            { "MGEF", x => x > 3 ? new MGEFRecord() : null },
-            { "LEVI", x => x > 3 ? new LEVIRecord() : null },
-            { "LEVC", x => x > 3 ? new LEVCRecord() : null },
-            { "BSGN", x => x > 3 ? new BSGNRecord() : null },
-            { "FACT", x => x > 3 ? new FACTRecord() : null },
+            { "CLAS", new RecordType { Func = x => x > 3 ? new CLASRecord() : null }},
+            { "SPEL", new RecordType { Func = x => x > 3 ? new SPELRecord() : null }},
+            { "BODY", new RecordType { Func = x => x > 3 ? new BODYRecord() : null }},
+            { "PGRD", new RecordType { Func = x => x > 3 ? new PGRDRecord() : null }},
+            { "INFO", new RecordType { Func = x => x > 3 ? new INFORecord() : null }},
+            { "DIAL", new RecordType { Func = x => x > 3 ? new DIALRecord() : null }},
+            { "SNDG", new RecordType { Func = x => x > 3 ? new SNDGRecord() : null }},
+            { "ENCH", new RecordType { Func = x => x > 3 ? new ENCHRecord() : null }},
+            { "SCPT", new RecordType { Func = x => x > 3 ? new SCPTRecord() : null }},
+            { "SKIL", new RecordType { Func = x => x > 3 ? new SKILRecord() : null }},
+            { "RACE", new RecordType { Func = x => x > 3 ? new RACERecord() : null }},
+            { "MGEF", new RecordType { Func = x => x > 3 ? new MGEFRecord() : null }},
+            { "LEVI", new RecordType { Func = x => x > 3 ? new LEVIRecord() : null }},
+            { "LEVC", new RecordType { Func = x => x > 3 ? new LEVCRecord() : null }},
+            { "BSGN", new RecordType { Func = x => x > 3 ? new BSGNRecord() : null }},
+            { "FACT", new RecordType { Func = x => x > 3 ? new FACTRecord() : null }},
             // 4 - Oblivion
-            { "ACRE", x => x > 4 ? new ACRERecord() : null }, //*
-            { "ACHR", x => x > 4 ? new ACHRRecord() : null },
-            { "AMMO", x => x > 4 ? new AMMORecord() : null },
-            { "ANIO", x => x > 4 ? new ANIORecord() : null },
-            { "CLMT", x => x > 4 ? new CLMTRecord() : null },
-            { "CSTY", x => x > 4 ? new CSTYRecord() : null },
-            { "EFSH", x => x > 4 ? new EFSHRecord() : null },
-            { "EYES", x => x > 4 ? new EYESRecord() : null },
-            { "FLOR", x => x > 4 ? new FLORRecord() : null },
-            { "FURN", x => x > 4 ? new FURNRecord() : null },
-            { "GRAS", x => x > 4 ? new GRASRecord() : null },
-            { "HAIR", x => x > 4 ? new HAIRRecord() : null }, //*
-            { "IDLE", x => x > 4 ? new IDLERecord() : null },
-            { "KEYM", x => x > 4 ? new KEYMRecord() : null }, //*
-            { "LSCR", x => x > 4 ? new LSCRRecord() : null }, //?
-            { "LVLC", x => x > 4 ? new LVLCRecord() : null },
-            { "LVLI", x => x > 4 ? new LVLIRecord() : null },
-            { "LVSP", x => x > 4 ? new LVSPRecord() : null },
-            { "PACK", x => x > 4 ? new PACKRecord() : null },
-            { "QUST", x => x > 4 ? new QUSTRecord() : null },
-            { "REFR", x => x > 4 ? new REFRRecord() : null },
-            { "ROAD", x => x > 4 ? new ROADRecord() : null }, //*
-            { "SBSP", x => x > 4 ? new SBSPRecord() : null }, //*
-            { "SGST", x => x > 4 ? new SGSTRecord() : null }, //*
-            { "SLGM", x => x > 4 ? new SLGMRecord() : null },
-            { "TREE", x => x > 4 ? new TREERecord() : null },
-            { "WATR", x => x > 4 ? new WATRRecord() : null },
-            { "WRLD", x => x > 4 ? new WRLDRecord() : null },
-            { "WTHR", x => x > 4 ? new WTHRRecord() : null },
-
+            { "ACRE", new RecordType { Func = x => x > 4 ? new ACRERecord() : null }}, //*
+            { "ACHR", new RecordType { Func = x => x > 4 ? new ACHRRecord() : null }},
+            { "AMMO", new RecordType { Func = x => x > 4 ? new AMMORecord() : null }},
+            { "ANIO", new RecordType { Func = x => x > 4 ? new ANIORecord() : null }},
+            { "CLMT", new RecordType { Func = x => x > 4 ? new CLMTRecord() : null }},
+            { "CSTY", new RecordType { Func = x => x > 4 ? new CSTYRecord() : null }},
+            { "EFSH", new RecordType { Func = x => x > 4 ? new EFSHRecord() : null }},
+            { "EYES", new RecordType { Func = x => x > 4 ? new EYESRecord() : null }},
+            { "FLOR", new RecordType { Func = x => x > 4 ? new FLORRecord() : null }},
+            { "FURN", new RecordType { Func = x => x > 4 ? new FURNRecord() : null }},
+            { "GRAS", new RecordType { Func = x => x > 4 ? new GRASRecord() : null }},
+            { "HAIR", new RecordType { Func = x => x > 4 ? new HAIRRecord() : null }}, //*
+            { "IDLE", new RecordType { Func = x => x > 4 ? new IDLERecord() : null }},
+            { "KEYM", new RecordType { Func = x => x > 4 ? new KEYMRecord() : null }}, //*
+            { "LSCR", new RecordType { Func = x => x > 4 ? new LSCRRecord() : null }}, //?
+            { "LVLC", new RecordType { Func = x => x > 4 ? new LVLCRecord() : null }},
+            { "LVLI", new RecordType { Func = x => x > 4 ? new LVLIRecord() : null }},
+            { "LVSP", new RecordType { Func = x => x > 4 ? new LVSPRecord() : null }},
+            { "PACK", new RecordType { Func = x => x > 4 ? new PACKRecord() : null }},
+            { "QUST", new RecordType { Func = x => x > 4 ? new QUSTRecord() : null }},
+            { "REFR", new RecordType { Func = x => x > 4 ? new REFRRecord() : null }},
+            { "ROAD", new RecordType { Func = x => x > 4 ? new ROADRecord() : null }}, //*
+            { "SBSP", new RecordType { Func = x => x > 4 ? new SBSPRecord() : null }}, //*
+            { "SGST", new RecordType { Func = x => x > 4 ? new SGSTRecord() : null }}, //*
+            { "SLGM", new RecordType { Func = x => x > 4 ? new SLGMRecord() : null }},
+            { "TREE", new RecordType { Func = x => x > 4 ? new TREERecord() : null }},
+            { "WATR", new RecordType { Func = x => x > 4 ? new WATRRecord() : null }},
+            { "WRLD", new RecordType { Func = x => x > 4 ? new WRLDRecord() : null }},
+            { "WTHR", new RecordType { Func = x => x > 4 ? new WTHRRecord() : null }},
             // 5 - Skyrim
-            { "AACT", x => x > 5 ? new AACTRecord() : null },
-            { "ADDN", x => x > 5 ? new ADDNRecord() : null },
-            { "ARMA", x => x > 5 ? new ARMARecord() : null },
-            { "ARTO", x => x > 5 ? new ARTORecord() : null },
-            { "ASPC", x => x > 5 ? new ASPCRecord() : null },
-            { "ASTP", x => x > 5 ? new ASTPRecord() : null },
-            { "AVIF", x => x > 5 ? new AVIFRecord() : null },
-            { "DLBR", x => x > 5 ? new DLBRRecord() : null },
-            { "DLVW", x => x > 5 ? new DLVWRecord() : null },
-            { "SNDR", x => x > 5 ? new SNDRRecord() : null },
-            //
-
+            { "AACT", new RecordType { Func = x => x > 5 ? new AACTRecord() : null }},
+            { "ADDN", new RecordType { Func = x => x > 5 ? new ADDNRecord() : null }},
+            { "ARMA", new RecordType { Func = x => x > 5 ? new ARMARecord() : null }},
+            { "ARTO", new RecordType { Func = x => x > 5 ? new ARTORecord() : null }},
+            { "ASPC", new RecordType { Func = x => x > 5 ? new ASPCRecord() : null }},
+            { "ASTP", new RecordType { Func = x => x > 5 ? new ASTPRecord() : null }},
+            { "AVIF", new RecordType { Func = x => x > 5 ? new AVIFRecord() : null }},
+            { "DLBR", new RecordType { Func = x => x > 5 ? new DLBRRecord() : null }},
+            { "DLVW", new RecordType { Func = x => x > 5 ? new DLVWRecord() : null }},
+            { "SNDR", new RecordType { Func = x => x > 5 ? new SNDRRecord() : null }},
         };
 
         public Record CreateRecord(long position, byte level)
         {
-            if (Create.TryGetValue(Type, out var func))
+            if (Create.TryGetValue(Type, out RecordType recordType))
             {
-                var r = func(level);
+                var r = recordType.Func(level);
                 if (r != null)
                 {
                     r.Position = position;

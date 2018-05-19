@@ -7,12 +7,14 @@ namespace OA.Tes.FilePacks
 {
     public partial class BsaMultiFile : IDisposable
     {
-        readonly List<BsaFile> _packs = new List<BsaFile>();
+        public readonly List<BsaFile> Packs = new List<BsaFile>();
 
         public BsaMultiFile(string[] filePaths)
         {
+            if (filePaths == null)
+                throw new ArgumentNullException("filePaths");
             var files = filePaths.Where(x => Path.GetExtension(x) == ".bsa" || Path.GetExtension(x) == ".ba2");
-            _packs.AddRange(files.Select(x => new BsaFile(x)));
+            Packs.AddRange(files.Select(x => new BsaFile(x)));
         }
 
         void IDisposable.Dispose()
@@ -27,7 +29,7 @@ namespace OA.Tes.FilePacks
 
         public void Close()
         {
-            foreach (var pack in _packs)
+            foreach (var pack in Packs)
                 pack.Close();
         }
 
@@ -36,7 +38,7 @@ namespace OA.Tes.FilePacks
         /// </summary>
         public virtual bool ContainsFile(string filePath)
         {
-            return _packs.Any(x => x.ContainsFile(filePath));
+            return Packs.Any(x => x.ContainsFile(filePath));
         }
 
         /// <summary>
@@ -44,9 +46,9 @@ namespace OA.Tes.FilePacks
         /// </summary>
         public virtual byte[] LoadFileData(string filePath)
         {
-            var pack = _packs.FirstOrDefault(x => x.ContainsFile(filePath));
+            var pack = Packs.FirstOrDefault(x => x.ContainsFile(filePath));
             if (pack == null)
-                throw new FileNotFoundException($"bCould not find file \"{filePath}\" in a BSA file.");
+                throw new FileNotFoundException($"Could not find file \"{filePath}\" in a BSA file.");
             return pack.LoadFileData(filePath);
         }
     }

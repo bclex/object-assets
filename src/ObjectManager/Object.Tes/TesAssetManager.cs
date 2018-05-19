@@ -19,6 +19,8 @@ namespace OA.Tes
                         var localPath = uri.LocalPath.Substring(1);
                         var gameId = StringToGameId(uri.Host);
                         var filePaths = FileManager.GetFilePaths(localPath, gameId);
+                        if (filePaths == null)
+                            throw new InvalidOperationException($"{gameId} not available");
                         var pack = (IAssetPack)new TesAssetPack(filePaths, null);
                         return Task.FromResult(pack);
                     }

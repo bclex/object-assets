@@ -11,7 +11,11 @@ namespace OA.Tes.FilePacks
     public partial class EsmFile : IDisposable
     {
         const int recordHeaderSizeInBytes = 16;
-        public Dictionary<string, List<Record>> Records = new Dictionary<string, List<Record>>();
+        public override string ToString() => $"{Path.GetFileName(FilePath)}";
+        UnityBinaryReader _r;
+        public string FilePath;
+        public GameFormatId FormatId;
+        public ILookup<string, EsmGroup> Groups;
         public Dictionary<Type, List<IRecord>> recordsByType;
         public Dictionary<string, IRecord> objectsByIDString;
         public Dictionary<Vector2i, CELLRecord> exteriorCELLRecordsByIndices;
@@ -19,9 +23,14 @@ namespace OA.Tes.FilePacks
 
         public EsmFile(string filePath, GameId gameId)
         {
+            if (filePath == null)
+                return;
+            FilePath = filePath;
+            FormatId = GetFormatId();
+            _r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             var watch = new Stopwatch();
             watch.Start();
-            Read(filePath, GetFormatId(), 0);
+            Read(0);
             Utils.Info($"Loading: {watch.Elapsed}");
             PostProcessRecords();
             watch.Stop();
@@ -55,76 +64,125 @@ namespace OA.Tes.FilePacks
             Close();
         }
 
-        public void Close() { }
+        public void Close()
+        {
+            if (_r != null)
+            {
+                _r.Close();
+                _r = null;
+            }
+        }
 
         public List<IRecord> GetRecordsOfType<T>() where T : Record { return recordsByType.TryGetValue(typeof(T), out List<IRecord> records) ? records : null; }
 
-        void Read(string filePath, GameFormatId formatId, byte level)
+        public class EsmGroup
         {
-            var r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
-            var header = new Header(r, formatId);
-            if ((formatId == GameFormatId.Tes3 && header.Type != "TES3") || (formatId != GameFormatId.Tes3 && header.Type != "TES4"))
-                throw new FormatException($"{filePath} record header {header.Type} is not valid for this {formatId}");
-            var rootRecord = header.CreateRecord(r.BaseStream.Position, level);
-            rootRecord.Read(r, filePath, formatId);
-            // read stream
-            var recordList = new List<Record>();
-            var endPosition = r.BaseStream.Length;
-            while (r.BaseStream.Position < endPosition)
+            public List<Record> Records;
+            public List<EsmGroup> Groups;
+            public Header Header;
+            public long Position;
+            readonly UnityBinaryReader _r;
+            readonly string _filePath;
+            readonly GameFormatId _formatId;
+            readonly byte _level;
+
+            public EsmGroup(UnityBinaryReader r, string filePath, GameFormatId formatId, byte level)
             {
-                header = new Header(r, formatId);
-                if (header.Type == "GRUP")
+                _r = r;
+                _filePath = filePath;
+                _formatId = formatId;
+                _level = level;
+            }
+
+            public void Read()
+            {
+                if (Records != null) return;
+                lock (_r)
                 {
-                    if (!Records.TryGetValue(header.Label, out List<Record> records))
+                    if (Records != null) return;
+                    Records = ReadGroup();
+                }
+            }
+
+            public List<Record> ReadGroup()
+            {
+                var records = new List<Record>();
+                _r.BaseStream.Position = Position;
+                var endPosition = Position + Header.DataSize;
+                while (_r.BaseStream.Position < endPosition)
+                {
+                    var header = new Header(_r, _formatId);
+                    if (header.Type == "GRUP")
                     {
-                        records = new List<Record>();
-                        Records.Add(header.Label, records);
+                        if (Groups == null)
+                            Groups = new List<EsmGroup>();
+                        var group = new EsmGroup(_r, _filePath, _formatId, _level)
+                        {
+                            Position = _r.BaseStream.Position,
+                            Header = header,
+                        };
+                        group.Read();
+                        Groups.Add(group);
+                        _r.BaseStream.Position += header.DataSize;
+                        continue;
                     }
-                    ReadGroup(r, records, header, filePath, formatId, level);
-                    continue;
+                    var record = header.CreateRecord(_r.BaseStream.Position, _level);
+                    if (record == null)
+                    {
+                        _r.BaseStream.Position += header.DataSize;
+                        continue;
+                    }
+                    ReadRecord(record, header.Compressed);
+                    records.Add(record);
                 }
-                var record = header.CreateRecord(r.BaseStream.Position, level);
-                if (record == null)
-                {
-                    r.BaseStream.Position += header.DataSize;
-                    continue;
-                }
-                ReadRecord(r, record, header.Compressed, filePath, formatId);
-                recordList.Add(record);
+                return records;
             }
-            if (recordList.Count > 0)
-                Records.Add(string.Empty, recordList);
-        }
 
-        void ReadGroup(UnityBinaryReader r, List<Record> records, Header groupHeader, string filePath, GameFormatId formatId, byte level)
-        {
-            var endPosition = r.BaseStream.Position + groupHeader.DataSize;
-            while (r.BaseStream.Position < endPosition)
+            void ReadRecord(Record record, bool compressed)
             {
-                var header = new Header(r, formatId);
-                if (header.Type == "GRUP")
-                {
-                    ReadGroup(r, records, header, filePath, formatId, level);
-                    continue;
-                }
-                var record = header.CreateRecord(r.BaseStream.Position, level);
-                if (record == null)
-                {
-                    r.BaseStream.Position += header.DataSize;
-                    continue;
-                }
-                ReadRecord(r, record, header.Compressed, filePath, formatId);
-                records.Add(record);
+                if (compressed)
+                    throw new NotImplementedException();
+                record.Read(_r, _filePath, _formatId);
             }
         }
 
-        void ReadRecord(UnityBinaryReader r, Record record, bool compressed, string filePath, GameFormatId formatId)
+        void Read(byte level)
         {
-            if (compressed)
+            var rootHeader = new Header(_r, FormatId);
+            if ((FormatId == GameFormatId.Tes3 && rootHeader.Type != "TES3") || (FormatId != GameFormatId.Tes3 && rootHeader.Type != "TES4"))
+                throw new FormatException($"{FilePath} record header {rootHeader.Type} is not valid for this {FormatId}");
+            var rootRecord = rootHeader.CreateRecord(_r.BaseStream.Position, level);
+            rootRecord.Read(_r, FilePath, FormatId);
+            var groups = new List<EsmGroup>();
+            // morrowind hack
+            if (FormatId == GameFormatId.Tes3)
             {
+                var group = new EsmGroup(_r, FilePath, FormatId, level)
+                {
+                    Position = _r.BaseStream.Position,
+                    Header = new Header { Label = string.Empty, DataSize = (uint)(_r.BaseStream.Length - _r.BaseStream.Position) },
+                };
+                groups.Add(group);
+                //group.Read();
                 return;
             }
-            record.Read(r, filePath, formatId);
+            // read groups
+            var endPosition = _r.BaseStream.Length;
+            while (_r.BaseStream.Position < endPosition)
+            {
+                var header = new Header(_r, FormatId);
+                if (header.Type != "GRUP")
+                    throw new InvalidOperationException();
+                var group = new EsmGroup(_r, FilePath, FormatId, level)
+                {
+                    Position = _r.BaseStream.Position,
+                    Header = header,
+                };
+                groups.Add(group);
+                _r.BaseStream.Position += header.DataSize;
+                //group.Read();
+            }
+            Groups = groups.ToLookup(x => x.Header.Label);
         }
 
         void PostProcessRecords()
@@ -133,7 +191,7 @@ namespace OA.Tes.FilePacks
             objectsByIDString = new Dictionary<string, IRecord>();
             exteriorCELLRecordsByIndices = new Dictionary<Vector2i, CELLRecord>();
             LANDRecordsByIndices = new Dictionary<Vector2i, LANDRecord>();
-            foreach (var record in Records.SelectMany(x => x.Value))
+            foreach (var record in Groups.SelectMany(x => x.SelectMany(y => y.Records)))
             {
                 if (record == null)
                     continue;

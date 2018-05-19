@@ -97,6 +97,7 @@ namespace OA.Tes.FilePacks
 
         #endregion
 
+        public override string ToString() => $"{Path.GetFileName(FilePath)}";
         UnityBinaryReader _r;
         uint Magic; // 4 bytes
         uint Version; // 4 bytes
@@ -186,10 +187,10 @@ namespace OA.Tes.FilePacks
                 var newFileData = new byte[newFileSize];
                 if (Version != SSE_BSAHEADER_VERSION)
                 {
-                    using (var s = new MemoryStream(fileData, 4, fileSize - 4))
-                    using (var gs = new InflaterInputStream(s))
-                        if (gs.Read(newFileData, 0, newFileData.Length) != newFileData.Length)
-                            throw new InvalidOperationException("ZLIB FAILED");
+                    if (fileData.Length > 4)
+                        using (var s = new MemoryStream(fileData, 4, fileSize - 4))
+                        using (var gs = new InflaterInputStream(s))
+                            gs.Read(newFileData, 0, newFileData.Length);
                 }
                 else
                 {
