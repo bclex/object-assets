@@ -42,6 +42,7 @@ namespace OA.Tes.FilePacks
 
     public class Header
     {
+        public override string ToString() => Type;
         public string Type; // 4 bytes
         public uint DataSize;
         public HeaderFlags Flags;
@@ -207,12 +208,6 @@ namespace OA.Tes.FilePacks
         /// Return an uninitialized subrecord to deserialize, or null to skip.
         /// </summary>
         /// <returns>Return an uninitialized subrecord to deserialize, or null to skip.</returns>
-        public abstract bool CreateField(UnityBinaryReader r, string type, uint dataSize);
-
-        /// <summary>
-        /// Return an uninitialized subrecord to deserialize, or null to skip.
-        /// </summary>
-        /// <returns>Return an uninitialized subrecord to deserialize, or null to skip.</returns>
         public abstract bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize);
 
         public void Read(UnityBinaryReader r, string filePath, GameFormatId formatId)
@@ -222,16 +217,15 @@ namespace OA.Tes.FilePacks
             {
                 var header = new FieldHeader(r, formatId);
                 var position = r.BaseStream.Position;
-                var skipField = formatId != GameFormatId.Tes3 ? !CreateField(r, formatId, header.Type, header.DataSize) : !CreateField(r, header.Type, header.DataSize);
-                if (skipField)
+                if (!CreateField(r, formatId, header.Type, header.DataSize))
                 {
-                    Utils.Warning($"Unsupported ESM record type: {Header.Type} {header.Type}");
+                    Utils.Warning($"Unsupported ESM record type: {Header.Type}:{header.Type}");
                     r.BaseStream.Position += header.DataSize;
                     continue;
                 }
                 // check full read
                 if (r.BaseStream.Position != position + header.DataSize)
-                    throw new FormatException($"Failed reading {header.Type} field data at offset {position} in {filePath}");
+                    throw new FormatException($"Failed reading {Header.Type}:{header.Type} field data at offset {position} in {filePath}");
             }
             // check full read
             if (r.BaseStream.Position != Position + Header.DataSize)
@@ -241,6 +235,7 @@ namespace OA.Tes.FilePacks
 
     public class FieldHeader
     {
+        public override string ToString() => Type;
         public string Type; // 4 bytes
         public uint DataSize;
 

@@ -96,33 +96,33 @@ namespace OA.Tes.FilePacks.Records
         public UNKNField FLTV; // The function/variable result for the previous SCVR
         public STRVField BNAM; // Result text (not compiled)
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            switch (type)
-            {
-                case "INAM": EDID = new STRVField(r, dataSize); DIALRecord.LastRecord?.INFOs.Add(this); return true;
-                case "PNAM": PNAM = new STRVField(r, dataSize); return true;
-                case "NNAM": NNAM = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = new DATAField(r, dataSize); return true;
-                case "ONAM": ONAM = new STRVField(r, dataSize); return true;
-                case "RNAM": RNAM = new STRVField(r, dataSize); return true;
-                case "CNAM": CNAM = new STRVField(r, dataSize); return true;
-                case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                case "ANAM": ANAM = new STRVField(r, dataSize); return true;
-                case "DNAM": DNAM = new STRVField(r, dataSize); return true;
-                case "NAME": NAME = new STRVField(r, dataSize); return true;
-                case "SNAM": SNAM = new FILEField(r, dataSize); return true;
-                case "QSTN": QSTN = new BYTEField(r, dataSize); return true;
-                case "QSTF": QSTF = new BYTEField(r, dataSize); return true;
-                case "QSTR": QSTR = new BYTEField(r, dataSize); return true;
-                case "SCVR": SCVR = new SCVRField(r, dataSize); return true;
-                case "INTV": INTV = new UNKNField(r, dataSize); return true;
-                case "FLTV": FLTV = new UNKNField(r, dataSize); return true;
-                case "BNAM": BNAM = new STRVField(r, dataSize); return true;
-                default: return false;
-            }
+            if (formatId == GameFormatId.Tes3)
+                switch (type)
+                {
+                    case "INAM": EDID = new STRVField(r, dataSize); DIALRecord.LastRecord?.INFOs.Add(this); return true;
+                    case "PNAM": PNAM = new STRVField(r, dataSize); return true;
+                    case "NNAM": NNAM = new STRVField(r, dataSize); return true;
+                    case "DATA": DATA = new DATAField(r, dataSize); return true;
+                    case "ONAM": ONAM = new STRVField(r, dataSize); return true;
+                    case "RNAM": RNAM = new STRVField(r, dataSize); return true;
+                    case "CNAM": CNAM = new STRVField(r, dataSize); return true;
+                    case "FNAM": FNAM = new STRVField(r, dataSize); return true;
+                    case "ANAM": ANAM = new STRVField(r, dataSize); return true;
+                    case "DNAM": DNAM = new STRVField(r, dataSize); return true;
+                    case "NAME": NAME = new STRVField(r, dataSize); return true;
+                    case "SNAM": SNAM = new FILEField(r, dataSize); return true;
+                    case "QSTN": QSTN = new BYTEField(r, dataSize); return true;
+                    case "QSTF": QSTF = new BYTEField(r, dataSize); return true;
+                    case "QSTR": QSTR = new BYTEField(r, dataSize); return true;
+                    case "SCVR": SCVR = new SCVRField(r, dataSize); return true;
+                    case "INTV": INTV = new UNKNField(r, dataSize); return true;
+                    case "FLTV": FLTV = new UNKNField(r, dataSize); return true;
+                    case "BNAM": BNAM = new STRVField(r, dataSize); return true;
+                    default: return false;
+                }
+            return false;
         }
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize) => throw new NotImplementedException();
     }
 }

@@ -29,12 +29,13 @@ namespace OA.Tes.FilePacks.Records
         public IN32Field INTV; // unknown
         public IN32Field? INCC; // unknown (Optional)
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize) => throw new NotImplementedException();
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
             switch (type)
             {
                 case "HEDR": HEDR = new HEDRField(r, dataSize); return true;
+                case "OFST": r.ReadBytes((int)dataSize); return true;
+                case "DELE": r.ReadBytes((int)dataSize); return true;
                 case "CNAM": CNAM = new STRVField(r, dataSize); return true;
                 case "SNAM": SNAM = new STRVField(r, dataSize); return true;
                 case "MAST": if (MASTs == null) MASTs = new List<STRVField>(); MASTs.Add(new STRVField(r, dataSize)); return true;

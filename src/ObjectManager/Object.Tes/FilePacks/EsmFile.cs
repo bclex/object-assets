@@ -30,9 +30,9 @@ namespace OA.Tes.FilePacks
             _r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             var watch = new Stopwatch();
             watch.Start();
-            Read(0);
+            Read(10);
             Utils.Info($"Loading: {watch.Elapsed}");
-            PostProcessRecords();
+            //PostProcessRecords();
             watch.Stop();
             GameFormatId GetFormatId()
             {
@@ -77,6 +77,7 @@ namespace OA.Tes.FilePacks
 
         public class EsmGroup
         {
+            public override string ToString() => Header.Label;
             public List<Record> Records;
             public List<EsmGroup> Groups;
             public Header Header;
@@ -163,7 +164,7 @@ namespace OA.Tes.FilePacks
                     Header = new Header { Label = string.Empty, DataSize = (uint)(_r.BaseStream.Length - _r.BaseStream.Position) },
                 };
                 groups.Add(group);
-                //group.Read();
+                group.Read();
                 return;
             }
             // read groups
@@ -180,7 +181,7 @@ namespace OA.Tes.FilePacks
                 };
                 groups.Add(group);
                 _r.BaseStream.Position += header.DataSize;
-                //group.Read();
+                group.Read();
             }
             Groups = groups.ToLookup(x => x.Header.Label);
         }

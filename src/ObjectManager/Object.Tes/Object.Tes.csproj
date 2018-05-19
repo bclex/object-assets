@@ -101,7 +101,7 @@
     <Compile Include="FilePacks\Records\300-BODY.Body.cs" />
     <Compile Include="FilePacks\Records\340-PGRD.Path grid.cs" />
     <Compile Include="FilePacks\Records\005-SNDR.Sound Reference.cs" />
-    <Compile Include="FilePacks\Records\300-SCPT.Script.cs" />
+    <Compile Include="FilePacks\Records\340-SCPT.Script.cs" />
     <Compile Include="FilePacks\Records\345-INFO.Dialog Topic Info.cs" />
     <Compile Include="FilePacks\Records\345-SKIL.Skill.cs" />
     <Compile Include="FilePacks\Records\345-SPEL.Spell.cs" />

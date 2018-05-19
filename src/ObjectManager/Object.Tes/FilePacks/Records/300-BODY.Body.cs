@@ -27,18 +27,18 @@ namespace OA.Tes.FilePacks.Records
         public STRVField FNAM; // Body name
         public BYDTField BYDT;
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "MODL": MODL = new FILEField(r, dataSize); return true;
-                case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                case "BYDT": BYDT = new BYDTField(r, dataSize); return true;
-                default: return false;
-            }
+            if (formatId == GameFormatId.Tes3)
+                switch (type)
+                {
+                    case "NAME": EDID = new STRVField(r, dataSize); return true;
+                    case "MODL": MODL = new FILEField(r, dataSize); return true;
+                    case "FNAM": FNAM = new STRVField(r, dataSize); return true;
+                    case "BYDT": BYDT = new BYDTField(r, dataSize); return true;
+                    default: return false;
+                }
+            return false;
         }
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize) => throw new NotImplementedException();
     }
 }

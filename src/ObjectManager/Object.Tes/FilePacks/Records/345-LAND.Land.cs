@@ -105,21 +105,21 @@ namespace OA.Tes.FilePacks.Records
 
         public Vector2i GridCoords => new Vector2i(INTV.CellX, INTV.CellY);
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            switch (type)
-            {
-                case "INTV": INTV = new CORDField(r, dataSize); return true;
-                case "DATA": DATA = new IN32Field(r, dataSize); return true;
-                case "VNML": VNML = new VNMLField(r, dataSize); return true;
-                case "VHGT": VHGT = new VHGTField(r, dataSize); return true;
-                case "WNAM": WNAM = new WNAMField(r, dataSize); return true;
-                case "VCLR": VCLR = new VCLRField(r, dataSize); return true;
-                case "VTEX": VTEX = new VTEXField(r, dataSize); return true;
-                default: return false;
-            }
+            if (formatId == GameFormatId.Tes3)
+                switch (type)
+                {
+                    case "INTV": INTV = new CORDField(r, dataSize); return true;
+                    case "DATA": DATA = new IN32Field(r, dataSize); return true;
+                    case "VNML": VNML = new VNMLField(r, dataSize); return true;
+                    case "VHGT": VHGT = new VHGTField(r, dataSize); return true;
+                    case "WNAM": WNAM = new WNAMField(r, dataSize); return true;
+                    case "VCLR": VCLR = new VCLRField(r, dataSize); return true;
+                    case "VTEX": VTEX = new VTEXField(r, dataSize); return true;
+                    default: return false;
+                }
+            return false;
         }
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize) => throw new NotImplementedException();
     }
 }

@@ -9,7 +9,6 @@ namespace OA.Tes.FilePacks.Records
         public STRVField EDID; // Action Name
         public CREFField CNAME; // RGB color
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize) => throw new NotImplementedException();
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
             switch (type)

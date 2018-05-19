@@ -50,17 +50,17 @@ namespace OA.Tes.FilePacks.Records
         public ENDTField ENDT; // Enchant Data
         public ENAMField ENAM; // Single enchantment
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "ENDT": ENDT = new ENDTField(r, dataSize); return true;
-                case "ENAM": ENAM = new ENAMField(r, dataSize); return true;
-                default: return false;
-            }
+            if (formatId == GameFormatId.Tes3)
+                switch (type)
+                {
+                    case "NAME": EDID = new STRVField(r, dataSize); return true;
+                    case "ENDT": ENDT = new ENDTField(r, dataSize); return true;
+                    case "ENAM": ENAM = new ENAMField(r, dataSize); return true;
+                    default: return false;
+                }
+            return false;
         }
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize) => throw new NotImplementedException();
     }
 }

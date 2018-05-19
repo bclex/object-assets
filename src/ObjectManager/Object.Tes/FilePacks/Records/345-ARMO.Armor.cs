@@ -51,24 +51,24 @@ namespace OA.Tes.FilePacks.Records
         public STRVField SCRI; // Script Name
         public STRVField ENAM; // Enchantment Name
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "MODL": MODL = new FILEField(r, dataSize); return true;
-                case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                case "AODT": AODT = new AODTField(r, dataSize); return true;
-                case "ITEX": ITEX = new FILEField(r, dataSize); return true;
-                case "INDX": INDXs.Add(new CLOTRecord.INDXFieldGroup { INDX = new INTVField(r, dataSize) }); return true;
-                case "BNAM": ArrayUtils.Last(INDXs).BNAM = new STRVField(r, dataSize); return true;
-                case "CNAM": ArrayUtils.Last(INDXs).CNAM = new STRVField(r, dataSize); return true;
-                case "SCRI": SCRI = new STRVField(r, dataSize); return true;
-                case "ENAM": ENAM = new STRVField(r, dataSize); return true;
-                default: return false;
-            }
+            if (formatId == GameFormatId.Tes3)
+                switch (type)
+                {
+                    case "NAME": EDID = new STRVField(r, dataSize); return true;
+                    case "MODL": MODL = new FILEField(r, dataSize); return true;
+                    case "FNAM": FNAM = new STRVField(r, dataSize); return true;
+                    case "AODT": AODT = new AODTField(r, dataSize); return true;
+                    case "ITEX": ITEX = new FILEField(r, dataSize); return true;
+                    case "INDX": INDXs.Add(new CLOTRecord.INDXFieldGroup { INDX = new INTVField(r, dataSize) }); return true;
+                    case "BNAM": ArrayUtils.Last(INDXs).BNAM = new STRVField(r, dataSize); return true;
+                    case "CNAM": ArrayUtils.Last(INDXs).CNAM = new STRVField(r, dataSize); return true;
+                    case "SCRI": SCRI = new STRVField(r, dataSize); return true;
+                    case "ENAM": ENAM = new STRVField(r, dataSize); return true;
+                    default: return false;
+                }
+            return false;
         }
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize) => throw new NotImplementedException();
     }
 }

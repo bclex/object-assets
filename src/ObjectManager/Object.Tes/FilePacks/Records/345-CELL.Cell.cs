@@ -105,7 +105,7 @@ namespace OA.Tes.FilePacks.Records
         public Vector2i GridCoords => new Vector2i(DATA.GridX, DATA.GridY);
         public Color? AmbientLight => AMBI != null ? (Color?)ColorUtils.B8G8R8ToColor32(AMBI.Value.AmbientColor) : null;
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
             if (!InObjectDataGroups && type == "FRMR")
                 InObjectDataGroups = true;
@@ -151,7 +151,5 @@ namespace OA.Tes.FilePacks.Records
                     default: return false;
                 }
         }
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize) => throw new NotImplementedException();
     }
 }

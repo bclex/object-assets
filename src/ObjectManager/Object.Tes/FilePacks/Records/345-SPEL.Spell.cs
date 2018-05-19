@@ -36,9 +36,10 @@ namespace OA.Tes.FilePacks.Records
         public SPDTField SPDT;
         public ENAMField ENAM;
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            switch (type)
+            if (formatId == GameFormatId.Tes3)
+                switch (type)
             {
                 case "NAME": EDID = new STRVField(r, dataSize); return true;
                 case "FNAM": FNAM = new STRVField(r, dataSize); return true;
@@ -46,8 +47,7 @@ namespace OA.Tes.FilePacks.Records
                 case "ENAM": ENAM = new ENAMField(r, dataSize); return true;
                 default: return false;
             }
+            return false;
         }
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize) => throw new NotImplementedException();
     }
 }

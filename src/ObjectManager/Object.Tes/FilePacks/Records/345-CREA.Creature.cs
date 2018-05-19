@@ -210,30 +210,30 @@ namespace OA.Tes.FilePacks.Records
         public STRVField? CNAM;
         public List<STRVField> NPCSs = new List<STRVField>();
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "MODL": MODL = new FILEField(r, dataSize); return true;
-                case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                case "NPDT": NPDT = new NPDTField(r, dataSize); return true;
-                case "FLAG": FLAG = new IN32Field(r, dataSize); return true;
-                case "SCRI": SCRI = new STRVField(r, dataSize); return true;
-                case "NPCO": NPCO = new NPCOField(r, dataSize); return true;
-                case "AIDT": AIDT = new AIDTField(r, dataSize); return true;
-                case "AI_W": AI_W = new AI_WField(r, dataSize, 0); return true;
-                case "AI_T": AI_T = new AI_TField(r, dataSize); return true;
-                case "AI_F": AI_F = new AI_FField(r, dataSize); return true;
-                case "AI_E": AI_E = new AI_FField(r, dataSize); return true;
-                case "AI_A": AI_A = new AI_AField(r, dataSize); return true;
-                case "XSCL": XSCL = new FLTVField(r, dataSize); return true;
-                case "CNAM": CNAM = new STRVField(r, dataSize); return true;
-                case "NPCS": NPCSs.Add(new STRVField(r, dataSize, ASCIIFormat.ZeroPadded)); return true;
-                default: return false;
-            }
+            if (formatId == GameFormatId.Tes3)
+                switch (type)
+                {
+                    case "NAME": EDID = new STRVField(r, dataSize); return true;
+                    case "MODL": MODL = new FILEField(r, dataSize); return true;
+                    case "FNAM": FNAM = new STRVField(r, dataSize); return true;
+                    case "NPDT": NPDT = new NPDTField(r, dataSize); return true;
+                    case "FLAG": FLAG = new IN32Field(r, dataSize); return true;
+                    case "SCRI": SCRI = new STRVField(r, dataSize); return true;
+                    case "NPCO": NPCO = new NPCOField(r, dataSize); return true;
+                    case "AIDT": AIDT = new AIDTField(r, dataSize); return true;
+                    case "AI_W": AI_W = new AI_WField(r, dataSize, 0); return true;
+                    case "AI_T": AI_T = new AI_TField(r, dataSize); return true;
+                    case "AI_F": AI_F = new AI_FField(r, dataSize); return true;
+                    case "AI_E": AI_E = new AI_FField(r, dataSize); return true;
+                    case "AI_A": AI_A = new AI_AField(r, dataSize); return true;
+                    case "XSCL": XSCL = new FLTVField(r, dataSize); return true;
+                    case "CNAM": CNAM = new STRVField(r, dataSize); return true;
+                    case "NPCS": NPCSs.Add(new STRVField(r, dataSize, ASCIIFormat.ZeroPadded)); return true;
+                    default: return false;
+                }
+            return false;
         }
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize) => throw new NotImplementedException();
     }
 }

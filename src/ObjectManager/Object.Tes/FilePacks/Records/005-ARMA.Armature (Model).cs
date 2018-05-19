@@ -8,7 +8,6 @@ namespace OA.Tes.FilePacks.Records
         public override string ToString() => $"ARMA: {EDID.Value}";
         public STRVField EDID; // Action Name
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize) => throw new NotImplementedException();
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
             switch (type)

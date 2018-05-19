@@ -15,7 +15,7 @@ namespace OA.Tes.FilePacks.Records
         public List<IN16Field> INTVs = new List<IN16Field>(); // PC level for previous INAM
         // The CNAM/INTV can occur many times in pairs
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
             switch (type)
             {
@@ -28,7 +28,5 @@ namespace OA.Tes.FilePacks.Records
                 default: return false;
             }
         }
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize) => throw new NotImplementedException();
     }
 }

@@ -15,20 +15,20 @@ namespace OA.Tes.FilePacks.Records
         public List<IN16Field> INTVs = new List<IN16Field>(); // PC level for previous CNAM
         // The CNAM/INTV can occur many times in pairs
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = new IN32Field(r, dataSize); return true;
-                case "NNAM": NNAM = new BYTEField(r, dataSize); return true;
-                case "INDX": INDX = new IN32Field(r, dataSize); return true;
-                case "CNAM": CNAMs.Add(new STRVField(r, dataSize)); return true;
-                case "INTV": INTVs.Add(new IN16Field(r, dataSize)); return true;
-                default: return false;
-            }
+            if (formatId == GameFormatId.Tes3)
+                switch (type)
+                {
+                    case "NAME": EDID = new STRVField(r, dataSize); return true;
+                    case "DATA": DATA = new IN32Field(r, dataSize); return true;
+                    case "NNAM": NNAM = new BYTEField(r, dataSize); return true;
+                    case "INDX": INDX = new IN32Field(r, dataSize); return true;
+                    case "CNAM": CNAMs.Add(new STRVField(r, dataSize)); return true;
+                    case "INTV": INTVs.Add(new IN16Field(r, dataSize)); return true;
+                    default: return false;
+                }
+            return false;
         }
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize) => throw new NotImplementedException();
     }
 }

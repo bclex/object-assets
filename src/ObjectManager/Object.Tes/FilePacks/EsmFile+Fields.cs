@@ -133,6 +133,40 @@ namespace OA.Tes.FilePacks
         }
     }
 
+    public struct FormId<TRecord>
+        where TRecord : Record
+    {
+        public override string ToString() => $"{Type}:{Id}";
+        public uint Id;
+        public string Type => typeof(TRecord).Name.Substring(0, 4);
+    }
+
+    public struct FMIDField<TRecord>
+        where TRecord : Record
+    {
+        public override string ToString() => $"{Value}";
+        public FormId<TRecord> Value;
+
+        public FMIDField(UnityBinaryReader r, uint dataSize)
+        {
+            Value.Id = r.ReadLEUInt32();
+        }
+    }
+
+    public struct FMID2Field<TRecord>
+       where TRecord : Record
+    {
+        public override string ToString() => $"{Value1}x{Value1}";
+        public FormId<TRecord> Value1;
+        public FormId<TRecord> Value2;
+
+        public FMID2Field(UnityBinaryReader r, uint dataSize)
+        {
+            Value1.Id = r.ReadLEUInt32();
+            Value2.Id = r.ReadLEUInt32();
+        }
+    }
+
     public struct CREFField // COLORREF
     {
         public byte Red;
@@ -159,6 +193,17 @@ namespace OA.Tes.FilePacks
         {
             ItemCount = r.ReadLEUInt32();
             ItemName = r.ReadASCIIString(32, ASCIIFormat.ZeroPadded);
+        }
+    }
+
+    public struct BYTVField
+    {
+        public override string ToString() => $"BYTS";
+        public byte[] Value;
+
+        public BYTVField(UnityBinaryReader r, uint dataSize)
+        {
+            Value = r.ReadBytes((int)dataSize);
         }
     }
 

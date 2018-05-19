@@ -54,22 +54,22 @@ namespace OA.Tes.FilePacks.Records
         public FILEField MODL { get; set; } // NIF model name
         public STRVField SNAM; // Sound name
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                case "LHDT": LHDT = new LHDTField(r, dataSize); return true;
-                case "SCPT": SCPT = new STRVField(r, dataSize); return true;
-                case "SCRI": SCRI = new STRVField(r, dataSize); return true;
-                case "ITEX": ITEX = new FILEField(r, dataSize); return true;
-                case "MODL": MODL = new FILEField(r, dataSize); return true;
-                case "SNAM": SNAM = new STRVField(r, dataSize); return true;
-                default: return false;
-            }
+            if (formatId == GameFormatId.Tes3)
+                switch (type)
+                {
+                    case "NAME": EDID = new STRVField(r, dataSize); return true;
+                    case "FNAM": FNAM = new STRVField(r, dataSize); return true;
+                    case "LHDT": LHDT = new LHDTField(r, dataSize); return true;
+                    case "SCPT": SCPT = new STRVField(r, dataSize); return true;
+                    case "SCRI": SCRI = new STRVField(r, dataSize); return true;
+                    case "ITEX": ITEX = new FILEField(r, dataSize); return true;
+                    case "MODL": MODL = new FILEField(r, dataSize); return true;
+                    case "SNAM": SNAM = new STRVField(r, dataSize); return true;
+                    default: return false;
+                }
+            return false;
         }
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize) => throw new NotImplementedException();
     }
 }

@@ -29,9 +29,10 @@ namespace OA.Tes.FilePacks.Records
         public FILEField ITEX; // Inventory Icon
         public STRVField SCRI; // Script Name
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            switch (type)
+            if (formatId == GameFormatId.Tes3)
+                switch (type)
             {
                 case "NAME": EDID = new STRVField(r, dataSize); return true;
                 case "MODL": MODL = new FILEField(r, dataSize); return true;
@@ -41,8 +42,7 @@ namespace OA.Tes.FilePacks.Records
                 case "SCRI": SCRI = new STRVField(r, dataSize); return true;
                 default: return false;
             }
+            return false;
         }
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize) => throw new NotImplementedException();
     }
 }

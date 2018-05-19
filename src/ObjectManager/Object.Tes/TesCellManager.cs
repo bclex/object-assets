@@ -345,7 +345,7 @@ namespace OA.Tes
                     continue;
                 }
                 var ltex = _data.FindLTEXRecord(textureIndex);
-                var textureFilePath = ltex.DATA.Value;
+                var textureFilePath = ltex.ICON.Value;
                 textureFilePaths.Add(textureFilePath);
             }
             return textureFilePaths;
@@ -403,7 +403,7 @@ namespace OA.Tes
                     else
                     {
                         var LTEX = _data.FindLTEXRecord(textureIndex);
-                        textureFilePath = LTEX.DATA.Value;
+                        textureFilePath = LTEX.ICON.Value;
                     }
                     var texture = _asset.LoadTexture(textureFilePath);
                     // Yield after loading each texture to avoid doing too much work on one frame.

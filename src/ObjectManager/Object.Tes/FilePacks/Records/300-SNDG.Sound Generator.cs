@@ -23,18 +23,18 @@ namespace OA.Tes.FilePacks.Records
         public STRVField SNAM; // Sound ID
         public STRVField? CNAM; // Creature name (optional)
 
-        public override bool CreateField(UnityBinaryReader r, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = new IN32Field(r, dataSize); return true;
-                case "SNAM": SNAM = new STRVField(r, dataSize); return true;
-                case "CNAM": CNAM = new STRVField(r, dataSize); return true;
-                default: return false;
-            }
+            if (formatId == GameFormatId.Tes3)
+                switch (type)
+                {
+                    case "NAME": EDID = new STRVField(r, dataSize); return true;
+                    case "DATA": DATA = new IN32Field(r, dataSize); return true;
+                    case "SNAM": SNAM = new STRVField(r, dataSize); return true;
+                    case "CNAM": CNAM = new STRVField(r, dataSize); return true;
+                    default: return false;
+                }
+            return false;
         }
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize) => throw new NotImplementedException();
     }
 }
