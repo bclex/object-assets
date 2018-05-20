@@ -1,30 +1,49 @@
 ﻿using OA.Core;
-using System;
 using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
 {
     public class LVLCRecord : Record
     {
+        public struct LVLOField
+        {
+            public short Level;
+            public FormId<Record> ItemFormId;
+            public int Count;
+
+            public LVLOField(UnityBinaryReader r, uint dataSize)
+            {
+                Level = r.ReadLEInt16();
+                r.ReadBytes(2); // Unused
+                ItemFormId.Id = r.ReadLEUInt32();
+                ItemFormId.Name = null;
+                if (dataSize == 12)
+                {
+                    Count = r.ReadLEInt16();
+                    r.ReadBytes(2); // Unused
+                }
+                else Count = 0;
+            }
+        }
+
         public override string ToString() => $"LVLC: {EDID.Value}";
         public STRVField EDID { get; set; } // ID
-        public IN32Field DATA; // List data - 1 = Calc from all levels <= PC level
-        public BYTEField NNAM; // Chance None?
-        public IN32Field INDX; // Number of items in list
-        public List<STRVField> CNAMs = new List<STRVField>(); // ID string of list item
-        public List<IN16Field> INTVs = new List<IN16Field>(); // PC level for previous CNAM
-        // The CNAM/INTV can occur many times in pairs
+        public BYTEField LVLD; // Chance
+        public BYTEField LVLF; // Flags - 0x01 = Calculate from all levels <= player's level, 0x02 = Calculate for each item in count
+        public FMIDField<SCPTRecord> SCRI; // Script (optional)
+        public FMIDField<CREARecord> TNAM; // Creature Template (optional)
+        public List<LVLOField> LVLOs = new List<LVLOField>();
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
             switch (type)
             {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = new IN32Field(r, dataSize); return true;
-                case "NNAM": NNAM = new BYTEField(r, dataSize); return true;
-                case "INDX": INDX = new IN32Field(r, dataSize); return true;
-                case "CNAM": CNAMs.Add(new STRVField(r, dataSize)); return true;
-                case "INTV": INTVs.Add(new IN16Field(r, dataSize)); return true;
+                case "EDID": EDID = new STRVField(r, dataSize); return true;
+                case "LVLD": LVLD = new BYTEField(r, dataSize); return true;
+                case "LVLF": LVLF = new BYTEField(r, dataSize); return true;
+                case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
+                case "TNAM": TNAM = new FMIDField<CREARecord>(r, dataSize); return true;
+                case "LVLO": LVLOs.Add(new LVLOField(r, dataSize)); return true;
                 default: return false;
             }
         }

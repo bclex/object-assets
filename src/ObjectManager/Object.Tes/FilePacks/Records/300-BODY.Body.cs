@@ -23,7 +23,7 @@ namespace OA.Tes.FilePacks.Records
 
         public override string ToString() => $"BODY: {EDID.Value}";
         public STRVField EDID { get; set; } // ID
-        public FILEField MODL { get; set; } // NIF Model
+        public MODLGroup MODL { get; set; } // NIF Model
         public STRVField FNAM; // Body name
         public BYDTField BYDT;
 
@@ -33,7 +33,7 @@ namespace OA.Tes.FilePacks.Records
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "MODL": MODL = new FILEField(r, dataSize); return true;
+                    case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                     case "FNAM": FNAM = new STRVField(r, dataSize); return true;
                     case "BYDT": BYDT = new BYDTField(r, dataSize); return true;
                     default: return false;

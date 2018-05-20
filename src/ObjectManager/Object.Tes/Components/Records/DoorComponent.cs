@@ -33,8 +33,8 @@ namespace OA.Tes.Components.Records
             doorData.openRotation = doorData.closedRotation * Quaternion.Euler(Vector3.up * 90f);
             doorData.moving = false;
             var DOOR = record as DOORRecord;
-            if (DOOR.FNAM.Value != null)
-                doorData.doorName = DOOR.FNAM.Value;
+            if (DOOR.FULL.Value != null)
+                doorData.doorName = DOOR.FULL.Value;
             doorData.leadsToAnotherCell = refObjDataGroup.DNAM.Value != null || refObjDataGroup.DODT != null;
             doorData.leadsToInteriorCell = refObjDataGroup.DNAM.Value != null;
             if (doorData.leadsToInteriorCell)

@@ -155,7 +155,7 @@
     <Compile Include="FilePacks\Records\345-GMST.Game Setting.cs" />
     <Compile Include="FilePacks\Records\345-INGR.Ingredient.cs" />
     <Compile Include="FilePacks\Records\345-LAND.Land.cs" />
-    <Compile Include="FilePacks\Records\300-LVLC.Leveled Creature.cs" />
+    <Compile Include="FilePacks\Records\300-LEVC.Leveled Creature.cs" />
     <Compile Include="FilePacks\Records\345-LIGH.Light.cs" />
     <Compile Include="FilePacks\Records\345-LOCK.Lock.cs" />
     <Compile Include="FilePacks\Records\345-LTEX.Land Texture.cs" />

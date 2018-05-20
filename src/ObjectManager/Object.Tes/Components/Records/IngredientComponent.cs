@@ -8,9 +8,9 @@ namespace OA.Tes.Components.Records
         {
             var INGR = (INGRRecord)record;
             //objData.icon = TESUnity.instance.Engine.textureManager.LoadTexture(INGR.ITEX.value, "icons"); 
-            objData.name = INGR.FNAM.Value;
-            objData.weight = INGR.IRDT.Weight.ToString();
-            objData.value = INGR.IRDT.Value.ToString();
+            objData.name = INGR.FULL.Value;
+            objData.weight = INGR.DATA.Weight.ToString();
+            objData.value = INGR.DATA.Value.ToString();
             objData.interactionPrefix = "Take ";
         }
     }

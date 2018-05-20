@@ -36,21 +36,21 @@ namespace OA.Tes.Components.Records
             pickable = false;
             var book = (BOOKRecord)record;
             objData.interactionPrefix = "Read ";
-            objData.name = book.FNAM.Value ?? book.EDID.Value;
+            objData.name = book.FULL.Value ?? book.EDID.Value;
             //objData.icon = TESUnity.instance.Engine.textureManager.LoadTexture(BOOK.ITEX.value, "icons");
-            objData.weight = book.BKDT.Weight.ToString();
-            objData.value = book.BKDT.Value.ToString();
+            objData.weight = book.DATA.Weight.ToString();
+            objData.value = book.DATA.Value.ToString();
         }
 
         public override void Interact()
         {
             var book = (BOOKRecord)record;
-            if (book.TEXT.Value == null)
+            if (book.DESC.Value == null)
             {
-                if (book.BKDT.Scroll == 1) OnTakeScroll(book);
+                if (book.DATA.Flags == 1) OnTakeScroll(book);
                 else OnTakeBook(book);
             }
-            if (book.BKDT.Scroll == 1)
+            if (book.DATA.Flags == 1)
             {
                 UIManager.Scroll.Show(book);
                 UIManager.Scroll.OnClosed += OnCloseScroll;

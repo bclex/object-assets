@@ -141,8 +141,7 @@ namespace OA.Tes.FilePacks.Records
             }
 
             public UI32Field INDX;
-            public FILEField MODL;
-            public FLTVField MODB;
+            public MODLGroup MODL;
             public FILEField ICON;
         }
 
@@ -234,9 +233,9 @@ namespace OA.Tes.FilePacks.Records
                         switch (type)
                         {
                             case "INDX": FaceParts.Add(new FacePartGroup { INDX = new UI32Field(r, dataSize) }); return true;
-                            case "MODL": ArrayUtils.Last(FaceParts).MODL = new FILEField(r, dataSize); return true;
+                            case "MODL": ArrayUtils.Last(FaceParts).MODL = new MODLGroup(r, dataSize); return true;
                             case "ICON": ArrayUtils.Last(FaceParts).ICON = new FILEField(r, dataSize); return true;
-                            case "MODB": ArrayUtils.Last(FaceParts).MODB = new FLTVField(r, dataSize); return true;
+                            case "MODB": ArrayUtils.Last(FaceParts).MODL.MODBField(r, dataSize); return true;
                             case "NAM1": NameState++; return true;
                             default: return false;
                         }

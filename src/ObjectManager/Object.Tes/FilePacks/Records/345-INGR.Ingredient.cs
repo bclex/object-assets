@@ -1,10 +1,12 @@
 ﻿using OA.Core;
 using System;
+using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
 {
     public class INGRRecord : Record, IHaveEDID, IHaveMODL
     {
+        // TES3
         public struct IRDTField
         {
             public float Weight;
@@ -29,28 +31,59 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
+        // TES4
+        public class DATAField
+        {
+            public float Weight;
+            public int Value;
+            public uint Flags;
+
+            public DATAField(UnityBinaryReader r, uint dataSize)
+            {
+                Weight = r.ReadLESingle();
+            }
+
+            public void ENITField(UnityBinaryReader r, uint dataSize)
+            {
+                Value = r.ReadLEInt32();
+                Flags = r.ReadLEUInt32();
+            }
+        }
+
         public override string ToString() => $"INGR: {EDID.Value}";
         public STRVField EDID { get; set; } // Item ID
-        public FILEField MODL { get; set; } // Model Name
-        public STRVField FNAM; // Item Name
-        public IRDTField IRDT; // Ingrediant Data
-        public FILEField ITEX; // Inventory Icon
-        public STRVField SCRI; // Script Name
+        public MODLGroup MODL { get; set; } // Model Name
+        public STRVField FULL; // Item Name
+        public IRDTField IRDT; // Ingrediant Data //: TES3
+        public DATAField DATA; // Ingrediant Data //: TES4
+        public FILEField ICON; // Inventory Icon
+        public FMIDField<SCPTRecord> SCRI; // Script Name
+        // TES4
+        public List<ENCHRecord.EFITField> EFITs = new List<ENCHRecord.EFITField>(); // Effect Data
+        public List<ENCHRecord.SCITField> SCITs = new List<ENCHRecord.SCITField>(); // Script effect data
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (formatId == GameFormatId.Tes3)
-                switch (type)
-                {
-                    case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "MODL": MODL = new FILEField(r, dataSize); return true;
-                    case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                    case "IRDT": IRDT = new IRDTField(r, dataSize); return true;
-                    case "ITEX": ITEX = new FILEField(r, dataSize); return true;
-                    case "SCRI": SCRI = new STRVField(r, dataSize); return true;
-                    default: return false;
-                }
-            return false;
+            switch (type)
+            {
+                case "EDID":
+                case "NAME": EDID = new STRVField(r, dataSize); return true;
+                case "MODL": MODL = new MODLGroup(r, dataSize); return true;
+                case "MODB": MODL.MODBField(r, dataSize); return true;
+                case "MODT": MODL.MODTField(r, dataSize); return true;
+                case "FULL": if (SCITs.Count == 0) FULL = new STRVField(r, dataSize); else ArrayUtils.Last(SCITs).FULLField(r, dataSize); return true;
+                case "FNAM": FULL = new STRVField(r, dataSize); return true;
+                case "DATA": DATA = new DATAField(r, dataSize); return true;
+                case "IRDT": IRDT = new IRDTField(r, dataSize); return true;
+                case "ICON":
+                case "ITEX": ICON = new FILEField(r, dataSize); return true;
+                case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
+                case "ENIT": DATA.ENITField(r, dataSize); return true;
+                case "EFID": r.ReadBytes((int)dataSize); return true;
+                case "EFIT": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, formatId)); return true;
+                case "SCIT": SCITs.Add(new ENCHRecord.SCITField(r, dataSize)); return true;
+                default: return false;
+            }
         }
     }
 }

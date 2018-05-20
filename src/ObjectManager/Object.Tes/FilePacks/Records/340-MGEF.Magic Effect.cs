@@ -126,7 +126,7 @@ namespace OA.Tes.FilePacks.Records
                                // TES3
         public INTVField INDX; // The Effect ID (0 to 137)
         public MEDTField MEDT; // Effect Data
-        public STRVField ITEX; // Effect Icon
+        public FILEField ICON; // Effect Icon
         public STRVField PTEX; // Particle texture
         public STRVField CVFX; // Casting visual
         public STRVField BVFX; // Bolt visual
@@ -138,9 +138,7 @@ namespace OA.Tes.FilePacks.Records
         public STRVField? ASND; // Area sound (optional)
                                 // TES4
         public STRVField FULL;
-        public FILEField ICON;
-        public FILEField MODL;
-        public FLTVField MODB;
+        public MODLGroup MODL;
         public DATAField DATA;
         public List<STRVField> ESCEs;
 
@@ -151,7 +149,7 @@ namespace OA.Tes.FilePacks.Records
                 {
                     case "INDX": INDX = new INTVField(r, dataSize); return true;
                     case "MEDT": MEDT = new MEDTField(r, dataSize); return true;
-                    case "ITEX": ITEX = new STRVField(r, dataSize); return true;
+                    case "ITEX": ICON = new FILEField(r, dataSize); return true;
                     case "PTEX": PTEX = new STRVField(r, dataSize); return true;
                     case "CVFX": CVFX = new STRVField(r, dataSize); return true;
                     case "BVFX": BVFX = new STRVField(r, dataSize); return true;
@@ -170,8 +168,8 @@ namespace OA.Tes.FilePacks.Records
                 case "FULL": FULL = new STRVField(r, dataSize); return true;
                 case "DESC": DESC = new STRVField(r, dataSize); return true;
                 case "ICON": ICON = new FILEField(r, dataSize); return true;
-                case "MODL": MODL = new FILEField(r, dataSize); return true;
-                case "MODB": MODB = new FLTVField(r, dataSize); return true;
+                case "MODL": MODL = new MODLGroup(r, dataSize); return true;
+                case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "DATA": DATA = new DATAField(r, dataSize); return true;
                 case "ESCE": ESCEs = new List<STRVField>(); for (var i = 0; i < dataSize >> 2; i++) ESCEs.Add(new STRVField(r, 4)); return true;
                 default: return false;

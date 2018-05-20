@@ -1,5 +1,6 @@
 ﻿using OA.Core;
 using System;
+using UnityEngine;
 
 namespace OA.Tes.FilePacks
 {
@@ -10,7 +11,31 @@ namespace OA.Tes.FilePacks
 
     public interface IHaveMODL
     {
-        FILEField MODL { get; }
+        MODLGroup MODL { get; }
+    }
+
+    public class MODLGroup
+    {
+        public override string ToString() => $"{Value}";
+        public string Value;
+        public float Bound;
+        public byte[] Textures; // Texture Files Hashes
+
+        public MODLGroup(UnityBinaryReader r, uint dataSize)
+        {
+            Value = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
+        }
+
+        public void MODBField(UnityBinaryReader r, uint dataSize)
+        {
+            Bound = r.ReadLESingle();
+        }
+
+        public void MODTField(UnityBinaryReader r, uint dataSize)
+        {
+            Textures = r.ReadBytes((int)dataSize);
+        }
+
     }
 
     public struct STRVField
@@ -138,6 +163,7 @@ namespace OA.Tes.FilePacks
     {
         public override string ToString() => $"{Type}:{Id}";
         public uint Id;
+        public string Name;
         public string Type => typeof(TRecord).Name.Substring(0, 4);
     }
 
@@ -149,7 +175,8 @@ namespace OA.Tes.FilePacks
 
         public FMIDField(UnityBinaryReader r, uint dataSize)
         {
-            Value.Id = r.ReadLEUInt32();
+            Value.Id = dataSize == 4 ? r.ReadLEUInt32() : 0;
+            Value.Name = dataSize == 4 ? null : r.ReadASCIIString((int)dataSize);
         }
     }
 
@@ -163,36 +190,59 @@ namespace OA.Tes.FilePacks
         public FMID2Field(UnityBinaryReader r, uint dataSize)
         {
             Value1.Id = r.ReadLEUInt32();
+            Value1.Name = null;
             Value2.Id = r.ReadLEUInt32();
+            Value2.Name = null;
         }
     }
 
-    public struct CREFField // COLORREF
+    public struct ColorRef
     {
+        public override string ToString() => $"{Red}:{Green}:{Blue}";
         public byte Red;
         public byte Green;
         public byte Blue;
         public byte NullByte;
 
-        public CREFField(UnityBinaryReader r, uint dataSize)
+        public ColorRef(UnityBinaryReader r)
         {
             Red = r.ReadByte();
             Green = r.ReadByte();
             Blue = r.ReadByte();
             NullByte = r.ReadByte();
         }
+
+        public Color32 ToColor32() => new Color32(Red, Green, Blue, 255); 
     }
 
-    public struct NPCOField
+    public struct CREFField
     {
-        public override string ToString() => $"{ItemName}";
-        public uint ItemCount; // Number of the item
-        public string ItemName; // The ID of the item
+        public ColorRef Color;
 
-        public NPCOField(UnityBinaryReader r, uint dataSize)
+        public CREFField(UnityBinaryReader r, uint dataSize)
         {
+            Color = new ColorRef(r);
+        }
+    }
+
+    public struct CNTOField
+    {
+        public override string ToString() => $"{Item.Name ?? Item.Id.ToString()}";
+        public uint ItemCount; // Number of the item
+        public FormId<Record> Item; // The ID of the item
+
+        public CNTOField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+        {
+            if (formatId == GameFormatId.Tes3)
+            {
+                ItemCount = r.ReadLEUInt32();
+                Item.Id = 0;
+                Item.Name = r.ReadASCIIString(32, ASCIIFormat.ZeroPadded);
+                return;
+            }
+            Item.Id = r.ReadLEUInt32();
+            Item.Name = null;
             ItemCount = r.ReadLEUInt32();
-            ItemName = r.ReadASCIIString(32, ASCIIFormat.ZeroPadded);
         }
     }
 

@@ -111,7 +111,7 @@ namespace OA.Tes.FilePacks.Records
         public override string ToString() => $"NPC_: {EDID.Value}";
         public STRVField EDID { get; set; } // NPC ID
         public STRVField FNAM; // NPC name
-        public FILEField MODL { get; set; } // Animation
+        public MODLGroup MODL { get; set; } // Animation
         public STRVField RNAM; // Race Name
         public STRVField ANAM; // Faction name
         public STRVField BNAM; // Head model
@@ -119,7 +119,7 @@ namespace OA.Tes.FilePacks.Records
         public STRVField KNAM; // Hair model
         public NPDTField NPDT; // NPC Data
         public INTVField FLAG; // NPC Flags
-        public List<NPCOField> NPCOs = new List<NPCOField>(); // NPC item
+        public List<CNTOField> NPCOs = new List<CNTOField>(); // NPC item
         public List<STRVField> NPCSs = new List<STRVField>(); // NPC spell
         public CREARecord.AIDTField AIDT; // AI data
         public CREARecord.AI_WField? AI_W; // AI
@@ -131,7 +131,7 @@ namespace OA.Tes.FilePacks.Records
         public DODTField DODT; // Cell Travel Destination
         public STRVField DNAM; // Cell name for previous DODT, if interior
         public FLTVField? XSCL; // Scale (optional) Only present if the scale is not 1.0
-        public STRVField? SCRI; // Unknown
+        public FMIDField<SCPTRecord>? SCRI; // Unknown
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
@@ -140,7 +140,7 @@ namespace OA.Tes.FilePacks.Records
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;
                     case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                    case "MODL": MODL = new FILEField(r, dataSize); return true;
+                    case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                     case "RNAM": RNAM = new STRVField(r, dataSize); return true;
                     case "ANAM": ANAM = new STRVField(r, dataSize); return true;
                     case "BNAM": BNAM = new STRVField(r, dataSize); return true;
@@ -148,7 +148,7 @@ namespace OA.Tes.FilePacks.Records
                     case "KNAM": KNAM = new STRVField(r, dataSize); return true;
                     case "NPDT": NPDT = new NPDTField(r, dataSize); return true;
                     case "FLAG": FLAG = new INTVField(r, dataSize); return true;
-                    case "NPCO": NPCOs.Add(new NPCOField(r, dataSize)); return true;
+                    case "NPCO": NPCOs.Add(new CNTOField(r, dataSize, formatId)); return true;
                     case "NPCS": NPCSs.Add(new STRVField(r, dataSize, ASCIIFormat.ZeroPadded)); return true;
                     case "AIDT": AIDT = new CREARecord.AIDTField(r, dataSize); return true;
                     case "AI_W": AI_W = new CREARecord.AI_WField(r, dataSize, 1); return true;
@@ -160,7 +160,7 @@ namespace OA.Tes.FilePacks.Records
                     case "DODT": DODT = new DODTField(r, dataSize); return true;
                     case "DNAM": DNAM = new STRVField(r, dataSize); return true;
                     case "XSCL": XSCL = new FLTVField(r, dataSize); return true;
-                    case "SCRI": SCRI = new STRVField(r, dataSize); return true;
+                    case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
                     default: return false;
                 }
             return false;

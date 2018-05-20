@@ -194,12 +194,12 @@ namespace OA.Tes.FilePacks.Records
 
         public override string ToString() => $"CREA: {EDID.Value}";
         public STRVField EDID { get; set; } // ID
-        public FILEField MODL { get; set; } // NIF Model
+        public MODLGroup MODL { get; set; } // NIF Model
         public STRVField FNAM; // Creature name
         public NPDTField NPDT; // Creature data
         public IN32Field FLAG; // Creature Flags
-        public STRVField SCRI; // Script
-        public NPCOField NPCO; // Item record
+        public FMIDField<SCPTRecord> SCRI; // Script
+        public CNTOField NPCO; // Item record
         public AIDTField AIDT; // AI data
         public AI_WField AI_W; // AI Wander
         public AI_TField? AI_T; // AI Travel
@@ -216,12 +216,12 @@ namespace OA.Tes.FilePacks.Records
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "MODL": MODL = new FILEField(r, dataSize); return true;
+                    case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                     case "FNAM": FNAM = new STRVField(r, dataSize); return true;
                     case "NPDT": NPDT = new NPDTField(r, dataSize); return true;
                     case "FLAG": FLAG = new IN32Field(r, dataSize); return true;
-                    case "SCRI": SCRI = new STRVField(r, dataSize); return true;
-                    case "NPCO": NPCO = new NPCOField(r, dataSize); return true;
+                    case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
+                    case "NPCO": NPCO = new CNTOField(r, dataSize, formatId); return true;
                     case "AIDT": AIDT = new AIDTField(r, dataSize); return true;
                     case "AI_W": AI_W = new AI_WField(r, dataSize, 0); return true;
                     case "AI_T": AI_T = new AI_TField(r, dataSize); return true;

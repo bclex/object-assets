@@ -7,27 +7,27 @@ namespace OA.Tes.FilePacks.Records
     {
         public override string ToString() => $"ACTI: {EDID.Value}";
         public STRVField EDID { get; set; } // Item ID
-        public FILEField MODL { get; set; } // Model Name
-        public STRVField FNAM; // Item Name
-        public STRVField SCRI; // Script Name
+        public MODLGroup MODL { get; set; } // Model Name
+        public FLTVField MODB { get; set; } // Model Bounds
+        public BYTVField MODT; // Texture Files Hashes
+        public STRVField FULL; // Item Name
+        public FMIDField<SCPTRecord> SCRI; // Script (Optional)
+        // TES4
+        public FMIDField<SOUNRecord> SNAM; // Sound (Optional)
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (formatId == GameFormatId.Tes3)
-                switch (type)
-                {
-                    case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "MODL": MODL = new FILEField(r, dataSize); return true;
-                    case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                    case "SCRI": SCRI = new STRVField(r, dataSize); return true;
-                    default: return false;
-                }
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "MODL": MODL = new FILEField(r, dataSize); return true;
-                case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                case "SCRI": SCRI = new STRVField(r, dataSize); return true;
+                case "EDID":
+                case "NAME": EDID = new STRVField(r, dataSize); return true;
+                case "MODL": MODL = new MODLGroup(r, dataSize); return true;
+                case "MODB": MODL.MODBField(r, dataSize); return true;
+                case "MODT": MODL.MODTField(r, dataSize); return true;
+                case "FULL":
+                case "FNAM": FULL = new STRVField(r, dataSize); return true;
+                case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
+                case "SNAM": SNAM = new FMIDField<SOUNRecord>(r, dataSize); return true;
                 default: return false;
             }
         }

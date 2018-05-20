@@ -5,44 +5,57 @@ namespace OA.Tes.FilePacks.Records
 {
     public class APPARecord : Record, IHaveEDID, IHaveMODL
     {
-        public struct AADTField
+        // TESX
+        public struct DATAField
         {
-            public int Type; // 0 = Mortar and Pestle, 1 = Albemic, 2 = Calcinator, 3 = Retort
+            public byte Type; // 0 = Mortar and Pestle, 1 = Albemic, 2 = Calcinator, 3 = Retort
             public float Quality;
             public float Weight;
             public int Value;
 
-            public AADTField(UnityBinaryReader r, uint dataSize)
+            public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
-                Type = r.ReadLEInt32();
-                Quality = r.ReadLESingle();
-                Weight = r.ReadLESingle();
+                if (formatId == GameFormatId.Tes3)
+                {
+                    Type = (byte)r.ReadLEInt32();
+                    Quality = r.ReadLESingle();
+                    Weight = r.ReadLESingle();
+                    Value = r.ReadLEInt32();
+                    return;
+                }
+                Type = r.ReadByte();
                 Value = r.ReadLEInt32();
+                Weight = r.ReadLESingle();
+                Quality = r.ReadLESingle();
             }
         }
 
         public override string ToString() => $"APPA: {EDID.Value}";
         public STRVField EDID { get; set; } // Item ID
-        public FILEField MODL { get; set; } // Model Name
-        public STRVField FNAM; // Item Name
-        public AADTField AADT; // Alchemy Data
-        public FILEField ITEX; // Inventory Icon
-        public STRVField SCRI; // Script Name
+        public MODLGroup MODL { get; set; } // Model Name
+        public STRVField FULL; // Item Name
+        public DATAField DATA; // Alchemy Data
+        public FILEField ICON; // Inventory Icon
+        public FMIDField<SCPTRecord> SCRI; // Script Name
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (formatId == GameFormatId.Tes3)
-                switch (type)
-                {
-                    case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "MODL": MODL = new FILEField(r, dataSize); return true;
-                    case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                    case "AADT": AADT = new AADTField(r, dataSize); return true;
-                    case "ITEX": ITEX = new FILEField(r, dataSize); return true;
-                    case "SCRI": SCRI = new STRVField(r, dataSize); return true;
-                    default: return false;
-                }
-            return false;
+            switch (type)
+            {
+                case "EDID":
+                case "NAME": EDID = new STRVField(r, dataSize); return true;
+                case "MODL": MODL = new MODLGroup(r, dataSize); return true;
+                case "MODB": MODL.MODBField(r, dataSize); return true;
+                case "MODT": MODL.MODTField(r, dataSize); return true;
+                case "FULL":
+                case "FNAM": FULL = new STRVField(r, dataSize); return true;
+                case "DATA":
+                case "AADT": DATA = new DATAField(r, dataSize, formatId); return true;
+                case "ICON":
+                case "ITEX": ICON = new FILEField(r, dataSize); return true;
+                case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
+                default: return false;
+            }
         }
     }
 }

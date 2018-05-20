@@ -8,9 +8,9 @@ namespace OA.Tes.Components.Records
         {
             var APPA = (APPARecord)record;
             //objData.icon = TESUnity.instance.Engine.textureManager.LoadTexture(WPDT.ITEX.value, "icons"); 
-            objData.name = APPA.FNAM.Value;
-            objData.weight = APPA.AADT.Weight.ToString();
-            objData.value = APPA.AADT.Value.ToString();
+            objData.name = APPA.FULL.Value;
+            objData.weight = APPA.DATA.Weight.ToString();
+            objData.value = APPA.DATA.Value.ToString();
             objData.interactionPrefix = "Take ";
         }
     }

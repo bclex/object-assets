@@ -272,8 +272,8 @@ namespace OA.Tes
             var game = TesSettings.Game;
             var lightObj = new GameObject("Light") { isStatic = true };
             var lightComponent = lightObj.AddComponent<Light>();
-            lightComponent.range = 3 * (LIGH.LHDT.Radius / ConvertUtils.MeterInUnits);
-            lightComponent.color = new Color32(LIGH.LHDT.Red, LIGH.LHDT.Green, LIGH.LHDT.Blue, 255);
+            lightComponent.range = 3 * (LIGH.DATA.Radius / ConvertUtils.MeterInUnits);
+            lightComponent.color = LIGH.DATA.LightColor.ToColor32();
             lightComponent.intensity = 1.5f;
             lightComponent.bounceIntensity = 0f;
             lightComponent.shadows = game.RenderLightShadows ? LightShadows.Soft : LightShadows.None;
