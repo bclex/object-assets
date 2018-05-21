@@ -5,45 +5,82 @@ using UnityEngine;
 
 namespace OA.Tes.FilePacks.Records
 {
-    // TODO: add support for strange INTV before object data?
     public class CELLRecord : Record, ICellRecord
     {
-        public struct DATAField
+        [Flags]
+        public enum CELLFlags : ushort
         {
-            [Flags]
-            public enum CELLFlags : uint
-            {
-                Interior = 0x01,
-                HasWater = 0x02,
-                IllegalToSleepHere = 0x04,
-                BehaveLikeExterior = 0x80, // (Tribunal)
-            }
-            public uint Flags;
+            Interior = 0x0001,
+            HasWater = 0x0002,
+            InvertFastTravel = 0x0004, //: IllegalToSleepHere
+            BehaveLikeExterior = 0x0008, //: BehaveLikeExterior (Tribunal), Force hide land (exterior cell) / Oblivion interior (interior cell)
+            Unknown1 = 0x0010,
+            PublicArea = 0x0020, // Public place
+            HandChanged = 0x0040,
+            ShowSky = 0x0080, // Behave like exterior
+            UseSkyLighting = 0x0100,
+        }
+
+        public struct XCLCField
+        {
             public int GridX;
             public int GridY;
+            public uint Flags;
 
-            public DATAField(UnityBinaryReader r, uint dataSize)
+            public XCLCField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
-                Flags = r.ReadLEUInt32();
                 GridX = r.ReadLEInt32();
                 GridY = r.ReadLEInt32();
+                Flags = formatId == GameFormatId.Tes5 ? r.ReadLEUInt32() : 0;
             }
         }
 
-        public struct AMBIField
+        public struct XCLLField
         {
-            public uint AmbientColor;
-            public uint SunlightColor;
-            public uint FogColor;
-            public float FogDensity;
+            public ColorRef AmbientColor;
+            public ColorRef DirectionalColor; //: SunlightColor
+            public ColorRef FogColor;
+            public float FogNear; //: FogDensity
+            // TES4
+            public float FogFar;
+            public int DirectionalRotationXY;
+            public int DirectionalRotationZ;
+            public float DirectionalFade;
+            public float FogClipDist;
+            // TES5
+            public float FogPow;
 
-            public AMBIField(UnityBinaryReader r, uint dataSize)
+            public XCLLField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
-                AmbientColor = r.ReadLEUInt32();
-                SunlightColor = r.ReadLEUInt32();
-                FogColor = r.ReadLEUInt32();
-                FogDensity = r.ReadLESingle();
+                AmbientColor = new ColorRef(r);
+                DirectionalColor = new ColorRef(r);
+                FogColor = new ColorRef(r);
+                FogNear = r.ReadLESingle();
+                if (formatId == GameFormatId.Tes3)
+                {
+                    FogFar = DirectionalFade = FogClipDist = DirectionalRotationXY = DirectionalRotationZ = 0;
+                    FogPow = 0;
+                    return;
+                }
+                FogFar = r.ReadLESingle();
+                DirectionalRotationXY = r.ReadLEInt32();
+                DirectionalRotationZ = r.ReadLEInt32();
+                DirectionalFade = r.ReadLESingle();
+                FogClipDist = r.ReadLESingle();
+                if (formatId == GameFormatId.Tes4)
+                {
+                    FogPow = 0;
+                    return;
+                }
+                FogPow = r.ReadLESingle();
             }
+        }
+
+        public class XOWNGroup
+        {
+            public FMIDField<Record> XOWN;
+            public IN32Field XRNK; // Faction rank
+            public FMIDField<Record> XGLB;
         }
 
         public class RefObj
@@ -86,42 +123,61 @@ namespace OA.Tes.FilePacks.Records
             public IN32Field? INDX; // Unknown
         }
 
-        public override string ToString() => $"CELL: {RGNN.Value}";
-        public STRVField EDID; // Cell ID. Can be an empty string for exterior cells in which case the region name is used instead.
-        public DATAField DATA; // Cell Data
-        public STRVField RGNN; // Region name
+        public override string ToString() => $"CELL: {FULL.Value}";
+        public STRVField EDID { get; set; } // Editor ID. Can be an empty string for exterior cells in which case the region name is used instead.
+        public STRVField FULL; // Full Name / TES3:RGNN - Region name
+        public UI16Field DATA; // Flags
+        public XCLCField? XCLC; // Cell Data (only used for exterior cells)
+        public XCLLField? XCLL; // Lighting (only used for interior cells)
+        public FLTVField? XCLW; // Water Height
+        // TES3
         public UI32Field? NAM0; // Number of objects in cell in current file (Optional)
         public INTVField INTV; // Unknown
-        // Exterior Cells
         public CREFField? NAM5; // Map Color (COLORREF)
-        // Interior Cells
-        public FLTVField? WHGT; // Water Height
-        public AMBIField? AMBI; // Ambient Light Level
+        // TES4
+        public FMIDField<REGNRecord>[] XCLRs; // Regions
+        public BYTEField? XCMT; // Music (optional)
+        public FMIDField<CLMTRecord>? XCCM; // Climate
+        public FMIDField<WATRRecord>? XCWT; // Water
+        public List<XOWNGroup> XOWNs = new List<XOWNGroup>(); // Ownership
+
         // Referenced Object Data Grouping
-        public bool InObjectDataGroups = false;
+        public bool InFRMR = false;
         public List<RefObj> RefObjs = new List<RefObj>();
 
-        public bool IsInterior => Utils.ContainsBitFlags((int)DATA.Flags, 0x01);
-        public Vector2i GridCoords => new Vector2i(DATA.GridX, DATA.GridY);
-        public Color? AmbientLight => AMBI != null ? (Color?)ColorUtils.B8G8R8ToColor32(AMBI.Value.AmbientColor) : null;
+        public bool IsInterior => Utils.ContainsBitFlags(DATA.Value, 0x01);
+        public Vector2i GridCoords => new Vector2i(XCLC.Value.GridX, XCLC.Value.GridY);
+        public Color? AmbientLight => XCLL != null ? (Color?)XCLL.Value.AmbientColor.ToColor32() : null;
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (!InObjectDataGroups && type == "FRMR")
-                InObjectDataGroups = true;
-            if (!InObjectDataGroups)
+            if (!InFRMR && type == "FRMR")
+                InFRMR = true;
+            if (!InFRMR)
                 switch (type)
                 {
+                    case "EDID":
                     case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "DATA": DATA = new DATAField(r, dataSize); return true;
-                    case "RGNN": RGNN = new STRVField(r, dataSize); return true;
+                    case "FULL":
+                    case "RGNN": FULL = new STRVField(r, dataSize); return true;
+                    case "DATA": DATA = new INTVField(r, dataSize).ToUI16Field(); if (formatId == GameFormatId.Tes3) goto case "XCLC"; return true;
+                    case "XCLC": XCLC = new XCLCField(r, dataSize, formatId); return true;
+                    case "XCLL":
+                    case "AMBI": XCLL = new XCLLField(r, dataSize, formatId); return true;
+                    case "XCLW":
+                    case "WHGT": XCLW = new FLTVField(r, dataSize); return true;
+                    // TES3
                     case "NAM0": NAM0 = new UI32Field(r, dataSize); return true;
                     case "INTV": INTV = new INTVField(r, dataSize); return true;
-                    // Exterior Cell
                     case "NAM5": NAM5 = new CREFField(r, dataSize); return true;
-                    // Interior Cell
-                    case "WHGT": WHGT = new FLTVField(r, dataSize); return true;
-                    case "AMBI": AMBI = new AMBIField(r, dataSize); return true;
+                    // TES4
+                    case "XCLR": XCLRs = new FMIDField<REGNRecord>[dataSize >> 2]; for (var i = 0; i < XCLRs.Length; i++) XCLRs[i] = new FMIDField<REGNRecord>(r, dataSize); return true;
+                    case "XCMT": XCMT = new BYTEField(r, dataSize); return true;
+                    case "XCCM": XCCM = new FMIDField<CLMTRecord>(r, dataSize); return true;
+                    case "XCWT": XCWT = new FMIDField<WATRRecord>(r, dataSize); return true;
+                    case "XOWN": XOWNs.Add(new XOWNGroup { XOWN = new FMIDField<Record>(r, dataSize) }); return true;
+                    case "XRNK": ArrayUtils.Last(XOWNs).XRNK = new IN32Field(r, dataSize); return true;
+                    case "XGLB": ArrayUtils.Last(XOWNs).XGLB = new FMIDField<Record>(r, dataSize); return true;
                     default: return false;
                 }
             // Referenced Object Data Grouping

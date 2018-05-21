@@ -1,4 +1,5 @@
-﻿using OA.Core;
+﻿using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using OA.Core;
 using OA.Tes.FilePacks.Records;
 using System;
 using System.Collections.Generic;
@@ -122,9 +123,10 @@ namespace OA.Tes.FilePacks
                             Position = _r.BaseStream.Position,
                             Header = header,
                         };
-                        group.Read();
                         Groups.Add(group);
-                        _r.BaseStream.Position += header.DataSize;
+                        group.Read();
+                        Console.WriteLine($"Read: {Header.Label}/{group.Header.Label}");
+                        //_r.BaseStream.Position += header.DataSize;
                         continue;
                     }
                     var record = header.CreateRecord(_r.BaseStream.Position, _level);
@@ -142,7 +144,21 @@ namespace OA.Tes.FilePacks
             void ReadRecord(Record record, bool compressed)
             {
                 if (compressed)
-                    throw new NotImplementedException();
+                {
+                    // decompress record
+                    var newDataSize = _r.ReadLEUInt32();
+                    var data = _r.ReadBytes((int)record.Header.DataSize);
+                    var newData = new byte[newDataSize];
+                    using (var s = new MemoryStream(data))
+                    using (var gs = new InflaterInputStream(s))
+                        gs.Read(newData, 0, newData.Length);
+                    // read record
+                    record.Position = 0;
+                    record.Header.DataSize = newDataSize;
+                    using (var s = new MemoryStream(newData))
+                    using (var r = new UnityBinaryReader(s))
+                        record.Read(r, _filePath, _formatId);
+                }
                 record.Read(_r, _filePath, _formatId);
             }
         }
@@ -164,6 +180,7 @@ namespace OA.Tes.FilePacks
                     Header = new Header { Label = string.Empty, DataSize = (uint)(_r.BaseStream.Length - _r.BaseStream.Position) },
                 };
                 groups.Add(group);
+                Console.WriteLine($"Read: {group.Header.Label}");
                 group.Read();
                 return;
             }
@@ -181,6 +198,7 @@ namespace OA.Tes.FilePacks
                 };
                 groups.Add(group);
                 _r.BaseStream.Position += header.DataSize;
+                Console.WriteLine($"Read: {group.Header.Label}");
                 group.Read();
             }
             Groups = groups.ToLookup(x => x.Header.Label);

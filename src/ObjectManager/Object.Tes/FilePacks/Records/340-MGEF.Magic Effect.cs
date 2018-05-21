@@ -105,16 +105,16 @@ namespace OA.Tes.FilePacks.Records
                 ResistValue = r.ReadLEInt32();
                 CounterEffectCount = r.ReadLEUInt16();
                 r.ReadLEInt16(); // Unused
-                Light.Id = r.ReadLEUInt32();
+                Light = new FormId<LIGHRecord>(r.ReadLEUInt32());
                 ProjectileSpeed = r.ReadLESingle();
-                EffectShader.Id = r.ReadLEUInt32();
+                EffectShader = new FormId<EFSHRecord>(r.ReadLEUInt32());
                 if (dataSize == 36)
                     return;
-                EnchantEffect.Id = r.ReadLEUInt32();
-                CastingSound.Id = r.ReadLEUInt32();
-                BoltSound.Id = r.ReadLEUInt32();
-                HitSound.Id = r.ReadLEUInt32();
-                AreaSound.Id = r.ReadLEUInt32();
+                EnchantEffect = new FormId<EFSHRecord>(r.ReadLEUInt32());
+                CastingSound = new FormId<SOUNRecord>(r.ReadLEUInt32());
+                BoltSound = new FormId<SOUNRecord>(r.ReadLEUInt32());
+                HitSound = new FormId<SOUNRecord>(r.ReadLEUInt32());
+                AreaSound = new FormId<SOUNRecord>(r.ReadLEUInt32());
                 ConstantEffectEnchantmentFactor = r.ReadLESingle();
                 ConstantEffectBarterFactor = r.ReadLESingle();
             }

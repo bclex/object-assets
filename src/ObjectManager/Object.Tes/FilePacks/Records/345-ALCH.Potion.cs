@@ -1,24 +1,36 @@
 ﻿using OA.Core;
-using System;
+using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
 {
     public class ALCHRecord : Record, IHaveEDID, IHaveMODL
     {
-        public struct ALDTField
+        // TESX
+        public class DATAField
         {
             public float Weight;
             public int Value;
-            public int AutoCalc;
+            public int Flags; //: AutoCalc
 
-            public ALDTField(UnityBinaryReader r, uint dataSize)
+            public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
                 Weight = r.ReadLESingle();
+                if (formatId == GameFormatId.Tes3)
+                {
+                    Value = r.ReadLEInt32();
+                    Flags = r.ReadLEInt32();
+                }
+            }
+
+            public void ENITField(UnityBinaryReader r, uint dataSize)
+            {
                 Value = r.ReadLEInt32();
-                AutoCalc = r.ReadLEInt32();
+                Flags = r.ReadByte();
+                r.ReadBytes(3); // Unknown
             }
         }
 
+        // TES3
         public struct ENAMField
         {
             public short EffectId;
@@ -45,28 +57,40 @@ namespace OA.Tes.FilePacks.Records
 
         public override string ToString() => $"ALCH: {EDID.Value}";
         public STRVField EDID { get; set; } // Item ID
-        public MODLGroup MODL { get; set; } // Model Name
-        public STRVField FNAM; // Item Name
-        public ALDTField ALDT; // Alchemy Data
-        public ENAMField ENAM; // Enchantment
-        public FILEField TEXT; // Inventory Icon
-        public FMIDField<SCPTRecord> SCRI; // Script Name
+        public MODLGroup MODL { get; set; } // Model
+        public STRVField FULL; // Item Name
+        public DATAField DATA; // Alchemy Data
+        public ENAMField? ENAM; // Enchantment
+        public FILEField ICON; // Icon
+        public FMIDField<SCPTRecord>? SCRI; // Script (optional)
+        // TES4
+        public List<ENCHRecord.EFITField> EFITs = new List<ENCHRecord.EFITField>(); // Effect Data
+        public List<ENCHRecord.SCITField> SCITs = new List<ENCHRecord.SCITField>(); // Script Effect Data
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (formatId == GameFormatId.Tes3)
-                switch (type)
-                {
-                    case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-                    case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                    case "ALDT": ALDT = new ALDTField(r, dataSize); return true;
-                    case "ENAM": ENAM = new ENAMField(r, dataSize); return true;
-                    case "TEXT": TEXT = new FILEField(r, dataSize); return true;
-                    case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-                    default: return false;
-                }
-            return false;
+            switch (type)
+            {
+                case "EDID":
+                case "NAME": EDID = new STRVField(r, dataSize); return true;
+                case "MODL": MODL = new MODLGroup(r, dataSize); return true;
+                case "MODB": MODL.MODBField(r, dataSize); return true;
+                case "MODT": MODL.MODTField(r, dataSize); return true;
+                case "FULL": if (SCITs.Count == 0) FULL = new STRVField(r, dataSize); else ArrayUtils.Last(SCITs).FULLField(r, dataSize); return true;
+                case "FNAM": FULL = new STRVField(r, dataSize); return true;
+                case "DATA":
+                case "ALDT": DATA = new DATAField(r, dataSize, formatId); return true;
+                case "ENAM": ENAM = new ENAMField(r, dataSize); return true;
+                case "ICON":
+                case "TEXT": ICON = new FILEField(r, dataSize); return true;
+                case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
+                //
+                case "ENIT": DATA.ENITField(r, dataSize); return true;
+                case "EFID": r.ReadBytes((int)dataSize); return true;
+                case "EFIT": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, formatId)); return true;
+                case "SCIT": SCITs.Add(new ENCHRecord.SCITField(r, dataSize)); return true;
+                default: return false;
+            }
         }
     }
 }

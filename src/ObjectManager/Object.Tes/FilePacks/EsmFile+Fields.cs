@@ -76,6 +76,7 @@ namespace OA.Tes.FilePacks
                 default: throw new NotImplementedException($"Tried to read an INTV subrecord with an unsupported size ({dataSize})");
             }
         }
+        public UI16Field ToUI16Field() => new UI16Field { Value = (ushort)Value };
     }
 
     //[StructLayout(LayoutKind.Explicit)]
@@ -136,6 +137,17 @@ namespace OA.Tes.FilePacks
         }
     }
 
+    public struct UI16Field
+    {
+        public override string ToString() => $"{Value}";
+        public ushort Value;
+
+        public UI16Field(UnityBinaryReader r, uint dataSize)
+        {
+            Value = r.ReadLEUInt16();
+        }
+    }
+
     public struct IN32Field
     {
         public override string ToString() => $"{Value}";
@@ -162,9 +174,14 @@ namespace OA.Tes.FilePacks
         where TRecord : Record
     {
         public override string ToString() => $"{Type}:{Id}";
-        public uint Id;
-        public string Name;
+        public readonly uint Id;
+        public readonly string Name;
         public string Type => typeof(TRecord).Name.Substring(0, 4);
+
+        public FormId(uint id) { Id = id; Name = null; }
+        public FormId(string name) { Id = 0; Name = name; }
+        FormId(uint id, string name) { Id = id; Name = name; }
+        public FormId<TRecord> AddName(string name) => new FormId<TRecord>(Id, name);
     }
 
     public struct FMIDField<TRecord>
@@ -175,8 +192,12 @@ namespace OA.Tes.FilePacks
 
         public FMIDField(UnityBinaryReader r, uint dataSize)
         {
-            Value.Id = dataSize == 4 ? r.ReadLEUInt32() : 0;
-            Value.Name = dataSize == 4 ? null : r.ReadASCIIString((int)dataSize);
+            Value = dataSize == 4 ? new FormId<TRecord>(r.ReadLEUInt32()) : new FormId<TRecord>(r.ReadASCIIString((int)dataSize, ASCIIFormat.ZeroPadded));
+        }
+
+        public void AddName(string name)
+        {
+            Value = Value.AddName(name);
         }
     }
 
@@ -189,10 +210,8 @@ namespace OA.Tes.FilePacks
 
         public FMID2Field(UnityBinaryReader r, uint dataSize)
         {
-            Value1.Id = r.ReadLEUInt32();
-            Value1.Name = null;
-            Value2.Id = r.ReadLEUInt32();
-            Value2.Name = null;
+            Value1 = new FormId<TRecord>(r.ReadLEUInt32());
+            Value2 = new FormId<TRecord>(r.ReadLEUInt32());
         }
     }
 
@@ -212,7 +231,7 @@ namespace OA.Tes.FilePacks
             NullByte = r.ReadByte();
         }
 
-        public Color32 ToColor32() => new Color32(Red, Green, Blue, 255); 
+        public Color32 ToColor32() => new Color32(Red, Green, Blue, 255);
     }
 
     public struct CREFField
@@ -236,12 +255,10 @@ namespace OA.Tes.FilePacks
             if (formatId == GameFormatId.Tes3)
             {
                 ItemCount = r.ReadLEUInt32();
-                Item.Id = 0;
-                Item.Name = r.ReadASCIIString(32, ASCIIFormat.ZeroPadded);
+                Item = new FormId<Record>(r.ReadASCIIString(32, ASCIIFormat.ZeroPadded));
                 return;
             }
-            Item.Id = r.ReadLEUInt32();
-            Item.Name = null;
+            Item = new FormId<Record>(r.ReadLEUInt32());
             ItemCount = r.ReadLEUInt32();
         }
     }

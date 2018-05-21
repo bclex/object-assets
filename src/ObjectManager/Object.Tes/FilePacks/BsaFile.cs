@@ -196,8 +196,7 @@ namespace OA.Tes.FilePacks
                 {
                     using (var s = new MemoryStream(fileData))
                     using (var gs = new Lzw​Input​Stream(s))
-                        if (gs.Read(newFileData, 0, newFileData.Length) != newFileData.Length)
-                            throw new InvalidOperationException("ZLIB FAILED");
+                        gs.Read(newFileData, 0, newFileData.Length);
                     fileData = newFileData;
                 }
                 fileData = newFileData;
@@ -208,8 +207,7 @@ namespace OA.Tes.FilePacks
                 var newFileData = new byte[file.UnpackedSize];
                 using (var s = new MemoryStream(fileData))
                 using (var gs = new InflaterInputStream(s))
-                    if (gs.Read(newFileData, 0, newFileData.Length) != newFileData.Length)
-                        throw new InvalidOperationException("ZLIB FAILED");
+                    gs.Read(newFileData, 0, newFileData.Length);
                 fileData = newFileData;
             }
             // Fill DDS Header

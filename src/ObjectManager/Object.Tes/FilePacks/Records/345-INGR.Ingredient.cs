@@ -78,6 +78,7 @@ namespace OA.Tes.FilePacks.Records
                 case "ICON":
                 case "ITEX": ICON = new FILEField(r, dataSize); return true;
                 case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
+                    //
                 case "ENIT": DATA.ENITField(r, dataSize); return true;
                 case "EFID": r.ReadBytes((int)dataSize); return true;
                 case "EFIT": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, formatId)); return true;
