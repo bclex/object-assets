@@ -158,6 +158,7 @@ namespace OA.Tes.FilePacks
                     using (var s = new MemoryStream(newData))
                     using (var r = new UnityBinaryReader(s))
                         record.Read(r, _filePath, _formatId);
+                    return;
                 }
                 record.Read(_r, _filePath, _formatId);
             }
