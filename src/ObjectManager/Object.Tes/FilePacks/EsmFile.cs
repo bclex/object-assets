@@ -147,7 +147,7 @@ namespace OA.Tes.FilePacks
                 {
                     // decompress record
                     var newDataSize = _r.ReadLEUInt32();
-                    var data = _r.ReadBytes((int)record.Header.DataSize);
+                    var data = _r.ReadBytes((int)record.Header.DataSize - 4);
                     var newData = new byte[newDataSize];
                     using (var s = new MemoryStream(data))
                     using (var gs = new InflaterInputStream(s))
@@ -158,9 +158,8 @@ namespace OA.Tes.FilePacks
                     using (var s = new MemoryStream(newData))
                     using (var r = new UnityBinaryReader(s))
                         record.Read(r, _filePath, _formatId);
-                    return;
                 }
-                record.Read(_r, _filePath, _formatId);
+                else record.Read(_r, _filePath, _formatId);
             }
         }
 

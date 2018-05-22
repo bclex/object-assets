@@ -216,6 +216,20 @@ namespace OA.Tes.FilePacks
             while (r.BaseStream.Position < endPosition)
             {
                 var header = new FieldHeader(r, formatId);
+                if (header.Type == "XXXX")
+                {
+                    if (header.DataSize != 4)
+                        throw new InvalidOperationException();
+                    header.DataSize = (uint)r.ReadLEInt32();
+                    continue;
+                }
+                else if (Header.Type == "WRLD" && header.Type == "OFST")
+                {
+                    if (header.DataSize != 0)
+                        throw new InvalidOperationException();
+                    r.BaseStream.Position = endPosition;
+                    continue;
+                }
                 var position = r.BaseStream.Position;
                 if (!CreateField(r, formatId, header.Type, header.DataSize))
                 {
