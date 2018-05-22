@@ -45,23 +45,22 @@ namespace OA.Tes.FilePacks.Records
         public override string ToString() => $"WRLD: {EDID.Value}";
         public STRVField EDID { get; set; }
         public STRVField FULL;
-        public List<FMIDField<WRLDRecord>> WNAMs = new List<FMIDField<WRLDRecord>>(); // Parent Worldspace
-        public FMIDField<CLMTRecord> CNAM; // Climate
-        public FMIDField<WATRRecord> NAM2; // Water
-        public FILEField ICON; // Icon
-        public MNAMField MNAM; // Map Data
-        public BYTEField DATA; // Flags
+        public FMIDField<WRLDRecord>? WNAM; // Parent Worldspace
+        public FMIDField<CLMTRecord>? CNAM; // Climate
+        public FMIDField<WATRRecord>? NAM2; // Water
+        public FILEField? ICON; // Icon
+        public MNAMField? MNAM; // Map Data
+        public BYTEField? DATA; // Flags
         public NAM0Field NAM0; // Object Bounds
-        public UI32Field SNAM; // Music
+        public UI32Field? SNAM; // Music
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            Console.Write($"{type}:");
             switch (type)
             {
-                case "EDID": Console.WriteLine(); EDID = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = new STRVField(r, dataSize); return true;
                 case "FULL": FULL = new STRVField(r, dataSize); return true;
-                case "WNAMs": WNAMs.Add(new FMIDField<WRLDRecord>(r, dataSize)); return true;
+                case "WNAM": if (WNAM != null) throw new InvalidOperationException(); WNAM = new FMIDField<WRLDRecord>(r, dataSize); return true;
                 case "CNAM": CNAM = new FMIDField<CLMTRecord>(r, dataSize); return true;
                 case "NAM2": NAM2 = new FMIDField<WATRRecord>(r, dataSize); return true;
                 case "ICON": ICON = new FILEField(r, dataSize); return true;
@@ -70,7 +69,6 @@ namespace OA.Tes.FilePacks.Records
                 case "NAM0": NAM0 = new NAM0Field(r, dataSize); return true;
                 case "NAM9": NAM0.NAM9Field(r, dataSize); return true;
                 case "SNAM": SNAM = new UI32Field(r, dataSize); return true;
-                case "OFST": r.ReadBytes((int)(Header.DataSize - r.BaseStream.Position)); return true;
                 default: return false;
             }
         }

@@ -180,7 +180,6 @@ namespace OA.Tes.FilePacks
                     Header = new Header { Label = string.Empty, DataSize = (uint)(_r.BaseStream.Length - _r.BaseStream.Position) },
                 };
                 groups.Add(group);
-                Console.WriteLine($"Read: {group.Header.Label}");
                 group.Read();
                 return;
             }
@@ -198,8 +197,11 @@ namespace OA.Tes.FilePacks
                 };
                 groups.Add(group);
                 _r.BaseStream.Position += header.DataSize;
-                Console.WriteLine($"Read: {group.Header.Label}");
-                group.Read();
+                if (group.Header.Label != "CELL" && group.Header.Label != "WRLD")
+                {
+                    Console.WriteLine($"Read: {group.Header.Label}");
+                    group.Read();
+                }
             }
             Groups = groups.ToLookup(x => x.Header.Label);
         }

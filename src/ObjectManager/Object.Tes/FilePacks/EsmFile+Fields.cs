@@ -223,6 +223,13 @@ namespace OA.Tes.FilePacks
         public byte Blue;
         public byte NullByte;
 
+        public ColorRef(byte red, byte green, byte blue)
+        {
+            Red = red;
+            Green = green;
+            Blue = blue;
+            NullByte = 255;
+        }
         public ColorRef(UnityBinaryReader r)
         {
             Red = r.ReadByte();

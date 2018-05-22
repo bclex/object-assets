@@ -171,7 +171,7 @@ namespace OA.Tes.FilePacks.Records
                     case "INTV": INTV = new INTVField(r, dataSize); return true;
                     case "NAM5": NAM5 = new CREFField(r, dataSize); return true;
                     // TES4
-                    case "XCLR": XCLRs = new FMIDField<REGNRecord>[dataSize >> 2]; for (var i = 0; i < XCLRs.Length; i++) XCLRs[i] = new FMIDField<REGNRecord>(r, dataSize); return true;
+                    case "XCLR": XCLRs = new FMIDField<REGNRecord>[dataSize >> 2]; for (var i = 0; i < XCLRs.Length; i++) XCLRs[i] = new FMIDField<REGNRecord>(r, 4); return true;
                     case "XCMT": XCMT = new BYTEField(r, dataSize); return true;
                     case "XCCM": XCCM = new FMIDField<CLMTRecord>(r, dataSize); return true;
                     case "XCWT": XCWT = new FMIDField<WATRRecord>(r, dataSize); return true;

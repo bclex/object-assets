@@ -387,13 +387,13 @@ namespace OA.Tes
             SplatPrototype[] splatPrototypes = null;
             float[,,] alphaMap = null;
             const int LAND_TEXTUREINDICES = 256;
-            var textureIndices = land.VTEX != null ? land.VTEX.Value.TextureIndices : new ushort[LAND_TEXTUREINDICES];
+            var textureIndices = land.VTEX != null ? land.VTEX.Value.TextureIndices : new uint[LAND_TEXTUREINDICES];
             // Create splat prototypes.
             var splatPrototypeList = new List<SplatPrototype>();
             var texInd2SplatInd = new Dictionary<ushort, int>();
             for (var i = 0; i < textureIndices.Length; i++)
             {
-                var textureIndex = (textureIndices[i] - 1);
+                var textureIndex = (int)(textureIndices[i] - 1);
                 if (!texInd2SplatInd.ContainsKey((ushort)textureIndex))
                 {
                     // Load terrain texture.

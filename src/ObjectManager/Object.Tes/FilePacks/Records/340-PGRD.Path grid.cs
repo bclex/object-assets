@@ -12,6 +12,7 @@ namespace OA.Tes.FilePacks.Records
         public UNKNField PGAG;
         public UNKNField PGRR;
         public UNKNField PGRL;
+        public UNKNField PGRI;
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
@@ -26,6 +27,7 @@ namespace OA.Tes.FilePacks.Records
                 case "PGAG": PGAG = new UNKNField(r, dataSize); return true;
                 case "PGRR": PGAG = new UNKNField(r, dataSize); return true;
                 case "PGRL": PGRL = new UNKNField(r, dataSize); return true;
+                case "PGRI": PGRI = new UNKNField(r, dataSize); return true;
                 default: return false;
             }
         }

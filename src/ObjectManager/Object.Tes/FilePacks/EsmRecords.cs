@@ -225,8 +225,6 @@ namespace OA.Tes.FilePacks
                 }
                 else if (Header.Type == "WRLD" && header.Type == "OFST")
                 {
-                    if (header.DataSize != 0)
-                        throw new InvalidOperationException();
                     r.BaseStream.Position = endPosition;
                     continue;
                 }
