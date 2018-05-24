@@ -12,9 +12,7 @@ namespace OA.Tes.FilePacks.Records
             public int SpellSchool; // 0 = Alteration, 1 = Conjuration, 2 = Destruction, 3 = Illusion, 4 = Mysticism, 5 = Restoration
             public float BaseCost;
             public int Flags; // 0x0200 = Spellmaking, 0x0400 = Enchanting, 0x0800 = Negative
-            public int Red;
-            public int Blue;
-            public int Green;
+            public ColorRef Color;
             public float SpeedX;
             public float SizeX;
             public float SizeCap;
@@ -24,9 +22,7 @@ namespace OA.Tes.FilePacks.Records
                 SpellSchool = r.ReadLEInt32();
                 BaseCost = r.ReadLESingle();
                 Flags = r.ReadLEInt32();
-                Red = r.ReadLEInt32();
-                Blue = r.ReadLEInt32();
-                Green = r.ReadLEInt32();
+                Color = new ColorRef((byte)r.ReadLEInt32(), (byte)r.ReadLEInt32(), (byte)r.ReadLEInt32());
                 SpeedX = r.ReadLESingle();
                 SizeX = r.ReadLESingle();
                 SizeCap = r.ReadLESingle();

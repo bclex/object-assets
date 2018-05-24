@@ -1,12 +1,68 @@
 ﻿using OA.Core;
-using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OA.Tes.FilePacks.Records
 {
     public class SCPTRecord : Record
     {
+        // TESX
+        public struct CTDAField
+        {
+            public enum INFOType : byte
+            {
+                Nothing = 0,
+                Function = 1,
+                Global = 2,
+                Local = 3,
+                Journal = 4,
+                Item = 5,
+                Dead = 6,
+                NotID = 7,
+                NotFaction = 8,
+                NotClass = 9,
+                NotRace = 10,
+                NotCell = 11,
+                NotLocal = 12,
+            }
+
+            public byte CompareOp; // TES3: 0 = [=], 1 = [!=], 2 = [>], 3 = [>=], 4 = [<], 5 = [<=]
+                                   // TES4: 0 = [=], 2 = [!=], 4 = [>], 6 = [>=], 8 = [<], 10 = [<=]
+            public string FunctionId; // (00-71) - sX = Global/Local/Not Local types, JX = Journal type, IX = Item Type, DX = Dead Type, XX = Not ID Type, FX = Not Faction, CX = Not Class, RX = Not Race, LX = Not Cell
+                                      // TES3
+            public byte Index; // (0-5)
+            public byte Type;
+            public string Name; // Except for the function type, this is the ID for the global/local/etc. Is not nessecarily NULL terminated.The function type SCVR sub-record has
+                                // TES4
+            public float ComparisonValue;
+            public int Parameter1; // Parameter #1
+            public int Parameter2; // Parameter #2
+
+            public CTDAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            {
+                if (formatId == GameFormatId.Tes3)
+                {
+                    Index = r.ReadByte();
+                    Type = r.ReadByte();
+                    FunctionId = r.ReadASCIIString(2);
+                    CompareOp = (byte)(r.ReadByte() * 2);
+                    Name = r.ReadASCIIString((int)dataSize - 5);
+                    ComparisonValue = Parameter1 = Parameter2 = 0;
+                    return;
+                }
+                CompareOp = r.ReadByte();
+                r.ReadBytes(3); // Unused
+                ComparisonValue = r.ReadLESingle();
+                FunctionId = r.ReadASCIIString(4);
+                Parameter1 = r.ReadLEInt32();
+                Parameter2 = r.ReadLEInt32();
+                if (dataSize == 24)
+                    r.ReadBytes(4); // Unused
+                Index = Type = 0;
+                Name = null;
+            }
+        }
+
         // TES3
         public class SCHDField
         {
@@ -64,6 +120,9 @@ namespace OA.Tes.FilePacks.Records
                 CompiledSize = r.ReadLEUInt32();
                 VariableCount = r.ReadLEUInt32();
                 Type = r.ReadLEUInt32();
+                if (dataSize == 20)
+                    return;
+                r.ReadBytes((int)dataSize - 20);
             }
         }
 

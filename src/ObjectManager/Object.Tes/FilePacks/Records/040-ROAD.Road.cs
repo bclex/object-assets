@@ -5,14 +5,14 @@ namespace OA.Tes.FilePacks.Records
     public class ROADRecord : Record
     {
         public override string ToString() => $"ROAD:";
-        public UNKNField PGRP { get; set; }
+        public PGRDRecord.PGRPField[] PGRPs { get; set; }
         public UNKNField PGRR { get; set; }
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
             switch (type)
             {
-                case "PGRP": PGRP = new UNKNField(r, dataSize); return true;
+                case "PGRP": PGRPs = new PGRDRecord.PGRPField[dataSize >> 4]; for (var i = 0; i < PGRPs.Length; i++) PGRPs[i] = new PGRDRecord.PGRPField(r, dataSize); return true;
                 case "PGRR": PGRR = new UNKNField(r, dataSize); return true;
                 default: return false;
             }
