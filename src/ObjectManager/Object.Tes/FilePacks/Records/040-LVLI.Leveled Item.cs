@@ -26,7 +26,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"LVLI: {EDID.Value}";
-        public STRVField EDID { get; set; } // ID
+        public STRVField EDID { get; set; } // Editor ID
         public BYTEField LVLD; // Chance
         public BYTEField LVLF; // Flags - 0x01 = Calculate from all levels <= player's level, 0x02 = Calculate for each item in count
         public BYTEField? DATA; // Data (optional)

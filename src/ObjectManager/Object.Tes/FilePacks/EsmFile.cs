@@ -16,7 +16,7 @@ namespace OA.Tes.FilePacks
         UnityBinaryReader _r;
         public string FilePath;
         public GameFormatId FormatId;
-        public ILookup<string, EsmGroup> Groups;
+        public Dictionary<string, EsmGroup> Groups;
         public Dictionary<Type, List<IRecord>> recordsByType;
         public Dictionary<string, IRecord> objectsByIDString;
         public Dictionary<Vector2i, CELLRecord> exteriorCELLRecordsByIndices;
@@ -40,16 +40,16 @@ namespace OA.Tes.FilePacks
                 switch (gameId)
                 {
                     // tes
-                    case GameId.Morrowind: return GameFormatId.Tes3;
-                    case GameId.Oblivion: return GameFormatId.Tes4;
+                    case GameId.Morrowind: return GameFormatId.TES3;
+                    case GameId.Oblivion: return GameFormatId.TES4;
                     case GameId.Skyrim:
                     case GameId.SkyrimSE:
-                    case GameId.SkyrimVR: return GameFormatId.Tes5;
+                    case GameId.SkyrimVR: return GameFormatId.TES5;
                     // fallout
                     case GameId.Fallout3:
-                    case GameId.FalloutNV: return GameFormatId.Tes4;
+                    case GameId.FalloutNV: return GameFormatId.TES4;
                     case GameId.Fallout4:
-                    case GameId.Fallout4VR: return GameFormatId.Tes5;
+                    case GameId.Fallout4VR: return GameFormatId.TES5;
                     default: throw new InvalidOperationException();
                 }
             }
@@ -78,15 +78,16 @@ namespace OA.Tes.FilePacks
 
         public class EsmGroup
         {
-            public override string ToString() => Header.Label;
-            public List<Record> Records;
+            public string Label => Headers.First.Value.Label;
+            public override string ToString() => Headers.First.Value.Label;
+            public LinkedList<Header> Headers = new LinkedList<Header>();
+            public List<Record> Records = new List<Record>();
             public List<EsmGroup> Groups;
-            public Header Header;
-            public long Position;
             readonly UnityBinaryReader _r;
             readonly string _filePath;
             readonly GameFormatId _formatId;
             readonly byte _level;
+            int _headerSkip;
 
             public EsmGroup(UnityBinaryReader r, string filePath, GameFormatId formatId, byte level)
             {
@@ -96,21 +97,27 @@ namespace OA.Tes.FilePacks
                 _level = level;
             }
 
+            public void AddHeader(Header header)
+            {
+                Headers.AddLast(header);
+            }
+
             public void Read()
             {
-                if (Records != null) return;
+                if (_headerSkip == Headers.Count) return;
                 lock (_r)
                 {
-                    if (Records != null) return;
-                    Records = ReadGroup();
+                    if (_headerSkip == Headers.Count) return;
+                    foreach (var header in Headers.Skip(_headerSkip))
+                        ReadGroup(header);
+                    _headerSkip = Headers.Count;
                 }
             }
 
-            public List<Record> ReadGroup()
+            void ReadGroup(Header groupHeader)
             {
-                var records = new List<Record>();
-                _r.BaseStream.Position = Position;
-                var endPosition = Position + Header.DataSize;
+                _r.BaseStream.Position = groupHeader.Position;
+                var endPosition = groupHeader.Position + groupHeader.DataSize;
                 while (_r.BaseStream.Position < endPosition)
                 {
                     var header = new Header(_r, _formatId);
@@ -118,14 +125,10 @@ namespace OA.Tes.FilePacks
                     {
                         if (Groups == null)
                             Groups = new List<EsmGroup>();
-                        var group = new EsmGroup(_r, _filePath, _formatId, _level)
-                        {
-                            Position = _r.BaseStream.Position,
-                            Header = header,
-                        };
+                        var group = new EsmGroup(_r, _filePath, _formatId, _level);
+                        group.AddHeader(header);
                         Groups.Add(group);
-                        group.Read();
-                        Console.WriteLine($"Read: {Header.Label}/{group.Header.Label}");
+                        group.Read(); Console.WriteLine($"Read: {groupHeader.Label}/{group}");
                         //_r.BaseStream.Position += header.DataSize;
                         continue;
                     }
@@ -136,9 +139,8 @@ namespace OA.Tes.FilePacks
                         continue;
                     }
                     ReadRecord(record, header.Compressed);
-                    records.Add(record);
+                    Records.Add(record);
                 }
-                return records;
             }
 
             void ReadRecord(Record record, bool compressed)
@@ -153,7 +155,7 @@ namespace OA.Tes.FilePacks
                     using (var gs = new InflaterInputStream(s))
                         gs.Read(newData, 0, newData.Length);
                     // read record
-                    record.Position = 0;
+                    record.Header.Position = 0;
                     record.Header.DataSize = newDataSize;
                     using (var s = new MemoryStream(newData))
                     using (var r = new UnityBinaryReader(s))
@@ -166,44 +168,50 @@ namespace OA.Tes.FilePacks
         void Read(byte level)
         {
             var rootHeader = new Header(_r, FormatId);
-            if ((FormatId == GameFormatId.Tes3 && rootHeader.Type != "TES3") || (FormatId != GameFormatId.Tes3 && rootHeader.Type != "TES4"))
+            if ((FormatId == GameFormatId.TES3 && rootHeader.Type != "TES3") || (FormatId != GameFormatId.TES3 && rootHeader.Type != "TES4"))
                 throw new FormatException($"{FilePath} record header {rootHeader.Type} is not valid for this {FormatId}");
             var rootRecord = rootHeader.CreateRecord(_r.BaseStream.Position, level);
             rootRecord.Read(_r, FilePath, FormatId);
-            var groups = new List<EsmGroup>();
             // morrowind hack
-            if (FormatId == GameFormatId.Tes3)
+            if (FormatId == GameFormatId.TES3)
             {
-                var group = new EsmGroup(_r, FilePath, FormatId, level)
+                var group = new EsmGroup(_r, FilePath, FormatId, level);
+                group.AddHeader(new Header
                 {
+                    Label = string.Empty,
+                    DataSize = (uint)(_r.BaseStream.Length - _r.BaseStream.Position),
                     Position = _r.BaseStream.Position,
-                    Header = new Header { Label = string.Empty, DataSize = (uint)(_r.BaseStream.Length - _r.BaseStream.Position) },
-                };
-                groups.Add(group);
+                });
                 group.Read();
+                Groups = group.Records.GroupBy(x => x.Header.Type)
+                    .ToDictionary(x => x.Key, x =>
+                    {
+                        var s = new EsmGroup(_r, FilePath, FormatId, level) { Records = x.ToList() };
+                        s.AddHeader(new Header { Label = x.Key });
+                        return s;
+                    });
                 return;
             }
             // read groups
+            Groups = new Dictionary<string, EsmGroup>();
             var endPosition = _r.BaseStream.Length;
             while (_r.BaseStream.Position < endPosition)
             {
                 var header = new Header(_r, FormatId);
                 if (header.Type != "GRUP")
-                    throw new InvalidOperationException();
-                var group = new EsmGroup(_r, FilePath, FormatId, level)
+                    throw new InvalidOperationException($"{header.Type} not GRUP");
+                if (!Groups.TryGetValue(header.Label, out EsmGroup group))
                 {
-                    Position = _r.BaseStream.Position,
-                    Header = header,
-                };
-                groups.Add(group);
+                    group = new EsmGroup(_r, FilePath, FormatId, level);
+                    Groups.Add(header.Label, group);
+                }
+                group.AddHeader(header);
                 _r.BaseStream.Position += header.DataSize;
-                if (group.Header.Label != "CELL" && group.Header.Label != "WRLD")
+                if (group.Label != "CELL" && group.Label != "WRLD")
                 {
-                    Console.WriteLine($"Read: {group.Header.Label}");
-                    group.Read();
+                    group.Read(); Console.WriteLine($"Read: {group}");
                 }
             }
-            Groups = groups.ToLookup(x => x.Header.Label);
         }
 
         void PostProcessRecords()
@@ -212,7 +220,7 @@ namespace OA.Tes.FilePacks
             objectsByIDString = new Dictionary<string, IRecord>();
             exteriorCELLRecordsByIndices = new Dictionary<Vector2i, CELLRecord>();
             LANDRecordsByIndices = new Dictionary<Vector2i, LANDRecord>();
-            foreach (var record in Groups.SelectMany(x => x.SelectMany(y => y.Records)))
+            foreach (var record in Groups.Values.SelectMany(x => x.Records))
             {
                 if (record == null)
                     continue;

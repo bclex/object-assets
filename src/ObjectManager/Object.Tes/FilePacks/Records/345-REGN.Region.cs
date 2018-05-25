@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -105,7 +104,7 @@ namespace OA.Tes.FilePacks.Records
 
             public RDSDField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
-                if (formatId == GameFormatId.Tes3)
+                if (formatId == GameFormatId.TES3)
                 {
                     Sound = new FormId<SOUNRecord>(r.ReadASCIIString(32, ASCIIFormat.ZeroPadded));
                     Flags = 0;
@@ -123,14 +122,14 @@ namespace OA.Tes.FilePacks.Records
             public override string ToString() => $"{Weather}";
             public FormId<WTHRRecord> Weather;
             public uint Chance;
-            public static byte SizeOf(GameFormatId formatId) => formatId == GameFormatId.Tes4 ? (byte)8 : (byte)12;
+            public static byte SizeOf(GameFormatId formatId) => formatId == GameFormatId.TES4 ? (byte)8 : (byte)12;
             public FormId<GLOBRecord> Global;
 
             public RDWTField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
                 Weather = new FormId<WTHRRecord>(r.ReadLEUInt32());
                 Chance = r.ReadLEUInt32();
-                Global = formatId == GameFormatId.Tes5 ? new FormId<GLOBRecord>(r.ReadLEUInt32()) : new FormId<GLOBRecord>();
+                Global = formatId == GameFormatId.TES5 ? new FormId<GLOBRecord>(r.ReadLEUInt32()) : new FormId<GLOBRecord>();
             }
         }
 
@@ -182,7 +181,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"REGN: {EDID.Value}";
-        public STRVField EDID { get; set; } // Region ID
+        public STRVField EDID { get; set; } // Editor ID
         public STRVField ICON; // Icon / Sleep creature
         public FMIDField<WRLDRecord> WNAM; // Worldspace - Region name
         public CREFField RCLR; // Map Color (COLORREF)

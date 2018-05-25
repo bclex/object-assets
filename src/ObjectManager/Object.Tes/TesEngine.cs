@@ -1,7 +1,6 @@
 ﻿using OA.Core;
-using OA.Tes.Components;
-using OA.Tes.Components.Records;
 using OA.Tes.FilePacks;
+using OA.Tes.FilePacks.Components;
 using OA.Tes.FilePacks.Records;
 using OA.Tes.UI;
 using OA.UI;
@@ -56,7 +55,7 @@ namespace OA.Tes
                 for (var i = 0; i < raycastHitCount; i++)
                 {
                     var hitInfo = _interactRaycastHitBuffer[i];
-                    var component = hitInfo.collider.GetComponentInParent<GenericObjectComponent>();
+                    var component = hitInfo.collider.GetComponentInParent<BASEComponent>();
                     if (component != null)
                     {
                         if (string.IsNullOrEmpty(component.objData.name))
@@ -64,7 +63,7 @@ namespace OA.Tes
                         ShowInteractiveText(component);
                         if (InputManager.GetButtonDown("Use"))
                         {
-                            if (component is DoorComponent) OpenDoor((DoorComponent)component);
+                            if (component is DOORComponent) OpenDoor((DOORComponent)component);
                             else if (component.usable) component.Interact();
                             else if (component.pickable) _playerInventory?.Add(component);
                         }
@@ -75,7 +74,7 @@ namespace OA.Tes
             else CloseInteractiveText(); //deactivate text if nothing is raycasted against
         }
 
-        public void ShowInteractiveText(GenericObjectComponent component)
+        public void ShowInteractiveText(BASEComponent component)
         {
             var data = component.objData;
             UIManager?.InteractiveText.Show(GUIUtils.CreateSprite(data.icon), data.interactionPrefix, data.name, data.value, data.weight);
@@ -86,7 +85,7 @@ namespace OA.Tes
             UIManager?.InteractiveText.Close();
         }
 
-        private void OpenDoor(DoorComponent component)
+        private void OpenDoor(DOORComponent component)
         {
             if (!component.doorData.leadsToAnotherCell)
                 component.Interact();

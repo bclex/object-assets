@@ -1,6 +1,4 @@
 ﻿using OA.Core;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace OA.Tes.FilePacks.Records
@@ -43,7 +41,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"WRLD: {EDID.Value}";
-        public STRVField EDID { get; set; }
+        public STRVField EDID { get; set; } // Editor ID
         public STRVField FULL;
         public FMIDField<WRLDRecord>? WNAM; // Parent Worldspace
         public FMIDField<CLMTRecord>? CNAM; // Climate
@@ -60,7 +58,7 @@ namespace OA.Tes.FilePacks.Records
             {
                 case "EDID": EDID = new STRVField(r, dataSize); return true;
                 case "FULL": FULL = new STRVField(r, dataSize); return true;
-                case "WNAM": if (WNAM != null) throw new InvalidOperationException(); WNAM = new FMIDField<WRLDRecord>(r, dataSize); return true;
+                case "WNAM": WNAM = new FMIDField<WRLDRecord>(r, dataSize); return true;
                 case "CNAM": CNAM = new FMIDField<CLMTRecord>(r, dataSize); return true;
                 case "NAM2": NAM2 = new FMIDField<WATRRecord>(r, dataSize); return true;
                 case "ICON": ICON = new FILEField(r, dataSize); return true;

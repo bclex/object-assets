@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace OA.Tes.IO
+namespace OA.Tes.FilePacks
 {
     public class FileManager
     {
@@ -17,9 +17,9 @@ namespace OA.Tes.IO
             @"Bethesda Softworks\Fallout 3", GameId.Fallout3,
             @"Bethesda Softworks\Fallout NV", GameId.FalloutNV,
             @"Bethesda Softworks\Morrowind", GameId.Morrowind,
-            @"Bethesda Softworks\Fallout 4", GameId.Fallout4,
+            @"Bethesda Softworks\Fallout4", GameId.Fallout4,
             @"Bethesda Softworks\Skyrim SE", GameId.SkyrimSE,
-            @"Bethesda Softworks\Fallout 4 VR", GameId.Fallout4VR,
+            @"Bethesda Softworks\Fallout4 VR", GameId.Fallout4VR,
             @"Bethesda Softworks\Skyrim VR", GameId.SkyrimVR
         };
 
@@ -30,13 +30,11 @@ namespace OA.Tes.IO
         static FileManager()
         {
             var game = TesSettings.Game;
-            Utils.Log($"Initializing TES Data. Is64Bit = {Is64Bit}");
-            Utils.Log("Looking for TES Installation(s):");
+            Utils.Log("TES Installation(s):");
             if (game.DataDirectory != null && Directory.Exists(game.DataDirectory))
             {
-                Utils.Log($"Settings: {game.DataDirectory}");
                 var gameId = (GameId)Enum.Parse(typeof(GameId), game.GameId);
-                _fileDirectories.Add(gameId, game.DataDirectory);
+                _fileDirectories.Add(gameId, game.DataDirectory); Utils.Log($"Settings: {game.DataDirectory}");
                 _isDataPresent = true;
             }
             else
@@ -50,11 +48,7 @@ namespace OA.Tes.IO
                         var gameId = (GameId)_knownRegkeys[i + 1];
                         if (Directory.Exists(dataPath))
                         {
-                            Utils.Log($"Compatible: {dataPath}");
-                            Utils.Log($"GameId: {gameId}");
-                            //tesRender.DataDirectory = dataPath;
-                            //tesRender.GameId = gameId.ToString();
-                            _fileDirectories.Add(gameId, dataPath);
+                            _fileDirectories.Add(gameId, dataPath); Utils.Log($"GameId: {gameId}");
                             _isDataPresent = true;
                         }
                         else Utils.Log($"Incompatible: {dataPath}");
@@ -64,11 +58,6 @@ namespace OA.Tes.IO
             }
             if (_fileDirectories.Count == 0)
                 _isDataPresent = false;
-            //else
-            //{
-            //    Utils.Log(string.Empty);
-            //    Utils.Log($"Selected: {_fileDirectories.Count}");
-            //}
         }
 
         static void HardAdds()
@@ -121,38 +110,5 @@ namespace OA.Tes.IO
             var files = Directory.GetFiles(fileDirectory, searchPattern);
             return files;
         }
-
-        //public static bool Exists(string name)
-        //{
-        //    try
-        //    {
-        //        name = Path.Combine(_fileDirectory, name);
-        //        Utils.Debug($"Checking if file exists [{name}]");
-        //        if (File.Exists(name))
-        //            return true;
-        //        return false;
-        //    }
-        //    catch { return false; }
-        //}
-
-        //public static bool Exists(string name, int index, string type) => Exists($"{name}{index}.{type}");
-
-        //public static bool Exists(string name, string type) => Exists($"{name}.{type}");
-
-        //public static FileStream GetFile(string path)
-        //{
-        //    try
-        //    {
-        //        path = Path.Combine(_fileDirectory, path);
-        //        return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        //    }
-        //    catch { return null; }
-        //}
-
-        //public static FileStream GetFile(string name, uint index, string type) => GetFile($"{name}{index}.{type}");
-
-        //public static FileStream GetFile(string name, string type) => GetFile($"{name}.{type}");
-
-        //public static string GetPath(string name) => Path.Combine(_fileDirectory, name);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
@@ -21,7 +20,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"SGST: {EDID.Value}";
-        public STRVField EDID { get; set; } // Item ID
+        public STRVField EDID { get; set; } // Editor ID
         public MODLGroup MODL { get; set; } // Model
         public STRVField FULL; // Item Name
         public DATAField DATA; // Sigil Stone Data

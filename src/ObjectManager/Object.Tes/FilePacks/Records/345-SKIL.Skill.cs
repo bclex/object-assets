@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 
 namespace OA.Tes.FilePacks.Records
 {
@@ -15,17 +14,17 @@ namespace OA.Tes.FilePacks.Records
 
             public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
-                Action = formatId == GameFormatId.Tes3 ? 0 : r.ReadLEInt32();
+                Action = formatId == GameFormatId.TES3 ? 0 : r.ReadLEInt32();
                 Attribute = r.ReadLEInt32();
                 Specialization = r.ReadLEUInt32();
-                UseValue = new float[formatId == GameFormatId.Tes3 ? 4 : 2];
+                UseValue = new float[formatId == GameFormatId.TES3 ? 4 : 2];
                 for (var i = 0; i < UseValue.Length; i++)
                     UseValue[i] = r.ReadLESingle();
             }
         }
 
         public override string ToString() => $"SKIL: {INDX.Value}:{EDID.Value}";
-        public STRVField EDID; // Skill ID
+        public STRVField EDID { get; set; } // Editor ID
         public IN32Field INDX; // Skill ID
         public DATAField DATA; // Skill Data
         public STRVField DESC; // Skill description

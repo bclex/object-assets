@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
@@ -76,7 +75,7 @@ namespace OA.Tes.FilePacks.Records
                 Male = new Gender();
                 Female = new Gender();
                 SkillBoosts = new SkillBoost[7];
-                if (formatId == GameFormatId.Tes3)
+                if (formatId == GameFormatId.TES3)
                 {
                     for (var i = 0; i < SkillBoosts.Length; i++)
                         SkillBoosts[i] = new SkillBoost { SkillId = (byte)r.ReadLEInt32(), Bonus = (sbyte)r.ReadLEInt32() };
@@ -168,7 +167,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"RACE: {EDID.Value}";
-        public STRVField EDID { get; set; } // Race ID
+        public STRVField EDID { get; set; } // Editor ID
         public STRVField FULL; // Race name
         public STRVField DESC; // Race description
         public List<STRVField> SPLOs = new List<STRVField>(); // NPCs: Special power/ability name
@@ -197,7 +196,7 @@ namespace OA.Tes.FilePacks.Records
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (formatId == GameFormatId.Tes3)
+            if (formatId == GameFormatId.TES3)
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;
@@ -207,7 +206,7 @@ namespace OA.Tes.FilePacks.Records
                     case "DESC": DESC = new STRVField(r, dataSize); return true;
                     default: return false;
                 }
-            if (formatId == GameFormatId.Tes4)
+            if (formatId == GameFormatId.TES4)
             {
                 switch (NameState)
                 {

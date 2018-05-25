@@ -193,7 +193,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"CREA: {EDID.Value}";
-        public STRVField EDID { get; set; } // ID
+        public STRVField EDID { get; set; } // Editor ID
         public MODLGroup MODL { get; set; } // NIF Model
         public STRVField FNAM; // Creature name
         public NPDTField NPDT; // Creature data
@@ -212,7 +212,7 @@ namespace OA.Tes.FilePacks.Records
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (formatId == GameFormatId.Tes3)
+            if (formatId == GameFormatId.TES3)
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;

@@ -2,8 +2,8 @@
 {
     public enum GameFormatId
     {
-        Tes3 = 1,
-        Tes4,
-        Tes5,
+        TES3 = 3,
+        TES4,
+        TES5,
     }
 }

@@ -109,7 +109,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"NPC_: {EDID.Value}";
-        public STRVField EDID { get; set; } // NPC ID
+        public STRVField EDID { get; set; } // Editor ID
         public STRVField FULL; // NPC name
         public MODLGroup MODL { get; set; } // Animation
         public STRVField RNAM; // Race Name

@@ -1,19 +1,18 @@
 ﻿using OA.Core;
-using System;
 
 namespace OA.Tes.FilePacks.Records
 {
     public class DOORRecord : Record, IHaveEDID, IHaveMODL
     {
         public override string ToString() => $"DOOR: {EDID.Value}";
-        public STRVField EDID { get; set; } // door ID
-        public STRVField FULL; // door name
+        public STRVField EDID { get; set; } // Editor ID
+        public STRVField FULL; // Door name
         public MODLGroup MODL { get; set; } // NIF model filename
         public FMIDField<SCPTRecord>? SCRI; // Script (optional)
-        public FMIDField<SOUNRecord> SNAM; // Open sound
-        public FMIDField<SOUNRecord> ANAM; // Close sound
+        public FMIDField<SOUNRecord> SNAM; // Open Sound
+        public FMIDField<SOUNRecord> ANAM; // Close Sound
         // TES4
-        public FMIDField<SOUNRecord> BNAM; // Loop sound
+        public FMIDField<SOUNRecord> BNAM; // Loop Sound
         public BYTEField FNAM; // Flags
         public FMIDField<Record> TNAM; // Random teleport destination
 
@@ -24,7 +23,7 @@ namespace OA.Tes.FilePacks.Records
                 case "EDID":
                 case "NAME": EDID = new STRVField(r, dataSize); return true;
                 case "FULL": FULL = new STRVField(r, dataSize); return true;
-                case "FNAM": if (formatId != GameFormatId.Tes3) FNAM = new BYTEField(r, dataSize); else FULL = new STRVField(r, dataSize); return true;
+                case "FNAM": if (formatId != GameFormatId.TES3) FNAM = new BYTEField(r, dataSize); else FULL = new STRVField(r, dataSize); return true;
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "MODT": MODL.MODTField(r, dataSize); return true;

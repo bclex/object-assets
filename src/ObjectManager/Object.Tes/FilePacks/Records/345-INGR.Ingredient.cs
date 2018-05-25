@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
@@ -51,7 +50,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"INGR: {EDID.Value}";
-        public STRVField EDID { get; set; } // Item ID
+        public STRVField EDID { get; set; } // Editor ID
         public MODLGroup MODL { get; set; } // Model Name
         public STRVField FULL; // Item Name
         public IRDTField IRDT; // Ingrediant Data //: TES3

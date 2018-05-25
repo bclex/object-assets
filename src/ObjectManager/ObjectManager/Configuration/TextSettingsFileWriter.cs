@@ -122,25 +122,30 @@ namespace OA.Configuration
                 {
                     if (!IsSerializableProperty(property))
                         continue;
-                    string value;
-                    if (!settingSection.TryGetValue(property.Name, out value))
+                    if (!settingSection.TryGetValue(property.Name, out string value))
                         continue;
                     if (property.PropertyType.IsArray)
                     {
-                        Array array;
-                        if (TryArrayifyString(property.PropertyType, value, out array))
+                        if (TryArrayifyString(property.PropertyType, value, out Array array))
                             property.SetValue(section.Value, Convert.ChangeType(array, property.PropertyType), null);
                     }
-                    else if (property.PropertyType.IsClass && property.PropertyType != typeof(String))
+                    else if (property.PropertyType.IsClass && property.PropertyType != typeof(string))
                     {
                         var cValue = _serializer.Deserialize(value, property.PropertyType);
                         if (cValue == null)
                             continue;
-                        property.SetValue(section.Value, Convert.ChangeType(cValue, property.PropertyType), null);
+                        property.SetValue(section.Value, ChangeType(cValue, property.PropertyType), null);
                     }
-                    else property.SetValue(section.Value, Convert.ChangeType(value, property.PropertyType), null);
+                    else property.SetValue(section.Value, ChangeType(value, property.PropertyType), null);
                 }
             }
+        }
+
+        private static object ChangeType(object value, Type type)
+        {
+            if (type.IsEnum)
+                return Enum.Parse(type, value.ToString());
+            return Convert.ChangeType(value, type);
         }
 
         public string StringifyArray(Type type, Array array)

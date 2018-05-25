@@ -44,7 +44,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"GRAS: {EDID.Value}";
-        public STRVField EDID { get; set; }
+        public STRVField EDID { get; set; } // Editor ID
         public MODLGroup MODL;
         public DATAField DATA;
 

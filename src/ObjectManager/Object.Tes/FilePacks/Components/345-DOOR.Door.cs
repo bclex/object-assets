@@ -3,9 +3,9 @@ using System.Collections;
 using OA.Tes.FilePacks.Records;
 using OA.Tes.Formats;
 
-namespace OA.Tes.Components.Records
+namespace OA.Tes.FilePacks.Components
 {
-    public class DoorComponent : GenericObjectComponent
+    public class DOORComponent : BASEComponent
     {
         public class DoorData
         {

@@ -6,7 +6,7 @@ namespace OA.Tes.FilePacks.Records
     public class LEVCRecord : Record
     {
         public override string ToString() => $"LEVC: {EDID.Value}";
-        public STRVField EDID { get; set; } // ID
+        public STRVField EDID { get; set; } // Editor ID
         public IN32Field DATA; // List data - 1 = Calc from all levels <= PC level
         public BYTEField NNAM; // Chance None?
         public IN32Field INDX; // Number of items in list
@@ -16,7 +16,7 @@ namespace OA.Tes.FilePacks.Records
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (formatId == GameFormatId.Tes3)
+            if (formatId == GameFormatId.TES3)
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;

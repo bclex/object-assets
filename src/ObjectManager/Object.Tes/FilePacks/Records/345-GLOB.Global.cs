@@ -5,7 +5,7 @@ namespace OA.Tes.FilePacks.Records
     public class GLOBRecord : Record, IHaveEDID
     {
         public override string ToString() => $"GLOB: {EDID.Value}";
-        public STRVField EDID { get; set; } // Global ID
+        public STRVField EDID { get; set; } // Editor ID
         public BYTEField? FNAM; // Type of global (s, l, f)
         public FLTVField? FLTV; // Float data
 

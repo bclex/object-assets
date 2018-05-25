@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
@@ -31,7 +30,7 @@ namespace OA.Tes.FilePacks.Records
 
             public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
-                if (formatId == GameFormatId.Tes3)
+                if (formatId == GameFormatId.TES3)
                 {
                     Type = r.ReadLEInt32();
                     Weight = r.ReadLESingle();
@@ -55,7 +54,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"CLOT: {EDID.Value}";
-        public STRVField EDID { get; set; } // Item ID
+        public STRVField EDID { get; set; } // Editor ID
         public MODLGroup MODL { get; set; } // Model Name
         public STRVField FULL; // Item Name
         public DATAField DATA; // Clothing Data
@@ -76,7 +75,8 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
+                case "EDID":
+                case "NAME": EDID = new STRVField(r, dataSize); return true;
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "MODT": MODL.MODTField(r, dataSize); return true;

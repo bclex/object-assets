@@ -4,9 +4,9 @@ using OA.Tes.FilePacks.Records;
 using OA.Core;
 using OA.Effects;
 
-namespace OA.Tes.Components.Records
+namespace OA.Tes.FilePacks.Components
 {
-    public class LightComponent : GenericObjectComponent
+    public class LIGHComponent : BASEComponent
     {
         [System.Serializable]
         public class LightData

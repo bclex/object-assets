@@ -1,10 +1,8 @@
 ﻿using OA.Components;
-using OA.Tes.Components.Records;
-using OA.Tes.FilePacks;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace OA.Tes.Components
+namespace OA.Tes.FilePacks.Components
 {
     public class PlayerInventory : MonoBehaviour
     {
@@ -20,17 +18,17 @@ namespace OA.Tes.Components
             _player = GetComponent<PlayerComponent>();
         }
 
-        public void Add(GenericObjectComponent item)
+        public void Add(BASEComponent item)
         {
             Add(item.record);
             // For now.
-            var weapon = item as WeaponComponent;
+            var weapon = item as WEAPComponent;
             if (weapon != null)
             {
                 var rightHand = _player.rightHand;
                 if (rightHand.childCount > 0)
                     rightHand.GetChild(0).parent = _disabledObjects;
-                ((WeaponComponent)item).Equip(rightHand);
+                ((WEAPComponent)item).Equip(rightHand);
                 return;
             }
             item.transform.parent = _disabledObjects.transform;

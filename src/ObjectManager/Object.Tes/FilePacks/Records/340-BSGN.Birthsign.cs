@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
@@ -7,7 +6,7 @@ namespace OA.Tes.FilePacks.Records
     public class BSGNRecord : Record
     {
         public override string ToString() => $"BSGN: {EDID.Value}";
-        public STRVField EDID { get; set; } // Sign ID
+        public STRVField EDID { get; set; } // Editor ID
         public STRVField FULL; // Sign name
         public FILEField ICON; // Texture
         public STRVField DESC; // Description

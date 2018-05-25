@@ -31,7 +31,7 @@ namespace OA.Tes.FilePacks.Records
             {
                 GridX = r.ReadLEInt32();
                 GridY = r.ReadLEInt32();
-                Flags = formatId == GameFormatId.Tes5 ? r.ReadLEUInt32() : 0;
+                Flags = formatId == GameFormatId.TES5 ? r.ReadLEUInt32() : 0;
             }
         }
 
@@ -56,7 +56,7 @@ namespace OA.Tes.FilePacks.Records
                 DirectionalColor = new ColorRef(r);
                 FogColor = new ColorRef(r);
                 FogNear = r.ReadLESingle();
-                if (formatId == GameFormatId.Tes3)
+                if (formatId == GameFormatId.TES3)
                 {
                     FogFar = DirectionalFade = FogClipDist = DirectionalRotationXY = DirectionalRotationZ = 0;
                     FogPow = 0;
@@ -67,7 +67,7 @@ namespace OA.Tes.FilePacks.Records
                 DirectionalRotationZ = r.ReadLEInt32();
                 DirectionalFade = r.ReadLESingle();
                 FogClipDist = r.ReadLESingle();
-                if (formatId == GameFormatId.Tes4)
+                if (formatId == GameFormatId.TES4)
                 {
                     FogPow = 0;
                     return;
@@ -160,7 +160,7 @@ namespace OA.Tes.FilePacks.Records
                     case "NAME": EDID = new STRVField(r, dataSize); return true;
                     case "FULL":
                     case "RGNN": FULL = new STRVField(r, dataSize); return true;
-                    case "DATA": DATA = new INTVField(r, dataSize).ToUI16Field(); if (formatId == GameFormatId.Tes3) goto case "XCLC"; return true;
+                    case "DATA": DATA = new INTVField(r, formatId == GameFormatId.TES3 ? 4 : dataSize).ToUI16Field(); if (formatId == GameFormatId.TES3) goto case "XCLC"; return true;
                     case "XCLC": XCLC = new XCLCField(r, dataSize, formatId); return true;
                     case "XCLL":
                     case "AMBI": XCLL = new XCLLField(r, dataSize, formatId); return true;

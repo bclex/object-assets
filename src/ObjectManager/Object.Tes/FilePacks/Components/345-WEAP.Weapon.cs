@@ -3,9 +3,9 @@ using OA.Tes.FilePacks.Records;
 using System.Collections;
 using UnityEngine;
 
-namespace OA.Tes.Components.Records
+namespace OA.Tes.FilePacks.Components
 {
-    public class WeaponComponent : GenericObjectComponent
+    public class WEAPComponent : BASEComponent
     {
         bool _isEquiped = false;
         bool _isVisible = true;

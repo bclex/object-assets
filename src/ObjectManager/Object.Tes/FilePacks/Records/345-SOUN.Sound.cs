@@ -33,10 +33,10 @@ namespace OA.Tes.FilePacks.Records
 
             public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
-                Volume = formatId == GameFormatId.Tes3 ? r.ReadByte() : (byte)0;
+                Volume = formatId == GameFormatId.TES3 ? r.ReadByte() : (byte)0;
                 MinRange = r.ReadByte();
                 MaxRange = r.ReadByte();
-                if (formatId == GameFormatId.Tes3)
+                if (formatId == GameFormatId.TES3)
                     return;
                 FrequencyAdjustment = (sbyte)r.ReadByte();
                 r.ReadByte(); // Unused
@@ -51,7 +51,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"SOUN: {EDID.Value}";
-        public STRVField EDID { get; set; } // Sound ID
+        public STRVField EDID { get; set; } // Editor ID
         public FILEField FNAM; // Sound Filename (relative to Sounds\)
         public DATAField DATA; // Sound Data
 

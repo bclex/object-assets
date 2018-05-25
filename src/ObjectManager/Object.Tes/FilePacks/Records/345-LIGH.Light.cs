@@ -32,7 +32,7 @@ namespace OA.Tes.FilePacks.Records
 
             public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
-                if (formatId == GameFormatId.Tes3)
+                if (formatId == GameFormatId.TES3)
                 {
                     Weight = r.ReadLESingle();
                     Value = r.ReadLEInt32();
@@ -82,7 +82,7 @@ namespace OA.Tes.FilePacks.Records
                 case "EDID":
                 case "NAME": EDID = new STRVField(r, dataSize); return true;
                 case "FULL": FULL = new STRVField(r, dataSize); return true;
-                case "FNAM": if (formatId != GameFormatId.Tes3) FNAM = new FLTVField(r, dataSize); else FULL = new STRVField(r, dataSize); return true;
+                case "FNAM": if (formatId != GameFormatId.TES3) FNAM = new FLTVField(r, dataSize); else FULL = new STRVField(r, dataSize); return true;
                 case "DATA":
                 case "LHDT": DATA = new DATAField(r, dataSize, formatId); return true;
                 case "SCPT": SCPT = new STRVField(r, dataSize); return true;

@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace OA.Tes.Components.Records
+namespace OA.Tes.FilePacks.Components
 {
-    public class CreatureComponent : GenericObjectComponent
+    public class CREAComponent : BASEComponent
     {
         void Start()
         {

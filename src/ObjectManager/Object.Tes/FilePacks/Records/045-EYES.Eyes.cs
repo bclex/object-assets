@@ -1,12 +1,11 @@
 ﻿using OA.Core;
-using System;
 
 namespace OA.Tes.FilePacks.Records
 {
     public class EYESRecord : Record
     {
         public override string ToString() => $"EYES: {EDID.Value}";
-        public STRVField EDID;
+        public STRVField EDID { get; set; } // Editor ID
         public STRVField FULL;
         public FILEField ICON;
         public BYTEField DATA; // Playable

@@ -40,7 +40,7 @@ namespace OA.Tes.FilePacks.Records
 
             public CTDAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
-                if (formatId == GameFormatId.Tes3)
+                if (formatId == GameFormatId.TES3)
                 {
                     Index = r.ReadByte();
                     Type = r.ReadByte();
@@ -169,7 +169,7 @@ namespace OA.Tes.FilePacks.Records
             {
                 case "EDID": EDID = new STRVField(r, dataSize); return true;
                 case "SCHD": SCHD = new SCHDField(r, dataSize); return true;
-                case "SCVR": if (formatId != GameFormatId.Tes3) ArrayUtils.Last(SLSDs).SCVRField(r, dataSize); else SCHD.SCVRField(r, dataSize); return true;
+                case "SCVR": if (formatId != GameFormatId.TES3) ArrayUtils.Last(SLSDs).SCVRField(r, dataSize); else SCHD.SCVRField(r, dataSize); return true;
                 case "SCDA":
                 case "SCDT": SCDA = new BYTVField(r, dataSize); return true;
                 case "SCTX": SCTX = new STRVField(r, dataSize); return true;

@@ -1,8 +1,8 @@
 ﻿using OA.Tes.FilePacks.Records;
 
-namespace OA.Tes.Components.Records
+namespace OA.Tes.FilePacks.Components
 {
-    public class ArmorComponent : GenericObjectComponent
+    public class ARMOComponent : BASEComponent
     {
         void Start()
         {

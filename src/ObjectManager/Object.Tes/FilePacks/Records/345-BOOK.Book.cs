@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 
 namespace OA.Tes.FilePacks.Records
 {
@@ -16,7 +15,7 @@ namespace OA.Tes.FilePacks.Records
 
             public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
-                if (formatId == GameFormatId.Tes3)
+                if (formatId == GameFormatId.TES3)
                 {
                     Weight = r.ReadLESingle();
                     Value = r.ReadLEInt32();

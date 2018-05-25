@@ -1,12 +1,11 @@
 ﻿using OA.Core;
-using System;
 
 namespace OA.Tes.FilePacks.Records
 {
     public class ACTIRecord : Record, IHaveEDID, IHaveMODL
     {
         public override string ToString() => $"ACTI: {EDID.Value}";
-        public STRVField EDID { get; set; } // Item ID
+        public STRVField EDID { get; set; } // Editor ID
         public MODLGroup MODL { get; set; } // Model Name
         public FLTVField MODB { get; set; } // Model Bounds
         public BYTVField MODT; // Texture Files Hashes

@@ -15,7 +15,7 @@ namespace OA.Tes.FilePacks.Records
             public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
                 Weight = r.ReadLESingle();
-                if (formatId == GameFormatId.Tes3)
+                if (formatId == GameFormatId.TES3)
                 {
                     Value = r.ReadLEInt32();
                     Flags = r.ReadLEInt32();
@@ -56,7 +56,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"ALCH: {EDID.Value}";
-        public STRVField EDID { get; set; } // Item ID
+        public STRVField EDID { get; set; } // Editor ID
         public MODLGroup MODL { get; set; } // Model
         public STRVField FULL; // Item Name
         public DATAField DATA; // Alchemy Data

@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 
 namespace OA.Tes.FilePacks.Records
 {
@@ -18,14 +17,14 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"SNDG: {EDID.Value}";
-        public STRVField EDID { get; set; } // Name
+        public STRVField EDID { get; set; } // Editor ID
         public IN32Field DATA; // Sound Type Data
         public STRVField SNAM; // Sound ID
         public STRVField? CNAM; // Creature name (optional)
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (formatId == GameFormatId.Tes3)
+            if (formatId == GameFormatId.TES3)
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;

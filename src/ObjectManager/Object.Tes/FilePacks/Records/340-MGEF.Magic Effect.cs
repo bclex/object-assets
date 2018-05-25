@@ -117,9 +117,9 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"MGEF: {INDX.Value}:{EDID.Value}";
-        public STRVField EDID { get; set; }
+        public STRVField EDID { get; set; } // Editor ID
         public STRVField DESC; // Description
-                               // TES3
+        // TES3
         public INTVField INDX; // The Effect ID (0 to 137)
         public MEDTField MEDT; // Effect Data
         public FILEField ICON; // Effect Icon
@@ -132,7 +132,7 @@ namespace OA.Tes.FilePacks.Records
         public STRVField? BSND; // Bolt sound (optional)
         public STRVField? HSND; // Hit sound (optional)
         public STRVField? ASND; // Area sound (optional)
-                                // TES4
+        // TES4
         public STRVField FULL;
         public MODLGroup MODL;
         public DATAField DATA;
@@ -140,7 +140,7 @@ namespace OA.Tes.FilePacks.Records
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (formatId == GameFormatId.Tes3)
+            if (formatId == GameFormatId.TES3)
                 switch (type)
                 {
                     case "INDX": INDX = new INTVField(r, dataSize); return true;

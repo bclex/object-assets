@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
@@ -21,7 +20,7 @@ namespace OA.Tes.FilePacks.Records
             {
                 Type = r.ReadLEUInt32();
                 SpellCost = r.ReadLEInt32();
-                SpellLevel = formatId != GameFormatId.Tes3 ? r.ReadLEInt32() : 0;
+                SpellLevel = formatId != GameFormatId.TES3 ? r.ReadLEInt32() : 0;
                 Flags = r.ReadLEUInt32();
             }
         }

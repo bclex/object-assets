@@ -1,12 +1,11 @@
 ﻿using OA.Core;
-using System;
 
 namespace OA.Tes.FilePacks.Records
 {
     public class ACHRRecord : Record
     {
         public override string ToString() => $"ACHR: {EDID.Value}";
-        public STRVField EDID { get; set; }
+        public STRVField EDID { get; set; } // Editor ID
         public FMIDField<Record> NAME; // Base
         public REFRRecord.DATAField DATA; // Position/Rotation
         public FMIDField<CELLRecord>? XPCI; // Unused (optional)

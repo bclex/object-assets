@@ -23,7 +23,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"AMMO: {EDID.Value}";
-        public STRVField EDID { get; set; } // Item ID
+        public STRVField EDID { get; set; } // Editor ID
         public MODLGroup MODL { get; set; } // Model
         public STRVField FULL; // Item Name
         public FILEField? ICON; // Male Icon (optional)

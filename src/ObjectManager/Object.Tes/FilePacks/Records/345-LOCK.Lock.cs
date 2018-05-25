@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 
 namespace OA.Tes.FilePacks.Records
 {
@@ -22,7 +21,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"LOCK: {EDID.Value}";
-        public STRVField EDID { get; set; } // Item ID
+        public STRVField EDID { get; set; } // Editor ID
         public MODLGroup MODL { get; set; } // Model Name
         public STRVField FNAM; // Item Name
         public LKDTField LKDT; // Lock Data
@@ -31,7 +30,7 @@ namespace OA.Tes.FilePacks.Records
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (formatId == GameFormatId.Tes3)
+            if (formatId == GameFormatId.TES3)
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;

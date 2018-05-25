@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
@@ -18,7 +17,7 @@ namespace OA.Tes.FilePacks.Records
             public ENITField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
                 Type = r.ReadLEInt32();
-                if (formatId == GameFormatId.Tes3)
+                if (formatId == GameFormatId.TES3)
                 {
                     EnchantCost = r.ReadLEInt32();
                     ChargeAmount = r.ReadLEInt32();
@@ -48,7 +47,7 @@ namespace OA.Tes.FilePacks.Records
 
             public EFITField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
-                if (formatId == GameFormatId.Tes3)
+                if (formatId == GameFormatId.TES3)
                 {
                     EffectId = r.ReadASCIIString(2);
                     SkillId = r.ReadByte();
@@ -96,7 +95,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"ENCH: {EDID.Value}";
-        public STRVField EDID { get; set; } // ID
+        public STRVField EDID { get; set; } // Editor ID
         public STRVField FULL; // Enchant name
         public ENITField ENIT; // Enchant Data
         public List<EFITField> EFITs = new List<EFITField>(); // Effect Data

@@ -48,6 +48,7 @@ namespace OA.Tes.FilePacks
         public HeaderFlags Flags;
         public bool Compressed => (Flags & HeaderFlags.Compressed) != 0;
         public uint FormId;
+        public long Position;
         // group
         public string Label;
         public int GroupType;
@@ -58,30 +59,41 @@ namespace OA.Tes.FilePacks
             Type = r.ReadASCIIString(4);
             if (Type == "GRUP")
             {
-                if (formatId == GameFormatId.Tes4) DataSize = r.ReadLEUInt32() - 20;
-                else if (formatId == GameFormatId.Tes5) DataSize = r.ReadLEUInt32() - 24;
+                if (formatId == GameFormatId.TES4) DataSize = r.ReadLEUInt32() - 20;
+                else if (formatId == GameFormatId.TES5) DataSize = r.ReadLEUInt32() - 24;
                 Label = r.ReadASCIIString(4);
-                if (formatId == GameFormatId.Tes4) GroupType = r.ReadLEInt32();
-                else if (formatId == GameFormatId.Tes5) GroupType = r.ReadLEInt32();
+                if (formatId == GameFormatId.TES4) GroupType = r.ReadLEInt32();
+                else if (formatId == GameFormatId.TES5) GroupType = r.ReadLEInt32();
                 r.ReadLEUInt32(); // stamp | stamp + uknown
-                if (formatId == GameFormatId.Tes4)
+                if (formatId == GameFormatId.TES4)
+                {
+                    Position = r.BaseStream.Position;
                     return;
+                }
                 r.ReadLEUInt32(); // version + uknown
+                Position = r.BaseStream.Position;
                 return;
             }
             DataSize = r.ReadLEUInt32();
-            if (formatId == GameFormatId.Tes3)
+            if (formatId == GameFormatId.TES3)
                 r.ReadLEUInt32(); // Unknown
             Flags = (HeaderFlags)r.ReadLEUInt32();
-            if (formatId == GameFormatId.Tes3)
+            if (formatId == GameFormatId.TES3)
+            {
+                Position = r.BaseStream.Position;
                 return;
+            }
             // tes4
             FormId = r.ReadLEUInt32();
             r.ReadLEUInt32();
-            if (formatId == GameFormatId.Tes4)
+            if (formatId == GameFormatId.TES4)
+            {
+                Position = r.BaseStream.Position;
                 return;
+            }
             // tes5
             r.ReadLEUInt32();
+            Position = r.BaseStream.Position;
         }
 
         struct RecordType
@@ -139,6 +151,7 @@ namespace OA.Tes.FilePacks
             { "LEVC", new RecordType { Func = x => x > 3 ? new LEVCRecord() : null }},
             { "BSGN", new RecordType { Func = x => x > 3 ? new BSGNRecord() : null }},
             { "FACT", new RecordType { Func = x => x > 3 ? new FACTRecord() : null }},
+            { "SSCR", new RecordType { Func = x => x > 3 ? new SSCRRecord() : null }},
             // 4 - Oblivion
             { "ACRE", new RecordType { Func = x => x > 4 ? new ACRERecord() : null }}, //*
             { "ACHR", new RecordType { Func = x => x > 4 ? new ACHRRecord() : null }},
@@ -189,7 +202,7 @@ namespace OA.Tes.FilePacks
                 var r = recordType.Func(level);
                 if (r != null)
                 {
-                    r.Position = position;
+                    //r.Position = position;
                     r.Header = this;
                 }
                 return r;
@@ -201,7 +214,7 @@ namespace OA.Tes.FilePacks
 
     public abstract class Record : IRecord
     {
-        internal long Position;
+        //internal long Position;
         internal Header Header;
 
         /// <summary>
@@ -212,6 +225,7 @@ namespace OA.Tes.FilePacks
 
         public void Read(UnityBinaryReader r, string filePath, GameFormatId formatId)
         {
+            var startPosition = r.BaseStream.Position;
             var endPosition = r.BaseStream.Position + Header.DataSize;
             while (r.BaseStream.Position < endPosition)
             {
@@ -240,8 +254,8 @@ namespace OA.Tes.FilePacks
                     throw new FormatException($"Failed reading {Header.Type}:{header.Type} field data at offset {position} in {filePath} of {r.BaseStream.Position - position - header.DataSize}");
             }
             // check full read
-            if (r.BaseStream.Position != Position + Header.DataSize)
-                throw new FormatException($"Failed reading {Header.Type} record data at offset {Position} in {filePath}");
+            if (r.BaseStream.Position != endPosition)
+                throw new FormatException($"Failed reading {Header.Type} record data at offset {startPosition} in {filePath}");
         }
     }
 
@@ -254,8 +268,7 @@ namespace OA.Tes.FilePacks
         public FieldHeader(UnityBinaryReader r, GameFormatId formatId)
         {
             Type = r.ReadASCIIString(4);
-            if (formatId == GameFormatId.Tes3) DataSize = r.ReadLEUInt32();
-            else DataSize = r.ReadLEUInt16();
+            DataSize = formatId == GameFormatId.TES3 ?  r.ReadLEUInt32() : r.ReadLEUInt16();
         }
     }
 }

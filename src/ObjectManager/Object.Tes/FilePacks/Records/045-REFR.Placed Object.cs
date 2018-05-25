@@ -87,7 +87,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"REFR: {EDID.Value}";
-        public STRVField EDID { get; set; }
+        public STRVField EDID { get; set; } // Editor ID
         public FMIDField<Record> NAME; // Base
         public XTELField? XTEL; // Teleport Destination (optional)
         public DATAField DATA; // Position/Rotation

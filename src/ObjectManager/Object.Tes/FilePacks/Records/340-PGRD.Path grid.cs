@@ -62,7 +62,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"PGRD: {EDID.Value}";
-        public STRVField EDID { get; set; }
+        public STRVField EDID { get; set; } // Editor ID
         public UNKNField DATA;
         public PGRPField[] PGRPs;
         public UNKNField PGRC;

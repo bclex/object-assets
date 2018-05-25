@@ -22,7 +22,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"CLAS: {EDID.Value}";
-        public STRVField EDID { get; set; } // editorID
+        public STRVField EDID { get; set; } // Editor ID
         public STRVField FULL; // Name
         public STRVField DESC; // Description
         public STRVField? ICON; // Icon (Optional)
@@ -30,7 +30,7 @@ namespace OA.Tes.FilePacks.Records
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (formatId == GameFormatId.Tes3)
+            if (formatId == GameFormatId.TES3)
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;

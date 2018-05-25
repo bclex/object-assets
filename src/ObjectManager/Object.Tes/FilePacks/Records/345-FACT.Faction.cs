@@ -36,12 +36,12 @@ namespace OA.Tes.FilePacks.Records
             {
                 FormId = r.ReadLEInt32();
                 Mod = r.ReadLEInt32();
-                Combat = formatId > GameFormatId.Tes4 ? r.ReadLEInt32() : 0; // 0 - Neutral, 1 - Enemy, 2 - Ally, 3 - Friend
+                Combat = formatId > GameFormatId.TES4 ? r.ReadLEInt32() : 0; // 0 - Neutral, 1 - Enemy, 2 - Ally, 3 - Friend
             }
         }
 
         public override string ToString() => $"FACT: {EDID.Value}";
-        public STRVField EDID { get; set; } // Faction ID
+        public STRVField EDID { get; set; } // Editor ID
         public STRVField FNAM; // Faction name
         public List<RNAMGroup> RNAMs = new List<RNAMGroup>(); // Rank Name
         public FADTField FADT; // Faction data
@@ -54,7 +54,7 @@ namespace OA.Tes.FilePacks.Records
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (formatId == GameFormatId.Tes3)
+            if (formatId == GameFormatId.TES3)
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;

@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 
 namespace OA.Tes.FilePacks.Records
 {
@@ -15,7 +14,7 @@ namespace OA.Tes.FilePacks.Records
 
             public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
-                if (formatId == GameFormatId.Tes3)
+                if (formatId == GameFormatId.TES3)
                 {
                     Type = (byte)r.ReadLEInt32();
                     Quality = r.ReadLESingle();
@@ -31,7 +30,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"APPA: {EDID.Value}";
-        public STRVField EDID { get; set; } // Item ID
+        public STRVField EDID { get; set; } // Editor ID
         public MODLGroup MODL { get; set; } // Model Name
         public STRVField FULL; // Item Name
         public DATAField DATA; // Alchemy Data

@@ -1,6 +1,4 @@
 ﻿using OA.Core;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace OA.Tes.FilePacks.Records
@@ -53,7 +51,7 @@ namespace OA.Tes.FilePacks.Records
 
             public VTEXField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
             {
-                if (formatId == GameFormatId.Tes3)
+                if (formatId == GameFormatId.TES3)
                 {
                     TextureIndices = new uint[dataSize >> 1];
                     for (var i = 0; i < TextureIndices.Length; i++)

@@ -5,7 +5,7 @@ namespace OA.Tes.FilePacks.Records
     public class HAIRRecord : Record
     {
         public override string ToString() => $"HAIR: {EDID.Value}";
-        public STRVField EDID;
+        public STRVField EDID { get; set; } // Editor ID
         public STRVField FULL;
         public MODLGroup MODL;
         public FILEField ICON;

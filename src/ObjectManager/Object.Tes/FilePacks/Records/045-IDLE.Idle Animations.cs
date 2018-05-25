@@ -1,5 +1,4 @@
 ﻿using OA.Core;
-using System;
 using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
@@ -7,7 +6,7 @@ namespace OA.Tes.FilePacks.Records
     public class IDLERecord : Record
     {
         public override string ToString() => $"IDLE: {EDID.Value}";
-        public STRVField EDID { get; set; }
+        public STRVField EDID { get; set; } // Editor ID
         public MODLGroup MODL;
         public List<SCPTRecord.CTDAField> CTDAs = new List<SCPTRecord.CTDAField>(); // Conditions
         public BYTEField ANAM;

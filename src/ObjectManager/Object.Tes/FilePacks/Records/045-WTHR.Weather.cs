@@ -104,7 +104,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"WTHR: {EDID.Value}";
-        public STRVField EDID { get; set; } // Item ID
+        public STRVField EDID { get; set; } // Editor ID
         public MODLGroup MODL { get; set; } // Model
         public FILEField CNAM; // Lower Cloud Layer
         public FILEField DNAM; // Upper Cloud Layer

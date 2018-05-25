@@ -6,7 +6,7 @@ namespace OA.Tes.FilePacks.Records
     public class ACRERecord : Record
     {
         public override string ToString() => $"GMST: {EDID.Value}";
-        public STRVField EDID { get; set; }
+        public STRVField EDID { get; set; } // Editor ID
         public FMIDField<Record> NAME; // Base
         public REFRRecord.DATAField DATA; // Position/Rotation
         public List<CELLRecord.XOWNGroup> XOWNs; // Ownership (optional)

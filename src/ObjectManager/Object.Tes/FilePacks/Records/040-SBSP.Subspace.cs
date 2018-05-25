@@ -19,7 +19,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"SBSP: {EDID.Value}";
-        public STRVField EDID { get; set; } // Item ID
+        public STRVField EDID { get; set; } // Editor ID
         public DNAMField DNAM;
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)

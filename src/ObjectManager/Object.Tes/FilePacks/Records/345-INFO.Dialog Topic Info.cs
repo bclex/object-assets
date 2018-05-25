@@ -107,14 +107,14 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"INFO: {EDID.Value}";
-        public STRVField EDID { get; set; } // Info name string (unique sequence of #'s), ID
+        public STRVField EDID { get; set; } // Editor ID - Info name string (unique sequence of #'s), ID
         public FMIDField<INFORecord> PNAM; // Previous info ID
         public TES3Group TES3 = new TES3Group();
         public TES4Group TES4 = new TES4Group();
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
         {
-            if (formatId == GameFormatId.Tes3)
+            if (formatId == GameFormatId.TES3)
                 switch (type)
                 {
                     case "INAM": EDID = new STRVField(r, dataSize); DIALRecord.LastRecord?.INFOs.Add(this); return true;

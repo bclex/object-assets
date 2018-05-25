@@ -3,9 +3,9 @@ using OA.Tes.FilePacks.Records;
 using OA.Tes.UI;
 using OA.UI;
 
-namespace OA.Tes.Components.Records
+namespace OA.Tes.FilePacks.Components
 {
-    public class BookComponent : GenericObjectComponent
+    public class BOOKComponent : BASEComponent
     {
         static PlayerComponent _player = null;
         static TesUIManager _uiManager = null;

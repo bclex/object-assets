@@ -38,7 +38,7 @@ namespace OA.Tes.FilePacks.Records
         }
 
         public override string ToString() => $"CLMT: {EDID.Value}";
-        public STRVField EDID { get; set; } // Item ID
+        public STRVField EDID { get; set; } // Editor ID
         public MODLGroup MODL { get; set; } // Model
         public FILEField FNAM; // Sun Texture
         public FILEField GNAM; // Sun Glare Texture

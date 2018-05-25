@@ -259,7 +259,7 @@ namespace OA.Tes.FilePacks
 
         public CNTOField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
         {
-            if (formatId == GameFormatId.Tes3)
+            if (formatId == GameFormatId.TES3)
             {
                 ItemCount = r.ReadLEUInt32();
                 Item = new FormId<Record>(r.ReadASCIIString(32, ASCIIFormat.ZeroPadded));
