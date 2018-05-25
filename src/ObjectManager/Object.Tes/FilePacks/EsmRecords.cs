@@ -237,7 +237,7 @@ namespace OA.Tes.FilePacks
                 }
                 // check full read
                 if (r.BaseStream.Position != position + header.DataSize)
-                    throw new FormatException($"Failed reading {Header.Type}:{header.Type} field data at offset {position} in {filePath}");
+                    throw new FormatException($"Failed reading {Header.Type}:{header.Type} field data at offset {position} in {filePath} of {r.BaseStream.Position - position - header.DataSize}");
             }
             // check full read
             if (r.BaseStream.Position != Position + Header.DataSize)
