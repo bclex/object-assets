@@ -1,8 +1,11 @@
-﻿using OA.Configuration;
+﻿using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using OA.Configuration;
 using OA.Core;
 using OA.Tes.FilePacks.Records;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 //https://github.com/WrinklyNinja/esplugin/tree/master/src
 //http://en.uesp.net/wiki/Tes3Mod:File_Format
@@ -98,113 +101,112 @@ namespace OA.Tes.FilePacks
 
         struct RecordType
         {
-            public Func<byte, Record> Func;
-            public bool Load;
+            public Func<Record> Func;
+            public Func<byte, bool> Load;
         }
 
         static Dictionary<string, RecordType> Create = new Dictionary<string, RecordType>
         {
-            { "TES3", new RecordType { Func = x => new TES3Record() }},
-            { "TES4", new RecordType { Func = x => new TES4Record() }},
+            { "TES3", new RecordType { Func = ()=>new TES3Record() }},
+            { "TES4", new RecordType { Func = ()=>new TES4Record() }},
             // 0
-            { "LTEX", new RecordType { Func = x => x > 0 ? new LTEXRecord() : null, Load = true }},
-            { "STAT", new RecordType { Func = x => x > 0 ? new STATRecord() : null }},
-            { "CELL", new RecordType { Func = x => x > 0 ? new CELLRecord() : null }},
-            { "LAND", new RecordType { Func = x => x > 0 ? new LANDRecord() : null }},
+            { "LTEX", new RecordType { Func = ()=>new LTEXRecord(), Load = x => x > 0 }},
+            { "STAT", new RecordType { Func = ()=>new STATRecord(), Load = x => x > 0 }},
+            { "CELL", new RecordType { Func = ()=>new CELLRecord(), Load = x => x > 0 }},
+            { "LAND", new RecordType { Func = ()=>new LANDRecord(), Load = x => x > 0 }},
             // 1
-            { "DOOR", new RecordType { Func = x => x > 1 ? new DOORRecord() : null }},
-            { "MISC", new RecordType { Func = x => x > 1 ? new MISCRecord() : null }},
-            { "WEAP", new RecordType { Func = x => x > 1 ? new WEAPRecord() : null }},
-            { "CONT", new RecordType { Func = x => x > 1 ? new CONTRecord() : null }},
-            { "LIGH", new RecordType { Func = x => x > 1 ? new LIGHRecord() : null }},
-            { "ARMO", new RecordType { Func = x => x > 1 ? new ARMORecord() : null }},
-            { "CLOT", new RecordType { Func = x => x > 1 ? new CLOTRecord() : null }},
-            { "REPA", new RecordType { Func = x => x > 1 ? new REPARecord() : null }},
-            { "ACTI", new RecordType { Func = x => x > 1 ? new ACTIRecord() : null }},
-            { "APPA", new RecordType { Func = x => x > 1 ? new APPARecord() : null }},
-            { "LOCK", new RecordType { Func = x => x > 1 ? new LOCKRecord() : null }},
-            { "PROB", new RecordType { Func = x => x > 1 ? new PROBRecord() : null }},
-            { "INGR", new RecordType { Func = x => x > 1 ? new INGRRecord() : null }},
-            { "BOOK", new RecordType { Func = x => x > 1 ? new BOOKRecord() : null }},
-            { "ALCH", new RecordType { Func = x => x > 1 ? new ALCHRecord() : null }},
-            { "CREA", new RecordType { Func = x => x > 1 && BaseSettings.Game.CreaturesEnabled ? new CREARecord() : null } },
-            { "NPC_", new RecordType { Func = x => x > 1 && BaseSettings.Game.NpcsEnabled ? new NPC_Record() : null } },
+            { "DOOR", new RecordType { Func = ()=>new DOORRecord(), Load = x => x > 1 }},
+            { "MISC", new RecordType { Func = ()=>new MISCRecord(), Load = x => x > 1 }},
+            { "WEAP", new RecordType { Func = ()=>new WEAPRecord(), Load = x => x > 1 }},
+            { "CONT", new RecordType { Func = ()=>new CONTRecord(), Load = x => x > 1 }},
+            { "LIGH", new RecordType { Func = ()=>new LIGHRecord(), Load = x => x > 1 }},
+            { "ARMO", new RecordType { Func = ()=>new ARMORecord(), Load = x => x > 1 }},
+            { "CLOT", new RecordType { Func = ()=>new CLOTRecord(), Load = x => x > 1 }},
+            { "REPA", new RecordType { Func = ()=>new REPARecord(), Load = x => x > 1 }},
+            { "ACTI", new RecordType { Func = ()=>new ACTIRecord(), Load = x => x > 1 }},
+            { "APPA", new RecordType { Func = ()=>new APPARecord(), Load = x => x > 1 }},
+            { "LOCK", new RecordType { Func = ()=>new LOCKRecord(), Load = x => x > 1 }},
+            { "PROB", new RecordType { Func = ()=>new PROBRecord(), Load = x => x > 1 }},
+            { "INGR", new RecordType { Func = ()=>new INGRRecord(), Load = x => x > 1 }},
+            { "BOOK", new RecordType { Func = ()=>new BOOKRecord(), Load = x => x > 1 }},
+            { "ALCH", new RecordType { Func = ()=>new ALCHRecord(), Load = x => x > 1 }},
+            { "CREA", new RecordType { Func = ()=>new CREARecord(), Load = x => x > 1 && BaseSettings.Game.CreaturesEnabled }},
+            { "NPC_", new RecordType { Func = ()=>new NPC_Record(), Load = x => x > 1 && BaseSettings.Game.NpcsEnabled }},
             // 2
-            { "GMST", new RecordType { Func = x => x > 2 ? new GMSTRecord() : null } },
-            { "GLOB", new RecordType { Func = x => x > 2 ? new GLOBRecord() : null }},
-            { "SOUN", new RecordType { Func = x => x > 2 ? new SOUNRecord() : null }},
-            { "REGN", new RecordType { Func = x => x > 2 ? new REGNRecord() : null }},
+            { "GMST", new RecordType { Func = ()=>new GMSTRecord(), Load = x => x > 2 }},
+            { "GLOB", new RecordType { Func = ()=>new GLOBRecord(), Load = x => x > 2 }},
+            { "SOUN", new RecordType { Func = ()=>new SOUNRecord(), Load = x => x > 2 }},
+            { "REGN", new RecordType { Func = ()=>new REGNRecord(), Load = x => x > 2 }},
             // 3
-            { "CLAS", new RecordType { Func = x => x > 3 ? new CLASRecord() : null }},
-            { "SPEL", new RecordType { Func = x => x > 3 ? new SPELRecord() : null }},
-            { "BODY", new RecordType { Func = x => x > 3 ? new BODYRecord() : null }},
-            { "PGRD", new RecordType { Func = x => x > 3 ? new PGRDRecord() : null }},
-            { "INFO", new RecordType { Func = x => x > 3 ? new INFORecord() : null }},
-            { "DIAL", new RecordType { Func = x => x > 3 ? new DIALRecord() : null }},
-            { "SNDG", new RecordType { Func = x => x > 3 ? new SNDGRecord() : null }},
-            { "ENCH", new RecordType { Func = x => x > 3 ? new ENCHRecord() : null }},
-            { "SCPT", new RecordType { Func = x => x > 3 ? new SCPTRecord() : null }},
-            { "SKIL", new RecordType { Func = x => x > 3 ? new SKILRecord() : null }},
-            { "RACE", new RecordType { Func = x => x > 3 ? new RACERecord() : null }},
-            { "MGEF", new RecordType { Func = x => x > 3 ? new MGEFRecord() : null }},
-            { "LEVI", new RecordType { Func = x => x > 3 ? new LEVIRecord() : null }},
-            { "LEVC", new RecordType { Func = x => x > 3 ? new LEVCRecord() : null }},
-            { "BSGN", new RecordType { Func = x => x > 3 ? new BSGNRecord() : null }},
-            { "FACT", new RecordType { Func = x => x > 3 ? new FACTRecord() : null }},
-            { "SSCR", new RecordType { Func = x => x > 3 ? new SSCRRecord() : null }},
+            { "CLAS", new RecordType { Func = ()=>new CLASRecord(), Load = x => x > 3 }},
+            { "SPEL", new RecordType { Func = ()=>new SPELRecord(), Load = x => x > 3 }},
+            { "BODY", new RecordType { Func = ()=>new BODYRecord(), Load = x => x > 3 }},
+            { "PGRD", new RecordType { Func = ()=>new PGRDRecord(), Load = x => x > 3 }},
+            { "INFO", new RecordType { Func = ()=>new INFORecord(), Load = x => x > 3 }},
+            { "DIAL", new RecordType { Func = ()=>new DIALRecord(), Load = x => x > 3 }},
+            { "SNDG", new RecordType { Func = ()=>new SNDGRecord(), Load = x => x > 3 }},
+            { "ENCH", new RecordType { Func = ()=>new ENCHRecord(), Load = x => x > 3 }},
+            { "SCPT", new RecordType { Func = ()=>new SCPTRecord(), Load = x => x > 3 }},
+            { "SKIL", new RecordType { Func = ()=>new SKILRecord(), Load = x => x > 3 }},
+            { "RACE", new RecordType { Func = ()=>new RACERecord(), Load = x => x > 3 }},
+            { "MGEF", new RecordType { Func = ()=>new MGEFRecord(), Load = x => x > 3 }},
+            { "LEVI", new RecordType { Func = ()=>new LEVIRecord(), Load = x => x > 3 }},
+            { "LEVC", new RecordType { Func = ()=>new LEVCRecord(), Load = x => x > 3 }},
+            { "BSGN", new RecordType { Func = ()=>new BSGNRecord(), Load = x => x > 3 }},
+            { "FACT", new RecordType { Func = ()=>new FACTRecord(), Load = x => x > 3 }},
+            { "SSCR", new RecordType { Func = ()=>new SSCRRecord(), Load = x => x > 3 }},
             // 4 - Oblivion
-            { "ACRE", new RecordType { Func = x => x > 4 ? new ACRERecord() : null }}, //*
-            { "ACHR", new RecordType { Func = x => x > 4 ? new ACHRRecord() : null }},
-            { "AMMO", new RecordType { Func = x => x > 4 ? new AMMORecord() : null }},
-            { "ANIO", new RecordType { Func = x => x > 4 ? new ANIORecord() : null }},
-            { "CLMT", new RecordType { Func = x => x > 4 ? new CLMTRecord() : null }},
-            { "CSTY", new RecordType { Func = x => x > 4 ? new CSTYRecord() : null }},
-            { "EFSH", new RecordType { Func = x => x > 4 ? new EFSHRecord() : null }},
-            { "EYES", new RecordType { Func = x => x > 4 ? new EYESRecord() : null }},
-            { "FLOR", new RecordType { Func = x => x > 4 ? new FLORRecord() : null }},
-            { "FURN", new RecordType { Func = x => x > 4 ? new FURNRecord() : null }},
-            { "GRAS", new RecordType { Func = x => x > 4 ? new GRASRecord() : null }},
-            { "HAIR", new RecordType { Func = x => x > 4 ? new HAIRRecord() : null }}, //*
-            { "IDLE", new RecordType { Func = x => x > 4 ? new IDLERecord() : null }},
-            { "KEYM", new RecordType { Func = x => x > 4 ? new KEYMRecord() : null }}, //*
-            { "LSCR", new RecordType { Func = x => x > 4 ? new LSCRRecord() : null }}, //?
-            { "LVLC", new RecordType { Func = x => x > 4 ? new LVLCRecord() : null }},
-            { "LVLI", new RecordType { Func = x => x > 4 ? new LVLIRecord() : null }},
-            { "LVSP", new RecordType { Func = x => x > 4 ? new LVSPRecord() : null }},
-            { "PACK", new RecordType { Func = x => x > 4 ? new PACKRecord() : null }},
-            { "QUST", new RecordType { Func = x => x > 4 ? new QUSTRecord() : null }},
-            { "REFR", new RecordType { Func = x => x > 4 ? new REFRRecord() : null }},
-            { "ROAD", new RecordType { Func = x => x > 4 ? new ROADRecord() : null }}, //*
-            { "SBSP", new RecordType { Func = x => x > 4 ? new SBSPRecord() : null }}, //*
-            { "SGST", new RecordType { Func = x => x > 4 ? new SGSTRecord() : null }}, //*
-            { "SLGM", new RecordType { Func = x => x > 4 ? new SLGMRecord() : null }},
-            { "TREE", new RecordType { Func = x => x > 4 ? new TREERecord() : null }},
-            { "WATR", new RecordType { Func = x => x > 4 ? new WATRRecord() : null }},
-            { "WRLD", new RecordType { Func = x => x > 4 ? new WRLDRecord() : null }},
-            { "WTHR", new RecordType { Func = x => x > 4 ? new WTHRRecord() : null }},
+            { "ACRE", new RecordType { Func = ()=>new ACRERecord(), Load = x => x > 4 }},
+            { "ACHR", new RecordType { Func = ()=>new ACHRRecord(), Load = x => x > 4 }},
+            { "AMMO", new RecordType { Func = ()=>new AMMORecord(), Load = x => x > 4 }},
+            { "ANIO", new RecordType { Func = ()=>new ANIORecord(), Load = x => x > 4 }},
+            { "CLMT", new RecordType { Func = ()=>new CLMTRecord(), Load = x => x > 4 }},
+            { "CSTY", new RecordType { Func = ()=>new CSTYRecord(), Load = x => x > 4 }},
+            { "EFSH", new RecordType { Func = ()=>new EFSHRecord(), Load = x => x > 4 }},
+            { "EYES", new RecordType { Func = ()=>new EYESRecord(), Load = x => x > 4 }},
+            { "FLOR", new RecordType { Func = ()=>new FLORRecord(), Load = x => x > 4 }},
+            { "FURN", new RecordType { Func = ()=>new FURNRecord(), Load = x => x > 4 }},
+            { "GRAS", new RecordType { Func = ()=>new GRASRecord(), Load = x => x > 4 }},
+            { "HAIR", new RecordType { Func = ()=>new HAIRRecord(), Load = x => x > 4 }},
+            { "IDLE", new RecordType { Func = ()=>new IDLERecord(), Load = x => x > 4 }},
+            { "KEYM", new RecordType { Func = ()=>new KEYMRecord(), Load = x => x > 4 }},
+            { "LSCR", new RecordType { Func = ()=>new LSCRRecord(), Load = x => x > 4 }},
+            { "LVLC", new RecordType { Func = ()=>new LVLCRecord(), Load = x => x > 4 }},
+            { "LVLI", new RecordType { Func = ()=>new LVLIRecord(), Load = x => x > 4 }},
+            { "LVSP", new RecordType { Func = ()=>new LVSPRecord(), Load = x => x > 4 }},
+            { "PACK", new RecordType { Func = ()=>new PACKRecord(), Load = x => x > 4 }},
+            { "QUST", new RecordType { Func = ()=>new QUSTRecord(), Load = x => x > 4 }},
+            { "REFR", new RecordType { Func = ()=>new REFRRecord(), Load = x => x > 4 }},
+            { "ROAD", new RecordType { Func = ()=>new ROADRecord(), Load = x => x > 4 }},
+            { "SBSP", new RecordType { Func = ()=>new SBSPRecord(), Load = x => x > 4 }},
+            { "SGST", new RecordType { Func = ()=>new SGSTRecord(), Load = x => x > 4 }},
+            { "SLGM", new RecordType { Func = ()=>new SLGMRecord(), Load = x => x > 4 }},
+            { "TREE", new RecordType { Func = ()=>new TREERecord(), Load = x => x > 4 }},
+            { "WATR", new RecordType { Func = ()=>new WATRRecord(), Load = x => x > 4 }},
+            { "WRLD", new RecordType { Func = ()=>new WRLDRecord(), Load = x => x > 4 }},
+            { "WTHR", new RecordType { Func = ()=>new WTHRRecord(), Load = x => x > 4 }},
             // 5 - Skyrim
-            { "AACT", new RecordType { Func = x => x > 5 ? new AACTRecord() : null }},
-            { "ADDN", new RecordType { Func = x => x > 5 ? new ADDNRecord() : null }},
-            { "ARMA", new RecordType { Func = x => x > 5 ? new ARMARecord() : null }},
-            { "ARTO", new RecordType { Func = x => x > 5 ? new ARTORecord() : null }},
-            { "ASPC", new RecordType { Func = x => x > 5 ? new ASPCRecord() : null }},
-            { "ASTP", new RecordType { Func = x => x > 5 ? new ASTPRecord() : null }},
-            { "AVIF", new RecordType { Func = x => x > 5 ? new AVIFRecord() : null }},
-            { "DLBR", new RecordType { Func = x => x > 5 ? new DLBRRecord() : null }},
-            { "DLVW", new RecordType { Func = x => x > 5 ? new DLVWRecord() : null }},
-            { "SNDR", new RecordType { Func = x => x > 5 ? new SNDRRecord() : null }},
+            { "AACT", new RecordType { Func = ()=>new AACTRecord(), Load = x => x > 5 }},
+            { "ADDN", new RecordType { Func = ()=>new ADDNRecord(), Load = x => x > 5 }},
+            { "ARMA", new RecordType { Func = ()=>new ARMARecord(), Load = x => x > 5 }},
+            { "ARTO", new RecordType { Func = ()=>new ARTORecord(), Load = x => x > 5 }},
+            { "ASPC", new RecordType { Func = ()=>new ASPCRecord(), Load = x => x > 5 }},
+            { "ASTP", new RecordType { Func = ()=>new ASTPRecord(), Load = x => x > 5 }},
+            { "AVIF", new RecordType { Func = ()=>new AVIFRecord(), Load = x => x > 5 }},
+            { "DLBR", new RecordType { Func = ()=>new DLBRRecord(), Load = x => x > 5 }},
+            { "DLVW", new RecordType { Func = ()=>new DLVWRecord(), Load = x => x > 5 }},
+            { "SNDR", new RecordType { Func = ()=>new SNDRRecord(), Load = x => x > 5 }},
         };
 
-        public Record CreateRecord(long position, byte level)
+        public static bool LoadRecord(string type, byte level) => Create.TryGetValue(type, out RecordType recordType) ? recordType.Load(level) : false;
+
+        public Record CreateRecord(long position)
         {
             if (Create.TryGetValue(Type, out RecordType recordType))
             {
-                var r = recordType.Func(level);
+                var r = recordType.Func();
                 if (r != null)
-                {
-                    //r.Position = position;
                     r.Header = this;
-                }
                 return r;
             }
             Utils.Warning($"Unsupported ESM record type: {Type}");
@@ -212,9 +214,98 @@ namespace OA.Tes.FilePacks
         }
     }
 
+    public class RecordGroup
+    {
+        public string Label => Headers.First.Value.Label;
+        public override string ToString() => Headers.First.Value.Label;
+        public LinkedList<Header> Headers = new LinkedList<Header>();
+        public List<Record> Records = new List<Record>();
+        public List<RecordGroup> Groups;
+        readonly UnityBinaryReader _r;
+        readonly string _filePath;
+        readonly GameFormatId _formatId;
+        readonly byte _level;
+        int _headerSkip;
+
+        public RecordGroup(UnityBinaryReader r, string filePath, GameFormatId formatId, byte level)
+        {
+            _r = r;
+            _filePath = filePath;
+            _formatId = formatId;
+            _level = level;
+        }
+
+        public void AddHeader(Header header)
+        {
+            Headers.AddLast(header);
+        }
+
+        public void Read()
+        {
+            if (_headerSkip == Headers.Count) return;
+            lock (_r)
+            {
+                if (_headerSkip == Headers.Count) return;
+                foreach (var header in Headers.Skip(_headerSkip))
+                    ReadGroup(header);
+                _headerSkip = Headers.Count;
+            }
+        }
+
+        void ReadGroup(Header groupHeader, bool readGroup = true)
+        {
+            _r.BaseStream.Position = groupHeader.Position;
+            var endPosition = groupHeader.Position + groupHeader.DataSize;
+            while (_r.BaseStream.Position < endPosition)
+            {
+                var header = new Header(_r, _formatId);
+                if (header.Type == "GRUP")
+                {
+                    if (Groups == null)
+                        Groups = new List<RecordGroup>();
+                    var group = new RecordGroup(_r, _filePath, _formatId, _level);
+                    group.AddHeader(header);
+                    Groups.Add(group);
+                    Console.WriteLine($"Grup: {groupHeader.Label}/{group}");
+                    if (readGroup) group.Read();
+                    else _r.BaseStream.Position += header.DataSize;
+                    continue;
+                }
+                var record = header.CreateRecord(_r.BaseStream.Position);
+                if (record == null)
+                {
+                    _r.BaseStream.Position += header.DataSize;
+                    continue;
+                }
+                ReadRecord(record, header.Compressed);
+                Records.Add(record);
+            }
+        }
+
+        void ReadRecord(Record record, bool compressed)
+        {
+            if (compressed)
+            {
+                // decompress record
+                var newDataSize = _r.ReadLEUInt32();
+                var data = _r.ReadBytes((int)record.Header.DataSize - 4);
+                var newData = new byte[newDataSize];
+                using (var s = new MemoryStream(data))
+                using (var gs = new InflaterInputStream(s))
+                    gs.Read(newData, 0, newData.Length);
+                // read record
+                record.Header.Position = 0;
+                record.Header.DataSize = newDataSize;
+                using (var s = new MemoryStream(newData))
+                using (var r = new UnityBinaryReader(s))
+                    record.Read(r, _filePath, _formatId);
+            }
+            else record.Read(_r, _filePath, _formatId);
+        }
+    }
+
     public abstract class Record : IRecord
     {
-        //internal long Position;
         internal Header Header;
 
         /// <summary>
@@ -268,7 +359,7 @@ namespace OA.Tes.FilePacks
         public FieldHeader(UnityBinaryReader r, GameFormatId formatId)
         {
             Type = r.ReadASCIIString(4);
-            DataSize = formatId == GameFormatId.TES3 ?  r.ReadLEUInt32() : r.ReadLEUInt16();
+            DataSize = formatId == GameFormatId.TES3 ? r.ReadLEUInt32() : r.ReadLEUInt16();
         }
     }
 }
