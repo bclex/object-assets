@@ -15,36 +15,51 @@ using System.Linq;
 //http://en.uesp.net/morrow/tech/mw_esm.txt
 namespace OA.Tes.FilePacks
 {
-    [Flags]
-    public enum HeaderFlags : uint
-    {
-        EsmFile = 0x00000001,               // ESM file. (TES4.HEDR record only.)
-        Deleted = 0x00000020,               // Deleted
-        R00 = 0x00000040,                   // Constant / (REFR) Hidden From Local Map (Needs Confirmation: Related to shields)
-        R01 = 0x00000100,                   // Must Update Anims / (REFR) Inaccessible
-        R02 = 0x00000200,                   // (REFR) Hidden from local map / (ACHR) Starts dead / (REFR) MotionBlurCastsShadows
-        R03 = 0x00000400,                   // Quest item / Persistent reference / (LSCR) Displays in Main Menu
-        InitiallyDisabled = 0x00000800,     // Initially disabled
-        Ignored = 0x00001000,               // Ignored
-        VisibleWhenDistant = 0x00008000,    // Visible when distant
-        R04 = 0x00010000,                   // (ACTI) Random Animation Start
-        R05 = 0x00020000,                   // (ACTI) Dangerous / Off limits (Interior cell) Dangerous Can't be set withough Ignore Object Interaction
-        Compressed = 0x00040000,            // Data is compressed
-        CantWait = 0x00080000,              // Can't wait
-        // tes5
-        R06 = 0x00100000,                   // (ACTI) Ignore Object Interaction Ignore Object Interaction Sets Dangerous Automatically
-        IsMarker = 0x00800000,              // Is Marker
-        R07 = 0x02000000,                   // (ACTI) Obstacle / (REFR) No AI Acquire
-        NavMesh01 = 0x04000000,             // NavMesh Gen - Filter
-        NavMesh02 = 0x08000000,             // NavMesh Gen - Bounding Box
-        R08 = 0x10000000,                   // (FURN) Must Exit to Talk / (REFR) Reflected By Auto Water
-        R09 = 0x20000000,                   // (FURN/IDLM) Child Can Use / (REFR) Don't Havok Settle
-        R10 = 0x40000000,                   // NavMesh Gen - Ground / (REFR) NoRespawn
-        R11 = 0x80000000,                   // (REFR) MultiBound
-    }
-
     public class Header
     {
+        [Flags]
+        public enum HeaderFlags : uint
+        {
+            EsmFile = 0x00000001,               // ESM file. (TES4.HEDR record only.)
+            Deleted = 0x00000020,               // Deleted
+            R00 = 0x00000040,                   // Constant / (REFR) Hidden From Local Map (Needs Confirmation: Related to shields)
+            R01 = 0x00000100,                   // Must Update Anims / (REFR) Inaccessible
+            R02 = 0x00000200,                   // (REFR) Hidden from local map / (ACHR) Starts dead / (REFR) MotionBlurCastsShadows
+            R03 = 0x00000400,                   // Quest item / Persistent reference / (LSCR) Displays in Main Menu
+            InitiallyDisabled = 0x00000800,     // Initially disabled
+            Ignored = 0x00001000,               // Ignored
+            VisibleWhenDistant = 0x00008000,    // Visible when distant
+            R04 = 0x00010000,                   // (ACTI) Random Animation Start
+            R05 = 0x00020000,                   // (ACTI) Dangerous / Off limits (Interior cell) Dangerous Can't be set withough Ignore Object Interaction
+            Compressed = 0x00040000,            // Data is compressed
+            CantWait = 0x00080000,              // Can't wait
+                                                // tes5
+            R06 = 0x00100000,                   // (ACTI) Ignore Object Interaction Ignore Object Interaction Sets Dangerous Automatically
+            IsMarker = 0x00800000,              // Is Marker
+            R07 = 0x02000000,                   // (ACTI) Obstacle / (REFR) No AI Acquire
+            NavMesh01 = 0x04000000,             // NavMesh Gen - Filter
+            NavMesh02 = 0x08000000,             // NavMesh Gen - Bounding Box
+            R08 = 0x10000000,                   // (FURN) Must Exit to Talk / (REFR) Reflected By Auto Water
+            R09 = 0x20000000,                   // (FURN/IDLM) Child Can Use / (REFR) Don't Havok Settle
+            R10 = 0x40000000,                   // NavMesh Gen - Ground / (REFR) NoRespawn
+            R11 = 0x80000000,                   // (REFR) MultiBound
+        }
+
+        public enum HeaderGroupType : int
+        {
+            Top = 0,                    // Label: Record type
+            WorldChildren,              // Label: Parent (WRLD)
+            InteriorCellBlock,          // Label: Block number
+            InteriorCellSubBlock,       // Label: Sub-block number
+            ExteriorCellBlock,          // Label: Grid Y, X (Note the reverse order)
+            ExteriorCellSubBlock,       // Label: Grid Y, X (Note the reverse order)
+            CellChildren,               // Label: Parent (CELL)
+            TopicChildren,              // Label: Parent (DIAL)
+            CellPersistentChilden,      // Label: Parent (CELL)
+            CellTemporaryChildren,      // Label: Parent (CELL)
+            CellVisibleDistantChildren, // Label: Parent (CELL)
+        }
+
         public override string ToString() => Type;
         public string Type; // 4 bytes
         public uint DataSize;
@@ -54,7 +69,7 @@ namespace OA.Tes.FilePacks
         public long Position;
         // group
         public string Label;
-        public int GroupType;
+        public HeaderGroupType GroupType;
 
         public Header() { }
         public Header(UnityBinaryReader r, GameFormatId formatId)
@@ -62,18 +77,12 @@ namespace OA.Tes.FilePacks
             Type = r.ReadASCIIString(4);
             if (Type == "GRUP")
             {
-                if (formatId == GameFormatId.TES4) DataSize = r.ReadLEUInt32() - 20;
-                else if (formatId == GameFormatId.TES5) DataSize = r.ReadLEUInt32() - 24;
+                DataSize = (uint)(r.ReadLEUInt32() - (formatId == GameFormatId.TES4 ? 20 : 24));
                 Label = r.ReadASCIIString(4);
-                if (formatId == GameFormatId.TES4) GroupType = r.ReadLEInt32();
-                else if (formatId == GameFormatId.TES5) GroupType = r.ReadLEInt32();
+                GroupType = (HeaderGroupType)r.ReadLEInt32();
                 r.ReadLEUInt32(); // stamp | stamp + uknown
                 if (formatId == GameFormatId.TES4)
-                {
-                    Position = r.BaseStream.Position;
-                    return;
-                }
-                r.ReadLEUInt32(); // version + uknown
+                    r.ReadLEUInt32(); // version + uknown
                 Position = r.BaseStream.Position;
                 return;
             }
@@ -325,14 +334,15 @@ namespace OA.Tes.FilePacks
                 {
                     if (header.DataSize != 4)
                         throw new InvalidOperationException();
-                    header.DataSize = (uint)r.ReadLEInt32();
+                    header.DataSize = r.ReadLEUInt32();
                     continue;
                 }
-                else if (Header.Type == "WRLD" && header.Type == "OFST")
-                {
-                    r.BaseStream.Position = endPosition;
-                    continue;
-                }
+                else if (header.Type == "OFST" && Header.Type == "WRLD")
+                    header.DataSize = (uint)(endPosition - r.BaseStream.Position);
+                //{
+                //    r.BaseStream.Position = endPosition;
+                //    continue;
+                //}
                 var position = r.BaseStream.Position;
                 if (!CreateField(r, formatId, header.Type, header.DataSize))
                 {

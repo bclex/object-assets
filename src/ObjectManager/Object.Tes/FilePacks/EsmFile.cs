@@ -117,10 +117,10 @@ namespace OA.Tes.FilePacks
                 }
                 group.AddHeader(header);
                 _r.BaseStream.Position += header.DataSize;
-                Console.WriteLine($"Read: {group}");
-                if (group.Label != "CELL" && group.Label != "WRLD")
-                    if (Header.LoadRecord(group.Label, level))
-                        group.Read();
+                //Console.WriteLine($"Read: {group}");
+                //if (group.Label != "CELL" && group.Label != "WRLD")
+                if (Header.LoadRecord(group.Label, level))
+                    group.Read();
             }
         }
 

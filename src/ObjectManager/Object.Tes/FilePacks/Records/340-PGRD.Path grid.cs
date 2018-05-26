@@ -1,4 +1,5 @@
 ﻿using OA.Core;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -63,7 +64,7 @@ namespace OA.Tes.FilePacks.Records
 
         public override string ToString() => $"PGRD: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID
-        public UNKNField DATA;
+        public IN16Field DATA; // Number of nodes
         public PGRPField[] PGRPs;
         public UNKNField PGRC;
         public UNKNField PGAG;
@@ -77,14 +78,13 @@ namespace OA.Tes.FilePacks.Records
             {
                 case "EDID":
                 case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = new UNKNField(r, dataSize); return true;
-                case "PGRP": PGRPs = new PGRPField[dataSize >> 4]; for (var i = 0; i < PGRPs.Length; i++) PGRPs[i] = new PGRPField(r, dataSize); return true;
+                case "DATA": DATA = new IN16Field(r, dataSize); return true;
+                case "PGRP": PGRPs = new PGRPField[dataSize >> 4]; for (var i = 0; i < PGRPs.Length; i++) PGRPs[i] = new PGRPField(r, 16); return true;
                 case "PGRC": PGRC = new UNKNField(r, dataSize); return true;
-                // TODO
                 case "PGAG": PGAG = new UNKNField(r, dataSize); return true;
-                case "PGRR": PGRRs = new PGRRField[dataSize >> 2]; for (var i = 0; i < PGRRs.Length; i++) PGRRs[i] = new PGRRField(r, dataSize); return true;
+                case "PGRR": PGRRs = new PGRRField[dataSize >> 2]; for (var i = 0; i < PGRRs.Length; i++) PGRRs[i] = new PGRRField(r, 4); r.ReadBytes((int)(dataSize % 4)); return true;
                 case "PGRL": if (PGRLs == null) PGRLs = new List<PGRLField>(); PGRLs.Add(new PGRLField(r, dataSize)); return true;
-                case "PGRI": PGRIs = new PGRIField[dataSize >> 4]; for (var i = 0; i < PGRIs.Length; i++) PGRIs[i] = new PGRIField(r, dataSize); return true;
+                case "PGRI": PGRIs = new PGRIField[dataSize >> 4]; for (var i = 0; i < PGRIs.Length; i++) PGRIs[i] = new PGRIField(r, 16); return true;
                 default: return false;
             }
         }
