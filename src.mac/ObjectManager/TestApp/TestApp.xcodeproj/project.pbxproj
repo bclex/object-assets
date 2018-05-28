@@ -12,8 +12,8 @@
 		5415F73020BC885D008A8E78 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 5415F72F20BC885D008A8E78 /* art.scnassets */; };
 		5415F73220BC885D008A8E78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5415F73120BC885D008A8E78 /* Assets.xcassets */; };
 		5415F73520BC885D008A8E78 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5415F73320BC885D008A8E78 /* Main.storyboard */; };
-		542CA6ED20BC9CB000031544 /* ObjectManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5415F74620BC8893008A8E78 /* ObjectManager.framework */; };
-		542CA6EE20BC9CB000031544 /* ObjectManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5415F74620BC8893008A8E78 /* ObjectManager.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		54FD13A720BC9E2A003D3138 /* ObjectManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54FD13A620BC9E2A003D3138 /* ObjectManager.framework */; };
+		54FD13A820BC9E2A003D3138 /* ObjectManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 54FD13A620BC9E2A003D3138 /* ObjectManager.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,7 +23,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				542CA6EE20BC9CB000031544 /* ObjectManager.framework in Embed Frameworks */,
+				54FD13A820BC9E2A003D3138 /* ObjectManager.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -39,7 +39,7 @@
 		5415F73420BC885D008A8E78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5415F73620BC885D008A8E78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5415F73720BC885D008A8E78 /* TestApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestApp.entitlements; sourceTree = "<group>"; };
-		5415F74620BC8893008A8E78 /* ObjectManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ObjectManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		54FD13A620BC9E2A003D3138 /* ObjectManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ObjectManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,7 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				542CA6ED20BC9CB000031544 /* ObjectManager.framework in Frameworks */,
+				54FD13A720BC9E2A003D3138 /* ObjectManager.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,6 +57,7 @@
 		5415F71F20BC885D008A8E78 = {
 			isa = PBXGroup;
 			children = (
+				54FD13A620BC9E2A003D3138 /* ObjectManager.framework */,
 				5415F72A20BC885D008A8E78 /* TestApp */,
 				5415F72920BC885D008A8E78 /* Products */,
 				5415F74420BC8893008A8E78 /* Frameworks */,
@@ -88,7 +89,6 @@
 		5415F74420BC8893008A8E78 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5415F74620BC8893008A8E78 /* ObjectManager.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

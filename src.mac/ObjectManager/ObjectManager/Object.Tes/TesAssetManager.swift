@@ -10,6 +10,7 @@ import Foundation
 
 class TesAssetManager : NSObject, IAssetManager {    
     func get(assetPack: URL?) -> IAssetPack? {
+        debugPrint("\(assetPack!)")
         return nil;
     }
     

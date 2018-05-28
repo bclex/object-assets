@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class TesPackTest : NSObject {
+public class TesPackTest {
     static var Asset: IAssetPack? = nil
     static var Data: IDataPack? = nil
     

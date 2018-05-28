@@ -14,10 +14,8 @@ class GameViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        var abc = TemporalLoadBalancer()
-        
-        //TesPackTest.start()
+    
+        TesPackTest.start()
         
         return
         
