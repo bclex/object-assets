@@ -6,6 +6,13 @@ using UnityEngine;
 
 namespace OA
 {
+    public enum EngineId
+    {
+        Tes = 0,
+        Valve,
+        Ultima,
+    }
+
     public interface IRecord
     {
     }

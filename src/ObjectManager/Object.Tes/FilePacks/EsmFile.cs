@@ -30,7 +30,7 @@ namespace OA.Tes.FilePacks
             _r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             var watch = new Stopwatch();
             watch.Start();
-            Read(10);
+            Read(0);
             Utils.Info($"Loading: {watch.Elapsed}");
             //PostProcessRecords();
             watch.Stop();
@@ -91,8 +91,8 @@ namespace OA.Tes.FilePacks
                     Label = string.Empty,
                     DataSize = (uint)(_r.BaseStream.Length - _r.BaseStream.Position),
                     Position = _r.BaseStream.Position,
-                });
-                group.Read();
+                }, int.MaxValue);
+                //group.Read();
                 Groups = group.Records.GroupBy(x => x.Header.Type)
                     .ToDictionary(x => x.Key, x =>
                     {
@@ -110,17 +110,17 @@ namespace OA.Tes.FilePacks
                 var header = new Header(_r, FormatId);
                 if (header.Type != "GRUP")
                     throw new InvalidOperationException($"{header.Type} not GRUP");
+                var nextPosition = _r.BaseStream.Position + header.DataSize;
                 if (!Groups.TryGetValue(header.Label, out RecordGroup group))
                 {
                     group = new RecordGroup(_r, FilePath, FormatId, level);
                     Groups.Add(header.Label, group);
                 }
-                group.AddHeader(header);
-                _r.BaseStream.Position += header.DataSize;
-                //Console.WriteLine($"Read: {group}");
+                group.AddHeader(header); Console.WriteLine($"Read: {group}");
                 //if (group.Label != "CELL" && group.Label != "WRLD")
-                if (Header.LoadRecord(group.Label, level))
-                    group.Read();
+                //if (Header.LoadRecord(group.Label, level))
+                //    group.Read();
+                _r.BaseStream.Position = nextPosition;
             }
         }
 

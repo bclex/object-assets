@@ -137,7 +137,6 @@
     <Compile Include="FilePacks\BsaMultiFile+Extensions.cs" />
     <Compile Include="FilePacks\Records\300-TES3.Plugin info.cs" />
     <Compile Include="FilePacks\TesDataPack.cs" />
-    <Compile Include="GameId.cs" />
     <Compile Include="FilePacks\Records\045-ACHR.Actor Reference.cs" />
     <Compile Include="FilePacks\Records\040-ACRE.Placed creature.cs" />
     <Compile Include="FilePacks\Records\345-ACTI.Activator.cs" />

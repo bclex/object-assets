@@ -7,6 +7,28 @@ namespace OA.Tes.FilePacks.Records
 {
     public class PGRDRecord : Record
     {
+        public struct DATAField
+        {
+            public int X;
+            public int Y;
+            public short Granularity;
+            public short PointCount;
+
+            public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            {
+                if (formatId == GameFormatId.TES3)
+                {
+                    X = r.ReadLEInt32();
+                    Y = r.ReadLEInt32();
+                    Granularity = r.ReadLEInt16();
+                    PointCount = r.ReadLEInt16();
+                    return;
+                }
+                else X = Y = Granularity = 0;
+                PointCount = r.ReadLEInt16();
+            }
+        }
+
         public struct PGRPField
         {
             public Vector3 Point;
@@ -64,7 +86,7 @@ namespace OA.Tes.FilePacks.Records
 
         public override string ToString() => $"PGRD: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID
-        public IN16Field DATA; // Number of nodes
+        public DATAField DATA; // Number of nodes
         public PGRPField[] PGRPs;
         public UNKNField PGRC;
         public UNKNField PGAG;
@@ -78,7 +100,7 @@ namespace OA.Tes.FilePacks.Records
             {
                 case "EDID":
                 case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = new IN16Field(r, dataSize); return true;
+                case "DATA": DATA = new DATAField(r, dataSize, formatId); return true;
                 case "PGRP": PGRPs = new PGRPField[dataSize >> 4]; for (var i = 0; i < PGRPs.Length; i++) PGRPs[i] = new PGRPField(r, 16); return true;
                 case "PGRC": PGRC = new UNKNField(r, dataSize); return true;
                 case "PGAG": PGAG = new UNKNField(r, dataSize); return true;

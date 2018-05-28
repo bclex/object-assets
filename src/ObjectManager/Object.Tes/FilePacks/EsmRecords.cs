@@ -7,12 +7,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-//https://github.com/WrinklyNinja/esplugin/tree/master/src
+
+// TES3
 //http://en.uesp.net/wiki/Tes3Mod:File_Format
+//https://github.com/TES5Edit/TES5Edit/blob/dev/wbDefinitionsTES3.pas
+//http://en.uesp.net/morrow/tech/mw_esm.txt
+//https://github.com/mlox/mlox/blob/master/util/tes3cmd/tes3cmd
+// TES4
+//https://github.com/WrinklyNinja/esplugin/tree/master/src
 //http://en.uesp.net/wiki/Tes4Mod:Mod_File_Format
+//https://github.com/TES5Edit/TES5Edit/blob/dev/wbDefinitionsTES4.pas 
+// TES5
 //http://en.uesp.net/wiki/Tes5Mod:Mod_File_Format
 //https://github.com/TES5Edit/TES5Edit/blob/dev/wbDefinitionsTES5.pas 
-//http://en.uesp.net/morrow/tech/mw_esm.txt
+
 namespace OA.Tes.FilePacks
 {
     public class Header
@@ -60,7 +68,7 @@ namespace OA.Tes.FilePacks
             CellVisibleDistantChildren, // Label: Parent (CELL)
         }
 
-        public override string ToString() => Type;
+        public override string ToString() => $"{Type}:{GroupType}";
         public string Type; // 4 bytes
         public uint DataSize;
         public HeaderFlags Flags;
@@ -81,7 +89,7 @@ namespace OA.Tes.FilePacks
                 Label = r.ReadASCIIString(4);
                 GroupType = (HeaderGroupType)r.ReadLEInt32();
                 r.ReadLEUInt32(); // stamp | stamp + uknown
-                if (formatId == GameFormatId.TES4)
+                if (formatId != GameFormatId.TES4)
                     r.ReadLEUInt32(); // version + uknown
                 Position = r.BaseStream.Position;
                 return;
@@ -226,7 +234,7 @@ namespace OA.Tes.FilePacks
     public class RecordGroup
     {
         public string Label => Headers.First.Value.Label;
-        public override string ToString() => Headers.First.Value.Label;
+        public override string ToString() => Headers.First.Value.ToString();
         public LinkedList<Header> Headers = new LinkedList<Header>();
         public List<Record> Records = new List<Record>();
         public List<RecordGroup> Groups;
@@ -244,12 +252,18 @@ namespace OA.Tes.FilePacks
             _level = level;
         }
 
-        public void AddHeader(Header header)
+        public void AddHeader(Header header, int mode = 0)
         {
             Headers.AddLast(header);
+            var grup = _r.ReadASCIIString(4);
+            _r.BaseStream.Position -= 4;
+            if (grup != "GRUP")
+                return;
+            var recordHeader = new Header(_r, _formatId);
+            ReadGrup(header, recordHeader);
         }
 
-        public void Read()
+        public void Load()
         {
             if (_headerSkip == Headers.Count) return;
             lock (_r)
@@ -261,32 +275,37 @@ namespace OA.Tes.FilePacks
             }
         }
 
-        void ReadGroup(Header groupHeader, bool readGroup = true)
+        void ReadGrup(Header header, Header recordHeader, int mode = 0)
         {
-            _r.BaseStream.Position = groupHeader.Position;
-            var endPosition = groupHeader.Position + groupHeader.DataSize;
+            var nextPosition = _r.BaseStream.Position + recordHeader.DataSize;
+            if (Groups == null)
+                Groups = new List<RecordGroup>();
+            var group = new RecordGroup(_r, _filePath, _formatId, _level);
+            group.AddHeader(recordHeader);
+            Groups.Add(group); Console.WriteLine($"Grup: {header.Label}/{group}");
+            _r.BaseStream.Position = nextPosition;
+        }
+
+        void ReadGroup(Header header)
+        {
+            _r.BaseStream.Position = header.Position;
+            var endPosition = header.Position + header.DataSize;
             while (_r.BaseStream.Position < endPosition)
             {
-                var header = new Header(_r, _formatId);
-                if (header.Type == "GRUP")
+                var recordHeader = new Header(_r, _formatId);
+                if (recordHeader.Type == "GRUP")
                 {
-                    if (Groups == null)
-                        Groups = new List<RecordGroup>();
-                    var group = new RecordGroup(_r, _filePath, _formatId, _level);
-                    group.AddHeader(header);
-                    Groups.Add(group);
-                    Console.WriteLine($"Grup: {groupHeader.Label}/{group}");
-                    if (readGroup) group.Read();
-                    else _r.BaseStream.Position += header.DataSize;
+                    ReadGrup(header, recordHeader);
+                    //group.Read();
                     continue;
                 }
-                var record = header.CreateRecord(_r.BaseStream.Position);
+                var record = recordHeader.CreateRecord(_r.BaseStream.Position);
                 if (record == null)
                 {
-                    _r.BaseStream.Position += header.DataSize;
+                    _r.BaseStream.Position += recordHeader.DataSize;
                     continue;
                 }
-                ReadRecord(record, header.Compressed);
+                ReadRecord(record, recordHeader.Compressed);
                 Records.Add(record);
             }
         }
@@ -295,7 +314,6 @@ namespace OA.Tes.FilePacks
         {
             if (compressed)
             {
-                // decompress record
                 var newDataSize = _r.ReadLEUInt32();
                 var data = _r.ReadBytes((int)record.Header.DataSize - 4);
                 var newData = new byte[newDataSize];
@@ -338,11 +356,11 @@ namespace OA.Tes.FilePacks
                     continue;
                 }
                 else if (header.Type == "OFST" && Header.Type == "WRLD")
-                    header.DataSize = (uint)(endPosition - r.BaseStream.Position);
-                //{
-                //    r.BaseStream.Position = endPosition;
-                //    continue;
-                //}
+                {
+                    r.BaseStream.Position = endPosition;
+                    continue;
+                    //header.DataSize = (uint)(endPosition - r.BaseStream.Position);
+                }
                 var position = r.BaseStream.Position;
                 if (!CreateField(r, formatId, header.Type, header.DataSize))
                 {

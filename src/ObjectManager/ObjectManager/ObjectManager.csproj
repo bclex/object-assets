@@ -94,7 +94,6 @@
     <Compile Include="Effects\UnderwaterEffect.cs" />
     <Compile Include="Formats\DdsReader.cs" />
     <Compile Include="AssetManager.cs" />
-    <Compile Include="EngineId.cs" />
     <Compile Include="GameObjectUtils.cs" />
     <Compile Include="HttpCache\HttpCacheManager.cs" />
     <Compile Include="MaterialManager.cs" />
