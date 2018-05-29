@@ -55,7 +55,6 @@
   <ItemGroup>
     <Compile Include="FilePacks\BsaFile+Extensions.cs" />
     <Compile Include="FilePacks\EsmFile+Fields.cs" />
-    <Compile Include="FilePacks\GameFormatId.cs" />
     <Compile Include="FilePacks\Records\005-ARMA.Armature %28Model%29.cs" />
     <Compile Include="FilePacks\Records\005-ARTO.Art Object.cs" />
     <Compile Include="FilePacks\Records\005-DLBR.Dialog Branch.cs" />
