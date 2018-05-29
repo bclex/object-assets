@@ -8,7 +8,7 @@ namespace OA.Tes.FilePacks.Records
         public STRVField EDID { get; set; } // Editor ID
         public CREFField CNAME; // RGB color
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

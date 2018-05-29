@@ -33,7 +33,7 @@ namespace OA.Tes.FilePacks.Records
             public float DisplacementSimulator_StartingSize;
             public ushort Damage;
 
-            public DATAField(UnityBinaryReader r, uint dataSize)
+            public DATAField(UnityBinaryReader r, int dataSize)
             {
                 if (dataSize != 102 && dataSize != 86 && dataSize != 62 && dataSize != 42 && dataSize != 2)
                     WindVelocity = 1;
@@ -94,7 +94,7 @@ namespace OA.Tes.FilePacks.Records
             public FormId<WATRRecord> Nighttime;
             public FormId<WATRRecord> Underwater;
 
-            public GNAMField(UnityBinaryReader r, uint dataSize)
+            public GNAMField(UnityBinaryReader r, int dataSize)
             {
                 Daytime = new FormId<WATRRecord>(r.ReadLEUInt32());
                 Nighttime = new FormId<WATRRecord>(r.ReadLEUInt32());
@@ -112,7 +112,7 @@ namespace OA.Tes.FilePacks.Records
         public DATAField DATA; // DATA
         public GNAMField GNAM; // GNAM
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

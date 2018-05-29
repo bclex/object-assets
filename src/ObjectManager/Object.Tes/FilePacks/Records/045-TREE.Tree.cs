@@ -8,7 +8,7 @@ namespace OA.Tes.FilePacks.Records
         {
             public int[] Values;
 
-            public SNAMField(UnityBinaryReader r, uint dataSize)
+            public SNAMField(UnityBinaryReader r, int dataSize)
             {
                 Values = new int[dataSize >> 2];
                 for (var i = 0; i < Values.Length; i++)
@@ -27,7 +27,7 @@ namespace OA.Tes.FilePacks.Records
             public float RockSpeed;
             public float RustleSpeed;
 
-            public CNAMField(UnityBinaryReader r, uint dataSize)
+            public CNAMField(UnityBinaryReader r, int dataSize)
             {
                 LeafCurvature = r.ReadLESingle();
                 MinimumLeafAngle = r.ReadLESingle();
@@ -45,7 +45,7 @@ namespace OA.Tes.FilePacks.Records
             public float Width;
             public float Height;
 
-            public BNAMField(UnityBinaryReader r, uint dataSize)
+            public BNAMField(UnityBinaryReader r, int dataSize)
             {
                 Width = r.ReadLESingle();
                 Height = r.ReadLESingle();
@@ -60,7 +60,7 @@ namespace OA.Tes.FilePacks.Records
         public CNAMField CNAM; // Tree Parameters
         public BNAMField BNAM; // Billboard Dimensions
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks.Records
             public int Value;
             public int Flags; //: AutoCalc
 
-            public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 Weight = r.ReadLESingle();
                 if (formatId == GameFormatId.TES3)
@@ -22,7 +22,7 @@ namespace OA.Tes.FilePacks.Records
                 }
             }
 
-            public void ENITField(UnityBinaryReader r, uint dataSize)
+            public void ENITField(UnityBinaryReader r, int dataSize)
             {
                 Value = r.ReadLEInt32();
                 Flags = r.ReadByte();
@@ -42,7 +42,7 @@ namespace OA.Tes.FilePacks.Records
             public int Magnitude;
             public int Unknown4;
 
-            public ENAMField(UnityBinaryReader r, uint dataSize)
+            public ENAMField(UnityBinaryReader r, int dataSize)
             {
                 EffectId = r.ReadLEInt16();
                 SkillId = r.ReadByte();
@@ -67,7 +67,7 @@ namespace OA.Tes.FilePacks.Records
         public List<ENCHRecord.EFITField> EFITs = new List<ENCHRecord.EFITField>(); // Effect Data
         public List<ENCHRecord.SCITField> SCITs = new List<ENCHRecord.SCITField>(); // Script Effect Data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

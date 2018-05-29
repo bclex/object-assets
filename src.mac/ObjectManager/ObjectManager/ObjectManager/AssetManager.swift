@@ -8,6 +8,11 @@
 
 import Foundation
 
+public enum EngineId: Int {
+    case tes = 0
+    case unk = 1
+}
+
 public protocol IRecord {
 }
 
@@ -18,14 +23,15 @@ public protocol IDataPack {
 }
 
 public protocol IAssetManager {
-    func get(assetPack: URL?) -> IAssetPack?
-    func get(dataPack: URL?) -> IDataPack?
+    public func getAssetPack(_ url: URL?) -> IAssetPack?
+    public func getDataPack(_ url: URL?) -> IDataPack?
+    public func getCellManager(asset: IAssetPack, data: IDataPack, loadBalancer: TemporalLoadBalancer) -> ICellManager?
 }
 
 public class AssetManager {
-    static let Statics: [IAssetManager] = [TesAssetManager()]
+    static let statics: [IAssetManager] = [TesAssetManager()]
     
-    static func get(assetManager: EngineId) -> IAssetManager {
-        return Statics[0];
+    static func getAssetManager(_ forEngine: EngineId) -> IAssetManager {
+        return statics[forEngine.rawValue]
     }
 }

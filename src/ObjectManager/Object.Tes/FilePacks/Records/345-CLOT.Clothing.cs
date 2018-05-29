@@ -28,7 +28,7 @@ namespace OA.Tes.FilePacks.Records
             public int Type;
             public short EnchantPts;
 
-            public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 if (formatId == GameFormatId.TES3)
                 {
@@ -71,7 +71,7 @@ namespace OA.Tes.FilePacks.Records
         public FILEField? ICO2; // Female icon (optional)
         public IN16Field? ANAM; // Enchantment points (optional)
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

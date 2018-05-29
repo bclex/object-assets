@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks.Records
             public Vector3 Position;
             public Vector3 Rotation;
 
-            public XTELField(UnityBinaryReader r, uint dataSize)
+            public XTELField(UnityBinaryReader r, int dataSize)
             {
                 Door = new FormId<REFRRecord>(r.ReadLEUInt32());
                 Position = new Vector3(r.ReadLESingle(), r.ReadLESingle(), r.ReadLESingle());
@@ -25,7 +25,7 @@ namespace OA.Tes.FilePacks.Records
             public Vector3 Position;
             public Vector3 Rotation;
 
-            public DATAField(UnityBinaryReader r, uint dataSize)
+            public DATAField(UnityBinaryReader r, int dataSize)
             {
                 Position = new Vector3(r.ReadLESingle(), r.ReadLESingle(), r.ReadLESingle());
                 Rotation = new Vector3(r.ReadLESingle(), r.ReadLESingle(), r.ReadLESingle());
@@ -39,7 +39,7 @@ namespace OA.Tes.FilePacks.Records
             public FormId<KEYMRecord> Key;
             public byte Flags;
 
-            public XLOCField(UnityBinaryReader r, uint dataSize)
+            public XLOCField(UnityBinaryReader r, int dataSize)
             {
                 LockLevel = r.ReadByte();
                 r.ReadBytes(3); // Unused
@@ -57,7 +57,7 @@ namespace OA.Tes.FilePacks.Records
             public FormId<Record> Reference;
             public byte Flags;
 
-            public XESPField(UnityBinaryReader r, uint dataSize)
+            public XESPField(UnityBinaryReader r, int dataSize)
             {
                 Reference = new FormId<Record>(r.ReadLEUInt32());
                 Flags = r.ReadByte();
@@ -70,7 +70,7 @@ namespace OA.Tes.FilePacks.Records
             public override string ToString() => $"{Seed}";
             public byte Seed;
 
-            public XSEDField(UnityBinaryReader r, uint dataSize)
+            public XSEDField(UnityBinaryReader r, int dataSize)
             {
                 Seed = r.ReadByte();
                 if (dataSize == 4)
@@ -111,7 +111,7 @@ namespace OA.Tes.FilePacks.Records
         public BYTEField? XSOL; // Contained Soul (optional)
         int NextFull;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

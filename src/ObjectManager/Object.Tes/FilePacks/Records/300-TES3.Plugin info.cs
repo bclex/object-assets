@@ -13,7 +13,7 @@ namespace OA.Tes.FilePacks.Records
             public string FileDescription;
             public uint NumRecords;
 
-            public HEDRField(UnityBinaryReader r, uint dataSize)
+            public HEDRField(UnityBinaryReader r, int dataSize)
             {
                 Version = r.ReadLESingle();
                 FileType = r.ReadLEUInt32();
@@ -27,7 +27,7 @@ namespace OA.Tes.FilePacks.Records
         public List<STRVField> MASTs;
         public List<INTVField> DATAs;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

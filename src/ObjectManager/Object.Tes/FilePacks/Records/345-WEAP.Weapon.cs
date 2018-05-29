@@ -39,7 +39,7 @@ namespace OA.Tes.FilePacks.Records
             public byte ThrustMax;
             public int Flags; // 0 = ?, 1 = Ignore Normal Weapon Resistance?
 
-            public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 if (formatId == GameFormatId.TES3)
                 {
@@ -67,12 +67,7 @@ namespace OA.Tes.FilePacks.Records
                 Health = (short)r.ReadLEInt32();
                 Weight = r.ReadLESingle();
                 Damage = r.ReadLEInt16();
-                ChopMin = 0;
-                ChopMax = 0;
-                SlashMin = 0;
-                SlashMax = 0;
-                ThrustMin = 0;
-                ThrustMax = 0;
+                ChopMin = ChopMax = SlashMin = SlashMax = ThrustMin = ThrustMax = 0;
             }
         }
 
@@ -87,7 +82,7 @@ namespace OA.Tes.FilePacks.Records
         // TES4
         public IN16Field? ANAM; // Enchantment points (optional)
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

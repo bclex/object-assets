@@ -17,7 +17,7 @@ namespace OA.Tes.FilePacks.Records
             public float SizeX;
             public float SizeCap;
 
-            public MEDTField(UnityBinaryReader r, uint dataSize)
+            public MEDTField(UnityBinaryReader r, int dataSize)
             {
                 SpellSchool = r.ReadLEInt32();
                 BaseCost = r.ReadLESingle();
@@ -86,7 +86,7 @@ namespace OA.Tes.FilePacks.Records
             public float ConstantEffectEnchantmentFactor;
             public float ConstantEffectBarterFactor;
 
-            public DATAField(UnityBinaryReader r, uint dataSize)
+            public DATAField(UnityBinaryReader r, int dataSize)
             {
                 Flags = r.ReadLEUInt32();
                 BaseCost = r.ReadLESingle();
@@ -138,7 +138,7 @@ namespace OA.Tes.FilePacks.Records
         public DATAField DATA;
         public List<STRVField> ESCEs;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             if (formatId == GameFormatId.TES3)
                 switch (type)

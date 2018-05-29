@@ -15,7 +15,7 @@ namespace OA.Tes.FilePacks.Records
             //wbInteger('Maximum training level', itU8),
             //wbInteger('Unused', itU16)
 
-            public DATAField(UnityBinaryReader r, uint dataSize)
+            public DATAField(UnityBinaryReader r, int dataSize)
             {
                 r.ReadBytes((int)dataSize);
             }
@@ -28,7 +28,7 @@ namespace OA.Tes.FilePacks.Records
         public STRVField? ICON; // Icon (Optional)
         public DATAField DATA; // Data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             if (formatId == GameFormatId.TES3)
                 switch (type)

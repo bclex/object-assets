@@ -10,7 +10,7 @@ namespace OA.Tes.FilePacks.Records
             public float Y; // Y dimension
             public float Z; // Z dimension
 
-            public DNAMField(UnityBinaryReader r, uint dataSize)
+            public DNAMField(UnityBinaryReader r, int dataSize)
             {
                 X = r.ReadLESingle();
                 Y = r.ReadLESingle();
@@ -22,7 +22,7 @@ namespace OA.Tes.FilePacks.Records
         public STRVField EDID { get; set; } // Editor ID
         public DNAMField DNAM;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

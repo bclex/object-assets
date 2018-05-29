@@ -31,7 +31,7 @@ namespace OA.Tes.FilePacks.Records
             public RDWTField[] RDWTs; // Weather Types
 
             public RDATField() { }
-            public RDATField(UnityBinaryReader r, uint dataSize)
+            public RDATField(UnityBinaryReader r, int dataSize)
             {
                 Type = r.ReadLEUInt32();
                 Flags = (REGNType)r.ReadByte();
@@ -60,7 +60,7 @@ namespace OA.Tes.FilePacks.Records
             public Vector3Int AngleVariance;
             public ColorRef VertexShading; // RGB + Shading radius (0 - 200) %
 
-            public RDOTField(UnityBinaryReader r, uint dataSize)
+            public RDOTField(UnityBinaryReader r, int dataSize)
             {
                 Object = new FormId<Record>(r.ReadLEUInt32());
                 ParentIdx = r.ReadLEUInt16();
@@ -88,7 +88,7 @@ namespace OA.Tes.FilePacks.Records
             public override string ToString() => $"{Grass}";
             public FormId<GRASRecord> Grass;
 
-            public RDGSField(UnityBinaryReader r, uint dataSize)
+            public RDGSField(UnityBinaryReader r, int dataSize)
             {
                 Grass = new FormId<GRASRecord>(r.ReadLEUInt32());
                 r.ReadBytes(4); // Unused
@@ -102,7 +102,7 @@ namespace OA.Tes.FilePacks.Records
             public uint Flags;
             public uint Chance;
 
-            public RDSDField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public RDSDField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 if (formatId == GameFormatId.TES3)
                 {
@@ -125,7 +125,7 @@ namespace OA.Tes.FilePacks.Records
             public static byte SizeOf(GameFormatId formatId) => formatId == GameFormatId.TES4 ? (byte)8 : (byte)12;
             public FormId<GLOBRecord> Global;
 
-            public RDWTField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public RDWTField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 Weather = new FormId<WTHRRecord>(r.ReadLEUInt32());
                 Chance = r.ReadLEUInt32();
@@ -145,7 +145,7 @@ namespace OA.Tes.FilePacks.Records
             public byte Ash;
             public byte Blight;
 
-            public WEATField(UnityBinaryReader r, uint dataSize)
+            public WEATField(UnityBinaryReader r, int dataSize)
             {
                 Clear = r.ReadByte();
                 Cloudy = r.ReadByte();
@@ -167,12 +167,12 @@ namespace OA.Tes.FilePacks.Records
             public uint EdgeFalloff; // (World Units)
             public Vector2[] Points; // Region Point List Data
 
-            public RPLIField(UnityBinaryReader r, uint dataSize)
+            public RPLIField(UnityBinaryReader r, int dataSize)
             {
                 EdgeFalloff = r.ReadLEUInt32();
             }
 
-            public void RPLDField(UnityBinaryReader r, uint dataSize)
+            public void RPLDField(UnityBinaryReader r, int dataSize)
             {
                 Points = new Vector2[dataSize >> 3];
                 for (var i = 0; i < Points.Length; i++)
@@ -191,7 +191,7 @@ namespace OA.Tes.FilePacks.Records
         // TES4
         public List<RPLIField> RPLIs = new List<RPLIField>(); // Region Areas
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

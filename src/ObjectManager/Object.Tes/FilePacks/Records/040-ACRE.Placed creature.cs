@@ -14,7 +14,7 @@ namespace OA.Tes.FilePacks.Records
         public FLTVField? XSCL; // Scale (optional)
         public BYTVField? XRGD; // Ragdoll Data (optional)
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

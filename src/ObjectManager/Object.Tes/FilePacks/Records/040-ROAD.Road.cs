@@ -8,7 +8,7 @@ namespace OA.Tes.FilePacks.Records
         public PGRDRecord.PGRPField[] PGRPs { get; set; }
         public UNKNField PGRR { get; set; }
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

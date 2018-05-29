@@ -11,7 +11,7 @@ namespace OA.Tes.FilePacks.Records
             public float Quality;
             public int Uses;
 
-            public LKDTField(UnityBinaryReader r, uint dataSize)
+            public LKDTField(UnityBinaryReader r, int dataSize)
             {
                 Weight = r.ReadLESingle();
                 Value = r.ReadLEInt32();
@@ -28,7 +28,7 @@ namespace OA.Tes.FilePacks.Records
         public FILEField ICON; // Inventory Icon
         public FMIDField<SCPTRecord> SCRI; // Script Name
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             if (formatId == GameFormatId.TES3)
                 switch (type)

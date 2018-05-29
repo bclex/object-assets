@@ -11,7 +11,7 @@ namespace OA.Tes.FilePacks.Records
             public byte Flags;
             public byte PartType;
 
-            public BYDTField(UnityBinaryReader r, uint dataSize)
+            public BYDTField(UnityBinaryReader r, int dataSize)
             {
                 Part = r.ReadByte();
                 Vampire = r.ReadByte();
@@ -26,7 +26,7 @@ namespace OA.Tes.FilePacks.Records
         public STRVField FNAM; // Body name
         public BYDTField BYDT;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             if (formatId == GameFormatId.TES3)
                 switch (type)

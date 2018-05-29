@@ -11,7 +11,7 @@ namespace OA.Tes.FilePacks.Records
             public int NumRecords; // Number of records and groups (not including TES4 record itself).
             public uint NextObjectId; // Next available object ID.
 
-            public HEDRField(UnityBinaryReader r, uint dataSize)
+            public HEDRField(UnityBinaryReader r, int dataSize)
             {
                 Version = r.ReadLESingle();
                 NumRecords = r.ReadLEInt32();
@@ -28,7 +28,7 @@ namespace OA.Tes.FilePacks.Records
         public IN32Field INTV; // unknown
         public IN32Field? INCC; // unknown (Optional)
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

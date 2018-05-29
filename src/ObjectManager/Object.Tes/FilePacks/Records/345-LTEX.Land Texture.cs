@@ -11,7 +11,7 @@ namespace OA.Tes.FilePacks.Records
             public byte Friction;
             public byte Restitution;
            
-            public HNAMField(UnityBinaryReader r, uint dataSize)
+            public HNAMField(UnityBinaryReader r, int dataSize)
             {
                 MaterialType = r.ReadByte();
                 Friction = r.ReadByte();
@@ -29,7 +29,7 @@ namespace OA.Tes.FilePacks.Records
         public BYTEField SNAM; // Texture specular exponent
         public List<FMIDField<GRASRecord>> GNAMs = new List<FMIDField<GRASRecord>>(); // Potential grass
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

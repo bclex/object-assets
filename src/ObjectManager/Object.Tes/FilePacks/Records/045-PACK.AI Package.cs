@@ -10,7 +10,7 @@ namespace OA.Tes.FilePacks.Records
             public ushort Flags;
             public byte Type;
 
-            public PKDTField(UnityBinaryReader r, uint dataSize)
+            public PKDTField(UnityBinaryReader r, int dataSize)
             {
                 Flags = r.ReadLEUInt16();
                 Type = r.ReadByte();
@@ -24,7 +24,7 @@ namespace OA.Tes.FilePacks.Records
             public uint Target;
             public int Radius;
 
-            public PLDTField(UnityBinaryReader r, uint dataSize)
+            public PLDTField(UnityBinaryReader r, int dataSize)
             {
                 Type = r.ReadLEInt32();
                 Target = r.ReadLEUInt32();
@@ -40,7 +40,7 @@ namespace OA.Tes.FilePacks.Records
             public sbyte Time;
             public int Duration;
 
-            public PSDTField(UnityBinaryReader r, uint dataSize)
+            public PSDTField(UnityBinaryReader r, int dataSize)
             {
                 Month = r.ReadByte();
                 DayOfWeek = r.ReadByte();
@@ -56,7 +56,7 @@ namespace OA.Tes.FilePacks.Records
             public uint Target;
             public int Count;
 
-            public PTDTField(UnityBinaryReader r, uint dataSize)
+            public PTDTField(UnityBinaryReader r, int dataSize)
             {
                 Type = r.ReadLEInt32();
                 Target = r.ReadLEUInt32();
@@ -72,7 +72,7 @@ namespace OA.Tes.FilePacks.Records
         public PTDTField PTDT; // Target
         public List<SCPTRecord.CTDAField> CTDAs = new List<SCPTRecord.CTDAField>(); // Conditions
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

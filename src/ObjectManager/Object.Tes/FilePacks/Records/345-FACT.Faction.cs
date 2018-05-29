@@ -18,7 +18,7 @@ namespace OA.Tes.FilePacks.Records
         // TES3
         public struct FADTField
         {
-            public FADTField(UnityBinaryReader r, uint dataSize)
+            public FADTField(UnityBinaryReader r, int dataSize)
             {
                 r.ReadBytes((int)dataSize);
             }
@@ -32,7 +32,7 @@ namespace OA.Tes.FilePacks.Records
             public int Mod;
             public int Combat;
 
-            public XNAMField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public XNAMField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 FormId = r.ReadLEInt32();
                 Mod = r.ReadLEInt32();
@@ -52,7 +52,7 @@ namespace OA.Tes.FilePacks.Records
         public INTVField DATA; // Flags (byte, uint32)
         public UI32Field CNAM;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             if (formatId == GameFormatId.TES3)
                 switch (type)

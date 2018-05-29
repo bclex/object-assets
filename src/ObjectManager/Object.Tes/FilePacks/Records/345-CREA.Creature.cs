@@ -49,7 +49,7 @@ namespace OA.Tes.FilePacks.Records
             public int AttackMax3;
             public int Gold;
 
-            public NPDTField(UnityBinaryReader r, uint dataSize)
+            public NPDTField(UnityBinaryReader r, int dataSize)
             {
                 Type = r.ReadLEInt32();
                 Level = r.ReadLEInt32();
@@ -112,7 +112,7 @@ namespace OA.Tes.FilePacks.Records
             public byte Unknown4;
             public uint Flags;
 
-            public AIDTField(UnityBinaryReader r, uint dataSize)
+            public AIDTField(UnityBinaryReader r, int dataSize)
             {
                 Hello = r.ReadByte();
                 Unknown1 = r.ReadByte();
@@ -134,7 +134,7 @@ namespace OA.Tes.FilePacks.Records
             public byte[] Idle;
             public byte Unknown;
 
-            public AI_WField(UnityBinaryReader r, uint dataSize, byte mode)
+            public AI_WField(UnityBinaryReader r, int dataSize, byte mode)
             {
                 Distance = r.ReadLEInt16();
                 Duration = r.ReadLEInt16();
@@ -151,7 +151,7 @@ namespace OA.Tes.FilePacks.Records
             public float Z;
             public float Unknown;
 
-            public AI_TField(UnityBinaryReader r, uint dataSize)
+            public AI_TField(UnityBinaryReader r, int dataSize)
             {
                 X = r.ReadLESingle();
                 Y = r.ReadLESingle();
@@ -169,7 +169,7 @@ namespace OA.Tes.FilePacks.Records
             public string Id;
             public short Unknown;
 
-            public AI_FField(UnityBinaryReader r, uint dataSize)
+            public AI_FField(UnityBinaryReader r, int dataSize)
             {
                 X = r.ReadLESingle();
                 Y = r.ReadLESingle();
@@ -185,7 +185,7 @@ namespace OA.Tes.FilePacks.Records
             public string Name;
             public byte Unknown;
 
-            public AI_AField(UnityBinaryReader r, uint dataSize)
+            public AI_AField(UnityBinaryReader r, int dataSize)
             {
                 Name = r.ReadASCIIString(32, ASCIIFormat.ZeroPadded);
                 Unknown = r.ReadByte();
@@ -210,7 +210,7 @@ namespace OA.Tes.FilePacks.Records
         public STRVField? CNAM;
         public List<STRVField> NPCSs = new List<STRVField>();
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             if (formatId == GameFormatId.TES3)
                 switch (type)

@@ -27,7 +27,7 @@ namespace OA.Tes.FilePacks.Records
             public int GridY;
             public uint Flags;
 
-            public XCLCField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public XCLCField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 GridX = r.ReadLEInt32();
                 GridY = r.ReadLEInt32();
@@ -50,7 +50,7 @@ namespace OA.Tes.FilePacks.Records
             // TES5
             public float FogPow;
 
-            public XCLLField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public XCLLField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 AmbientColor = new ColorRef(r);
                 DirectionalColor = new ColorRef(r);
@@ -90,7 +90,7 @@ namespace OA.Tes.FilePacks.Records
                 public Vector3 Position;
                 public Vector3 EulerAngles;
 
-                public XYZAField(UnityBinaryReader r, uint dataSize)
+                public XYZAField(UnityBinaryReader r, int dataSize)
                 {
                     Position = r.ReadLEVector3();
                     EulerAngles = r.ReadLEVector3();
@@ -149,7 +149,7 @@ namespace OA.Tes.FilePacks.Records
         public Vector2i GridCoords => new Vector2i(XCLC.Value.GridX, XCLC.Value.GridY);
         public Color? AmbientLight => XCLL != null ? (Color?)XCLL.Value.AmbientColor.ToColor32() : null;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             if (!InFRMR && type == "FRMR")
                 InFRMR = true;

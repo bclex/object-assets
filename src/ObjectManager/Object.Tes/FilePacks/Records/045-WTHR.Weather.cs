@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks.Records
             public float NightNear;
             public float NightFar;
 
-            public FNAMField(UnityBinaryReader r, uint dataSize)
+            public FNAMField(UnityBinaryReader r, int dataSize)
             {
                 DayNear = r.ReadLESingle();
                 DayFar = r.ReadLESingle();
@@ -38,7 +38,7 @@ namespace OA.Tes.FilePacks.Records
             public float GrassDimmer;
             public float TreeDimmer;
 
-            public HNAMField(UnityBinaryReader r, uint dataSize)
+            public HNAMField(UnityBinaryReader r, int dataSize)
             {
                 EyeAdaptSpeed = r.ReadLESingle();
                 BlurRadius = r.ReadLESingle();
@@ -73,7 +73,7 @@ namespace OA.Tes.FilePacks.Records
             public byte WeatherClassification;
             public ColorRef LightningColor;
 
-            public DATAField(UnityBinaryReader r, uint dataSize)
+            public DATAField(UnityBinaryReader r, int dataSize)
             {
                 WindSpeed = r.ReadByte();
                 CloudSpeed_Lower = r.ReadByte();
@@ -96,7 +96,7 @@ namespace OA.Tes.FilePacks.Records
             public FormId<SOUNRecord> Sound; // Sound FormId
             public uint Type; // Sound Type - 0=Default, 1=Precipitation, 2=Wind, 3=Thunder
 
-            public SNAMField(UnityBinaryReader r, uint dataSize)
+            public SNAMField(UnityBinaryReader r, int dataSize)
             {
                 Sound = new FormId<SOUNRecord>(r.ReadLEUInt32());
                 Type = r.ReadLEUInt32();
@@ -114,7 +114,7 @@ namespace OA.Tes.FilePacks.Records
         public DATAField DATA; // Weather Data
         public List<SNAMField> SNAMs = new List<SNAMField>(); // Sounds
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

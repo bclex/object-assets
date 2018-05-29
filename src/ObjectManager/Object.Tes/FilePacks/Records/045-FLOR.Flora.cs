@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks.Records
         public FMIDField<INGRRecord> PFIG; // The ingredient the plant produces (optional)
         public BYTVField PFPC; // Spring, Summer, Fall, Winter Ingredient Production (byte)
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

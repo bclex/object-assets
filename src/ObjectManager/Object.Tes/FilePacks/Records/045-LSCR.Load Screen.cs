@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks.Records
             public short IndirectGridX;
             public short IndirectGridY;
 
-            public LNAMField(UnityBinaryReader r, uint dataSize)
+            public LNAMField(UnityBinaryReader r, int dataSize)
             {
                 Direct = new FormId<Record>(r.ReadLEUInt32());
                 //if (dataSize == 0)
@@ -29,7 +29,7 @@ namespace OA.Tes.FilePacks.Records
         public STRVField DESC; // Description
         public List<LNAMField> LNAMs; // LoadForm
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

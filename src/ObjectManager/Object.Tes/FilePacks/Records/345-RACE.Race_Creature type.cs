@@ -70,7 +70,7 @@ namespace OA.Tes.FilePacks.Records
             public Gender Female;
             public uint Flags; // 1 = Playable 2 = Beast Race
 
-            public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 Male = new Gender();
                 Female = new Gender();
@@ -102,7 +102,7 @@ namespace OA.Tes.FilePacks.Records
                 Flags = r.ReadLEUInt32();
             }
 
-            public void ATTRField(UnityBinaryReader r, uint dataSize)
+            public void ATTRField(UnityBinaryReader r, int dataSize)
             {
                 Male.Strength = r.ReadByte();
                 Male.Intelligence = r.ReadByte();
@@ -194,7 +194,7 @@ namespace OA.Tes.FilePacks.Records
         public List<FacePartGroup> FaceParts = new List<FacePartGroup>();
         public BodyGroup[] Bodys = new[] { new BodyGroup(), new BodyGroup() };
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             if (formatId == GameFormatId.TES3)
                 switch (type)

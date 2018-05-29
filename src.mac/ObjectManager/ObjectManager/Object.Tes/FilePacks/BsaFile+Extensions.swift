@@ -7,3 +7,24 @@
 //
 
 import Foundation
+
+extension BsaFile {
+    func testContainsFile() {
+        for file in _files {
+             debugPrint(file.path)
+             guard containsFile(file.path) else {
+                 fatalError("Hash Invalid")
+             }
+             guard !_filesByHash[hashFilePath(file.path)].contains({ $0.path == file.path }) else {
+                  fatalError("Hash Invalid")
+             }
+        }
+    }
+
+    func testLoadFileData() {
+         for file in _files {
+            debugPrint(file.path)
+            loadFileData(file)
+        }
+    }
+}

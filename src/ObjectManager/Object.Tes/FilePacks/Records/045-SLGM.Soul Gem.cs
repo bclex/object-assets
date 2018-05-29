@@ -9,7 +9,7 @@ namespace OA.Tes.FilePacks.Records
             public int Value;
             public float Weight;
 
-            public DATAField(UnityBinaryReader r, uint dataSize)
+            public DATAField(UnityBinaryReader r, int dataSize)
             {
                 Value = r.ReadLEInt32();
                 Weight = r.ReadLESingle();
@@ -26,7 +26,7 @@ namespace OA.Tes.FilePacks.Records
         public BYTEField SOUL; // Type of soul contained in the gem
         public BYTEField SLCP; // Soul gem maximum capacity
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

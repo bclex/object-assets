@@ -16,7 +16,7 @@ namespace OA.Tes.FilePacks.Records
         public BYTEField FNAM; // Flags
         public FMIDField<Record> TNAM; // Random teleport destination
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

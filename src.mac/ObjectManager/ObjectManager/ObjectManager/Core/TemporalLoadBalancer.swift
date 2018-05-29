@@ -8,6 +8,6 @@
 
 import Foundation
 
-public class TemporalLoadBalancer: NSObject {
+public class TemporalLoadBalancer {
     
 }

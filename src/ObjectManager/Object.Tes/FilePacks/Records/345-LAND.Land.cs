@@ -10,7 +10,7 @@ namespace OA.Tes.FilePacks.Records
         {
             public Vector3Int[] Vertexs; // XYZ 8 bit floats
 
-            public VNMLField(UnityBinaryReader r, uint dataSize)
+            public VNMLField(UnityBinaryReader r, int dataSize)
             {
                 Vertexs = new Vector3Int[dataSize / 3];
                 for (var i = 0; i < Vertexs.Length; i++)
@@ -23,7 +23,7 @@ namespace OA.Tes.FilePacks.Records
             public float ReferenceHeight; // A height offset for the entire cell. Decreasing this value will shift the entire cell land down.
             public sbyte[] HeightData; // HeightData
 
-            public VHGTField(UnityBinaryReader r, uint dataSize)
+            public VHGTField(UnityBinaryReader r, int dataSize)
             {
                 ReferenceHeight = r.ReadLESingle();
                 HeightData = new sbyte[dataSize - 4 - 3];
@@ -37,7 +37,7 @@ namespace OA.Tes.FilePacks.Records
         {
             public ColorRef[] Colors; // 24-bit RGB
 
-            public VCLRField(UnityBinaryReader r, uint dataSize)
+            public VCLRField(UnityBinaryReader r, int dataSize)
             {
                 Colors = new ColorRef[dataSize / 24];
                 for (var i = 0; i < Colors.Length; i++)
@@ -49,7 +49,7 @@ namespace OA.Tes.FilePacks.Records
         {
             public uint[] TextureIndices;
 
-            public VTEXField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public VTEXField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 if (formatId == GameFormatId.TES3)
                 {
@@ -72,7 +72,7 @@ namespace OA.Tes.FilePacks.Records
             public override string ToString() => $"{CellX}, {CellY}";
             public int CellX, CellY;
 
-            public CORDField(UnityBinaryReader r, uint dataSize)
+            public CORDField(UnityBinaryReader r, int dataSize)
             {
                 CellX = r.ReadLEInt32();
                 CellY = r.ReadLEInt32();
@@ -82,7 +82,7 @@ namespace OA.Tes.FilePacks.Records
         public struct WNAMField
         {
             // Low-LOD heightmap (signed chars)
-            public WNAMField(UnityBinaryReader r, uint dataSize)
+            public WNAMField(UnityBinaryReader r, int dataSize)
             {
                 var heightCount = dataSize;
                 for (var i = 0; i < heightCount; i++)
@@ -99,7 +99,7 @@ namespace OA.Tes.FilePacks.Records
             public byte Quadrant;
             public short Layer;
 
-            public BTXTField(UnityBinaryReader r, uint dataSize)
+            public BTXTField(UnityBinaryReader r, int dataSize)
             {
                 Texture = r.ReadLEUInt32();
                 Quadrant = r.ReadByte();
@@ -113,7 +113,7 @@ namespace OA.Tes.FilePacks.Records
             public ushort Position;
             public float Opacity;
 
-            public VTXTField(UnityBinaryReader r, uint dataSize)
+            public VTXTField(UnityBinaryReader r, int dataSize)
             {
                 Position = r.ReadLEUInt16();
                 r.ReadBytes(2); // Unused
@@ -146,7 +146,7 @@ namespace OA.Tes.FilePacks.Records
 
         public Vector2i GridCoords => new Vector2i(INTV.CellX, INTV.CellY);
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

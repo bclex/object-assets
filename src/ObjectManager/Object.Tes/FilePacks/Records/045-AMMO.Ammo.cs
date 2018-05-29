@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks.Records
             public float Weight;
             public ushort Damage;
 
-            public DATAField(UnityBinaryReader r, uint dataSize)
+            public DATAField(UnityBinaryReader r, int dataSize)
             {
                 Speed = r.ReadLESingle();
                 Flags = r.ReadLEUInt32();
@@ -31,7 +31,7 @@ namespace OA.Tes.FilePacks.Records
         public IN16Field? ANAM; // Enchantment points (optional)
         public DATAField DATA; // Ammo Data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

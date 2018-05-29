@@ -14,7 +14,7 @@ namespace OA.Tes.FilePacks.Records
             public int[] SkillId; // only for Skill related effects, 0 or -1 otherwise
             public int[] AttributeId; // only for Attribute related effects, 0 or -1 otherwise
 
-            public IRDTField(UnityBinaryReader r, uint dataSize)
+            public IRDTField(UnityBinaryReader r, int dataSize)
             {
                 Weight = r.ReadLESingle();
                 Value = r.ReadLEInt32();
@@ -37,12 +37,12 @@ namespace OA.Tes.FilePacks.Records
             public int Value;
             public uint Flags;
 
-            public DATAField(UnityBinaryReader r, uint dataSize)
+            public DATAField(UnityBinaryReader r, int dataSize)
             {
                 Weight = r.ReadLESingle();
             }
 
-            public void ENITField(UnityBinaryReader r, uint dataSize)
+            public void ENITField(UnityBinaryReader r, int dataSize)
             {
                 Value = r.ReadLEInt32();
                 Flags = r.ReadLEUInt32();
@@ -61,7 +61,7 @@ namespace OA.Tes.FilePacks.Records
         public List<ENCHRecord.EFITField> EFITs = new List<ENCHRecord.EFITField>(); // Effect Data
         public List<ENCHRecord.SCITField> SCITs = new List<ENCHRecord.SCITField>(); // Script effect data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

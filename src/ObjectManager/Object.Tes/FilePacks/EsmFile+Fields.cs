@@ -21,17 +21,17 @@ namespace OA.Tes.FilePacks
         public float Bound;
         public byte[] Textures; // Texture Files Hashes
 
-        public MODLGroup(UnityBinaryReader r, uint dataSize)
+        public MODLGroup(UnityBinaryReader r, int dataSize)
         {
             Value = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
         }
 
-        public void MODBField(UnityBinaryReader r, uint dataSize)
+        public void MODBField(UnityBinaryReader r, int dataSize)
         {
             Bound = r.ReadLESingle();
         }
 
-        public void MODTField(UnityBinaryReader r, uint dataSize)
+        public void MODTField(UnityBinaryReader r, int dataSize)
         {
             Textures = r.ReadBytes((int)dataSize);
         }
@@ -43,9 +43,9 @@ namespace OA.Tes.FilePacks
         public override string ToString() => $"{Value}";
         public string Value;
 
-        public STRVField(UnityBinaryReader r, uint dataSize, ASCIIFormat format = ASCIIFormat.PossiblyNullTerminated)
+        public STRVField(UnityBinaryReader r, int dataSize, ASCIIFormat format = ASCIIFormat.PossiblyNullTerminated)
         {
-            Value = r.ReadASCIIString((int)dataSize, format);
+            Value = r.ReadASCIIString(dataSize, format);
         }
     }
 
@@ -54,9 +54,9 @@ namespace OA.Tes.FilePacks
         public override string ToString() => $"{Value}";
         public string Value;
 
-        public FILEField(UnityBinaryReader r, uint dataSize)
+        public FILEField(UnityBinaryReader r, int dataSize)
         {
-            Value = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
+            Value = r.ReadASCIIString(dataSize, ASCIIFormat.PossiblyNullTerminated);
         }
     }
 
@@ -65,7 +65,7 @@ namespace OA.Tes.FilePacks
         public override string ToString() => $"{Value}";
         public long Value;
 
-        public INTVField(UnityBinaryReader r, uint dataSize)
+        public INTVField(UnityBinaryReader r, int dataSize)
         {
             switch (dataSize)
             {
@@ -82,6 +82,7 @@ namespace OA.Tes.FilePacks
     //[StructLayout(LayoutKind.Explicit)]
     public struct DATVField
     {
+        public override string ToString() => "DATV";
         //[FieldOffset(0)]
         public bool ValueB;
         //[FieldOffset(0)]
@@ -91,14 +92,17 @@ namespace OA.Tes.FilePacks
         //[FieldOffset(0)]
         public string ValueS;
 
-        public static DATVField Create(UnityBinaryReader r, uint dataSize, char type)
+        public DATVField(UnityBinaryReader r, int dataSize, char type)
         {
+            ValueB = false;
+            ValueF = ValueI = 0;
+            ValueS = null;
             switch (type)
             {
-                case 'b': return new DATVField { ValueB = r.ReadLEInt32() != 0 };
-                case 'i': return new DATVField { ValueI = r.ReadLEInt32() };
-                case 'f': return new DATVField { ValueF = r.ReadLESingle() };
-                case 's': return new DATVField { ValueS = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated) };
+                case 'b': ValueB = r.ReadLEInt32() != 0; return;
+                case 'i': ValueI = r.ReadLEInt32(); return;
+                case 'f': ValueF = r.ReadLESingle(); return;
+                case 's': ValueS = r.ReadASCIIString(dataSize, ASCIIFormat.PossiblyNullTerminated); return;
                 default: throw new InvalidOperationException();
             }
         }
@@ -109,7 +113,7 @@ namespace OA.Tes.FilePacks
         public override string ToString() => $"{Value}";
         public float Value;
 
-        public FLTVField(UnityBinaryReader r, uint dataSize)
+        public FLTVField(UnityBinaryReader r, int dataSize)
         {
             Value = r.ReadLESingle();
         }
@@ -120,7 +124,7 @@ namespace OA.Tes.FilePacks
         public override string ToString() => $"{Value}";
         public byte Value;
 
-        public BYTEField(UnityBinaryReader r, uint dataSize)
+        public BYTEField(UnityBinaryReader r, int dataSize)
         {
             Value = r.ReadByte();
         }
@@ -131,7 +135,7 @@ namespace OA.Tes.FilePacks
         public override string ToString() => $"{Value}";
         public short Value;
 
-        public IN16Field(UnityBinaryReader r, uint dataSize)
+        public IN16Field(UnityBinaryReader r, int dataSize)
         {
             Value = r.ReadLEInt16();
         }
@@ -142,7 +146,7 @@ namespace OA.Tes.FilePacks
         public override string ToString() => $"{Value}";
         public ushort Value;
 
-        public UI16Field(UnityBinaryReader r, uint dataSize)
+        public UI16Field(UnityBinaryReader r, int dataSize)
         {
             Value = r.ReadLEUInt16();
         }
@@ -153,7 +157,7 @@ namespace OA.Tes.FilePacks
         public override string ToString() => $"{Value}";
         public int Value;
 
-        public IN32Field(UnityBinaryReader r, uint dataSize)
+        public IN32Field(UnityBinaryReader r, int dataSize)
         {
             Value = r.ReadLEInt32();
         }
@@ -164,7 +168,7 @@ namespace OA.Tes.FilePacks
         public override string ToString() => $"{Value}";
         public uint Value;
 
-        public UI32Field(UnityBinaryReader r, uint dataSize)
+        public UI32Field(UnityBinaryReader r, int dataSize)
         {
             Value = r.ReadLEUInt32();
         }
@@ -173,7 +177,7 @@ namespace OA.Tes.FilePacks
     public struct FormId<TRecord>
         where TRecord : Record
     {
-        public override string ToString() => $"{Type}:{Id}";
+        public override string ToString() => $"{Type}:{Name}{Id}";
         public readonly uint Id;
         public readonly string Name;
         public string Type => typeof(TRecord).Name.Substring(0, 4);
@@ -190,9 +194,11 @@ namespace OA.Tes.FilePacks
         public override string ToString() => $"{Value}";
         public FormId<TRecord> Value;
 
-        public FMIDField(UnityBinaryReader r, uint dataSize)
+        public FMIDField(UnityBinaryReader r, int dataSize)
         {
-            Value = dataSize == 4 ? new FormId<TRecord>(r.ReadLEUInt32()) : new FormId<TRecord>(r.ReadASCIIString((int)dataSize, ASCIIFormat.ZeroPadded));
+            Value = dataSize == 4 ?
+                new FormId<TRecord>(r.ReadLEUInt32()) :
+                new FormId<TRecord>(r.ReadASCIIString(dataSize, ASCIIFormat.ZeroPadded));
         }
 
         public void AddName(string name)
@@ -204,11 +210,11 @@ namespace OA.Tes.FilePacks
     public struct FMID2Field<TRecord>
        where TRecord : Record
     {
-        public override string ToString() => $"{Value1}x{Value1}";
+        public override string ToString() => $"{Value1}x{Value2}";
         public FormId<TRecord> Value1;
         public FormId<TRecord> Value2;
 
-        public FMID2Field(UnityBinaryReader r, uint dataSize)
+        public FMID2Field(UnityBinaryReader r, int dataSize)
         {
             Value1 = new FormId<TRecord>(r.ReadLEUInt32());
             Value2 = new FormId<TRecord>(r.ReadLEUInt32());
@@ -245,7 +251,7 @@ namespace OA.Tes.FilePacks
     {
         public ColorRef Color;
 
-        public CREFField(UnityBinaryReader r, uint dataSize)
+        public CREFField(UnityBinaryReader r, int dataSize)
         {
             Color = new ColorRef(r);
         }
@@ -253,11 +259,11 @@ namespace OA.Tes.FilePacks
 
     public struct CNTOField
     {
-        public override string ToString() => $"{Item.Name ?? Item.Id.ToString()}";
+        public override string ToString() => $"{Item}";
         public uint ItemCount; // Number of the item
         public FormId<Record> Item; // The ID of the item
 
-        public CNTOField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+        public CNTOField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
         {
             if (formatId == GameFormatId.TES3)
             {
@@ -275,9 +281,9 @@ namespace OA.Tes.FilePacks
         public override string ToString() => $"BYTS";
         public byte[] Value;
 
-        public BYTVField(UnityBinaryReader r, uint dataSize)
+        public BYTVField(UnityBinaryReader r, int dataSize)
         {
-            Value = r.ReadBytes((int)dataSize);
+            Value = r.ReadBytes(dataSize);
         }
     }
 
@@ -286,9 +292,9 @@ namespace OA.Tes.FilePacks
         public override string ToString() => $"UNKN";
         public byte[] Value;
 
-        public UNKNField(UnityBinaryReader r, uint dataSize)
+        public UNKNField(UnityBinaryReader r, int dataSize)
         {
-            Value = r.ReadBytes((int)dataSize);
+            Value = r.ReadBytes(dataSize);
         }
     }
 }

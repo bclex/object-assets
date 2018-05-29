@@ -11,7 +11,7 @@ namespace OA.Tes.FilePacks.Records
             public byte Flags; // flags 0x0001 = Organic, 0x0002 = Respawns, organic only, 0x0008 = Default, unknown
             public float Weight;
 
-            public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 if (formatId == GameFormatId.TES3)
                 {
@@ -22,7 +22,7 @@ namespace OA.Tes.FilePacks.Records
                 Weight = r.ReadLESingle();
             }
 
-            public void FLAGField(UnityBinaryReader r, uint dataSize)
+            public void FLAGField(UnityBinaryReader r, int dataSize)
             {
                 Flags = (byte)r.ReadLEUInt32();
             }
@@ -39,7 +39,7 @@ namespace OA.Tes.FilePacks.Records
         public FMIDField<SOUNRecord> SNAM; // Open sound
         public FMIDField<SOUNRecord> QNAM; // Close sound
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

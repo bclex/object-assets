@@ -25,7 +25,7 @@ namespace OA.Tes.FilePacks.Records
             public float WavePeriod;
             public byte Flags;
 
-            public DATAField(UnityBinaryReader r, uint dataSize)
+            public DATAField(UnityBinaryReader r, int dataSize)
             {
                 Density = r.ReadByte();
                 MinSlope = r.ReadByte();
@@ -48,7 +48,7 @@ namespace OA.Tes.FilePacks.Records
         public MODLGroup MODL;
         public DATAField DATA;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

@@ -16,7 +16,7 @@ public class TesPackTest {
         let assetUrl = URL(string: "game://Morrowind/Morrowind.bsa")
         //let dataUrl = URL(string: "game://Morrowind/Morrowind.esm")
     
-        let assetManager = AssetManager.get(assetManager: .Tes)
-        Asset = assetManager.get(assetPack: assetUrl)
+        let assetManager = AssetManager.getAssetManager(.tes)
+        Asset = assetManager.getAssetPack(assetUrl)
     }
 }

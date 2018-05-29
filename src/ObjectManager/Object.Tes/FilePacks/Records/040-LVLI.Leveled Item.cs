@@ -11,7 +11,7 @@ namespace OA.Tes.FilePacks.Records
             public FormId<Record> ItemFormId;
             public int Count;
 
-            public LVLOField(UnityBinaryReader r, uint dataSize)
+            public LVLOField(UnityBinaryReader r, int dataSize)
             {
                 Level = r.ReadLEInt16();
                 r.ReadBytes(2); // Unused
@@ -32,7 +32,7 @@ namespace OA.Tes.FilePacks.Records
         public BYTEField? DATA; // Data (optional)
         public List<LVLOField> LVLOs = new List<LVLOField>();
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

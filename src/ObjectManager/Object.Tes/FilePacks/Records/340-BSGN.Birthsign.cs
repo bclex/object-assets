@@ -13,7 +13,7 @@ namespace OA.Tes.FilePacks.Records
         public List<STRVField> NPCSs = new List<STRVField>(); // TES3: Spell/ability
         public List<FMIDField<Record>> SPLOs = new List<FMIDField<Record>>(); // TES4: (points to a SPEL or LVSP record)
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

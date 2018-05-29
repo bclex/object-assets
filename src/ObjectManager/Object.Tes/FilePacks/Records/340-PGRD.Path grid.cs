@@ -14,7 +14,7 @@ namespace OA.Tes.FilePacks.Records
             public short Granularity;
             public short PointCount;
 
-            public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 if (formatId == GameFormatId.TES3)
                 {
@@ -34,7 +34,7 @@ namespace OA.Tes.FilePacks.Records
             public Vector3 Point;
             public byte Connections;
 
-            public PGRPField(UnityBinaryReader r, uint dataSize)
+            public PGRPField(UnityBinaryReader r, int dataSize)
             {
                 Point = new Vector3(r.ReadLESingle(), r.ReadLESingle(), r.ReadLESingle());
                 Connections = r.ReadByte();
@@ -47,7 +47,7 @@ namespace OA.Tes.FilePacks.Records
             public short StartPointId;
             public short EndPointId;
 
-            public PGRRField(UnityBinaryReader r, uint dataSize)
+            public PGRRField(UnityBinaryReader r, int dataSize)
             {
                 StartPointId = r.ReadLEInt16();
                 EndPointId = r.ReadLEInt16();
@@ -59,7 +59,7 @@ namespace OA.Tes.FilePacks.Records
             public short PointId;
             public Vector3 ForeignNode;
 
-            public PGRIField(UnityBinaryReader r, uint dataSize)
+            public PGRIField(UnityBinaryReader r, int dataSize)
             {
                 PointId = r.ReadLEInt16();
                 r.ReadBytes(2); // Unused (can merge back)
@@ -72,7 +72,7 @@ namespace OA.Tes.FilePacks.Records
             public FormId<REFRRecord> Reference;
             public short[] PointIds;
 
-            public PGRLField(UnityBinaryReader r, uint dataSize)
+            public PGRLField(UnityBinaryReader r, int dataSize)
             {
                 Reference = new FormId<REFRRecord>(r.ReadLEUInt32());
                 PointIds = new short[(dataSize - 4) >> 2];
@@ -94,7 +94,7 @@ namespace OA.Tes.FilePacks.Records
         public List<PGRLField> PGRLs; // Point-to-Reference Mappings
         public PGRIField[] PGRIs; // Inter-Cell Connections
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

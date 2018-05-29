@@ -50,7 +50,7 @@ namespace OA.Tes.FilePacks.Records
             public byte Unknown3;
             //public int Gold;
 
-            public NPDTField(UnityBinaryReader r, uint dataSize)
+            public NPDTField(UnityBinaryReader r, int dataSize)
             {
                 if (dataSize == 52)
                 {
@@ -97,7 +97,7 @@ namespace OA.Tes.FilePacks.Records
             public float YRot;
             public float ZRot;
 
-            public DODTField(UnityBinaryReader r, uint dataSize)
+            public DODTField(UnityBinaryReader r, int dataSize)
             {
                 XPos = r.ReadLESingle();
                 YPos = r.ReadLESingle();
@@ -133,7 +133,7 @@ namespace OA.Tes.FilePacks.Records
         public FLTVField? XSCL; // Scale (optional) Only present if the scale is not 1.0
         public FMIDField<SCPTRecord>? SCRI; // Unknown
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

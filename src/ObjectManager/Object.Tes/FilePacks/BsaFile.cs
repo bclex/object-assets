@@ -99,8 +99,8 @@ namespace OA.Tes.FilePacks
 
         public override string ToString() => $"{Path.GetFileName(FilePath)}";
         UnityBinaryReader _r;
-        uint Magic; // 4 bytes
-        uint Version; // 4 bytes
+        public uint Magic; // 4 bytes
+        public uint Version; // 4 bytes
         bool _compressToggle; // Whether the %BSA is compressed
         bool _hasNamePrefix; // Whether Fallout 3 names are prefixed with an extra string
         FileMetadata[] _files;
@@ -197,7 +197,6 @@ namespace OA.Tes.FilePacks
                     using (var s = new MemoryStream(fileData))
                     using (var gs = new Lzw​Input​Stream(s))
                         gs.Read(newFileData, 0, newFileData.Length);
-                    fileData = newFileData;
                 }
                 fileData = newFileData;
             }
@@ -294,10 +293,10 @@ namespace OA.Tes.FilePacks
         void ReadMetadata()
         {
             // Open
-            Magic = BitConverter.ToUInt32(_r.ReadBytes(4), 0);
+            Magic = _r.ReadLEUInt32();
             if (Magic == F4_BSAHEADER_FILEID)
             {
-                Version = BitConverter.ToUInt32(_r.ReadBytes(4), 0);
+                Version = _r.ReadLEUInt32();
                 if (Version != F4_BSAHEADER_VERSION)
                     throw new InvalidOperationException("BAD MAGIC");
                 // Read the header
@@ -383,7 +382,7 @@ namespace OA.Tes.FilePacks
             }
             else if (Magic == OB_BSAHEADER_FILEID)
             {
-                Version = BitConverter.ToUInt32(_r.ReadBytes(4), 0);
+                Version = _r.ReadLEUInt32();
                 if (Version != OB_BSAHEADER_VERSION && Version != F3_BSAHEADER_VERSION && Version != SSE_BSAHEADER_VERSION)
                     throw new InvalidOperationException("BAD MAGIC");
                 // Read the header

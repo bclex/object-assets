@@ -44,7 +44,7 @@ namespace OA.Tes.FilePacks.Records
             public float RushingAttackDistanceMult;
             public uint Flags2;
 
-            public CSTDField(UnityBinaryReader r, uint dataSize)
+            public CSTDField(UnityBinaryReader r, int dataSize)
             {
                 //if (dataSize != 124 && dataSize != 120 && dataSize != 112 && dataSize != 104 && dataSize != 92 && dataSize != 84)
                 //    DodgePercentChance = 0;
@@ -118,7 +118,7 @@ namespace OA.Tes.FilePacks.Records
             public float PowerAttFatigueModBase;
             public float PowerAttFatigueModMult;
 
-            public CSADField(UnityBinaryReader r, uint dataSize)
+            public CSADField(UnityBinaryReader r, int dataSize)
             {
                 DodgeFatigueModMult = r.ReadLESingle();
                 DodgeFatigueModBase = r.ReadLESingle();
@@ -149,7 +149,7 @@ namespace OA.Tes.FilePacks.Records
         public CSTDField CSTD; // Standard
         public CSADField CSAD; // Advanced
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

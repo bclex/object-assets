@@ -15,7 +15,7 @@ namespace OA.Tes.FilePacks.Records
             public byte PCRank; // (0-10)
             public byte Unknown2;
 
-            public DATA3Field(UnityBinaryReader r, uint dataSize)
+            public DATA3Field(UnityBinaryReader r, int dataSize)
             {
                 Unknown1 = r.ReadLEInt32();
                 Disposition = r.ReadLEInt32();
@@ -54,7 +54,7 @@ namespace OA.Tes.FilePacks.Records
             public byte NextSpeaker;
             public byte Flags;
 
-            public DATA4Field(UnityBinaryReader r, uint dataSize)
+            public DATA4Field(UnityBinaryReader r, int dataSize)
             {
                 Type = r.ReadByte();
                 NextSpeaker = r.ReadByte();
@@ -70,7 +70,7 @@ namespace OA.Tes.FilePacks.Records
             public string ResponseText;
             public string ActorNotes;
 
-            public TRDTField(UnityBinaryReader r, uint dataSize)
+            public TRDTField(UnityBinaryReader r, int dataSize)
             {
                 EmotionType = r.ReadLEUInt32();
                 EmotionValue = r.ReadLEInt32();
@@ -79,12 +79,12 @@ namespace OA.Tes.FilePacks.Records
                 r.ReadBytes(3); // Unused
             }
 
-            public void NAM1Field(UnityBinaryReader r, uint dataSize)
+            public void NAM1Field(UnityBinaryReader r, int dataSize)
             {
                 ResponseText = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
             }
 
-            public void NAM2Field(UnityBinaryReader r, uint dataSize)
+            public void NAM2Field(UnityBinaryReader r, int dataSize)
             {
                 ActorNotes = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
             }
@@ -112,7 +112,7 @@ namespace OA.Tes.FilePacks.Records
         public TES3Group TES3 = new TES3Group();
         public TES4Group TES4 = new TES4Group();
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             if (formatId == GameFormatId.TES3)
                 switch (type)

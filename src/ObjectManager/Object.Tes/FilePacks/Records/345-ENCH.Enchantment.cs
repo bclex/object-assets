@@ -14,7 +14,7 @@ namespace OA.Tes.FilePacks.Records
             public int ChargeAmount; //: Charge
             public int Flags; //: AutoCalc
 
-            public ENITField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public ENITField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 Type = r.ReadLEInt32();
                 if (formatId == GameFormatId.TES3)
@@ -45,7 +45,7 @@ namespace OA.Tes.FilePacks.Records
             // TES4
             public int ActorValue;
 
-            public EFITField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public EFITField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 if (formatId == GameFormatId.TES3)
                 {
@@ -77,7 +77,7 @@ namespace OA.Tes.FilePacks.Records
             public string VisualEffect;
             public uint Flags;
 
-            public SCITField(UnityBinaryReader r, uint dataSize)
+            public SCITField(UnityBinaryReader r, int dataSize)
             {
                 Name = "Script Effect";
                 ScriptFormId = r.ReadLEInt32();
@@ -88,7 +88,7 @@ namespace OA.Tes.FilePacks.Records
                 Flags = dataSize > 12 ? r.ReadLEUInt32() : 0;
             }
 
-            public void FULLField(UnityBinaryReader r, uint dataSize)
+            public void FULLField(UnityBinaryReader r, int dataSize)
             {
                 Name = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
             }
@@ -102,7 +102,7 @@ namespace OA.Tes.FilePacks.Records
         // TES4
         public List<SCITField> SCITs = new List<SCITField>(); // Script effect data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

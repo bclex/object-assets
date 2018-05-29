@@ -10,7 +10,7 @@ namespace OA.Tes.FilePacks.Records
             public FormId<WTHRRecord> Weather;
             public int Chance;
 
-            public WLSTField(UnityBinaryReader r, uint dataSize)
+            public WLSTField(UnityBinaryReader r, int dataSize)
             {
                 Weather = new FormId<WTHRRecord>(r.ReadLEUInt32());
                 Chance = r.ReadLEInt32();
@@ -26,7 +26,7 @@ namespace OA.Tes.FilePacks.Records
             public byte Volatility;
             public byte MoonsPhaseLength;
 
-            public TNAMField(UnityBinaryReader r, uint dataSize)
+            public TNAMField(UnityBinaryReader r, int dataSize)
             {
                 Sunrise_Begin = r.ReadByte();
                 Sunrise_End = r.ReadByte();
@@ -45,7 +45,7 @@ namespace OA.Tes.FilePacks.Records
         public List<WLSTField> WLSTs = new List<WLSTField>(); // Climate
         public TNAMField TNAM; // Timing
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

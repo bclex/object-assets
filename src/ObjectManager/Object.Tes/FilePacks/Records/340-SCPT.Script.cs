@@ -38,7 +38,7 @@ namespace OA.Tes.FilePacks.Records
             public int Parameter1; // Parameter #1
             public int Parameter2; // Parameter #2
 
-            public CTDAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public CTDAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 if (formatId == GameFormatId.TES3)
                 {
@@ -75,7 +75,7 @@ namespace OA.Tes.FilePacks.Records
             public int LocalVarSize;
             public string[] Variables;
 
-            public SCHDField(UnityBinaryReader r, uint dataSize)
+            public SCHDField(UnityBinaryReader r, int dataSize)
             {
                 Name = r.ReadASCIIString(32, ASCIIFormat.ZeroPadded);
                 NumShorts = r.ReadLEInt32();
@@ -87,7 +87,7 @@ namespace OA.Tes.FilePacks.Records
                 Variables = null;
             }
 
-            public void SCVRField(UnityBinaryReader r, uint dataSize)
+            public void SCVRField(UnityBinaryReader r, int dataSize)
             {
                 Variables = r.ReadASCIIMultiString((int)dataSize);
             }
@@ -98,7 +98,7 @@ namespace OA.Tes.FilePacks.Records
         //    public override string ToString() => $"{string.Join(",", Values)}";
         //    public string[] Values;
 
-        //    public SCVRField(UnityBinaryReader r, uint dataSize)
+        //    public SCVRField(UnityBinaryReader r, int dataSize)
         //    {
         //        Values = r.ReadASCIIMultiString((int)dataSize);
         //    }
@@ -113,7 +113,7 @@ namespace OA.Tes.FilePacks.Records
             public uint VariableCount;
             public uint Type; // 0x000 = Object, 0x001 = Quest, 0x100 = Magic Effect
 
-            public SCHRField(UnityBinaryReader r, uint dataSize)
+            public SCHRField(UnityBinaryReader r, int dataSize)
             {
                 r.ReadLEInt32(); // Unused
                 RefCount = r.ReadLEUInt32();
@@ -133,7 +133,7 @@ namespace OA.Tes.FilePacks.Records
             public uint Type;
             public string VariableName;
 
-            public SLSDField(UnityBinaryReader r, uint dataSize)
+            public SLSDField(UnityBinaryReader r, int dataSize)
             {
                 Idx = r.ReadLEUInt32();
                 r.ReadLEUInt32(); // Unknown
@@ -145,7 +145,7 @@ namespace OA.Tes.FilePacks.Records
                 VariableName = null;
             }
 
-            public void SCVRField(UnityBinaryReader r, uint dataSize)
+            public void SCVRField(UnityBinaryReader r, int dataSize)
             {
                 VariableName = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
             }
@@ -163,7 +163,7 @@ namespace OA.Tes.FilePacks.Records
         public List<SLSDField> SCRVs = new List<SLSDField>(); // Ref variable data (one for each ref declared)
         public List<FMIDField<Record>> SCROs = new List<FMIDField<Record>>(); // Global variable reference
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

@@ -63,7 +63,7 @@ namespace OA.Tes.FilePacks.Records
             public float ColorKey2_ColorKeyTime;
             public float ColorKey3_ColorKeyTime;
 
-            public DATAField(UnityBinaryReader r, uint dataSize)
+            public DATAField(UnityBinaryReader r, int dataSize)
             {
                 if (dataSize != 224 && dataSize != 96)
                     Flags = 0;
@@ -135,7 +135,7 @@ namespace OA.Tes.FilePacks.Records
         public FILEField ICO2; // Particle Shader Texture
         public DATAField DATA; // Data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

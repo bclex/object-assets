@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks.Records
             public uint Specialization; // 0 = Combat, 1 = Magic, 2 = Stealth
             public float[] UseValue; // The use types for each skill are hard-coded.
 
-            public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 Action = formatId == GameFormatId.TES3 ? 0 : r.ReadLEInt32();
                 Attribute = r.ReadLEInt32();
@@ -35,7 +35,7 @@ namespace OA.Tes.FilePacks.Records
         public STRVField ENAM; // Expert Text
         public STRVField MNAM; // Master Text
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

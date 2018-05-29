@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks.Records
         public BYTEField ANAM;
         public FMIDField<IDLERecord>[] DATAs;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

@@ -16,7 +16,7 @@ namespace OA.Tes.FilePacks.Records
             // TES4
             public int SpellLevel;
 
-            public SPITField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public SPITField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 Type = r.ReadLEUInt32();
                 SpellCost = r.ReadLEInt32();
@@ -33,7 +33,7 @@ namespace OA.Tes.FilePacks.Records
         // TES4
         public List<ENCHRecord.SCITField> SCITs = new List<ENCHRecord.SCITField>(); // Script effect data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

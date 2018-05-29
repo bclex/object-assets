@@ -22,7 +22,7 @@ namespace OA.Tes.FilePacks.Records
         public STRVField SNAM; // Sound ID
         public STRVField? CNAM; // Creature name (optional)
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             if (formatId == GameFormatId.TES3)
                 switch (type)

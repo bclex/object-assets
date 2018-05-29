@@ -23,6 +23,13 @@ using System.Linq;
 
 namespace OA.Tes.FilePacks
 {
+    public enum GameFormatId
+    {
+        TES3 = 3,
+        TES4,
+        TES5,
+    }
+
     public class Header
     {
         [Flags]
@@ -118,116 +125,115 @@ namespace OA.Tes.FilePacks
 
         struct RecordType
         {
-            public Func<Record> Func;
-            public Func<byte, bool> Load;
+            public Func<Record> F;
+            public Func<byte, bool> L;
         }
 
         static Dictionary<string, RecordType> Create = new Dictionary<string, RecordType>
         {
-            { "TES3", new RecordType { Func = ()=>new TES3Record() }},
-            { "TES4", new RecordType { Func = ()=>new TES4Record() }},
+            { "TES3", new RecordType { F = ()=>new TES3Record() }},
+            { "TES4", new RecordType { F = ()=>new TES4Record() }},
             // 0
-            { "LTEX", new RecordType { Func = ()=>new LTEXRecord(), Load = x => x > 0 }},
-            { "STAT", new RecordType { Func = ()=>new STATRecord(), Load = x => x > 0 }},
-            { "CELL", new RecordType { Func = ()=>new CELLRecord(), Load = x => x > 0 }},
-            { "LAND", new RecordType { Func = ()=>new LANDRecord(), Load = x => x > 0 }},
+            { "LTEX", new RecordType { F = ()=>new LTEXRecord(), L = x => x > 0 }},
+            { "STAT", new RecordType { F = ()=>new STATRecord(), L = x => x > 0 }},
+            { "CELL", new RecordType { F = ()=>new CELLRecord(), L = x => x > 0 }},
+            { "LAND", new RecordType { F = ()=>new LANDRecord(), L = x => x > 0 }},
             // 1
-            { "DOOR", new RecordType { Func = ()=>new DOORRecord(), Load = x => x > 1 }},
-            { "MISC", new RecordType { Func = ()=>new MISCRecord(), Load = x => x > 1 }},
-            { "WEAP", new RecordType { Func = ()=>new WEAPRecord(), Load = x => x > 1 }},
-            { "CONT", new RecordType { Func = ()=>new CONTRecord(), Load = x => x > 1 }},
-            { "LIGH", new RecordType { Func = ()=>new LIGHRecord(), Load = x => x > 1 }},
-            { "ARMO", new RecordType { Func = ()=>new ARMORecord(), Load = x => x > 1 }},
-            { "CLOT", new RecordType { Func = ()=>new CLOTRecord(), Load = x => x > 1 }},
-            { "REPA", new RecordType { Func = ()=>new REPARecord(), Load = x => x > 1 }},
-            { "ACTI", new RecordType { Func = ()=>new ACTIRecord(), Load = x => x > 1 }},
-            { "APPA", new RecordType { Func = ()=>new APPARecord(), Load = x => x > 1 }},
-            { "LOCK", new RecordType { Func = ()=>new LOCKRecord(), Load = x => x > 1 }},
-            { "PROB", new RecordType { Func = ()=>new PROBRecord(), Load = x => x > 1 }},
-            { "INGR", new RecordType { Func = ()=>new INGRRecord(), Load = x => x > 1 }},
-            { "BOOK", new RecordType { Func = ()=>new BOOKRecord(), Load = x => x > 1 }},
-            { "ALCH", new RecordType { Func = ()=>new ALCHRecord(), Load = x => x > 1 }},
-            { "CREA", new RecordType { Func = ()=>new CREARecord(), Load = x => x > 1 && BaseSettings.Game.CreaturesEnabled }},
-            { "NPC_", new RecordType { Func = ()=>new NPC_Record(), Load = x => x > 1 && BaseSettings.Game.NpcsEnabled }},
+            { "DOOR", new RecordType { F = ()=>new DOORRecord(), L = x => x > 1 }},
+            { "MISC", new RecordType { F = ()=>new MISCRecord(), L = x => x > 1 }},
+            { "WEAP", new RecordType { F = ()=>new WEAPRecord(), L = x => x > 1 }},
+            { "CONT", new RecordType { F = ()=>new CONTRecord(), L = x => x > 1 }},
+            { "LIGH", new RecordType { F = ()=>new LIGHRecord(), L = x => x > 1 }},
+            { "ARMO", new RecordType { F = ()=>new ARMORecord(), L = x => x > 1 }},
+            { "CLOT", new RecordType { F = ()=>new CLOTRecord(), L = x => x > 1 }},
+            { "REPA", new RecordType { F = ()=>new REPARecord(), L = x => x > 1 }},
+            { "ACTI", new RecordType { F = ()=>new ACTIRecord(), L = x => x > 1 }},
+            { "APPA", new RecordType { F = ()=>new APPARecord(), L = x => x > 1 }},
+            { "LOCK", new RecordType { F = ()=>new LOCKRecord(), L = x => x > 1 }},
+            { "PROB", new RecordType { F = ()=>new PROBRecord(), L = x => x > 1 }},
+            { "INGR", new RecordType { F = ()=>new INGRRecord(), L = x => x > 1 }},
+            { "BOOK", new RecordType { F = ()=>new BOOKRecord(), L = x => x > 1 }},
+            { "ALCH", new RecordType { F = ()=>new ALCHRecord(), L = x => x > 1 }},
+            { "CREA", new RecordType { F = ()=>new CREARecord(), L = x => x > 1 && BaseSettings.Game.CreaturesEnabled }},
+            { "NPC_", new RecordType { F = ()=>new NPC_Record(), L = x => x > 1 && BaseSettings.Game.NpcsEnabled }},
             // 2
-            { "GMST", new RecordType { Func = ()=>new GMSTRecord(), Load = x => x > 2 }},
-            { "GLOB", new RecordType { Func = ()=>new GLOBRecord(), Load = x => x > 2 }},
-            { "SOUN", new RecordType { Func = ()=>new SOUNRecord(), Load = x => x > 2 }},
-            { "REGN", new RecordType { Func = ()=>new REGNRecord(), Load = x => x > 2 }},
+            { "GMST", new RecordType { F = ()=>new GMSTRecord(), L = x => x > 2 }},
+            { "GLOB", new RecordType { F = ()=>new GLOBRecord(), L = x => x > 2 }},
+            { "SOUN", new RecordType { F = ()=>new SOUNRecord(), L = x => x > 2 }},
+            { "REGN", new RecordType { F = ()=>new REGNRecord(), L = x => x > 2 }},
             // 3
-            { "CLAS", new RecordType { Func = ()=>new CLASRecord(), Load = x => x > 3 }},
-            { "SPEL", new RecordType { Func = ()=>new SPELRecord(), Load = x => x > 3 }},
-            { "BODY", new RecordType { Func = ()=>new BODYRecord(), Load = x => x > 3 }},
-            { "PGRD", new RecordType { Func = ()=>new PGRDRecord(), Load = x => x > 3 }},
-            { "INFO", new RecordType { Func = ()=>new INFORecord(), Load = x => x > 3 }},
-            { "DIAL", new RecordType { Func = ()=>new DIALRecord(), Load = x => x > 3 }},
-            { "SNDG", new RecordType { Func = ()=>new SNDGRecord(), Load = x => x > 3 }},
-            { "ENCH", new RecordType { Func = ()=>new ENCHRecord(), Load = x => x > 3 }},
-            { "SCPT", new RecordType { Func = ()=>new SCPTRecord(), Load = x => x > 3 }},
-            { "SKIL", new RecordType { Func = ()=>new SKILRecord(), Load = x => x > 3 }},
-            { "RACE", new RecordType { Func = ()=>new RACERecord(), Load = x => x > 3 }},
-            { "MGEF", new RecordType { Func = ()=>new MGEFRecord(), Load = x => x > 3 }},
-            { "LEVI", new RecordType { Func = ()=>new LEVIRecord(), Load = x => x > 3 }},
-            { "LEVC", new RecordType { Func = ()=>new LEVCRecord(), Load = x => x > 3 }},
-            { "BSGN", new RecordType { Func = ()=>new BSGNRecord(), Load = x => x > 3 }},
-            { "FACT", new RecordType { Func = ()=>new FACTRecord(), Load = x => x > 3 }},
-            { "SSCR", new RecordType { Func = ()=>new SSCRRecord(), Load = x => x > 3 }},
+            { "CLAS", new RecordType { F = ()=>new CLASRecord(), L = x => x > 3 }},
+            { "SPEL", new RecordType { F = ()=>new SPELRecord(), L = x => x > 3 }},
+            { "BODY", new RecordType { F = ()=>new BODYRecord(), L = x => x > 3 }},
+            { "PGRD", new RecordType { F = ()=>new PGRDRecord(), L = x => x > 3 }},
+            { "INFO", new RecordType { F = ()=>new INFORecord(), L = x => x > 3 }},
+            { "DIAL", new RecordType { F = ()=>new DIALRecord(), L = x => x > 3 }},
+            { "SNDG", new RecordType { F = ()=>new SNDGRecord(), L = x => x > 3 }},
+            { "ENCH", new RecordType { F = ()=>new ENCHRecord(), L = x => x > 3 }},
+            { "SCPT", new RecordType { F = ()=>new SCPTRecord(), L = x => x > 3 }},
+            { "SKIL", new RecordType { F = ()=>new SKILRecord(), L = x => x > 3 }},
+            { "RACE", new RecordType { F = ()=>new RACERecord(), L = x => x > 3 }},
+            { "MGEF", new RecordType { F = ()=>new MGEFRecord(), L = x => x > 3 }},
+            { "LEVI", new RecordType { F = ()=>new LEVIRecord(), L = x => x > 3 }},
+            { "LEVC", new RecordType { F = ()=>new LEVCRecord(), L = x => x > 3 }},
+            { "BSGN", new RecordType { F = ()=>new BSGNRecord(), L = x => x > 3 }},
+            { "FACT", new RecordType { F = ()=>new FACTRecord(), L = x => x > 3 }},
+            { "SSCR", new RecordType { F = ()=>new SSCRRecord(), L = x => x > 3 }},
             // 4 - Oblivion
-            { "ACRE", new RecordType { Func = ()=>new ACRERecord(), Load = x => x > 4 }},
-            { "ACHR", new RecordType { Func = ()=>new ACHRRecord(), Load = x => x > 4 }},
-            { "AMMO", new RecordType { Func = ()=>new AMMORecord(), Load = x => x > 4 }},
-            { "ANIO", new RecordType { Func = ()=>new ANIORecord(), Load = x => x > 4 }},
-            { "CLMT", new RecordType { Func = ()=>new CLMTRecord(), Load = x => x > 4 }},
-            { "CSTY", new RecordType { Func = ()=>new CSTYRecord(), Load = x => x > 4 }},
-            { "EFSH", new RecordType { Func = ()=>new EFSHRecord(), Load = x => x > 4 }},
-            { "EYES", new RecordType { Func = ()=>new EYESRecord(), Load = x => x > 4 }},
-            { "FLOR", new RecordType { Func = ()=>new FLORRecord(), Load = x => x > 4 }},
-            { "FURN", new RecordType { Func = ()=>new FURNRecord(), Load = x => x > 4 }},
-            { "GRAS", new RecordType { Func = ()=>new GRASRecord(), Load = x => x > 4 }},
-            { "HAIR", new RecordType { Func = ()=>new HAIRRecord(), Load = x => x > 4 }},
-            { "IDLE", new RecordType { Func = ()=>new IDLERecord(), Load = x => x > 4 }},
-            { "KEYM", new RecordType { Func = ()=>new KEYMRecord(), Load = x => x > 4 }},
-            { "LSCR", new RecordType { Func = ()=>new LSCRRecord(), Load = x => x > 4 }},
-            { "LVLC", new RecordType { Func = ()=>new LVLCRecord(), Load = x => x > 4 }},
-            { "LVLI", new RecordType { Func = ()=>new LVLIRecord(), Load = x => x > 4 }},
-            { "LVSP", new RecordType { Func = ()=>new LVSPRecord(), Load = x => x > 4 }},
-            { "PACK", new RecordType { Func = ()=>new PACKRecord(), Load = x => x > 4 }},
-            { "QUST", new RecordType { Func = ()=>new QUSTRecord(), Load = x => x > 4 }},
-            { "REFR", new RecordType { Func = ()=>new REFRRecord(), Load = x => x > 4 }},
-            { "ROAD", new RecordType { Func = ()=>new ROADRecord(), Load = x => x > 4 }},
-            { "SBSP", new RecordType { Func = ()=>new SBSPRecord(), Load = x => x > 4 }},
-            { "SGST", new RecordType { Func = ()=>new SGSTRecord(), Load = x => x > 4 }},
-            { "SLGM", new RecordType { Func = ()=>new SLGMRecord(), Load = x => x > 4 }},
-            { "TREE", new RecordType { Func = ()=>new TREERecord(), Load = x => x > 4 }},
-            { "WATR", new RecordType { Func = ()=>new WATRRecord(), Load = x => x > 4 }},
-            { "WRLD", new RecordType { Func = ()=>new WRLDRecord(), Load = x => x > 4 }},
-            { "WTHR", new RecordType { Func = ()=>new WTHRRecord(), Load = x => x > 4 }},
+            { "ACRE", new RecordType { F = ()=>new ACRERecord(), L = x => x > 4 }},
+            { "ACHR", new RecordType { F = ()=>new ACHRRecord(), L = x => x > 4 }},
+            { "AMMO", new RecordType { F = ()=>new AMMORecord(), L = x => x > 4 }},
+            { "ANIO", new RecordType { F = ()=>new ANIORecord(), L = x => x > 4 }},
+            { "CLMT", new RecordType { F = ()=>new CLMTRecord(), L = x => x > 4 }},
+            { "CSTY", new RecordType { F = ()=>new CSTYRecord(), L = x => x > 4 }},
+            { "EFSH", new RecordType { F = ()=>new EFSHRecord(), L = x => x > 4 }},
+            { "EYES", new RecordType { F = ()=>new EYESRecord(), L = x => x > 4 }},
+            { "FLOR", new RecordType { F = ()=>new FLORRecord(), L = x => x > 4 }},
+            { "FURN", new RecordType { F = ()=>new FURNRecord(), L = x => x > 4 }},
+            { "GRAS", new RecordType { F = ()=>new GRASRecord(), L = x => x > 4 }},
+            { "HAIR", new RecordType { F = ()=>new HAIRRecord(), L = x => x > 4 }},
+            { "IDLE", new RecordType { F = ()=>new IDLERecord(), L = x => x > 4 }},
+            { "KEYM", new RecordType { F = ()=>new KEYMRecord(), L = x => x > 4 }},
+            { "LSCR", new RecordType { F = ()=>new LSCRRecord(), L = x => x > 4 }},
+            { "LVLC", new RecordType { F = ()=>new LVLCRecord(), L = x => x > 4 }},
+            { "LVLI", new RecordType { F = ()=>new LVLIRecord(), L = x => x > 4 }},
+            { "LVSP", new RecordType { F = ()=>new LVSPRecord(), L = x => x > 4 }},
+            { "PACK", new RecordType { F = ()=>new PACKRecord(), L = x => x > 4 }},
+            { "QUST", new RecordType { F = ()=>new QUSTRecord(), L = x => x > 4 }},
+            { "REFR", new RecordType { F = ()=>new REFRRecord(), L = x => x > 4 }},
+            { "ROAD", new RecordType { F = ()=>new ROADRecord(), L = x => x > 4 }},
+            { "SBSP", new RecordType { F = ()=>new SBSPRecord(), L = x => x > 4 }},
+            { "SGST", new RecordType { F = ()=>new SGSTRecord(), L = x => x > 4 }},
+            { "SLGM", new RecordType { F = ()=>new SLGMRecord(), L = x => x > 4 }},
+            { "TREE", new RecordType { F = ()=>new TREERecord(), L = x => x > 4 }},
+            { "WATR", new RecordType { F = ()=>new WATRRecord(), L = x => x > 4 }},
+            { "WRLD", new RecordType { F = ()=>new WRLDRecord(), L = x => x > 4 }},
+            { "WTHR", new RecordType { F = ()=>new WTHRRecord(), L = x => x > 4 }},
             // 5 - Skyrim
-            { "AACT", new RecordType { Func = ()=>new AACTRecord(), Load = x => x > 5 }},
-            { "ADDN", new RecordType { Func = ()=>new ADDNRecord(), Load = x => x > 5 }},
-            { "ARMA", new RecordType { Func = ()=>new ARMARecord(), Load = x => x > 5 }},
-            { "ARTO", new RecordType { Func = ()=>new ARTORecord(), Load = x => x > 5 }},
-            { "ASPC", new RecordType { Func = ()=>new ASPCRecord(), Load = x => x > 5 }},
-            { "ASTP", new RecordType { Func = ()=>new ASTPRecord(), Load = x => x > 5 }},
-            { "AVIF", new RecordType { Func = ()=>new AVIFRecord(), Load = x => x > 5 }},
-            { "DLBR", new RecordType { Func = ()=>new DLBRRecord(), Load = x => x > 5 }},
-            { "DLVW", new RecordType { Func = ()=>new DLVWRecord(), Load = x => x > 5 }},
-            { "SNDR", new RecordType { Func = ()=>new SNDRRecord(), Load = x => x > 5 }},
+            { "AACT", new RecordType { F = ()=>new AACTRecord(), L = x => x > 5 }},
+            { "ADDN", new RecordType { F = ()=>new ADDNRecord(), L = x => x > 5 }},
+            { "ARMA", new RecordType { F = ()=>new ARMARecord(), L = x => x > 5 }},
+            { "ARTO", new RecordType { F = ()=>new ARTORecord(), L = x => x > 5 }},
+            { "ASPC", new RecordType { F = ()=>new ASPCRecord(), L = x => x > 5 }},
+            { "ASTP", new RecordType { F = ()=>new ASTPRecord(), L = x => x > 5 }},
+            { "AVIF", new RecordType { F = ()=>new AVIFRecord(), L = x => x > 5 }},
+            { "DLBR", new RecordType { F = ()=>new DLBRRecord(), L = x => x > 5 }},
+            { "DLVW", new RecordType { F = ()=>new DLVWRecord(), L = x => x > 5 }},
+            { "SNDR", new RecordType { F = ()=>new SNDRRecord(), L = x => x > 5 }},
         };
 
-        public static bool LoadRecord(string type, byte level) => Create.TryGetValue(type, out RecordType recordType) ? recordType.Load(level) : false;
+        public static bool LoadRecord(string type, byte level) => Create.TryGetValue(type, out RecordType recordType) ? recordType.L(level) : false;
 
         public Record CreateRecord(long position)
         {
-            if (Create.TryGetValue(Type, out RecordType recordType))
+            if (!Create.TryGetValue(Type, out RecordType recordType))
             {
-                var r = recordType.Func();
-                if (r != null)
-                    r.Header = this;
-                return r;
+                Utils.Warning($"Unsupported ESM record type: {Type}");
+                return null;
             }
-            Utils.Warning($"Unsupported ESM record type: {Type}");
-            return null;
+            var record = recordType.F();
+            record.Header = this;
+            return record;
         }
     }
 
@@ -263,6 +269,17 @@ namespace OA.Tes.FilePacks
             ReadGrup(header, recordHeader);
         }
 
+        void ReadGrup(Header header, Header recordHeader, int mode = 0)
+        {
+            var nextPosition = _r.BaseStream.Position + recordHeader.DataSize;
+            if (Groups == null)
+                Groups = new List<RecordGroup>();
+            var group = new RecordGroup(_r, _filePath, _formatId, _level);
+            group.AddHeader(recordHeader);
+            Groups.Add(group); Console.WriteLine($"Grup: {header.Label}/{group}");
+            _r.BaseStream.Position = nextPosition;
+        }
+
         public void Load()
         {
             if (_headerSkip == Headers.Count) return;
@@ -273,17 +290,6 @@ namespace OA.Tes.FilePacks
                     ReadGroup(header);
                 _headerSkip = Headers.Count;
             }
-        }
-
-        void ReadGrup(Header header, Header recordHeader, int mode = 0)
-        {
-            var nextPosition = _r.BaseStream.Position + recordHeader.DataSize;
-            if (Groups == null)
-                Groups = new List<RecordGroup>();
-            var group = new RecordGroup(_r, _filePath, _formatId, _level);
-            group.AddHeader(recordHeader);
-            Groups.Add(group); Console.WriteLine($"Grup: {header.Label}/{group}");
-            _r.BaseStream.Position = nextPosition;
         }
 
         void ReadGroup(Header header)
@@ -312,22 +318,23 @@ namespace OA.Tes.FilePacks
 
         void ReadRecord(Record record, bool compressed)
         {
-            if (compressed)
+            if (!compressed)
             {
-                var newDataSize = _r.ReadLEUInt32();
-                var data = _r.ReadBytes((int)record.Header.DataSize - 4);
-                var newData = new byte[newDataSize];
-                using (var s = new MemoryStream(data))
-                using (var gs = new InflaterInputStream(s))
-                    gs.Read(newData, 0, newData.Length);
-                // read record
-                record.Header.Position = 0;
-                record.Header.DataSize = newDataSize;
-                using (var s = new MemoryStream(newData))
-                using (var r = new UnityBinaryReader(s))
-                    record.Read(r, _filePath, _formatId);
+                record.Read(_r, _filePath, _formatId);
+                return;
             }
-            else record.Read(_r, _filePath, _formatId);
+            var newDataSize = _r.ReadLEUInt32();
+            var data = _r.ReadBytes((int)record.Header.DataSize - 4);
+            var newData = new byte[newDataSize];
+            using (var s = new MemoryStream(data))
+            using (var gs = new InflaterInputStream(s))
+                gs.Read(newData, 0, newData.Length);
+            // read record
+            record.Header.Position = 0;
+            record.Header.DataSize = newDataSize;
+            using (var s = new MemoryStream(newData))
+            using (var r = new UnityBinaryReader(s))
+                record.Read(r, _filePath, _formatId);
         }
     }
 
@@ -339,38 +346,38 @@ namespace OA.Tes.FilePacks
         /// Return an uninitialized subrecord to deserialize, or null to skip.
         /// </summary>
         /// <returns>Return an uninitialized subrecord to deserialize, or null to skip.</returns>
-        public abstract bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize);
+        public abstract bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize);
 
         public void Read(UnityBinaryReader r, string filePath, GameFormatId formatId)
         {
             var startPosition = r.BaseStream.Position;
-            var endPosition = r.BaseStream.Position + Header.DataSize;
+            var endPosition = startPosition + Header.DataSize;
             while (r.BaseStream.Position < endPosition)
             {
-                var header = new FieldHeader(r, formatId);
-                if (header.Type == "XXXX")
+                var fieldHeader = new FieldHeader(r, formatId);
+                if (fieldHeader.Type == "XXXX")
                 {
-                    if (header.DataSize != 4)
+                    if (fieldHeader.DataSize != 4)
                         throw new InvalidOperationException();
-                    header.DataSize = r.ReadLEUInt32();
+                    fieldHeader.DataSize = (int)r.ReadLEUInt32();
                     continue;
                 }
-                else if (header.Type == "OFST" && Header.Type == "WRLD")
+                else if (fieldHeader.Type == "OFST" && Header.Type == "WRLD")
                 {
                     r.BaseStream.Position = endPosition;
                     continue;
                     //header.DataSize = (uint)(endPosition - r.BaseStream.Position);
                 }
                 var position = r.BaseStream.Position;
-                if (!CreateField(r, formatId, header.Type, header.DataSize))
+                if (!CreateField(r, formatId, fieldHeader.Type, fieldHeader.DataSize))
                 {
-                    Utils.Warning($"Unsupported ESM record type: {Header.Type}:{header.Type}");
-                    r.BaseStream.Position += header.DataSize;
+                    Utils.Warning($"Unsupported ESM record type: {Header.Type}:{fieldHeader.Type}");
+                    r.BaseStream.Position += fieldHeader.DataSize;
                     continue;
                 }
                 // check full read
-                if (r.BaseStream.Position != position + header.DataSize)
-                    throw new FormatException($"Failed reading {Header.Type}:{header.Type} field data at offset {position} in {filePath} of {r.BaseStream.Position - position - header.DataSize}");
+                if (r.BaseStream.Position != position + fieldHeader.DataSize)
+                    throw new FormatException($"Failed reading {Header.Type}:{fieldHeader.Type} field data at offset {position} in {filePath} of {r.BaseStream.Position - position - fieldHeader.DataSize}");
             }
             // check full read
             if (r.BaseStream.Position != endPosition)
@@ -382,12 +389,12 @@ namespace OA.Tes.FilePacks
     {
         public override string ToString() => Type;
         public string Type; // 4 bytes
-        public uint DataSize;
+        public int DataSize;
 
         public FieldHeader(UnityBinaryReader r, GameFormatId formatId)
         {
             Type = r.ReadASCIIString(4);
-            DataSize = formatId == GameFormatId.TES3 ? r.ReadLEUInt32() : r.ReadLEUInt16();
+            DataSize = (int)(formatId == GameFormatId.TES3 ? r.ReadLEUInt32() : r.ReadLEUInt16());
         }
     }
 }

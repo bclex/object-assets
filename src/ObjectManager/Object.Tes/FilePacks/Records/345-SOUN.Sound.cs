@@ -31,7 +31,7 @@ namespace OA.Tes.FilePacks.Records
             public byte StopTime; // Stop time
             public byte StartTime; // Start time
 
-            public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
             {
                 Volume = formatId == GameFormatId.TES3 ? r.ReadByte() : (byte)0;
                 MinRange = r.ReadByte();
@@ -55,7 +55,7 @@ namespace OA.Tes.FilePacks.Records
         public FILEField FNAM; // Sound Filename (relative to Sounds\)
         public DATAField DATA; // Sound Data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

@@ -9,7 +9,7 @@ namespace OA.Tes.FilePacks.Records
         public MODLGroup MODL; // Model
         public FMIDField<IDLERecord> DATA; // IDLE animation
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {

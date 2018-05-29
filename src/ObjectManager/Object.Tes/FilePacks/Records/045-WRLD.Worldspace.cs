@@ -14,7 +14,7 @@ namespace OA.Tes.FilePacks.Records
             public short SECell_X;
             public short SECell_Y;
 
-            public MNAMField(UnityBinaryReader r, uint dataSize)
+            public MNAMField(UnityBinaryReader r, int dataSize)
             {
                 UsableDimensions = new Vector2Int(r.ReadLEInt32(), r.ReadLEInt32());
                 NWCell_X = r.ReadLEInt16();
@@ -29,12 +29,12 @@ namespace OA.Tes.FilePacks.Records
             public Vector2 Min;
             public Vector2 Max;
 
-            public NAM0Field(UnityBinaryReader r, uint dataSize)
+            public NAM0Field(UnityBinaryReader r, int dataSize)
             {
                 Min = new Vector2(r.ReadLESingle(), r.ReadLESingle());
             }
 
-            public void NAM9Field(UnityBinaryReader r, uint dataSize)
+            public void NAM9Field(UnityBinaryReader r, int dataSize)
             {
                 Max = new Vector2(r.ReadLESingle(), r.ReadLESingle());
             }
@@ -52,7 +52,7 @@ namespace OA.Tes.FilePacks.Records
         public NAM0Field NAM0; // Object Bounds
         public UI32Field? SNAM; // Music
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
             switch (type)
             {
