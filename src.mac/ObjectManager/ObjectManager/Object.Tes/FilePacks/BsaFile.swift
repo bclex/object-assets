@@ -61,9 +61,15 @@ public class BsaFile {
         public let path: String
         public let pathHash: UInt64
         public func size() -> UInt32 { return 0 }
-        public var compressed: Bool { return (SizeFlags & OB_BSAFILE_FLAG_COMPRESS) != 0 }
+        public var compressed: Bool { return (sizeFlags & OB_BSAFILE_FLAG_COMPRESS) != 0 }
+        
+        init() {
+        }
     }
 
+    public struct DXGIFormat {
+    }
+    
     public struct F4Tex {
         public let height: UInt16
         public let width: UInt16
@@ -94,20 +100,20 @@ public class BsaFile {
     public let filePath: String
     //public let RootDir: VirtualFileSystem.Directory
 
-    public var isAtEof -> Bool { return _r.Position >= _r.Length }
+    public var isAtEof: Bool { return _r.offsetInFileo >= _r.Length }
 
-    init(filePath: String) {
-        guard filePath != nil else {
+    init(filePath: String?) {
+        guard let filePath = filePath else {
             return
         }
         self.filePath = filePath
-        _r = BinaryReader(FileHandle(forReadingAtPath: filePath))
+        _r = BinaryReader(stream: FileHandle(forReadingAtPath: filePath))
         readMetadata()
         //testContainsFile()
         //testLoadFileData()
     }
 
-    deinit() {
+    deinit {
         close()
     }
 
@@ -125,8 +131,9 @@ public class BsaFile {
         guard !files.isEmpty else {
             fatalError("should not happen")
         }
-        if files.count == 1
-            return loadFileData(files[0]);
+        if files.count == 1 {
+            return loadFileData(files[0])
+        }
         guard let file = files.first { $0.path.caseInsensitiveCompare(newPath) == ComparisonResult.orderedSame } else {
             fatalError("Could not find file '\(filePath)' in a BSA file.")
         }

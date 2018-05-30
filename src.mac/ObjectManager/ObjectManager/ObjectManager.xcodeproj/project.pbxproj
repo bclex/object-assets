@@ -11,23 +11,21 @@
 		540B163620BC8E5E0058D516 /* TesPackTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540B163520BC8E5E0058D516 /* TesPackTest.swift */; };
 		5415F74920BC8906008A8E78 /* BinaryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F74820BC8906008A8E78 /* BinaryReader.swift */; };
 		5415F74B20BC8931008A8E78 /* AssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F74A20BC8931008A8E78 /* AssetManager.swift */; };
-		5415F74D20BC895A008A8E78 /* EngineId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F74C20BC895A008A8E78 /* EngineId.swift */; };
 		5415F75120BC8AB0008A8E78 /* TesAssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F75020BC8AB0008A8E78 /* TesAssetManager.swift */; };
 		5415F75320BC8ABC008A8E78 /* TesCellManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F75220BC8ABC008A8E78 /* TesCellManager.swift */; };
-		5415F75520BC8AD1008A8E78 /* GameId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F75420BC8AD1008A8E78 /* GameId.swift */; };
 		5415F75720BC8AE0008A8E78 /* TesEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F75620BC8AE0008A8E78 /* TesEngine.swift */; };
 		5415F75A20BC8B26008A8E78 /* BsaFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F75920BC8B26008A8E78 /* BsaFile.swift */; };
 		5415F75C20BC8B37008A8E78 /* BsaMultiFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F75B20BC8B36008A8E78 /* BsaMultiFile.swift */; };
 		5415F75E20BC8B4C008A8E78 /* EsmFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F75D20BC8B4C008A8E78 /* EsmFile.swift */; };
 		5415F76020BC8B5B008A8E78 /* EsmRecords.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F75F20BC8B5B008A8E78 /* EsmRecords.swift */; };
 		5415F76220BC8B66008A8E78 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76120BC8B66008A8E78 /* FileManager.swift */; };
-		5415F76420BC8B74008A8E78 /* GameFormatId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76320BC8B74008A8E78 /* GameFormatId.swift */; };
 		5415F76620BC8B93008A8E78 /* TesAssetPack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76520BC8B93008A8E78 /* TesAssetPack.swift */; };
 		5415F76820BC8B9C008A8E78 /* TesDataPack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76720BC8B9C008A8E78 /* TesDataPack.swift */; };
 		5415F76A20BC8BB7008A8E78 /* EsmFile+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76920BC8BB7008A8E78 /* EsmFile+Fields.swift */; };
 		5415F76C20BC8BCA008A8E78 /* EsmFile+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76B20BC8BCA008A8E78 /* EsmFile+Extensions.swift */; };
 		5415F76E20BC8BDA008A8E78 /* BsaMultiFile+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76D20BC8BDA008A8E78 /* BsaMultiFile+Extensions.swift */; };
 		5415F77020BC8BE5008A8E78 /* BsaFile+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76F20BC8BE5008A8E78 /* BsaFile+Extensions.swift */; };
+		54FD13AA20BE206A003D3138 /* CellManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD13A920BE206A003D3138 /* CellManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,23 +35,21 @@
 		5415F71820BC8835008A8E78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5415F74820BC8906008A8E78 /* BinaryReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinaryReader.swift; sourceTree = "<group>"; };
 		5415F74A20BC8931008A8E78 /* AssetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetManager.swift; sourceTree = "<group>"; };
-		5415F74C20BC895A008A8E78 /* EngineId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineId.swift; sourceTree = "<group>"; };
 		5415F75020BC8AB0008A8E78 /* TesAssetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesAssetManager.swift; sourceTree = "<group>"; };
 		5415F75220BC8ABC008A8E78 /* TesCellManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesCellManager.swift; sourceTree = "<group>"; };
-		5415F75420BC8AD1008A8E78 /* GameId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameId.swift; sourceTree = "<group>"; };
 		5415F75620BC8AE0008A8E78 /* TesEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesEngine.swift; sourceTree = "<group>"; };
 		5415F75920BC8B26008A8E78 /* BsaFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BsaFile.swift; sourceTree = "<group>"; };
 		5415F75B20BC8B36008A8E78 /* BsaMultiFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BsaMultiFile.swift; sourceTree = "<group>"; };
 		5415F75D20BC8B4C008A8E78 /* EsmFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EsmFile.swift; sourceTree = "<group>"; };
 		5415F75F20BC8B5B008A8E78 /* EsmRecords.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EsmRecords.swift; sourceTree = "<group>"; };
 		5415F76120BC8B66008A8E78 /* FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
-		5415F76320BC8B74008A8E78 /* GameFormatId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameFormatId.swift; sourceTree = "<group>"; };
 		5415F76520BC8B93008A8E78 /* TesAssetPack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesAssetPack.swift; sourceTree = "<group>"; };
 		5415F76720BC8B9C008A8E78 /* TesDataPack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesDataPack.swift; sourceTree = "<group>"; };
 		5415F76920BC8BB7008A8E78 /* EsmFile+Fields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EsmFile+Fields.swift"; sourceTree = "<group>"; };
 		5415F76B20BC8BCA008A8E78 /* EsmFile+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EsmFile+Extensions.swift"; sourceTree = "<group>"; };
 		5415F76D20BC8BDA008A8E78 /* BsaMultiFile+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BsaMultiFile+Extensions.swift"; sourceTree = "<group>"; };
 		5415F76F20BC8BE5008A8E78 /* BsaFile+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BsaFile+Extensions.swift"; sourceTree = "<group>"; };
+		54FD13A920BE206A003D3138 /* CellManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +101,7 @@
 				5415F74320BC8872008A8E78 /* Core */,
 				5415F71820BC8835008A8E78 /* Info.plist */,
 				5415F74A20BC8931008A8E78 /* AssetManager.swift */,
-				5415F74C20BC895A008A8E78 /* EngineId.swift */,
+				54FD13A920BE206A003D3138 /* CellManager.swift */,
 			);
 			path = ObjectManager;
 			sourceTree = "<group>";
@@ -127,7 +123,6 @@
 				5415F74E20BC8A84008A8E78 /* Configuration */,
 				5415F75020BC8AB0008A8E78 /* TesAssetManager.swift */,
 				5415F75220BC8ABC008A8E78 /* TesCellManager.swift */,
-				5415F75420BC8AD1008A8E78 /* GameId.swift */,
 				5415F75620BC8AE0008A8E78 /* TesEngine.swift */,
 				5415F75820BC8B0D008A8E78 /* Formats */,
 			);
@@ -154,7 +149,6 @@
 				5415F76B20BC8BCA008A8E78 /* EsmFile+Extensions.swift */,
 				5415F75F20BC8B5B008A8E78 /* EsmRecords.swift */,
 				5415F76120BC8B66008A8E78 /* FileManager.swift */,
-				5415F76320BC8B74008A8E78 /* GameFormatId.swift */,
 				5415F76520BC8B93008A8E78 /* TesAssetPack.swift */,
 				5415F76720BC8B9C008A8E78 /* TesDataPack.swift */,
 			);
@@ -251,6 +245,7 @@
 				540B163320BC8CCF0058D516 /* TemporalLoadBalancer.swift in Sources */,
 				5415F77020BC8BE5008A8E78 /* BsaFile+Extensions.swift in Sources */,
 				5415F74B20BC8931008A8E78 /* AssetManager.swift in Sources */,
+				54FD13AA20BE206A003D3138 /* CellManager.swift in Sources */,
 				5415F75E20BC8B4C008A8E78 /* EsmFile.swift in Sources */,
 				5415F76020BC8B5B008A8E78 /* EsmRecords.swift in Sources */,
 				5415F76220BC8B66008A8E78 /* FileManager.swift in Sources */,
@@ -258,16 +253,13 @@
 				5415F75320BC8ABC008A8E78 /* TesCellManager.swift in Sources */,
 				5415F76A20BC8BB7008A8E78 /* EsmFile+Fields.swift in Sources */,
 				5415F76E20BC8BDA008A8E78 /* BsaMultiFile+Extensions.swift in Sources */,
-				5415F74D20BC895A008A8E78 /* EngineId.swift in Sources */,
 				5415F75C20BC8B37008A8E78 /* BsaMultiFile.swift in Sources */,
 				5415F76620BC8B93008A8E78 /* TesAssetPack.swift in Sources */,
 				540B163620BC8E5E0058D516 /* TesPackTest.swift in Sources */,
 				5415F74920BC8906008A8E78 /* BinaryReader.swift in Sources */,
-				5415F75520BC8AD1008A8E78 /* GameId.swift in Sources */,
 				5415F75A20BC8B26008A8E78 /* BsaFile.swift in Sources */,
 				5415F75120BC8AB0008A8E78 /* TesAssetManager.swift in Sources */,
 				5415F76820BC8B9C008A8E78 /* TesDataPack.swift in Sources */,
-				5415F76420BC8B74008A8E78 /* GameFormatId.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
