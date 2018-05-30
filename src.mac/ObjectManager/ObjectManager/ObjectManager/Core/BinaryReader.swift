@@ -20,9 +20,9 @@ public class BinaryReader {
         baseStream = stream
     }
     
-    init(stream: Data) {
-        baseStream = stream
-    }
+    //init(stream: Data) {
+    //    baseStream = stream
+    //}
     
     deinit {
         close()
