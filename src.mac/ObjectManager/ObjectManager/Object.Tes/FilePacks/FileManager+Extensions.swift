@@ -21,7 +21,7 @@ extension FileManager {
         GameId.skyrimVR : "Skyrim VR"
     ]
 
-    static lazy var _fileDirectories: [GameId : URL] = {
+    static var _fileDirectories: [GameId : URL] = {
         // var game = TesSettings.Game;
         debugPrint("TES Installation(s):")
         // if (game.DataDirectory != null && Directory.Exists(game.DataDirectory))
@@ -33,7 +33,7 @@ extension FileManager {
         // else
         var r = [GameId : URL]()
         let fileManager = FileManager.default
-        let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        let documentsURL = try! fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         for key in _knownkeys {
             let url = documentsURL.appendingPathComponent(key.value)
             let isDirectory: ObjCBool
@@ -46,18 +46,18 @@ extension FileManager {
         return r
     }
 
-    public func getFilePath(_ path: String, forGame: GameId) -> URL?
+    public func getFilePath(_ path: String, for game: GameId) -> URL?
     {
-        guard let fileDirectory = _fileDirectories[gameId] else {
+        guard let fileDirectory = FileManager._fileDirectories[game] else {
             return nil
         }
-        path = fileDirectory.appendingPathComponent(path)
-        return fileExists(atPath: path) ? path : nil
+        let url = fileDirectory.appendingPathComponent(path)
+        return fileExists(atPath: url.path) ? url : nil
     }
 
-    public func getFilePaths(searchPattern: String, forGame: GameId) -> [URL]?
+    public func getFilePaths(searchPattern: String, for game: GameId) -> [URL]?
     {
-        guard let fileDirectory = _fileDirectories[gameId] else {
+        guard let fileDirectory = FileManager._fileDirectories[game] else {
             return nil
         }
         let files: [URL]

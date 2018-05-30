@@ -57,30 +57,30 @@ public class Header: CustomStringConvertible {
     public let type: String // 4 bytes
     public let dataSize: UInt32
     public let flags: Flags
-    public var compressed: Bool { return (flags & Flags.compressed) != 0 }
+    public var compressed: Bool { return (flags.rawValue & Flags.compressed.rawValue) != 0 }
     public let formId: UInt32
-    public let position: Int64
+    public let position: UInt64
     // group
     public let label: String
     public let groupType: GroupType
 
     init() { }
-    init(_r: BinaryReader, for format: GameFormatId) {
-        type = r.ReadASCIIString(4)
+    init(_ r: BinaryReader, for format: GameFormatId) {
+        type = r.readASCIIString(4)
         if type == "GRUP" {
             dataSize = r.readLEUInt32() - (format == .TES4 ? 20 : 24)
             label = r.readASCIIString(4)
             groupType = GroupType(rawValue: r.readLEInt32())!
-            r.readLEUInt32() // stamp | stamp + uknown
+            _ = r.readLEUInt32() // stamp | stamp + uknown
             if format != .TES4 {
-                r.readLEUInt32() // version + uknown
+                _ = r.readLEUInt32() // version + uknown
             }
             position = r.baseStream.offsetInFile;
             return;
         }
         dataSize = r.readLEUInt32()
         if format == .TES3 {
-            r.readLEUInt32() // Unknown
+            _ = r.readLEUInt32() // Unknown
         }
         flags = Flags(rawValue: r.readLEUInt32())!
         if format == .TES3 {
@@ -89,18 +89,19 @@ public class Header: CustomStringConvertible {
         }
         // tes4
         formId = r.readLEUInt32()
-        r.readLEUInt32()
+        _ = r.readLEUInt32()
         if format == .TES4 {
             position = r.baseStream.offsetInFile
             return
         }
         // tes5
-        r.readLEUInt32()
+        _ = r.readLEUInt32()
         position = r.baseStream.offsetInFile
     }
 
     static let create:[String : (f: ()->Record, l: (Int)->Bool)] = [
-        "TES3" : ({return TES3Record()}, {x in return true}),
+        "TES3" : ({return TES3Record()}, {x in return true})
+         /*
         "TES4" : ({return TES4Record()}, {x in return true}),
         // 0
         "LTEX" : ({return LTEXRecord()}, {x in return x > 0}),
@@ -189,12 +190,13 @@ public class Header: CustomStringConvertible {
         "DLBR" : ({return DLBRRecord()}, {x in return x > 5}),
         "DLVW" : ({return DLVWRecord()}, {x in return x > 5}),
         "SNDR" : ({return SNDRRecord()}, {x in return x > 5}),
+        */
     ]
 
     // public static bool LoadRecord(string type, byte level) => Create.TryGetValue(type, out RecordType recordType) ? recordType.Load(level) : false;
 
     func createRecord(at position: UInt64) -> Record {
-        guard let recordType = create[type] else {
+        guard let recordType = Header.create[type] else {
             fatalError("Unsupported ESM record type: \(type)")
         }
         let record = recordType.f()
@@ -204,7 +206,7 @@ public class Header: CustomStringConvertible {
 }
 
 public class RecordGroup: CustomStringConvertible {
-    public var description: String { return "\(headers.first??0)" }
+    public var description: String { return "\(headers.first ?? "none")" }
     //public string Label => Headers.First.Value.Label
     public var headers = [Header]()
     public var records = [Record]()
@@ -292,9 +294,9 @@ public class RecordGroup: CustomStringConvertible {
 
 public class Record: IRecord, CustomStringConvertible {
     public var description: String { return "BASE" }
-    internal let header: Header
+    internal var header: Header
 
-    public func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) {
+    func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) {
     }
 
     func read(_ r: BinaryReader, filePath: String, for format: GameFormatId) {

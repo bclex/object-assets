@@ -12,24 +12,51 @@ public enum ASCIIFormat {
     case raw, possibleNullTerminated, zeroPadded
 }
 
-public class BinaryReader {
-    
-    public var baseStream: FileHandle!
-    
-    init(stream: FileHandle) {
-        baseStream = stream
+public protocol BaseStream {
+    func close()
+    func readData(ofLength: Int) -> Data
+    var position: UInt64 {get set}
+}
+
+public class FileBaseStream: FileHandle, BaseStream {
+    public var position: UInt64 {
+        get { return self.offsetInFile }
+        set { self.seek(toFileOffset: newValue) }
     }
     
-    //init(stream: Data) {
-    //    baseStream = stream
-    //}
+    public func close() { super.closeFile() }
+    //public func readData(ofLength: Int) -> Data { return super.readData(ofLength: ofLength) }
+    public required init?(coder: NSCoder) { }
+    public convenience init?(forReadingAtPath path: String) { self.init(forReadingAtPath: path) }
+}
+
+/*
+public class DataBaseStream: BaseStream {
+    public func close() {
+    }
+    
+    public func readData(ofLength: Int) -> Data {
+        return Data()
+    }
+    
+    public var position: UInt64
+}
+*/
+
+public class BinaryReader {
+    
+    public var baseStream: BaseStream!
+    
+    init(_ stream: BaseStream) {
+        baseStream = stream
+    }
     
     deinit {
         close()
     }
     
     func close() {
-        baseStream?.closeFile()
+        baseStream?.close()
         baseStream = nil
     }
 
@@ -52,7 +79,7 @@ public class BinaryReader {
     // readRestOfBytes
     // readRestOfBytes
     
-    public func readASCIIString(length: Int, format: ASCIIFormat = .raw) -> String {
+    public func readASCIIString(_ length: Int, format: ASCIIFormat = .raw) -> String {
         var data = baseStream.readData(ofLength: length)
         switch format {
         case .raw: break

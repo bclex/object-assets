@@ -52,22 +52,32 @@ public class BsaFile {
         // Skyrim and earlier
         public let sizeFlags: UInt32 // The size of the file in the BSA
         // Fallout 4
-        public let packedSize: UInt32
-        public let unpackedSize: UInt32
+        public var packedSize: UInt32
+        public var unpackedSize: UInt32
         //
-        public let offset: Int64 // The offset of the file in the BSA
-        public let tex: F4Tex
+        public var offset: UInt64 // The offset of the file in the BSA
+        public var tex: F4Tex
         //
         public let path: String
         public let pathHash: UInt64
-        public func size() -> UInt32 { return 0 }
-        public var compressed: Bool { return (sizeFlags & OB_BSAFILE_FLAG_COMPRESS) != 0 }
+        // The size of the file inside the BSA
+        public var size: UInt32 { return sizeFlags > 0 ?
+            // Skyrim and earlier
+            sizeFlags & BsaFile.OB_BSAFILE_SIZEMASK :
+            //TODO: Not correct for texture BA2s
+            packedSize == 0 ? unpackedSize : packedSize }
+        // Whether the file is compressed inside the BSA
+        public var compressed: UInt { return UInt(sizeFlags & OB_BSAFILE_FLAG_COMPRESS) }
         
-        init() {
+        init(path: String,
+             pathHash: UInt64) {
+            self.path = path
+            self.pathHash = pathHash
         }
     }
 
-    public struct DXGIFormat {
+    public enum DXGIFormat: UInt8 {
+        case ukn
     }
     
     public struct F4Tex {
@@ -76,7 +86,21 @@ public class BsaFile {
         public let numMips: UInt8
         public let format: DXGIFormat
         public let unk16: UInt16
-        public let chunks: [F4TexChunk]
+        public let chunks: [F4TexChunk]?
+        
+        init(height: UInt16,
+             width: UInt16,
+             numMips: UInt8,
+             format: DXGIFormat,
+             unk16: UInt16,
+             chunks: [F4TexChunk]?) {
+            self.height = height
+            self.width = width
+            self.numMips = numMips
+            self.format = format
+            self.unk16 = unk16
+            self.chunks = chunks
+        }
     }
 
     public struct F4TexChunk {
@@ -86,28 +110,42 @@ public class BsaFile {
         public let startMip: UInt16
         public let endMip: UInt16
         public let unk14: UInt32
+        
+        init(offset: UInt64,
+             packedSize: UInt32,
+             unpackedSize: UInt32,
+             startMip: UInt16,
+             endMip: UInt16,
+             unk14: UInt32) {
+            self.offset = offset
+            self.packedSize = packedSize
+            self.unpackedSize = unpackedSize
+            self.startMip = startMip
+            self.endMip = endMip
+            self.unk14 = unk14
+        }
     }
 
     // MARK:Code
 
-    let _r: BinaryReader
-    public let magic: UInt32 // 4 bytes
-    public let version: UInt32 // 4 bytes
-    let _compressToggle: Bool // Whether the %BSA is compressed
-    let _hasNamePrefix: Bool // Whether Fallout 3 names are prefixed with an extra string
-    let _files: [FileMetadata]
-    let _filesByHash: [UInt64 : [FileMetadata]]
+    var _r: BinaryReader!
+    public var magic: UInt32 // 4 bytes
+    public var version: UInt32 // 4 bytes
+    var _compressToggle: UInt // Whether the %BSA is compressed
+    var _hasNamePrefix: Bool // Whether Fallout 3 names are prefixed with an extra string
+    var _files: [FileMetadata]
+    var _filesByHash: [UInt64 : [FileMetadata]]
     public let filePath: String
     //public let RootDir: VirtualFileSystem.Directory
 
-    public var isAtEof: Bool { return _r.offsetInFileo >= _r.Length }
+    //public var isAtEof: Bool { return _r.baseStream.offsetInFile >= _r.baseStream.count }
 
     init(filePath: String?) {
         guard let filePath = filePath else {
             return
         }
         self.filePath = filePath
-        _r = BinaryReader(stream: FileHandle(forReadingAtPath: filePath))
+        _r = BinaryReader(FileBaseStream(forReadingAtPath: filePath)!)
         readMetadata()
         //testContainsFile()
         //testLoadFileData()
@@ -119,56 +157,56 @@ public class BsaFile {
 
     public func close() {
         _r?.close()
-        _r = null
+        _r = nil
     }
 
     public func containsFile(filePath: String) -> Bool {
-        return _filesByHash.contains(hashFilePath(filePath))
+        return _filesByHash[hashFilePath(filePath)] != nil
     }
 
     public func loadFileData(filePath: String) -> Data {
-        var files = _filesByHash[hashFilePath(filePath)]
-        guard !files.isEmpty else {
+        guard let files = _filesByHash[hashFilePath(filePath)], !files.isEmpty else {
             fatalError("should not happen")
         }
         if files.count == 1 {
             return loadFileData(files[0])
         }
-        guard let file = files.first { $0.path.caseInsensitiveCompare(newPath) == ComparisonResult.orderedSame } else {
+        let newPath = filePath.replacingOccurrences(of: "/", with: "\\")
+        guard let file = files.first(where: { $0.path.caseInsensitiveCompare(newPath) == .orderedSame }) else {
             fatalError("Could not find file '\(filePath)' in a BSA file.")
         }
         return loadFileData(file)
     }
 
-    public func loadFileData(file: FileMetadata) -> Data {
-        _r.baseStream.offsetInFile = file.offset
-        var fileSize = Int32(file.size)
+    public func loadFileData(_ file: FileMetadata) -> Data {
+        _r.baseStream.position = file.offset
+        var fileSize = Int(file.size)
         if _hasNamePrefix {
-            let len = _r.readByte()
-            fileSize -= len + 1
-            _r.baseStream.position = file.offset + 1 + len
+            let len = Int(_r.readByte() + 1)
+            fileSize -= len
+            _r.baseStream.position = file.offset + UInt64(len)
         }
-        var newFileSize = fileSize;
-        if Version == SSE_BSAHEADER_VERSION && file.sizeFlags > 0 && file.compressed ^ _compressToggle
-            newFileSize = _r.readLEInt32() - 4;
-        let fileData = _r.readBytes(fileSize);
+        var newFileSize = fileSize
+        if version == BsaFile.SSE_BSAHEADER_VERSION && file.sizeFlags > 0 && (file.compressed ^ _compressToggle) != 0 {
+            newFileSize = Int(_r.readLEInt32()) - 4
+        }
+        var fileData = _r.readBytes(fileSize)
         // BSA
-        if file.sizeFlags > 0 && file.compressed ^ _compressToggle {
+        if file.sizeFlags > 0 && (file.compressed ^ _compressToggle) != 0 {
              var newFileData: Data
-             if Version != SSE_BSAHEADER_VERSION {
+             if version != BsaFile.SSE_BSAHEADER_VERSION {
                 if fileData.count > 4 {
-                    newFileData = fileData.inflate(withOffset: 4)
+                    newFileData = fileData.inflate(withOffset: 4)!
                 }
             }
             else {
-                newFileData = fileData.lzmaDecompress()
+                newFileData = fileData.lzmaDecompress()!
             }
-            fileData = newFileData;
+            fileData = newFileData
         }
         // General BA2
         else if file.packedSize > 0 && file.tex.chunks == nil {
-            let newFileData = fileData.inflate()
-            fileData = newFileData
+            fileData = fileData.inflate()!
         }
         // Fill DDS Header
         else if file.tex.chunks != nil {
@@ -250,29 +288,29 @@ public class BsaFile {
     func readMetadata() {
         // Open
         magic = _r.readLEUInt32()
-        if magic == F4_BSAHEADER_FILEID {
+        if magic == BsaFile.F4_BSAHEADER_FILEID {
             version = _r.readLEUInt32()
-            if version != F4_BSAHEADER_VERSION
+            if version != BsaFile.F4_BSAHEADER_VERSION {
                 fatalError("BAD MAGIC")
+            }
             // Read the header
             let header_type = _r.readASCIIString(4)            // 08 GNRL=General, DX10=Textures
-            let header_numFiles = _r.readLEUInt32()            // 0C
+            let header_numFiles = Int(_r.readLEUInt32())       // 0C
             let header_nameTableOffset = _r.readLEUInt64()     // 10 - relative to start of file
 
             // Create file metadatas
-            _r.baseStream.offsetInFile = UInt64(header_nameTableOffset)
-            _files = [FileMetadata]() ; _files.reserveCapacity(header_numFiles)
-            for i in 0..<header_NumFiles {
-                let length = _r.readLEUInt16()
+            _r.baseStream.position = UInt64(header_nameTableOffset)
+            _files = [FileMetadata](); _files.reserveCapacity(Int(header_numFiles))
+            for i in 0..<header_numFiles {
+                let length = Int(_r.readLEUInt16())
                 let path = _r.readASCIIString(length)
-                _files[i] = FileMetadata()
-                {
-                    path = path,
-                    pathHash = tes4HashFilePath(path),
-                }
+                _files[i] = FileMetadata(
+                    path: path,
+                    pathHash: BsaFile.tes4HashFilePath(path)
+                )
             }
-            if header_Type == "GNRL" { // General BA2 Format
-                _r.baseStream.offsetInFile = 16 + 8 // sizeof(header) + 8
+            if header_type == "GNRL" { // General BA2 Format
+                _r.baseStream.position = 16 + 8 // sizeof(header) + 8
                 for i in 0..<header_numFiles {
                     let info_nameHash = _r.readLEUInt32()      // 00
                     let info_ext = _r.readASCIIString(4)       // 04 - extension
@@ -284,18 +322,18 @@ public class BsaFile {
                     let info_unk20 = _r.readLEUInt32()         // 20 - BAADF00D
                     _files[i].packedSize = info_packedSize
                     _files[i].unpackedSize = info_unpackedSize
-                    _files[i].offset = Int64(info_offset)
+                    _files[i].offset = info_offset
                 }
             }
-            else if header_Type == "DX10" { // Texture BA2 Format
-                _r.baseStream.offsetInFile = 16 + 8 // sizeof(header) + 8
+            else if header_type == "DX10" { // Texture BA2 Format
+                _r.baseStream.position = 16 + 8 // sizeof(header) + 8
                 for i in 0..<header_numFiles {
                     let fileMetadata = _files[i]
                     let info_nameHash = _r.readLEUInt32()      // 00
                     let info_ext = _r.readASCIIString(4)       // 04
                     let info_dirHash = _r.readLEUInt32()       // 08
                     let info_unk0C = _r.readByte()             // 0C
-                    let info_numChunks = _r.readByte()         // 0D
+                    let info_numChunks = Int(_r.readByte())    // 0D
                     let info_chunkHeaderSize = _r.readLEUInt16()// 0E - size of one chunk header
                     let info_height = _r.readLEUInt16()        // 10
                     let info_width = _r.readLEUInt16()         // 12
@@ -303,144 +341,148 @@ public class BsaFile {
                     let info_format = _r.readByte()            // 15 - DXGI_FORMAT
                     let info_unk16 = _r.readLEUInt16()         // 16 - 0800
                     // read tex-chunks
-                    var texChunks = [F4TexChunk]() ; texChunks.reserveCapacity(info_numChunks)
+                    var texChunks = [F4TexChunk](); texChunks.reserveCapacity(info_numChunks)
                     for j in 0..<info_numChunks {
-                        texChunks[j] = F4TexChunk() {
-                            offset = _r.readLEUInt64(),         // 00
-                            packedSize = _r.readLEUInt32(),     // 08
-                            unpackedSize = _r.readLEUInt32(),   // 0C
-                            startMip = _r.readLEUInt16(),       // 10
-                            endMip = _r.readLEUInt16(),         // 12
-                            unk14 = _r.readLEUInt32(),          // 14 - BAADFOOD
-                        }
+                        texChunks[j] = F4TexChunk(
+                            offset: _r.readLEUInt64(),         // 00
+                            packedSize: _r.readLEUInt32(),     // 08
+                            unpackedSize: _r.readLEUInt32(),   // 0C
+                            startMip: _r.readLEUInt16(),       // 10
+                            endMip: _r.readLEUInt16(),         // 12
+                            unk14: _r.readLEUInt32()          // 14 - BAADFOOD
+                        )
                     }
-                    let firstChunk = texChunks.first
-                    _files[i].PackedSize = firstChunk.packedSize
-                    _files[i].UnpackedSize = firstChunk.unpackedSize
-                    _files[i].Offset = Int64(firstChunk.offset)
-                    fileMetadata.tex = F4Tex() {
-                        height = info_Height,
-                        width = info_Width,
-                        numMips = info_numMips,
-                        format = (DXGIFormat)info_format,
-                        unk16 = info_unk16,
-                        chunks = texChunks,
-                    }
+                    let firstChunk = texChunks.first!
+                    _files[i].packedSize = firstChunk.packedSize
+                    _files[i].unpackedSize = firstChunk.unpackedSize
+                    _files[i].offset = firstChunk.offset
+                    fileMetadata.tex = F4Tex(
+                        height: info_height,
+                        width: info_width,
+                        numMips: info_numMips,
+                        format: DXGIFormat(rawValue: info_format)!,
+                        unk16: info_unk16,
+                        chunks: texChunks
+                    )
                 }
             }
         }
-        else if magic == OB_BSAHEADER_FILEID {
-            version = _r.readUInt32()
-            if version != OB_BSAHEADER_VERSION && version != F3_BSAHEADER_VERSION && version != SSE_BSAHEADER_VERSION
+        else if magic == BsaFile.OB_BSAHEADER_FILEID {
+            version = _r.readLEUInt32()
+            if version != BsaFile.OB_BSAHEADER_VERSION && version != BsaFile.F3_BSAHEADER_VERSION && version != BsaFile.SSE_BSAHEADER_VERSION {
                 fatalError("BAD MAGIC")
+            }
             // Read the header
             let header_folderRecordOffset = _r.readLEUInt32() // Offset of beginning of folder records
-            let header_archiveFlags = _r.readLEUInt32() // Archive flags
-            let header_folderCount = _r.readLEUInt32() // Total number of folder records (OBBSAFolderInfo)
-            let header_fileCount = _r.readLEUInt32() // Total number of file records (OBBSAFileInfo)
+            let header_archiveFlags = UInt16(_r.readLEUInt32()) // Archive flags
+            let header_folderCount = Int(_r.readLEUInt32()) // Total number of folder records (OBBSAFolderInfo)
+            let header_fileCount = Int(_r.readLEUInt32()) // Total number of file records (OBBSAFileInfo)
             let header_folderNameLength = _r.readLEUInt32() // Total length of folder names
             let header_fileNameLength = _r.readLEUInt32() // Total length of file names
             let header_fileFlags = _r.readLEUInt32() // File flags
 
             // Calculate some useful values
-            if (header_archiveFlags & OB_BSAARCHIVE_PATHNAMES) == 0 || (header_archiveFlags & OB_BSAARCHIVE_FILENAMES) == 0
+            if (header_archiveFlags & BsaFile.OB_BSAARCHIVE_PATHNAMES) == 0 || (header_archiveFlags & BsaFile.OB_BSAARCHIVE_FILENAMES) == 0 {
                 fatalError("HEADER FLAGS")
-            _compressToggle = (header_archiveFlags & OB_BSAARCHIVE_COMPRESSFILES) != 0
-            if version == F3_BSAHEADER_VERSION || version == SSE_BSAHEADER_VERSION
-                _hasNamePrefix = (header_archiveFlags & F3_BSAARCHIVE_PREFIXFULLFILENAMES) != 0
-            let folderSize = version != SSE_BSAHEADER_VERSION ? 16 : 24
+            }
+            _compressToggle = (header_archiveFlags & BsaFile.OB_BSAARCHIVE_COMPRESSFILES) != 0
+            if version == BsaFile.F3_BSAHEADER_VERSION || version == BsaFile.SSE_BSAHEADER_VERSION {
+                _hasNamePrefix = (header_archiveFlags & BsaFile.F3_BSAARCHIVE_PREFIXFULLFILENAMES) != 0
+            }
+            let folderSize = version != BsaFile.SSE_BSAHEADER_VERSION ? 16 : 24
 
             // Create file metadatas
-            _files = [FileMetadata]() ; _files.reserveCapacity(header_fileCount)
-            var filenamesSectionStartPos = _r.baseStream.offsetInFile = header_folderRecordOffset + header_folderNameLength + header_folderCount * (folderSize + 1) + header_fileCount * 16
-            var buf = Data() ; buf.reserveCapacity(64)
+            _files = [FileMetadata](); _files.reserveCapacity(header_fileCount)
+            var filenamesSectionStartPos = _r.baseStream.position = header_folderRecordOffset +
+                header_folderNameLength + header_folderCount * (folderSize + 1) + header_fileCount * 16
+            var buf = Data(); buf.reserveCapacity(64)
             for i in 0..<header_fileCount {
-                buf.clear()
-                curCharAsByte: UInt8; while (curCharAsByte = _r.readByte()) != 0 {
-                    buf.add(curCharAsByte)
+                buf.removeAll(keepingCapacity: true)
+                var curCharAsByte: UInt8; while (curCharAsByte = _r.readByte()) != 0 {
+                    buf.append(curCharAsByte)
                 }
                 let path = String(data: buf, encoding: .utf8)
-                _files[i] = FileMetadata()
-                {
-                    Path = path,
-                }
+                _files[i] = FileMetadata(
+                    path: path
+                )
             }
-            if _r.baseStream.offsetInFile != filenamesSectionStartPos + header_fileNameLength
+            if _r.baseStream.position != filenamesSectionStartPos + header_fileNameLength {
                 fatalError("HEADER FILENAMES")
+            }
 
             // read-all folders
-            _r.baseStream.offsetInFile = header_folderRecordOffset;
-            var foldersFiles = [UInt32]() ; foldersFiles.reserveCapacity(header_folderCount)
+            _r.baseStream.position = header_folderRecordOffset
+            var foldersFiles = [UInt32](); foldersFiles.reserveCapacity(header_folderCount)
             for i in 0..<header_folderCount {
                 var folder_hash = _r.readLEUInt64() // Hash of the folder name
-                var folder_fileCount = _r.readLEUInt32() // Number of files in folder
-                var folder_unk = 0U ; var folder_offset = 0UL
-                if version == SSE_BSAHEADER_VERSION { folder_unk = _r.readLEUInt32() ; folder_offset = _r.readLEUInt64() }
-                else { folder_offset = _r.readLEUInt32() }
+                var folder_fileCount = Int(_r.readLEUInt32()) // Number of files in folder
+                var folder_unk: UInt32 = 0; var folder_offset: UInt64 = 0
+                if version == SSE_BSAHEADER_VERSION { folder_unk = _r.readLEUInt32(); folder_offset = _r.readLEUInt64() }
+                else { folder_offset = UInt64(_r.readLEUInt32()) }
                 foldersFiles[i] = folder_fileCount
             }
 
             // add file
-            var fileNameIndex = 0U
+            var fileNameIndex = 0
             for i in 0..<header_folderCount {
-                let folder_name = _r.readASCIIString(_r.readByte(), ASCIIFormat.possiblyNullTerminated) // BSAReadSizedString
+                let folder_name = _r.readASCIIString(Int(_r.readByte()), format: .possiblyNullTerminated) // BSAReadSizedString
                 var folderFiles = foldersFiles[i]
                 for j in 0..<folderFiles {
                     let file_hash = _r.readLEUInt64() // Hash of the filename
                     let file_sizeFlags = _r.readLEUInt32() // Size of the data, possibly with OB_BSAFILE_FLAG_COMPRESS set
                     let file_offset = _r.readLEUInt32() // Offset to raw file data
-                    let fileMetadata = _files[fileNameIndex++]
+                    let fileMetadata = _files[fileNameIndex]; fileNameIndex += 1
                     fileMetadata.sizeFlags = file_sizeFlags
                     fileMetadata.offset = file_offset
                     var path = folder_name + "\\" + fileMetadata.path
                     fileMetadata.path = path
-                    fileMetadata.pathHash = tes4HashFilePath(path)
+                    fileMetadata.pathHash = BsaFile.tes4HashFilePath(path)
                 }
             }
         }
-        else if magic == MW_BSAHEADER_FILEID {
+        else if magic == BsaFile.MW_BSAHEADER_FILEID {
             // Read the header
             let header_hashOffset = _r.readLEUInt32() // Offset of hash table minus header size (12)
-            let header_fileCount = _r.readLEUInt32() // Number of files in the archive
+            let header_fileCount = Int(_r.readLEUInt32()) // Number of files in the archive
 
             // Calculate some useful values
-            let headerSize = _r.baseStream.offsetInFile;
-            let hashTablePosition = headerSize + header_hashOffset;
+            let headerSize = _r.baseStream.position
+            let hashTablePosition = headerSize + header_hashOffset
             let fileDataSectionPostion = hashTablePosition + (8 * header_fileCount)
 
             // Create file metadatas
-            _files = [FileMetadata]() ; _files.reserveCapacity(header_fileCount)
+            _files = [FileMetadata](); _files.reserveCapacity(header_fileCount)
             for i in 0..<header_fileCount {
-                _files[i] = FileMetadata()
-                {
+                _files[i] = FileMetadata(
                     // Read file sizes/offsets
-                    sizeFlags = _r.readLEUInt32(),
-                    offset = fileDataSectionPostion + _r.readLEUInt32(),
-                }
+                    sizeFlags: _r.readLEUInt32(),
+                    offset: fileDataSectionPostion + _r.readLEUInt32()
+                )
             }
 
             // Read filename offsets
-            var filenameOffsets = [UInt32]() ; filenameOffsets.reserveCapacity(header_FileCount) // relative offset in filenames section
+            var filenameOffsets = [UInt32](); filenameOffsets.reserveCapacity(header_FileCount) // relative offset in filenames section
             for i in 0..<header_fileCount {
                 filenameOffsets[i] = _r.readLEUInt32()
             }
 
             // Read filenames
-            var filenamesSectionStartPos = _r.baseStream.offsetInFile;
-            var buf = Data() ; buf.reserveCapacity(64)
+            var filenamesSectionStartPos = _r.baseStream.position
+            var buf = Data(); buf.reserveCapacity(64)
             for i in 0..<header_fileCount {
-                _r.baseStream.offsetInFile = filenamesSectionStartPos + filenameOffsets[i];
-                buf.clear()
-                curCharAsByte : UInt8 ; while (curCharAsByte = _r.readByte()) != 0 {
-                    buf.Add(curCharAsByte)
+                _r.baseStream.offsetInFile = filenamesSectionStartPos + filenameOffsets[i]
+                buf.removeAll(keepingCapacity: true)
+                var curCharAsByte: UInt8; while (curCharAsByte = _r.readByte()) != 0 {
+                    buf.append(curCharAsByte)
                 }
                 _files[i].path = String(data: buf, encoding: .utf8)
             }
 
             // Read filename hashes
             _r.baseStream.offsetInFile = hashTablePosition;
-            for i in 0..<header_fileCount
+            for i in 0..<header_fileCount {
                 _files[i].pathHash = UInt64((_r.readLEUInt32() << 32) | _r.readLEUInt32())
+            }
         }
         else { fatalError("BAD MAGIC") }
 
@@ -453,28 +495,28 @@ public class BsaFile {
         //     RootDir.CreateDescendantFile(fileMetadata.Path);
     }
 
-    func hashFilePath(string filePath: String) -> UInt64 {
-        if Magic == MW_BSAHEADER_FILEID { return tes3HashFilePath(filePath) }
-        else { return tes4HashFilePath(filePath) }
+    func hashFilePath(_ filePath: String) -> UInt64 {
+        if magic == BsaFile.MW_BSAHEADER_FILEID { return BsaFile.tes3HashFilePath(filePath) }
+        else { return BsaFile.tes4HashFilePath(filePath) }
     }
 
     // http://en.uesp.net/wiki/Tes3Mod:BSA_File_Format
-    static func tes3HashFilePath(filePath: String) -> UInt64 {
-        filePath = filePath.lowered().replacingOccurrences(of: "/", with: "\\")
-        let len = UInt32(filePath.size)
+    static func tes3HashFilePath(_ filePath: String) -> UInt64 {
+        let newPath = filePath.lowercased().replacingOccurrences(of: "/", with: "\\")
+        let len = Int(newPath.count)
         //
         var l: UInt32 = (len >> 1)
         var off: Int = 0, i: Int = 0
         var sum: UInt32 = 0, temp: UInt32
         for i in 0..<l {
-            sum ^= UInt32(filePath[i]) << (off & 0x1F)
+            sum ^= UInt32(newPath[i]) << (off & 0x1F)
             off += 8
         }
         let value1 = sum
-        sum = 0, off = 0
-        Int n
-        for i in i..len {
-            temp = UInt32(filePath[i]) << (off & 0x1F)
+        sum = 0; off = 0
+        var n: Int
+        for i in i...len {
+            temp = UInt32(newPath[i]) << (off & 0x1F)
             sum ^= temp
             n = temp & 0x1F
             sum = (sum << (32 - n)) | (sum >> n)
@@ -484,45 +526,8 @@ public class BsaFile {
         return UInt64((value1 << 32) | value2)
     }
 
-    static func tes4HashFilePath(filePath: String) -> UInt64 {
-        filePath = filePath.lowered().replacingOccurrences(of: "/", with: "\\")
-        let url = URL(filePath)
-        return genHash(url.deletingPathExtension().path, url.pathExtension)
-
-        func genHash(file: String, ext: String) -> UInt64 {
-            var hash: UInt64 = 0UL
-            if file.size > 0 {
-                hash = UInt64(
-                    (((byte)file[file.Length - 1]) * 0x1) +
-                    ((file.Length > 2 ? (byte)file[file.Length - 2] : (byte)0) * 0x100) +
-                    (file.Length * 0x10000) +
-                    (((byte)file[0]) * 0x1000000)
-                )
-            }
-            if file.size > 3 {
-                hash += UInt64(genHash2(file.Substring(1, file.Length - 3)) * 0x100000000)
-            }
-            if ext.size > 0 {
-                hash += UInt64(genHash2(ext) * 0x100000000)
-                var i: UInt8 = 0
-                switch ext {
-                    case ".nif": i = 1
-                    case ".kf": i = 2
-                    case ".dds": i = 3
-                    case ".wav": i = 4
-                }
-                if i != 0 {
-                    let a: UInt8 = ((i & 0xfc) << 5) + UInt8((hash & 0xff000000) >> 24)
-                    let b: UInt8 = ((i & 0xfe) << 6) + UInt8(hash & 0xff)
-                    let c: UInt8 = (i << 7) + UInt8((hash & 0xff00) >> 8)
-                    hash -= hash & 0xFF00FFFF
-                    hash += UInt32((a << 24) + b + (c << 8))
-                }
-            }
-            return hash
-        }
-
-        func genHash2(s: String) -> UInt32 {
+    static func tes4HashFilePath(_ filePath: String) -> UInt64 {
+        func genHash2(_ s: String) -> UInt32 {
             var hash: UInt32 = 0
             for i in s.startIndex..<s.endIndex {
                 hash *= 0x1003f
@@ -530,5 +535,43 @@ public class BsaFile {
             }
             return hash
         }
+        
+        func genHash(_ file: String, ext: String) -> UInt64 {
+            var hash: UInt64 = 0
+            if file.count > 0 {
+                let val = (file[file.count - 1] * 0x1) +
+                    ((file.count > 2 ? file[file.count - 2] : 0) * 0x100) +
+                    (file.count * 0x10000) +
+                    (file[0] * 0x1000000)
+                hash = UInt64(val)
+            }
+            if file.count > 3 {
+                let str = String(file[file.index(file.startIndex, offsetBy: 1)..<file.index(file.endIndex, offsetBy: -3)])
+                hash += UInt64(genHash2(str) * 0x100000000)
+            }
+            if ext.count > 0 {
+                hash += UInt64(genHash2(ext) * 0x100000000)
+                var i: UInt8
+                switch ext {
+                case ".nif": i = 1
+                case ".kf": i = 2
+                case ".dds": i = 3
+                case ".wav": i = 4
+                default: i = 0
+                }
+                if i != 0 {
+                    let a: UInt8 = ((i & 0xfc) << 5) + UInt8((hash & 0xff000000) >> 24)
+                    let b: UInt8 = ((i & 0xfe) << 6) + UInt8(hash & 0xff)
+                    let c: UInt8 = (i << 7) + UInt8((hash & 0xff00) >> 8)
+                    hash -= hash & 0xFF00FFFF
+                    hash += UInt64((a << 24) + b + (c << 8))
+                }
+            }
+            return hash
+        }
+        
+        let newPath = filePath.lowercased().replacingOccurrences(of: "/", with: "\\")
+        let url = URL(fileURLWithPath: newPath)
+        return genHash(url.deletingPathExtension().path, ext: url.pathExtension)
     }
 }

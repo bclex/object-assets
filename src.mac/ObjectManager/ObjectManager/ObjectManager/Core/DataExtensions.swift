@@ -9,25 +9,21 @@
 import Foundation
 import Compression
 
-public extension Data
-{
-    public func lzmaDecompress(withOffset: Int = 0) -> Data?
-    {
+public extension Data {
+    public func lzmaDecompress(withOffset: Int = 0) -> Data? {
         return self.withUnsafeBytes { (sourcePtr: UnsafePointer<UInt8>) -> Data? in
             return perform(operation: COMPRESSION_STREAM_DECODE, algorithm: COMPRESSION_LZMA, source: sourcePtr + withOffset, sourceSize: count - withOffset)
         }
     }
 
-    public func inflate(withOffset: Int = 0) -> Data?
-    {
+    public func inflate(withOffset: Int = 0) -> Data? {
         return self.withUnsafeBytes { (sourcePtr: UnsafePointer<UInt8>) -> Data? in
             return perform(operation: COMPRESSION_STREAM_DECODE, algorithm: COMPRESSION_ZLIB, source: sourcePtr + withOffset, sourceSize: count - withOffset)
         }
     }
 }
 
-fileprivate func perform(operation: compression_stream_operation, algorithm: compression_algorithm, source: UnsafePointer<UInt8>, sourceSize: Int) -> Data?
-{
+fileprivate func perform(operation: compression_stream_operation, algorithm: compression_algorithm, source: UnsafePointer<UInt8>, sourceSize: Int) -> Data? {
     guard operation == COMPRESSION_STREAM_ENCODE || sourceSize > 0 else { return nil }
     
     let streamBase = UnsafeMutablePointer<compression_stream>.allocate(capacity: 1)

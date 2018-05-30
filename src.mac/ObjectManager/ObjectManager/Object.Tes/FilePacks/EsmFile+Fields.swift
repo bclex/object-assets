@@ -9,21 +9,21 @@
 import Foundation
 
 public protocol IHaveEDID {
-    var EDID: STRVField
+    var EDID: STRVField {get}
 }
 
 public protocol IHaveMODL {
-    var MODL: MODLGroup
+    var MODL: MODLGroup {get}
 }
 
 public class MODLGroup: CustomStringConvertible {
     public var description: String { return "\(value)" }
     public let value: String
-    public let bound: Float
-    public let textures: Data // Texture Files Hashes
+    public var bound: Float
+    public var textures: Data // Texture Files Hashes
 
     init(_ r: BinaryReader, _ dataSize: Int) {
-        value = r.readASCIIString(dataSize, format: .possiblyNullTerminated)
+        value = r.readASCIIString(dataSize, format: .possibleNullTerminated)
     }
 
     func MODBField(_ r: BinaryReader, _ dataSize: Int) {
@@ -39,7 +39,7 @@ public struct STRVField: CustomStringConvertible {
     public var description: String { return "\(value)" }
     public let value: String
 
-    init(_ r: BinaryReader, _ dataSize: Int, format: ASCIIFormat = .possiblyNullTerminated) {
+    init(_ r: BinaryReader, _ dataSize: Int, format: ASCIIFormat = .possibleNullTerminated) {
         value = r.readASCIIString(dataSize, format: format)
     }
 }
@@ -49,7 +49,7 @@ public struct FILEField: CustomStringConvertible {
     public let value: String
 
     init(_ r: BinaryReader, _ dataSize: Int) {
-        value = r.readASCIIString(dataSize, format: .possiblyNullTerminated)
+        value = r.readASCIIString(dataSize, format: .possibleNullTerminated)
     }
 }
 
@@ -59,14 +59,15 @@ public struct INTVField: CustomStringConvertible {
 
     init(_ r: BinaryReader, _ dataSize: Int) {
         switch dataSize {
-            case 1: value = r.readByte()
-            case 2: value = r.readLEInt16()
-            case 4: value = r.readLEInt32()
-            case 8: value = r.readLEInt64()
+            case 1: value = Int64(r.readByte())
+            case 2: value = Int64(r.readLEInt16())
+            case 4: value = Int64(r.readLEInt32())
+            case 8: value = Int64(r.readLEInt64())
             default: fatalError("Tried to read an INTV subrecord with an unsupported size (\(dataSize))")
         }
     }
-    var toUI16Field: UI16Field { return UI16Field(value: UInt16(value) }
+    
+    var toUI16Field: UI16Field { return UI16Field(value: UInt16(value)) }
 }
 
 public struct DATVField: CustomStringConvertible {
@@ -81,7 +82,7 @@ public struct DATVField: CustomStringConvertible {
             case "b": valueB = r.readLEInt32() != 0
             case "i": valueI = r.readLEInt32()
             case "f": valueF = r.readLESingle()
-            case "s": valueS = r.readASCIIString(dataSize, .possiblyNullTerminated)
+            case "s": valueS = r.readASCIIString(dataSize, format: .possibleNullTerminated)
             default: fatalError("\(type)")
         }
     }
@@ -118,6 +119,7 @@ public struct UI16Field: CustomStringConvertible {
     public var description: String { return "\(value)" }
     public let value: UInt16
 
+    init(value: UInt16) { self.value = value }
     init(_ r: BinaryReader, _ dataSize: Int) {
         value = r.readLEUInt16();
     }
@@ -142,15 +144,15 @@ public struct UI32Field: CustomStringConvertible {
 }
 
 public struct FormId<TRecord>: CustomStringConvertible {
-    public var description: String { return "\(type):\(name)\(id)" }
+    public var description: String { return "\(type):\(name ?? "none")\(id ?? 0)" }
     public let id: UInt32?
     public let name: String?
-    public var type: String { return "\(TRecord.class)"[0..<4] }
+    public var type: String { let r = "\(TRecord.self)" ; return String(r[r.startIndex..<r.index(r.startIndex, offsetBy: 4)])  }
 
     init(_ id: UInt32) { self.id = id ; name = nil }
     init(_ name: String) { id = 0 ; self.name = name }
-    init(_ uint id, _ string name) { self.id = id ; self.name = name }
-    func adding(name: Name) -> FormId<TRecord> { return FormId<TRecord>(id, name) }
+    init(_ id: UInt32, _ name: String) { self.id = id ; self.name = name }
+    func adding(name: String) -> FormId<TRecord> { return FormId<TRecord>(id!, name) }
 }
 
 public struct FMIDField<TRecord>: CustomStringConvertible {
@@ -160,10 +162,10 @@ public struct FMIDField<TRecord>: CustomStringConvertible {
     init(_ r: BinaryReader, _ dataSize: Int) {
         value = dataSize == 4 ?
             FormId<TRecord>(r.readLEUInt32()) :
-            FormId<TRecord>(r.readASCIIString(dataSize, .zeroPadded))
+            FormId<TRecord>(r.readASCIIString(dataSize, format: .zeroPadded))
     }
 
-    mutating func addName(name: Name) {
+    mutating func addName(name: String) {
         value = value.adding(name: name)
     }
 }
@@ -187,9 +189,9 @@ public struct ColorRef: CustomStringConvertible {
     public let nullByte: UInt8
 
     init(red: UInt8, green: UInt8, blue: UInt8) {
-        red = red
-        green = green
-        blue = blue
+        self.red = red
+        self.green = green
+        self.blue = blue
         nullByte = 255
     }
 
@@ -199,16 +201,16 @@ public struct ColorRef: CustomStringConvertible {
         blue = r.readByte()
         nullByte = r.readByte()
     }
-    //TODO: SceneKit Color
-    //func toColor32() => Color32(red, green, blue, 255)
+
+    //func toColor32() -> CGColor { return CGColor(red: red, green: green, blue: blue, alpha: 255) }
 }
 
 public struct CREFField: CustomStringConvertible {
-    public var description: String { return "\(value1)x\(value2)" }
+    public var description: String { return "\(color)" }
     public let color: ColorRef
 
     init(_ r: BinaryReader, _ dataSize: Int) {
-        color = ColorRef(r)
+        color = ColorRef(r, dataSize)
     }
 }
 
@@ -217,11 +219,11 @@ public struct CNTOField: CustomStringConvertible {
     public let itemCount: UInt32 // Number of the item
     public let item: FormId<Record> // The ID of the item
 
-    init(_ r: BinaryReader, _ dataSize: Int, forFormat: GameFormatId)
+    init(_ r: BinaryReader, _ dataSize: Int, for format: GameFormatId)
     {
-        if formatId == .TES3 {
+        if format == .TES3 {
             itemCount = r.readLEUInt32()
-            item = FormId<Record>(r.readASCIIString(32, .ZeroPadded))
+            item = FormId<Record>(r.readASCIIString(32, format: .zeroPadded))
             return;
         }
         item = FormId<Record>(r.readLEUInt32())
