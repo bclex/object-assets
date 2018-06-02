@@ -1,5 +1,5 @@
 ﻿//
-//  STAT.swift
+//  STATRecord.swift
 //  ObjectManager
 //
 //  Created by Sky Morey on 5/28/18.

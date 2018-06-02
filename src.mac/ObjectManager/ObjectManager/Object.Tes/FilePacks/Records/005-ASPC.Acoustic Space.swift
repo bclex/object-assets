@@ -1,21 +1,23 @@
-﻿using OA.Core;
+﻿//
+//  ASPCRecord.swift
+//  ObjectManager
+//
+//  Created by Sky Morey on 5/28/18.
+//  Copyright © 2018 Sky Morey. All rights reserved.
+//
 
-namespace OA.Tes.FilePacks.Records
-{
-    public class ASPCRecord : Record
+public class ASPCRecord: Record {
+    public var description: String { return "ASPC: \(EDID)" }
+    public var EDID: STRVField // Editor ID
+    public var CNAME: CREFField // RGB color
+
+    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
     {
-        public override string ToString() => $"ASPC: {EDID.Value}";
-        public STRVField EDID { get; set; } // Editor ID
-        public CREFField CNAME; // RGB color
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        switch (type)
         {
-            switch (type)
-            {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "CNAME": CNAME = new CREFField(r, dataSize); return true;
-                default: return false;
-            }
+            case "EDID": EDID = new STRVField(r, dataSize); return true;
+            case "CNAME": CNAME = new CREFField(r, dataSize); return true;
+            default: return false;
         }
     }
 }

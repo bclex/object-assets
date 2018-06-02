@@ -1,5 +1,5 @@
 ﻿//
-//  WEAP.swift
+//  WEAPRecord.swift
 //  ObjectManager
 //
 //  Created by Sky Morey on 5/28/18.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class WEAPRecord : Record, IHaveEDID, IHaveMODL {
+public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
     public struct DATAField {
         public enum WEAPType {
             case shortBladeOneHand = 0
@@ -42,7 +42,7 @@ public class WEAPRecord : Record, IHaveEDID, IHaveMODL {
         public let thrustMax: UInt8
         public let flags: Int32 // 0 = ?, 1 = Ignore Normal Weapon Resistance?
 
-        func DATAField(r: BinaryReader, dataSize: UInt32, forFormat: GameFormatId) {
+        init(r: BinaryReader, dataSize: UInt32, forFormat: GameFormatId) {
             if forFormat == .TES3 {
                 weight = r.readLESingle()
                 value = r.readLEInt32()

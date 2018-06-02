@@ -1,31 +1,32 @@
-﻿using OA.Core;
-using System.Collections.Generic;
+﻿//
+//  IDLERecord.swift
+//  ObjectManager
+//
+//  Created by Sky Morey on 5/28/18.
+//  Copyright © 2018 Sky Morey. All rights reserved.
+//
 
-namespace OA.Tes.FilePacks.Records
-{
-    public class IDLERecord : Record
+public class IDLERecord: Record {
+    public override string ToString() => $"IDLE: {EDID.Value}";
+    public STRVField EDID { get; set; } // Editor ID
+    public MODLGroup MODL;
+    public List<SCPTRecord.CTDAField> CTDAs = new List<SCPTRecord.CTDAField>(); // Conditions
+    public BYTEField ANAM;
+    public FMIDField<IDLERecord>[] DATAs;
+
+    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
     {
-        public override string ToString() => $"IDLE: {EDID.Value}";
-        public STRVField EDID { get; set; } // Editor ID
-        public MODLGroup MODL;
-        public List<SCPTRecord.CTDAField> CTDAs = new List<SCPTRecord.CTDAField>(); // Conditions
-        public BYTEField ANAM;
-        public FMIDField<IDLERecord>[] DATAs;
-
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+        switch (type)
         {
-            switch (type)
-            {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-                case "MODB": MODL.MODBField(r, dataSize); return true;
-                case "CTDA":
-                case "CTDT": CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, formatId)); return true;
-                case "ANAM": ANAM = new BYTEField(r, dataSize); return true;
-                case "DATA": DATAs = new FMIDField<IDLERecord>[dataSize >> 2]; for (var i = 0; i < DATAs.Length; i++) DATAs[i] = new FMIDField<IDLERecord>(r, 4); return true;
-                    
-                default: return false;
-            }
+            case "EDID": EDID = new STRVField(r, dataSize); return true;
+            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
+            case "MODB": MODL.MODBField(r, dataSize); return true;
+            case "CTDA":
+            case "CTDT": CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, formatId)); return true;
+            case "ANAM": ANAM = new BYTEField(r, dataSize); return true;
+            case "DATA": DATAs = new FMIDField<IDLERecord>[dataSize >> 2]; for (var i = 0; i < DATAs.Length; i++) DATAs[i] = new FMIDField<IDLERecord>(r, 4); return true;
+                
+            default: return false;
         }
     }
 }

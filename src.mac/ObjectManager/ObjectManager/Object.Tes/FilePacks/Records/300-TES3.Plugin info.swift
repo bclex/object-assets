@@ -41,4 +41,3 @@ public class TES3Record: Record {
         return true
     }
 }
-

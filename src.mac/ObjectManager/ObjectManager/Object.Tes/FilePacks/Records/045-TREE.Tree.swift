@@ -1,79 +1,81 @@
-﻿using OA.Core;
+﻿//
+//  TREERecord.swift
+//  ObjectManager
+//
+//  Created by Sky Morey on 5/28/18.
+//  Copyright © 2018 Sky Morey. All rights reserved.
+//
 
-namespace OA.Tes.FilePacks.Records
-{
-    public class TREERecord : Record
+public class TREERecord: Record {
+    public struct SNAMField
     {
-        public struct SNAMField
-        {
-            public int[] Values;
+        public int[] Values;
 
-            public SNAMField(UnityBinaryReader r, uint dataSize)
-            {
-                Values = new int[dataSize >> 2];
-                for (var i = 0; i < Values.Length; i++)
-                    Values[i] = r.ReadLEInt32();
-            }
+        public SNAMField(UnityBinaryReader r, uint dataSize)
+        {
+            Values = new int[dataSize >> 2];
+            for (var i = 0; i < Values.Length; i++)
+                Values[i] = r.ReadLEInt32();
         }
+    }
 
-        public struct CNAMField
+    public struct CNAMField
+    {
+        public float LeafCurvature;
+        public float MinimumLeafAngle;
+        public float MaximumLeafAngle;
+        public float BranchDimmingValue;
+        public float LeafDimmingValue;
+        public int ShadowRadius;
+        public float RockSpeed;
+        public float RustleSpeed;
+
+        public CNAMField(UnityBinaryReader r, uint dataSize)
         {
-            public float LeafCurvature;
-            public float MinimumLeafAngle;
-            public float MaximumLeafAngle;
-            public float BranchDimmingValue;
-            public float LeafDimmingValue;
-            public int ShadowRadius;
-            public float RockSpeed;
-            public float RustleSpeed;
-
-            public CNAMField(UnityBinaryReader r, uint dataSize)
-            {
-                LeafCurvature = r.ReadLESingle();
-                MinimumLeafAngle = r.ReadLESingle();
-                MaximumLeafAngle = r.ReadLESingle();
-                BranchDimmingValue = r.ReadLESingle();
-                LeafDimmingValue = r.ReadLESingle();
-                ShadowRadius = r.ReadLEInt32();
-                RockSpeed = r.ReadLESingle();
-                RustleSpeed = r.ReadLESingle();
-            }
+            LeafCurvature = r.ReadLESingle();
+            MinimumLeafAngle = r.ReadLESingle();
+            MaximumLeafAngle = r.ReadLESingle();
+            BranchDimmingValue = r.ReadLESingle();
+            LeafDimmingValue = r.ReadLESingle();
+            ShadowRadius = r.ReadLEInt32();
+            RockSpeed = r.ReadLESingle();
+            RustleSpeed = r.ReadLESingle();
         }
+    }
 
-        public struct BNAMField
+    public struct BNAMField
+    {
+        public float Width;
+        public float Height;
+
+        public BNAMField(UnityBinaryReader r, uint dataSize)
         {
-            public float Width;
-            public float Height;
-
-            public BNAMField(UnityBinaryReader r, uint dataSize)
-            {
-                Width = r.ReadLESingle();
-                Height = r.ReadLESingle();
-            }
+            Width = r.ReadLESingle();
+            Height = r.ReadLESingle();
         }
+    }
 
-        public override string ToString() => $"TREE: {EDID.Value}";
-        public STRVField EDID { get; set; } // Editor ID
-        public MODLGroup MODL; // Model
-        public FILEField ICON; // Leaf Texture
-        public SNAMField SNAM; // SpeedTree Seeds, array of ints
-        public CNAMField CNAM; // Tree Parameters
-        public BNAMField BNAM; // Billboard Dimensions
+    public override string ToString() => $"TREE: {EDID.Value}";
+    public STRVField EDID { get; set; } // Editor ID
+    public MODLGroup MODL; // Model
+    public FILEField ICON; // Leaf Texture
+    public SNAMField SNAM; // SpeedTree Seeds, array of ints
+    public CNAMField CNAM; // Tree Parameters
+    public BNAMField BNAM; // Billboard Dimensions
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+    {
+        switch (type)
         {
-            switch (type)
-            {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-                case "MODB": MODL.MODBField(r, dataSize); return true;
-                case "MODT": MODL.MODTField(r, dataSize); return true;
-                case "ICON": ICON = new FILEField(r, dataSize); return true;
-                case "SNAM": SNAM = new SNAMField(r, dataSize); return true;
-                case "CNAM": CNAM = new CNAMField(r, dataSize); return true;
-                case "BNAM": BNAM = new BNAMField(r, dataSize); return true;
-                default: return false;
-            }
+            case "EDID": EDID = new STRVField(r, dataSize); return true;
+            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
+            case "MODB": MODL.MODBField(r, dataSize); return true;
+            case "MODT": MODL.MODTField(r, dataSize); return true;
+            case "ICON": ICON = new FILEField(r, dataSize); return true;
+            case "SNAM": SNAM = new SNAMField(r, dataSize); return true;
+            case "CNAM": CNAM = new CNAMField(r, dataSize); return true;
+            case "BNAM": BNAM = new BNAMField(r, dataSize); return true;
+            default: return false;
         }
     }
 }
