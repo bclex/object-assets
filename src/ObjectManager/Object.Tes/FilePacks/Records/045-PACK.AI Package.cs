@@ -72,7 +72,7 @@ namespace OA.Tes.FilePacks.Records
         public PTDTField PTDT; // Target
         public List<SCPTRecord.CTDAField> CTDAs = new List<SCPTRecord.CTDAField>(); // Conditions
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -82,7 +82,7 @@ namespace OA.Tes.FilePacks.Records
                 case "PSDT": PSDT = new PSDTField(r, dataSize); return true;
                 case "PTDT": PTDT = new PTDTField(r, dataSize); return true;
                 case "CTDA":
-                case "CTDT": CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, formatId)); return true;
+                case "CTDT": CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, format)); return true;
                 default: return false;
             }
         }

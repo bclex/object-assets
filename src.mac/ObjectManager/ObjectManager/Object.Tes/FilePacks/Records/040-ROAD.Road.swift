@@ -11,6 +11,9 @@ public class ROADRecord: Record {
     public var PGRPs: [PGRDRecord.PGRPField]
     public var PGRR: UNKNField
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "PGRP": PGRPs = [PGRDRecord.PGRPField](); PGRPs.allocateCapacity(dataSize >> 4); for i in 0..<PGRPs.capacity { PGRPs[i] = PGRDRecord.PGRPField(r, dataSize) }

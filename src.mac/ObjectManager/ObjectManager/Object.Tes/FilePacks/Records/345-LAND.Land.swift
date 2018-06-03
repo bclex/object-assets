@@ -10,40 +10,40 @@ public class LANDRecord: Record {
     // TESX
     public struct VNMLField
     {
-        public Vector3Int[] Vertexs; // XYZ 8 bit floats
+        public Vector3Int[] Vertexs // XYZ 8 bit floats
 
         public VNMLField(UnityBinaryReader r, uint dataSize)
         {
-            Vertexs = new Vector3Int[dataSize / 3];
+            Vertexs = Vector3Int[dataSize / 3];
             for (var i = 0; i < Vertexs.Length; i++)
-                Vertexs[i] = new Vector3Int(r.ReadByte(), r.ReadByte(), r.ReadByte());
+                Vertexs[i] = Vector3Int(r.readByte(), r.readByte(), r.readByte());
         }
     }
 
     public struct VHGTField
     {
-        public float ReferenceHeight; // A height offset for the entire cell. Decreasing this value will shift the entire cell land down.
-        public sbyte[] HeightData; // HeightData
+        public float ReferenceHeight // A height offset for the entire cell. Decreasing this value will shift the entire cell land down.
+        public sbyte[] HeightData // HeightData
 
         public VHGTField(UnityBinaryReader r, uint dataSize)
         {
-            ReferenceHeight = r.ReadLESingle();
-            HeightData = new sbyte[dataSize - 4 - 3];
+            ReferenceHeight = r.readLESingle();
+            HeightData = sbyte[dataSize - 4 - 3];
             for (var i = 0; i < HeightData.Length; i++)
-                HeightData[i] = r.ReadSByte();
-            r.skipBytes(3); // Unused
+                HeightData[i] = r.readSByte();
+            r.skipBytes(3) // Unused
         }
     }
 
     public struct VCLRField
     {
-        public ColorRef[] Colors; // 24-bit RGB
+        public ColorRef[] Colors // 24-bit RGB
 
         public VCLRField(UnityBinaryReader r, uint dataSize)
         {
-            Colors = new ColorRef[dataSize / 24];
+            Colors = ColorRef[dataSize / 24];
             for (var i = 0; i < Colors.Length; i++)
-                Colors[i] = new ColorRef(r.ReadByte(), r.ReadByte(), r.ReadByte());
+                Colors[i] = ColorRef(r.readByte(), r.readByte(), r.readByte());
         }
     }
 
@@ -55,15 +55,15 @@ public class LANDRecord: Record {
         {
             if (formatId == GameFormatId.TES3)
             {
-                TextureIndices = new uint[dataSize >> 1];
+                TextureIndices = uint[dataSize >> 1];
                 for (var i = 0; i < TextureIndices.Length; i++)
-                    TextureIndices[i] = r.ReadLEUInt16();
+                    TextureIndices[i] = r.readLEUInt16();
             }
             else
             {
-                TextureIndices = new uint[dataSize >> 2];
+                TextureIndices = uint[dataSize >> 2];
                 for (var i = 0; i < TextureIndices.Length; i++)
-                    TextureIndices[i] = r.ReadLEUInt32();
+                    TextureIndices[i] = r.readLEUInt32();
             }
         }
     }
@@ -76,8 +76,8 @@ public class LANDRecord: Record {
 
         public CORDField(UnityBinaryReader r, uint dataSize)
         {
-            CellX = r.ReadLEInt32();
-            CellY = r.ReadLEInt32();
+            CellX = r.readLEInt32();
+            CellY = r.readLEInt32();
         }
     }
 
@@ -89,7 +89,7 @@ public class LANDRecord: Record {
             var heightCount = dataSize;
             for (var i = 0; i < heightCount; i++)
             {
-                var height = r.ReadByte();
+                var height = r.readByte();
             }
         }
     }
@@ -103,10 +103,10 @@ public class LANDRecord: Record {
 
         public BTXTField(UnityBinaryReader r, uint dataSize)
         {
-            Texture = r.ReadLEUInt32();
-            Quadrant = r.ReadByte();
-            r.ReadByte(); // Unused
-            Layer = r.ReadLEInt16();
+            Texture = r.readLEUInt32();
+            Quadrant = r.readByte();
+            r.readByte() // Unused
+            Layer = r.readLEInt16();
         }
     }
 
@@ -117,9 +117,9 @@ public class LANDRecord: Record {
 
         public VTXTField(UnityBinaryReader r, uint dataSize)
         {
-            Position = r.ReadLEUInt16();
-            r.skipBytes(2); // Unused
-            Opacity = r.ReadLESingle();
+            Position = r.readLEUInt16();
+            r.skipBytes(2) // Unused
+            Opacity = r.readLESingle();
         }
     }
 
@@ -130,23 +130,26 @@ public class LANDRecord: Record {
     }
 
     public var description: String { return "LAND: \(INTV)" }
-    public IN32Field DATA; // Unknown (default of 0x09) Changing this value makes the land 'disappear' in the editor.
-    public VNMLField VNML; // A RGB color map 65x65 pixels in size representing the land normal vectors.
+    public IN32Field DATA // Unknown (default of 0x09) Changing this value makes the land 'disappear' in the editor.
+    public VNMLField VNML // A RGB color map 65x65 pixels in size representing the land normal vectors.
                             // The signed value of the 'color' represents the vector's component. Blue
                             // is vertical(Z), Red the X direction and Green the Y direction.Note that
                             // the y-direction of the data is from the bottom up.
-    public VHGTField VHGT; // Height data
-    public VNMLField? VCLR; // Vertex color array, looks like another RBG image 65x65 pixels in size. (Optional)
-    public VTEXField? VTEX; // A 16x16 array of short texture indices. (Optional)
+    public VHGTField VHGT // Height data
+    public VNMLField? VCLR // Vertex color array, looks like another RBG image 65x65 pixels in size. (Optional)
+    public VTEXField? VTEX // A 16x16 array of short texture indices. (Optional)
     // TES3
-    public CORDField INTV; // The cell coordinates of the cell
-    public WNAMField WNAM; // Unknown byte data.
+    public CORDField INTV // The cell coordinates of the cell
+    public WNAMField WNAM // Unknown byte data.
     // TES4
-    public BTXTField[] BTXTs = new BTXTField[4]; // Base Layer
-    public ATXTGroup[] ATXTs; // Alpha Layer
+    public BTXTField[] BTXTs = BTXTField[4] // Base Layer
+    public ATXTGroup[] ATXTs // Alpha Layer
     ATXTGroup _lastATXT;
 
-    public Vector2i GridCoords => new Vector2i(INTV.CellX, INTV.CellY);
+    public Vector2i GridCoords => Vector2i(INTV.CellX, INTV.CellY);
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

@@ -37,46 +37,49 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
         {
             if (formatId == GameFormatId.TES3)
             {
-                Weight = r.ReadLESingle();
-                Value = r.ReadLEInt32();
-                Time = r.ReadLEInt32();
-                Radius = r.ReadLEInt32();
-                LightColor = new ColorRef(r);
-                Flags = r.ReadLEInt32();
+                Weight = r.readLESingle();
+                Value = r.readLEInt32();
+                Time = r.readLEInt32();
+                Radius = r.readLEInt32();
+                LightColor = ColorRef(r);
+                Flags = r.readLEInt32();
                 FalloffExponent = 1;
                 FOV = 90;
                 return;
             }
 
-            Time = r.ReadLEInt32();
-            Radius = r.ReadLEInt32();
-            LightColor = new ColorRef(r);
-            Flags = r.ReadLEInt32();
+            Time = r.readLEInt32();
+            Radius = r.readLEInt32();
+            LightColor = ColorRef(r);
+            Flags = r.readLEInt32();
             if (dataSize == 32)
             {
-                FalloffExponent = r.ReadLESingle();
-                FOV = r.ReadLESingle();
+                FalloffExponent = r.readLESingle();
+                FOV = r.readLESingle();
             }
             else
             {
                 FalloffExponent = 1;
                 FOV = 90;
             }
-            Value = r.ReadLEInt32();
-            Weight = r.ReadLESingle();
+            Value = r.readLEInt32();
+            Weight = r.readLESingle();
         }
     }
 
     public var description: String { return "LIGH: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model
-    public STRVField? FULL; // Item Name (optional)
-    public DATAField DATA; // Light Data
-    public STRVField? SCPT; // Script Name (optional)??
-    public FMIDField<SCPTRecord>? SCRI; // Script FormId (optional)
-    public FILEField? ICON; // Male Icon (optional)
-    public FLTVField FNAM; // Fade Value
-    public FMIDField<SOUNRecord> SNAM; // Sound FormId (optional)
+    public STRVField EDID  // Editor ID
+    public MODLGroup MODL  // Model
+    public STRVField? FULL // Item Name (optional)
+    public DATAField DATA // Light Data
+    public STRVField? SCPT // Script Name (optional)??
+    public FMIDField<SCPTRecord>? SCRI // Script FormId (optional)
+    public FILEField? ICON // Male Icon (optional)
+    public FLTVField FNAM // Fade Value
+    public FMIDField<SOUNRecord> SNAM // Sound FormId (optional)
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

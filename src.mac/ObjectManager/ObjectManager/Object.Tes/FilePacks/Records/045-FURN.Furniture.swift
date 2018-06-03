@@ -14,6 +14,9 @@ public class FURNRecord: Record {
     public var SCRI: FMIDField<SCPTRecord> // Script (optional)
     public var MNAM: IN32Field // Active marker flags, required. A bit field with a bit value of 1 indicating that the matching marker position in the NIF file is active.
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

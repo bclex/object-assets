@@ -7,113 +7,106 @@
 //
 
 public class WATRRecord: Record {
-    public class DATAField
-    {
-        public float WindVelocity;
-        public float WindDirection;
-        public float WaveAmplitude;
-        public float WaveFrequency;
-        public float SunPower;
-        public float ReflectivityAmount;
-        public float FresnelAmount;
-        public float ScrollXSpeed;
-        public float ScrollYSpeed;
-        public float FogDistance_NearPlane;
-        public float FogDistance_FarPlane;
-        public ColorRef ShallowColor;
-        public ColorRef DeepColor;
-        public ColorRef ReflectionColor;
-        public byte TextureBlend;
-        public float RainSimulator_Force;
-        public float RainSimulator_Velocity;
-        public float RainSimulator_Falloff;
-        public float RainSimulator_Dampner;
-        public float RainSimulator_StartingSize;
-        public float DisplacementSimulator_Force;
-        public float DisplacementSimulator_Velocity;
-        public float DisplacementSimulator_Falloff;
-        public float DisplacementSimulator_Dampner;
-        public float DisplacementSimulator_StartingSize;
-        public ushort Damage;
+    public class DATAField {
+        public let windVelocity: Float
+        public let windDirection: Float
+        public let waveAmplitude: Float
+        public let waveFrequency: Float
+        public let sunPower: Float
+        public let reflectivityAmount: Float
+        public let fresnelAmount: Float
+        public let scrollXSpeed: Float
+        public let scrollYSpeed: Float
+        public let fogDistance_nearPlane: Float
+        public let fogDistance_farPlane: Float
+        public let shallowColor: ColorRef
+        public let deepColor: ColorRef
+        public let reflectionColor: ColorRef
+        public let textureBlend: UInt8
+        public let rainSimulator_force: Float
+        public let rainSimulator_velocity: Float
+        public let rainSimulator_falloff: Float
+        public let rainSimulator_dampner: Float
+        public let rainSimulator_startingSize: Float
+        public let displacementSimulator_force: Float
+        public let displacementSimulator_velocity: Float
+        public let displacementSimulator_falloff: Float
+        public let displacementSimulator_dampner: Float
+        public let displacementSimulator_startingSize: Float
+        public let damage: UInt16
 
-        public DATAField(UnityBinaryReader r, uint dataSize)
-        {
-            if (dataSize != 102 && dataSize != 86 && dataSize != 62 && dataSize != 42 && dataSize != 2)
-                WindVelocity = 1;
-            if (dataSize == 2)
-            {
-                Damage = r.ReadLEUInt16();
-                return;
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            guard dataSize != 2 else {
+                damage = r.readLEUInt16()
+                return
             }
-            WindVelocity = r.ReadLESingle();
-            WindDirection = r.ReadLESingle();
-            WaveAmplitude = r.ReadLESingle();
-            WaveFrequency = r.ReadLESingle();
-            SunPower = r.ReadLESingle();
-            ReflectivityAmount = r.ReadLESingle();
-            FresnelAmount = r.ReadLESingle();
-            ScrollXSpeed = r.ReadLESingle();
-            ScrollYSpeed = r.ReadLESingle();
-            FogDistance_NearPlane = r.ReadLESingle();
-            if (dataSize == 42)
-            {
-                Damage = r.ReadLEUInt16();
-                return;
+            windVelocity = r.readLESingle()
+            windDirection = r.readLESingle()
+            waveAmplitude = r.readLESingle()
+            waveFrequency = r.readLESingle()
+            sunPower = r.readLESingle()
+            reflectivityAmount = r.readLESingle()
+            fresnelAmount = r.readLESingle()
+            scrollXSpeed = r.readLESingle()
+            scrollYSpeed = r.readLESingle()
+            fogDistance_nearPlane = r.readLESingle()
+            guard dataSize != 42 else {
+                damage = r.readLEUInt16()
+                return
             }
-            FogDistance_FarPlane = r.ReadLESingle();
-            ShallowColor = new ColorRef(r);
-            DeepColor = new ColorRef(r);
-            ReflectionColor = new ColorRef(r);
-            TextureBlend = r.ReadByte();
-            r.skipBytes(3); // Unused
-            if (dataSize == 62)
-            {
-                Damage = r.ReadLEUInt16();
-                return;
+            fogDistance_farPlane = r.readLESingle()
+            shallowColor = ColorRef(r)
+            deepColor = ColorRef(r)
+            reflectionColor = ColorRef(r)
+            textureBlend = r.readByte()
+            r.skipBytes(3) // Unused
+            guard dataSize != 62 else {
+                damage = r.readLEUInt16()
+                return
             }
-            RainSimulator_Force = r.ReadLESingle();
-            RainSimulator_Velocity = r.ReadLESingle();
-            RainSimulator_Falloff = r.ReadLESingle();
-            RainSimulator_Dampner = r.ReadLESingle();
-            RainSimulator_StartingSize = r.ReadLESingle();
-            DisplacementSimulator_Force = r.ReadLESingle();
-            if (dataSize == 86)
-            {
-                //DisplacementSimulator_Velocity = DisplacementSimulator_Falloff = DisplacementSimulator_Dampner = DisplacementSimulator_StartingSize = 0F;
-                Damage = r.ReadLEUInt16();
-                return;
+            rainSimulator_force = r.readLESingle()
+            rainSimulator_velocity = r.readLESingle()
+            rainSimulator_falloff = r.readLESingle()
+            rainSimulator_dampner = r.readLESingle()
+            rainSimulator_startingSize = r.readLESingle()
+            displacementSimulator_force = r.readLESingle()
+            guard dataSize != 86 {
+                //displacementSimulator_velocity = displacementSimulator_falloff = displacementSimulator_dampner = displacementSimulator_startingSize = 0
+                damage = r.readLEUInt16()
+                return
             }
-            DisplacementSimulator_Velocity = r.ReadLESingle();
-            DisplacementSimulator_Falloff = r.ReadLESingle();
-            DisplacementSimulator_Dampner = r.ReadLESingle();
-            DisplacementSimulator_StartingSize = r.ReadLESingle();
-            Damage = r.ReadLEUInt16();
+            displacementSimulator_velocity = r.readLESingle()
+            displacementSimulator_falloff = r.readLESingle()
+            displacementSimulator_dampner = r.readLESingle()
+            displacementSimulator_startingSize = r.readLESingle()
+            damage = r.readLEUInt16()
         }
     }
 
-    public struct GNAMField
-    {
-        public FormId<WATRRecord> Daytime;
-        public FormId<WATRRecord> Nighttime;
-        public FormId<WATRRecord> Underwater;
+    public struct GNAMField {
+        public let daytime: FormId<WATRRecord> 
+        public let nighttime: FormId<WATRRecord> 
+        public let underwater: FormId<WATRRecord> 
 
-        public GNAMField(UnityBinaryReader r, uint dataSize)
-        {
-            Daytime = new FormId<WATRRecord>(r.ReadLEUInt32());
-            Nighttime = new FormId<WATRRecord>(r.ReadLEUInt32());
-            Underwater = new FormId<WATRRecord>(r.ReadLEUInt32());
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            daytime = FormId<WATRRecord>(r.readLEUInt32())
+            nighttime = FormId<WATRRecord>(r.readLEUInt32())
+            underwater = FormId<WATRRecord>(r.readLEUInt32())
         }
     }
 
     public var description: String { return "WATR: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public STRVField TNAM; // Texture
-    public BYTEField ANAM; // Opacity
-    public BYTEField FNAM; // Flags
-    public STRVField MNAM; // Material ID
-    public FMIDField<SOUNRecord> SNAM; // Sound
-    public DATAField DATA; // DATA
-    public GNAMField GNAM; // GNAM
+    public var EDID: STRVField // Editor ID
+    public var TNAM: STRVField // Texture
+    public var ANAM: BYTEField // Opacity
+    public var FNAM: BYTEField // Flags
+    public var MNAM: STRVField // Material ID
+    public var SNAM: FMIDField<SOUNRecord> // Sound
+    public var DATA: DATAField // DATA
+    public var GNAM: GNAMField // GNAM
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

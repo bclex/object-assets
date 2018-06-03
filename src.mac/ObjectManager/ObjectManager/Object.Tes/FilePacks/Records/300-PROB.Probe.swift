@@ -7,29 +7,30 @@
 //
 
 public class PROBRecord: Record, IHaveEDID, IHaveMODL {
-    public struct PBDTField
-    {
-        public float Weight;
-        public int Value;
-        public float Quality;
-        public int Uses;
+    public struct PBDTField {
+        public let weight: Float
+        public let value: Int32
+        public let quality: Float
+        public let uses: Int32
 
-        public PBDTField(UnityBinaryReader r, uint dataSize)
-        {
-            Weight = r.ReadLESingle();
-            Value = r.ReadLEInt32();
-            Quality = r.ReadLESingle();
-            Uses = r.ReadLEInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            weight = r.readLESingle()
+            value = r.readLEInt32()
+            quality = r.readLESingle()
+            uses = r.readLEInt32()
         }
     }
 
     public var description: String { return "PROB: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model Name
-    public STRVField FNAM; // Item Name
-    public PBDTField PBDT; // Probe Data
-    public FILEField ICON; // Inventory Icon
-    public FMIDField<SCPTRecord> SCRI; // Script Name
+    public var EDID: STRVField  // Editor ID
+    public var MODL: MODLGroup  // Model Name
+    public var FNAM: STRVField // Item Name
+    public var PBDT: PBDTField // Probe Data
+    public var ICON: FILEField // Inventory Icon
+    public var SCRI: FMIDField<SCPTRecord> // Script Name
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard format == .TES3 else {

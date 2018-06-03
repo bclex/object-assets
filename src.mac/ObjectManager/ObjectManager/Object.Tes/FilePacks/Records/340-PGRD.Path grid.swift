@@ -7,92 +7,82 @@
 //
 
 public class PGRDRecord: Record {
-    public struct DATAField
-    {
-        public int X;
-        public int Y;
-        public short Granularity;
-        public short PointCount;
+    public struct DATAField {
+        public let x: Int32
+        public let y: Int32
+        public let granularity: Int16
+        public let pointCount: Int16
 
-        public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            if (formatId == GameFormatId.TES3)
-            {
-                X = r.ReadLEInt32();
-                Y = r.ReadLEInt32();
-                Granularity = r.ReadLEInt16();
-                PointCount = r.ReadLEInt16();
-                return;
+        init(_ r: BinaryReader, _ dataSize: Int, for format: GameFormatId) {
+            guard formatId != .TES3 else {
+                x = y = granularity = 0
+                pointCount = r.readLEInt16()
             }
-            else X = Y = Granularity = 0;
-            PointCount = r.ReadLEInt16();
+            x = r.readLEInt32()
+            y = r.readLEInt32()
+            granularity = r.readLEInt16()
+            pointCount = r.readLEInt16()
         }
     }
 
-    public struct PGRPField
-    {
-        public Vector3 Point;
-        public byte Connections;
+    public struct PGRPField {
+        public let point: SCNVector3
+        public let connections: UInt8
 
-        public PGRPField(UnityBinaryReader r, uint dataSize)
-        {
-            Point = new Vector3(r.ReadLESingle(), r.ReadLESingle(), r.ReadLESingle());
-            Connections = r.ReadByte();
-            r.skipBytes(3); // Unused
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            point = SCNVector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
+            connections = r.readByte()
+            r.skipBytes(3) // Unused
         }
     }
 
-    public struct PGRRField
-    {
-        public short StartPointId;
-        public short EndPointId;
+    public struct PGRRField {
+        public let StartPointId: Int16
+        public let EndPointId: Int16
 
-        public PGRRField(UnityBinaryReader r, uint dataSize)
-        {
-            StartPointId = r.ReadLEInt16();
-            EndPointId = r.ReadLEInt16();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            startPointId = r.readLEInt16()
+            endPointId = r.readLEInt16()
         }
     }
 
-    public struct PGRIField
-    {
-        public short PointId;
-        public Vector3 ForeignNode;
+    public struct PGRIField {
+        public let pointId: Int16
+        public let foreignNode: SCNVector3
 
-        public PGRIField(UnityBinaryReader r, uint dataSize)
-        {
-            PointId = r.ReadLEInt16();
-            r.skipBytes(2); // Unused (can merge back)
-            ForeignNode = new Vector3(r.ReadLESingle(), r.ReadLESingle(), r.ReadLESingle());
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            pointId = r.readLEInt16()
+            r.skipBytes(2) // Unused (can merge back)
+            foreignNode = SCNVector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
         }
     }
 
-    public struct PGRLField
-    {
-        public FormId<REFRRecord> Reference;
-        public short[] PointIds;
+    public struct PGRLField {
+        public let reference: FormId<REFRRecord>
+        public let pointIds: [Int16]
 
-        public PGRLField(UnityBinaryReader r, uint dataSize)
-        {
-            Reference = new FormId<REFRRecord>(r.ReadLEUInt32());
-            PointIds = new short[(dataSize - 4) >> 2];
-            for (var i = 0; i < PointIds.Length; i++)
-            {
-                PointIds[i] = r.ReadLEInt16();
-                r.skipBytes(2); // Unused (can merge back)
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            reference = FormId<REFRRecord>(r.readLEUInt32())
+            pointIds = [short](); pointIds.allocateCapacity((dataSize - 4) >> 2)
+            for i in 0..<pointIds.capactiy {
+                pointIds[i] = r.readLEInt16()
+                r.skipBytes(2) // Unused (can merge back)
             }
         }
     }
 
     public var description: String { return "PGRD: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public DATAField DATA; // Number of nodes
-    public PGRPField[] PGRPs;
-    public UNKNField PGRC;
-    public UNKNField PGAG;
-    public PGRRField[] PGRRs; // Point-to-Point Connections
-    public PGRLs: [PGRLField]? // Point-to-Reference Mappings
-    public PGRIField[] PGRIs; // Inter-Cell Connections
+    public var EDID: STRVField // Editor ID
+    public var DATA: DATAField // Number of nodes
+    public var PGRPs: [PGRPField]
+    public var PGRC: UNKNField
+    public var PGAG: UNKNField
+    public var PGRRs: [PGRRField] // Point-to-Point Connections
+    public var PGRLs: [PGRLField]? // Point-to-Reference Mappings
+    public var PGRIs: [PGRIField] // Inter-Cell Connections
+    
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

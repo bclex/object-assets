@@ -18,11 +18,14 @@ public class DIALRecord: Record {
     }
 
     public var description: String { return "DIAL: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public STRVField FULL; // Dialogue Name
-    public BYTEField DATA; // Dialogue Type
-    public List<FMIDField<QUSTRecord>> QSTIs; // Quests (optional)
-    public List<INFORecord> INFOs = new List<INFORecord>(); // Info Records
+    public STRVField EDID  // Editor ID
+    public STRVField FULL // Dialogue Name
+    public BYTEField DATA // Dialogue Type
+    public List<FMIDField<QUSTRecord>> QSTIs // Quests (optional)
+    public List<INFORecord> INFOs = List<INFORecord>() // Info Records
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

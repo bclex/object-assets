@@ -8,66 +8,63 @@
 
 public class ALCHRecord: Record, IHaveEDID, IHaveMODL {
     // TESX
-    public class DATAField
-    {
-        public float Weight;
-        public int Value;
-        public int Flags; //: AutoCalc
+    public class DATAField {
+        public let weight: Float
+        public let value: Int32
+        public let flags: Int32 //: AutoCalc
 
-        init(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            Weight = r.ReadLESingle();
-            if (formatId == GameFormatId.TES3)
-            {
-                Value = r.ReadLEInt32();
-                Flags = r.ReadLEInt32();
+        init(_ r: BinaryReader, _ dataSize: Int, for format: GameFormatId) {
+            weight = r.readLESingle()
+            if format == .TES3 {
+                value = r.readLEInt32()
+                flags = r.readLEInt32()
             }
         }
 
-        public void ENITField(UnityBinaryReader r, uint dataSize)
-        {
-            Value = r.ReadLEInt32();
-            Flags = r.ReadByte();
-            r.skipBytes(3); // Unknown
+        func ENITField(_ r: BinaryReader, _ dataSize: Int) {
+            value = r.readLEInt32()
+            flags = r.readByte()
+            r.skipBytes(3) // Unknown
         }
     }
 
     // TES3
-    public struct ENAMField
-    {
-        public short EffectId;
-        public byte SkillId; // for skill related effects, -1/0 otherwise
-        public byte AttributeId; // for attribute related effects, -1/0 otherwise
-        public int Unknown1;
-        public int Unknown2;
-        public int Duration;
-        public int Magnitude;
-        public int Unknown4;
+    public struct ENAMField {
+        public let effectId: UInt16
+        public let skillId: UInt8 // for skill related effects, -1/0 otherwise
+        public let attributeId: UInt8 // for attribute related effects, -1/0 otherwise
+        public let unknown1: Int32
+        public let unknown2: Int32
+        public let duration: Int32
+        public let magnitude: Int32
+        public let unknown4: Int32
 
-        public ENAMField(UnityBinaryReader r, uint dataSize)
-        {
-            EffectId = r.ReadLEInt16();
-            SkillId = r.ReadByte();
-            AttributeId = r.ReadByte();
-            Unknown1 = r.ReadLEInt32();
-            Unknown2 = r.ReadLEInt32();
-            Duration = r.ReadLEInt32();
-            Magnitude = r.ReadLEInt32();
-            Unknown4 = r.ReadLEInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            effectId = r.readLEInt16()
+            skillId = r.readByte()
+            attributeId = r.readByte()
+            unknown1 = r.readLEInt32()
+            unknown2 = r.readLEInt32()
+            duration = r.readLEInt32()
+            magnitude = r.readLEInt32()
+            unknown4 = r.readLEInt32()
         }
     }
 
     public var description: String { return "ALCH: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model
-    public STRVField FULL; // Item Name
-    public DATAField DATA; // Alchemy Data
-    public ENAMField? ENAM; // Enchantment
-    public FILEField ICON; // Icon
-    public FMIDField<SCPTRecord>? SCRI; // Script (optional)
+    public EDID: STRVField  // Editor ID
+    public MODL: MODLGroup  // Model
+    public FULL: STRVField // Item Name
+    public DATA: DATAField // Alchemy Data
+    public ENAM: ENAMField? // Enchantment
+    public ICON: FILEField // Icon
+    public SCRI: FMIDField<SCPTRecord>? // Script (optional)
     // TES4
-    public List<ENCHRecord.EFITField> EFITs = new List<ENCHRecord.EFITField>(); // Effect Data
-    public List<ENCHRecord.SCITField> SCITs = new List<ENCHRecord.SCITField>(); // Script Effect Data
+    public EFITs = [ENCHRecord.EFITField]() // Effect Data
+    public SCITs = [ENCHRecord.SCITField]() // Script Effect Data
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
@@ -76,7 +73,7 @@ public class ALCHRecord: Record, IHaveEDID, IHaveMODL {
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL.MODBField(r, dataSize)
         case "MODT": MODL.MODTField(r, dataSize)
-        case "FULL": if SCITs.Count == 0 { FULL = STRVField(r, dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
+        case "FULL": if SCITs.count == 0 { FULL = STRVField(r, dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
         case "FNAM": FULL = STRVField(r, dataSize)
         case "DATA":
         case "ALDT": DATA = DATAField(r, dataSize, format)

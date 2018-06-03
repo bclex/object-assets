@@ -28,7 +28,7 @@ namespace OA.Tes.FilePacks.Records
         public IN32Field INTV; // unknown
         public IN32Field? INCC; // unknown (Optional)
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

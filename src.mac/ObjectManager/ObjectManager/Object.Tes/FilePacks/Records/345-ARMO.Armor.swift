@@ -8,69 +8,58 @@
 
 public class ARMORecord: Record, IHaveEDID, IHaveMODL {
     // TESX
-    public struct DATAField
-    {
-        public enum ARMOType
-        {
-            Helmet = 0,
-            Cuirass = 1,
-            L_Pauldron = 2,
-            R_Pauldron = 3,
-            Greaves = 4,
-            Boots = 5,
-            L_Gauntlet = 6,
-            R_Gauntlet = 7,
-            Shield = 8,
-            L_Bracer = 9,
-            R_Bracer = 10,
+    public struct DATAField {
+        public enum ARMOType {
+            case Helmet = 0, Cuirass, L_Pauldron, R_Pauldron, Greaves, Boots, L_Gauntlet, R_Gauntlet, Shield, L_Bracer, R_Bracer,
         }
 
-        public short Armour;
-        public int Value;
-        public int Health;
-        public float Weight;
-        //
-        public int Type;
-        public int EnchantPts;
+        public let armour: Int16
+        public let value: Int32
+        public let health: Int32
+        public let weight: Float
+        // TES3
+        public let type: Int32
+        public let enchantPts: Int32
 
-        public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            if (formatId == GameFormatId.TES3)
-            {
-                Type = r.ReadLEInt32();
-                Weight = r.ReadLESingle();
-                Value = r.ReadLEInt32();
-                Health = r.ReadLEInt32();
-                EnchantPts = r.ReadLEInt32();
-                Armour = (short)r.ReadLEInt32();
-                return;
+        init(_ r: BinaryReader, _ dataSize: Int, for format: GameFormatId) {
+            guard format != .TES3 else {
+                type = r.readLEInt32()
+                weight = r.readLESingle()
+                value = r.readLEInt32()
+                health = r.readLEInt32()
+                enchantPts = r.readLEInt32()
+                armour = Int16(r.readLEInt32())
+                return
             }
-            Armour = r.ReadLEInt16();
-            Value = r.ReadLEInt32();
-            Health = r.ReadLEInt32();
-            Weight = r.ReadLESingle();
-            Type = 0;
-            EnchantPts = 0;
+            armour = r.readLEInt16()
+            value = r.readLEInt32()
+            health = r.readLEInt32()
+            weight = r.readLESingle()
+            type = 0
+            enchantPts = 0
         }
     }
 
     public var description: String { return "ARMO: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Male biped model
-    public STRVField FULL; // Item Name
-    public FILEField ICON; // Male icon
-    public DATAField DATA; // Armour Data
-    public FMIDField<SCPTRecord>? SCRI; // Script Name (optional)
-    public FMIDField<ENCHRecord>? ENAM; // Enchantment FormId (optional)
+    public var EDID: STRVField  // Editor ID
+    public var MODL: MODLGroup  // Male biped model
+    public var FULL: STRVField // Item Name
+    public var ICON: FILEField // Male icon
+    public var DATA: DATAField // Armour Data
+    public var SCRI: FMIDField<SCPTRecord>? // Script Name (optional)
+    public var ENAM: FMIDField<ENCHRecord>? // Enchantment FormId (optional)
     // TES3
-    public List<CLOTRecord.INDXFieldGroup> INDXs = new List<CLOTRecord.INDXFieldGroup>(); // Body Part Index
+    public var INDXs = [CLOTRecord.INDXFieldGroup]() // Body Part Index
     // TES4
-    public UI32Field BMDT; // Flags
-    public MODLGroup MOD2; // Male world model (optional)
-    public MODLGroup MOD3; // Female biped (optional)
-    public MODLGroup MOD4; // Female world model (optional)
-    public FILEField? ICO2; // Female icon (optional)
-    public IN16Field? ANAM; // Enchantment points (optional)
+    public var BMDT: UI32Field // Flags
+    public var MOD2: MODLGroup // Male world model (optional)
+    public var MOD3: MODLGroup // Female biped (optional)
+    public var MOD4: MODLGroup // Female world model (optional)
+    public var ICO2: FILEField? // Female icon (optional)
+    public var ANAM: IN16Field? // Enchantment points (optional)
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

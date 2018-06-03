@@ -16,20 +16,23 @@ public class LOCKRecord: Record, IHaveEDID, IHaveMODL {
 
         public LKDTField(UnityBinaryReader r, uint dataSize)
         {
-            Weight = r.ReadLESingle();
-            Value = r.ReadLEInt32();
-            Quality = r.ReadLESingle();
-            Uses = r.ReadLEInt32();
+            Weight = r.readLESingle();
+            Value = r.readLEInt32();
+            Quality = r.readLESingle();
+            Uses = r.readLEInt32();
         }
     }
 
     public var description: String { return "LOCK: \(EDID)" }LOCK
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model Name
-    public STRVField FNAM; // Item Name
-    public LKDTField LKDT; // Lock Data
-    public FILEField ICON; // Inventory Icon
-    public FMIDField<SCPTRecord> SCRI; // Script Name
+    public STRVField EDID  // Editor ID
+    public MODLGroup MODL  // Model Name
+    public STRVField FNAM // Item Name
+    public LKDTField LKDT // Lock Data
+    public FILEField ICON // Inventory Icon
+    public FMIDField<SCPTRecord> SCRI // Script Name
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard formatId == GameFormatId.TES3 else {

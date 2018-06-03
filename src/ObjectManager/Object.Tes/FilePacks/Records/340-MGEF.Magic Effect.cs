@@ -100,7 +100,7 @@ namespace OA.Tes.FilePacks.Records
                 MagicSchool = r.ReadLEInt32();
                 ResistValue = r.ReadLEInt32();
                 CounterEffectCount = r.ReadLEUInt16();
-                r.ReadLEInt16(); // Unused
+                r.SkipBytes(2); // Unused
                 Light = new FormId<LIGHRecord>(r.ReadLEUInt32());
                 ProjectileSpeed = r.ReadLESingle();
                 EffectShader = new FormId<EFSHRecord>(r.ReadLEUInt32());
@@ -136,11 +136,11 @@ namespace OA.Tes.FilePacks.Records
         public STRVField FULL;
         public MODLGroup MODL;
         public DATAField DATA;
-        public List<STRVField> ESCEs;
+        public STRVField[] ESCEs;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
-            if (formatId == GameFormatId.TES3)
+            if (format == GameFormatId.TES3)
                 switch (type)
                 {
                     case "INDX": INDX = new INTVField(r, dataSize); return true;
@@ -167,7 +167,7 @@ namespace OA.Tes.FilePacks.Records
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "DATA": DATA = new DATAField(r, dataSize); return true;
-                case "ESCE": ESCEs = new List<STRVField>(); for (var i = 0; i < dataSize >> 2; i++) ESCEs.Add(new STRVField(r, 4)); return true;
+                case "ESCE": ESCEs = new STRVField[dataSize >> 2]; for (var i = 0; i < ESCEs.Length; i++) ESCEs[i] = new STRVField(r, 4); return true;
                 default: return false;
             }
         }

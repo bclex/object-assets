@@ -11,29 +11,32 @@ public class SPELRecord: Record {
     public struct SPITField
     {
         public override string ToString() => $"{Type}";
-        public uint Type; // TES3: 0 = Spell, 1 = Ability, 2 = Blight, 3 = Disease, 4 = Curse, 5 = Power
+        public uint Type // TES3: 0 = Spell, 1 = Ability, 2 = Blight, 3 = Disease, 4 = Curse, 5 = Power
                             // TES4: 0 = Spell, 1 = Disease, 2 = Power, 3 = Lesser Power, 4 = Ability, 5 = Poison
         public int SpellCost;
-        public uint Flags; // 0x0001 = AutoCalc, 0x0002 = PC Start, 0x0004 = Always Succeeds
+        public uint Flags // 0x0001 = AutoCalc, 0x0002 = PC Start, 0x0004 = Always Succeeds
         // TES4
         public int SpellLevel;
 
         public SPITField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
         {
-            Type = r.ReadLEUInt32();
-            SpellCost = r.ReadLEInt32();
-            SpellLevel = formatId != GameFormatId.TES3 ? r.ReadLEInt32() : 0;
-            Flags = r.ReadLEUInt32();
+            Type = r.readLEUInt32();
+            SpellCost = r.readLEInt32();
+            SpellLevel = formatId != GameFormatId.TES3 ? r.readLEInt32() : 0;
+            Flags = r.readLEUInt32();
         }
     }
 
     public var description: String { return "SPEL: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public STRVField FULL; // Spell name
-    public SPITField SPIT; // Spell data
-    public List<ENCHRecord.EFITField> EFITs = new List<ENCHRecord.EFITField>(); // Effect Data
+    public STRVField EDID  // Editor ID
+    public STRVField FULL // Spell name
+    public SPITField SPIT // Spell data
+    public List<ENCHRecord.EFITField> EFITs = List<ENCHRecord.EFITField>() // Effect Data
     // TES4
-    public List<ENCHRecord.SCITField> SCITs = new List<ENCHRecord.SCITField>(); // Script effect data
+    public List<ENCHRecord.SCITField> SCITs = List<ENCHRecord.SCITField>() // Script effect data
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

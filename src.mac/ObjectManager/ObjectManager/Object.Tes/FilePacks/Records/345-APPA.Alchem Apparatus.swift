@@ -8,37 +8,37 @@
 
 public class APPARecord: Record, IHaveEDID, IHaveMODL {
     // TESX
-    public struct DATAField
-    {
-        public byte Type; // 0 = Mortar and Pestle, 1 = Albemic, 2 = Calcinator, 3 = Retort
-        public float Quality;
-        public float Weight;
-        public int Value;
+    public struct DATAField {
+        public let type: UInt8 // 0 = Mortar and Pestle, 1 = Albemic, 2 = Calcinator, 3 = Retort
+        public let quality: Float
+        public let weight: Float
+        public let value: Int32
 
-        public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            if (formatId == GameFormatId.TES3)
-            {
-                Type = (byte)r.ReadLEInt32();
-                Quality = r.ReadLESingle();
-                Weight = r.ReadLESingle();
-                Value = r.ReadLEInt32();
-                return;
+        init(_ r: BinaryReader, _ dataSize: Int, for format: GameFormatId) {
+            guard format != .TES3 else {
+                type = (byte)r.readLEInt32()
+                quality = r.readLESingle()
+                weight = r.readLESingle()
+                value = r.readLEInt32()
+                return
             }
-            Type = r.ReadByte();
-            Value = r.ReadLEInt32();
-            Weight = r.ReadLESingle();
-            Quality = r.ReadLESingle();
+            type = r.readByte()
+            value = r.readLEInt32()
+            weight = r.readLESingle()
+            quality = r.readLESingle()
         }
     }
 
     public var description: String { return "APPA: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model Name
-    public STRVField FULL; // Item Name
-    public DATAField DATA; // Alchemy Data
-    public FILEField ICON; // Inventory Icon
-    public FMIDField<SCPTRecord> SCRI; // Script Name
+    public var EDID: STRVField  // Editor ID
+    public var MODL: MODLGroup  // Model Name
+    public var FULL: STRVField // Item Name
+    public var DATA: DATAField // Alchemy Data
+    public var ICON: FILEField // Inventory Icon
+    public var FMIDField<SCPTRecord> SCRI // Script Name
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

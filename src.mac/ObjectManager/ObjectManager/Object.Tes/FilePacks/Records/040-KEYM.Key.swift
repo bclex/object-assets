@@ -25,6 +25,9 @@ public class KEYMRecord: Record {
     public var DATA: DATAField // Type of soul contained in the gem
     public var ICON: FILEField // Icon (optional)
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

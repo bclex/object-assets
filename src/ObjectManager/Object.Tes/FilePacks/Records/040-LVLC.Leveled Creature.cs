@@ -13,7 +13,7 @@ namespace OA.Tes.FilePacks.Records
         public FMIDField<CREARecord> TNAM; // Creature Template (optional)
         public List<LVLIRecord.LVLOField> LVLOs = new List<LVLIRecord.LVLOField>();
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

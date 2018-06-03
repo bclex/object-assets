@@ -7,114 +7,109 @@
 //
 
 public class WTHRRecord: Record {
-    public struct FNAMField
-    {
-        public float DayNear;
-        public float DayFar;
-        public float NightNear;
-        public float NightFar;
+    public struct FNAMField {
+        public let dayNear: Float
+        public let dayFar: Float
+        public let nightNear: Float
+        public let nightFar: Float
 
-        public FNAMField(UnityBinaryReader r, uint dataSize)
-        {
-            DayNear = r.ReadLESingle();
-            DayFar = r.ReadLESingle();
-            NightNear = r.ReadLESingle();
-            NightFar = r.ReadLESingle();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            dayNear = r.readLESingle()
+            dayFar = r.readLESingle()
+            nightNear = r.readLESingle()
+            nightFar = r.readLESingle()
         }
     }
 
-    public struct HNAMField
-    {
-        public float EyeAdaptSpeed;
-        public float BlurRadius;
-        public float BlurPasses;
-        public float EmissiveMult;
-        public float TargetLUM;
-        public float UpperLUMClamp;
-        public float BrightScale;
-        public float BrightClamp;
-        public float LUMRampNoTex;
-        public float LUMRampMin;
-        public float LUMRampMax;
-        public float SunlightDimmer;
-        public float GrassDimmer;
-        public float TreeDimmer;
+    public struct HNAMField {
+        public let eyeAdaptSpeed: Float
+        public let blurRadius: Float
+        public let blurPasses: Float
+        public let emissiveMult: Float
+        public let targetLUM: Float
+        public let upperLUMClamp: Float
+        public let brightScale: Float
+        public let brightClamp: Float
+        public let lumRampNoTex: Float
+        public let lumRampMin: Float
+        public let lumRampMax: Float
+        public let sunlightDimmer: Float
+        public let grassDimmer: Float
+        public let treeDimmer: Float
 
-        public HNAMField(UnityBinaryReader r, uint dataSize)
-        {
-            EyeAdaptSpeed = r.ReadLESingle();
-            BlurRadius = r.ReadLESingle();
-            BlurPasses = r.ReadLESingle();
-            EmissiveMult = r.ReadLESingle();
-            TargetLUM = r.ReadLESingle();
-            UpperLUMClamp = r.ReadLESingle();
-            BrightScale = r.ReadLESingle();
-            BrightClamp = r.ReadLESingle();
-            LUMRampNoTex = r.ReadLESingle();
-            LUMRampMin = r.ReadLESingle();
-            LUMRampMax = r.ReadLESingle();
-            SunlightDimmer = r.ReadLESingle();
-            GrassDimmer = r.ReadLESingle();
-            TreeDimmer = r.ReadLESingle();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            eyeAdaptSpeed = r.readLESingle()
+            blurRadius = r.readLESingle()
+            blurPasses = r.readLESingle()
+            emissiveMult = r.readLESingle()
+            targetLUM = r.readLESingle()
+            upperLUMClamp = r.readLESingle()
+            brightScale = r.readLESingle()
+            brightClamp = r.readLESingle()
+            lumRampNoTex = r.readLESingle()
+            lumRampMin = r.readLESingle()
+            lumRampMax = r.readLESingle()
+            sunlightDimmer = r.readLESingle()
+            grassDimmer = r.readLESingle()
+            treeDimmer = r.readLESingle()
         }
     }
 
-    public struct DATAField
-    {
-        public byte WindSpeed;
-        public byte CloudSpeed_Lower;
-        public byte CloudSpeed_Upper;
-        public byte TransDelta;
-        public byte SunGlare;
-        public byte SunDamage;
-        public byte Precipitation_BeginFadeIn;
-        public byte Precipitation_EndFadeOut;
-        public byte ThunderLightning_BeginFadeIn;
-        public byte ThunderLightning_EndFadeOut;
-        public byte ThunderLightning_Frequency;
-        public byte WeatherClassification;
-        public ColorRef LightningColor;
+    public struct DATAField {
+        public let windSpeed: UInt8
+        public let cloudSpeed_lower: UInt8
+        public let cloudSpeed_upper: UInt8
+        public let transDelta: UInt8
+        public let sunGlare: UInt8
+        public let sunDamage: UInt8
+        public let precipitation_beginFadeIn: UInt8
+        public let precipitation_endFadeOut: UInt8
+        public let thunderLightning_beginFadeIn: UInt8
+        public let thunderLightning_endFadeOut: UInt8
+        public let thunderLightning_frequency: UInt8
+        public let weatherClassification: UInt8
+        public let lightningColor: ColorRef
 
-        public DATAField(UnityBinaryReader r, uint dataSize)
-        {
-            WindSpeed = r.ReadByte();
-            CloudSpeed_Lower = r.ReadByte();
-            CloudSpeed_Upper = r.ReadByte();
-            TransDelta = r.ReadByte();
-            SunGlare = r.ReadByte();
-            SunDamage = r.ReadByte();
-            Precipitation_BeginFadeIn = r.ReadByte();
-            Precipitation_EndFadeOut = r.ReadByte();
-            ThunderLightning_BeginFadeIn = r.ReadByte();
-            ThunderLightning_EndFadeOut = r.ReadByte();
-            ThunderLightning_Frequency = r.ReadByte();
-            WeatherClassification = r.ReadByte();
-            LightningColor = new ColorRef { Red = r.ReadByte(), Green = r.ReadByte(), Blue = r.ReadByte(), NullByte = 255 };
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            windSpeed = r.readByte()
+            cloudSpeed_lower = r.readByte()
+            cloudSpeed_upper = r.readByte()
+            transDelta = r.readByte()
+            sunGlare = r.readByte()
+            sunDamage = r.readByte()
+            precipitation_beginFadeIn = r.readByte()
+            precipitation_endFadeOut = r.readByte()
+            thunderLightning_beginFadeIn = r.readByte()
+            thunderLightning_endFadeOut = r.readByte()
+            thunderLightning_frequency = r.readByte()
+            weatherClassification = r.readByte()
+            lightningColor = ColorRef(red: r.readByte(), green: r.readByte(), blue: r.readByte(), nullByte: 255)
         }
     }
 
-    public struct SNAMField
-    {
-        public FormId<SOUNRecord> Sound; // Sound FormId
-        public uint Type; // Sound Type - 0=Default, 1=Precipitation, 2=Wind, 3=Thunder
+    public struct SNAMField {
+        public let sound: FormId<SOUNRecord> // Sound FormId
+        public let type: UInt32 // Sound Type - 0=Default, 1=Precipitation, 2=Wind, 3=Thunder
 
-        public SNAMField(UnityBinaryReader r, uint dataSize)
-        {
-            Sound = new FormId<SOUNRecord>(r.ReadLEUInt32());
-            Type = r.ReadLEUInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            sound = FormId<SOUNRecord>(r.readLEUInt32())
+            type = r.readLEUInt32()
         }
     }
 
     public var description: String { return "WTHR: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model
-    public FILEField CNAM; // Lower Cloud Layer
-    public FILEField DNAM; // Upper Cloud Layer
-    public BYTVField NAM0; // Colors by Types/Times
-    public FNAMField FNAM; // Fog Distance
-    public HNAMField HNAM; // HDR Data
-    public DATAField DATA; // Weather Data
-    public List<SNAMField> SNAMs = new List<SNAMField>(); // Sounds
+    public var EDID: STRVField  // Editor ID
+    public var MODL: MODLGroup  // Model
+    public var CNAM: FILEField // Lower Cloud Layer
+    public var DNAM: FILEField // Upper Cloud Layer
+    public var NAM0: BYTVField // Colors by Types/Times
+    public var FNAM: FNAMField // Fog Distance
+    public var HNAM: HNAMField // HDR Data
+    public var DATA: DATAField // Weather Data
+    public var SNAMs = [SNAMField]() // Sounds
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

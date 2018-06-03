@@ -60,7 +60,7 @@ namespace OA.Tes.FilePacks.Records
         public CNAMField CNAM; // Tree Parameters
         public BNAMField BNAM; // Billboard Dimensions
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

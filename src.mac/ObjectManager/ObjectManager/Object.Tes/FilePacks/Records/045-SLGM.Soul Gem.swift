@@ -7,28 +7,29 @@
 //
 
 public class SLGMRecord: Record {
-    public struct DATAField
-    {
-        public int Value;
-        public float Weight;
+    public struct DATAField {
+        public let value: Int32
+        public let weight: Float
 
-        public DATAField(UnityBinaryReader r, uint dataSize)
-        {
-            Value = r.ReadLEInt32();
-            Weight = r.ReadLESingle();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            value = r.readLEInt32()
+            weight = r.readLESingle()
         }
     }
 
     public var description: String { return "SLGM: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL; // Model
-    public STRVField FULL; // Item Name
-    public FMIDField<SCPTRecord> SCRI; // Script (optional)
-    public DATAField DATA; // Type of soul contained in the gem
-    public FILEField ICON; // Icon (optional)
-    public BYTEField SOUL; // Type of soul contained in the gem
-    public BYTEField SLCP; // Soul gem maximum capacity
+    public var EDID: STRVField  // Editor ID
+    public var MODL: MODLGroup // Model
+    public var FULL: STRVField // Item Name
+    public var SCRI: FMIDField<SCPTRecord> // Script (optional)
+    public var DATA: DATAField // Type of soul contained in the gem
+    public var ICON: FILEField // Icon (optional)
+    public var SOUL: BYTEField // Type of soul contained in the gem
+    public var SLCP: BYTEField // Soul gem maximum capacity
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

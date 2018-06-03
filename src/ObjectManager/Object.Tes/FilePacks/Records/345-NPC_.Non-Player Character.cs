@@ -133,7 +133,7 @@ namespace OA.Tes.FilePacks.Records
         public FLTVField? XSCL; // Scale (optional) Only present if the scale is not 1.0
         public FMIDField<SCPTRecord>? SCRI; // Unknown
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -150,7 +150,7 @@ namespace OA.Tes.FilePacks.Records
                 case "KNAM": KNAM = new STRVField(r, dataSize); return true;
                 case "NPDT": NPDT = new NPDTField(r, dataSize); return true;
                 case "FLAG": FLAG = new INTVField(r, dataSize); return true;
-                case "NPCO": NPCOs.Add(new CNTOField(r, dataSize, formatId)); return true;
+                case "NPCO": NPCOs.Add(new CNTOField(r, dataSize, format)); return true;
                 case "NPCS": NPCSs.Add(new STRVField(r, dataSize, ASCIIFormat.ZeroPadded)); return true;
                 case "AIDT": AIDT = new CREARecord.AIDTField(r, dataSize); return true;
                 case "AI_W": AI_W = new CREARecord.AI_WField(r, dataSize, 1); return true;

@@ -11,42 +11,33 @@ namespace OA.Tes.FilePacks.Records
         {
             public enum INFOType : byte
             {
-                Nothing = 0,
-                Function = 1,
-                Global = 2,
-                Local = 3,
-                Journal = 4,
-                Item = 5,
-                Dead = 6,
-                NotID = 7,
-                NotFaction = 8,
-                NotClass = 9,
-                NotRace = 10,
-                NotCell = 11,
-                NotLocal = 12,
+                Nothing = 0, Function, Global, Local, Journal, Item, Dead, NotId, NotFaction, NotClass, NotRace, NotCell, NotLocal
             }
 
-            public byte CompareOp; // TES3: 0 = [=], 1 = [!=], 2 = [>], 3 = [>=], 4 = [<], 5 = [<=]
-                                   // TES4: 0 = [=], 2 = [!=], 4 = [>], 6 = [>=], 8 = [<], 10 = [<=]
-            public string FunctionId; // (00-71) - sX = Global/Local/Not Local types, JX = Journal type, IX = Item Type, DX = Dead Type, XX = Not ID Type, FX = Not Faction, CX = Not Class, RX = Not Race, LX = Not Cell
-                                      // TES3
+            // TES3: 0 = [=], 1 = [!=], 2 = [>], 3 = [>=], 4 = [<], 5 = [<=]
+            // TES4: 0 = [=], 2 = [!=], 4 = [>], 6 = [>=], 8 = [<], 10 = [<=]
+            public byte CompareOp;
+            // (00-71) - sX = Global/Local/Not Local types, JX = Journal type, IX = Item Type, DX = Dead Type, XX = Not ID Type, FX = Not Faction, CX = Not Class, RX = Not Race, LX = Not Cell
+            public string FunctionId;
+            // TES3
             public byte Index; // (0-5)
             public byte Type;
-            public string Name; // Except for the function type, this is the ID for the global/local/etc. Is not nessecarily NULL terminated.The function type SCVR sub-record has
-                                // TES4
+            // Except for the function type, this is the ID for the global/local/etc. Is not nessecarily NULL terminated.The function type SCVR sub-record has
+            public string Name;
+            // TES4
             public float ComparisonValue;
             public int Parameter1; // Parameter #1
             public int Parameter2; // Parameter #2
 
-            public CTDAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public CTDAField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     Index = r.ReadByte();
                     Type = r.ReadByte();
                     FunctionId = r.ReadASCIIString(2);
-                    CompareOp = (byte)(r.ReadByte() * 2);
-                    Name = r.ReadASCIIString((int)dataSize - 5);
+                    CompareOp = (byte)(r.ReadByte() << 1);
+                    Name = r.ReadASCIIString(dataSize - 5);
                     ComparisonValue = Parameter1 = Parameter2 = 0;
                     return;
                 }
@@ -56,10 +47,13 @@ namespace OA.Tes.FilePacks.Records
                 FunctionId = r.ReadASCIIString(4);
                 Parameter1 = r.ReadLEInt32();
                 Parameter2 = r.ReadLEInt32();
-                if (dataSize == 24)
-                    r.SkipBytes(4); // Unused
-                Index = Type = 0;
-                Name = null;
+                if (dataSize != 24)
+                {
+                    Index = Type = 0;
+                    Name = null;
+                    return;
+                }
+                r.SkipBytes(4); // Unused
             }
         }
 
@@ -93,17 +87,6 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        //public struct SCVRField
-        //{
-        //    public override string ToString() => $"{string.Join(",", Values)}";
-        //    public string[] Values;
-
-        //    public SCVRField(UnityBinaryReader r, int dataSize)
-        //    {
-        //        Values = r.ReadASCIIMultiString(dataSize);
-        //    }
-        //}
-
         // TES4
         public struct SCHRField
         {
@@ -115,7 +98,7 @@ namespace OA.Tes.FilePacks.Records
 
             public SCHRField(UnityBinaryReader r, int dataSize)
             {
-                r.ReadLEInt32(); // Unused
+                r.SkipBytes(4); // Unused
                 RefCount = r.ReadLEUInt32();
                 CompiledSize = r.ReadLEUInt32();
                 VariableCount = r.ReadLEUInt32();
@@ -163,13 +146,13 @@ namespace OA.Tes.FilePacks.Records
         public List<SLSDField> SCRVs = new List<SLSDField>(); // Ref variable data (one for each ref declared)
         public List<FMIDField<Record>> SCROs = new List<FMIDField<Record>>(); // Global variable reference
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
                 case "EDID": EDID = new STRVField(r, dataSize); return true;
                 case "SCHD": SCHD = new SCHDField(r, dataSize); return true;
-                case "SCVR": if (formatId != GameFormatId.TES3) ArrayUtils.Last(SLSDs).SCVRField(r, dataSize); else SCHD.SCVRField(r, dataSize); return true;
+                case "SCVR": if (format != GameFormatId.TES3) ArrayUtils.Last(SLSDs).SCVRField(r, dataSize); else SCHD.SCVRField(r, dataSize); return true;
                 case "SCDA":
                 case "SCDT": SCDA = new BYTVField(r, dataSize); return true;
                 case "SCTX": SCTX = new STRVField(r, dataSize); return true;

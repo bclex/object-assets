@@ -11,9 +11,9 @@ namespace OA.Tes.FilePacks.Records
             public byte Flags; // flags 0x0001 = Organic, 0x0002 = Respawns, organic only, 0x0008 = Default, unknown
             public float Weight;
 
-            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     Weight = r.ReadLESingle();
                     return;
@@ -39,7 +39,7 @@ namespace OA.Tes.FilePacks.Records
         public FMIDField<SOUNRecord> SNAM; // Open sound
         public FMIDField<SOUNRecord> QNAM; // Close sound
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -51,10 +51,10 @@ namespace OA.Tes.FilePacks.Records
                 case "FULL":
                 case "FNAM": FULL = new STRVField(r, dataSize); return true;
                 case "DATA":
-                case "CNDT": DATA = new DATAField(r, dataSize, formatId); return true;
+                case "CNDT": DATA = new DATAField(r, dataSize, format); return true;
                 case "FLAG": DATA.FLAGField(r, dataSize); return true;
                 case "CNTO":
-                case "NPCO": CNTOs.Add(new CNTOField(r, dataSize, formatId)); return true;
+                case "NPCO": CNTOs.Add(new CNTOField(r, dataSize, format)); return true;
                 case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
                 case "SNAM": SNAM = new FMIDField<SOUNRecord>(r, dataSize); return true;
                 case "QNAM": QNAM = new FMIDField<SOUNRecord>(r, dataSize); return true;

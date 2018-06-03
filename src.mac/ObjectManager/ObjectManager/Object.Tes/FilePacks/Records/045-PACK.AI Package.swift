@@ -46,8 +46,7 @@ public class PACKRecord: Record {
         }
     }
 
-    public struct PTDTField
-    {
+    public struct PTDTField {
         public let type: Int32
         public let target: UInt32
         public let count: Int32
@@ -66,6 +65,9 @@ public class PACKRecord: Record {
     public var PSDT: PSDTField // Schedule
     public var PTDT: PTDTField // Target
     public var CTDAs = [SCPTRecord.CTDAField]() // Conditions
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

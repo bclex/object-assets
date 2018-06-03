@@ -15,21 +15,24 @@ public class LTEXRecord: Record, IHaveEDID {
         
         public HNAMField(UnityBinaryReader r, uint dataSize)
         {
-            MaterialType = r.ReadByte();
-            Friction = r.ReadByte();
-            Restitution = r.ReadByte();
+            MaterialType = r.readByte();
+            Friction = r.readByte();
+            Restitution = r.readByte();
         }
     }
 
     public var description: String { return "LTEX: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public FILEField ICON; // Texture
+    public STRVField EDID  // Editor ID
+    public FILEField ICON // Texture
     // TES3
     public INTVField INTV;
     // TES4
-    public HNAMField HNAM; // Havok data
-    public BYTEField SNAM; // Texture specular exponent
-    public List<FMIDField<GRASRecord>> GNAMs = new List<FMIDField<GRASRecord>>(); // Potential grass
+    public HNAMField HNAM // Havok data
+    public BYTEField SNAM // Texture specular exponent
+    public List<FMIDField<GRASRecord>> GNAMs = List<FMIDField<GRASRecord>>() // Potential grass
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

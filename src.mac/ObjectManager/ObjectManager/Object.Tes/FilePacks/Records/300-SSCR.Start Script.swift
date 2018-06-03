@@ -8,8 +8,11 @@
 
 public class SSCRRecord: Record {
     public var description: String { return "SSCR: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public STRVField DATA; // Digits
+    public var EDID: STRVField  // Editor ID
+    public var DATA: STRVField // Digits
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard format == .TES3 else {

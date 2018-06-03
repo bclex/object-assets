@@ -31,12 +31,12 @@ namespace OA.Tes.FilePacks.Records
             public byte StopTime; // Stop time
             public byte StartTime; // Start time
 
-            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                Volume = formatId == GameFormatId.TES3 ? r.ReadByte() : (byte)0;
+                Volume = format == GameFormatId.TES3 ? r.ReadByte() : (byte)0;
                 MinRange = r.ReadByte();
                 MaxRange = r.ReadByte();
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                     return;
                 FrequencyAdjustment = (sbyte)r.ReadByte();
                 r.ReadByte(); // Unused
@@ -55,16 +55,16 @@ namespace OA.Tes.FilePacks.Records
         public FILEField FNAM; // Sound Filename (relative to Sounds\)
         public DATAField DATA; // Sound Data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
                 case "EDID":
                 case "NAME": EDID = new STRVField(r, dataSize); return true;
                 case "FNAM": FNAM = new FILEField(r, dataSize); return true;
-                case "SNDX": DATA = new DATAField(r, dataSize, formatId); return true;
-                case "SNDD": DATA = new DATAField(r, dataSize, formatId); return true;
-                case "DATA": DATA = new DATAField(r, dataSize, formatId); return true;
+                case "SNDX": DATA = new DATAField(r, dataSize, format); return true;
+                case "SNDD": DATA = new DATAField(r, dataSize, format); return true;
+                case "DATA": DATA = new DATAField(r, dataSize, format); return true;
                 default: return false;
             }
         }

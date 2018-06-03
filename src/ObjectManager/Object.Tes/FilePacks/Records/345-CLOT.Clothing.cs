@@ -28,9 +28,9 @@ namespace OA.Tes.FilePacks.Records
             public int Type;
             public short EnchantPts;
 
-            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     Type = r.ReadLEInt32();
                     Weight = r.ReadLESingle();
@@ -71,7 +71,7 @@ namespace OA.Tes.FilePacks.Records
         public FILEField? ICO2; // Female icon (optional)
         public IN16Field? ANAM; // Enchantment points (optional)
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -83,7 +83,7 @@ namespace OA.Tes.FilePacks.Records
                 case "FULL":
                 case "FNAM": FULL = new STRVField(r, dataSize); return true;
                 case "DATA":
-                case "CTDT": DATA = new DATAField(r, dataSize, formatId); return true;
+                case "CTDT": DATA = new DATAField(r, dataSize, format); return true;
                 case "ICON":
                 case "ITEX": ICON = new FILEField(r, dataSize); return true;
                 case "INDX": INDXs.Add(new INDXFieldGroup { INDX = new INTVField(r, dataSize) }); return true;

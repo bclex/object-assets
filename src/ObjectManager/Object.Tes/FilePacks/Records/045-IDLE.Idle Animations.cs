@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks.Records
         public BYTEField ANAM;
         public FMIDField<IDLERecord>[] DATAs;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -20,7 +20,7 @@ namespace OA.Tes.FilePacks.Records
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "CTDA":
-                case "CTDT": CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, formatId)); return true;
+                case "CTDT": CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, format)); return true;
                 case "ANAM": ANAM = new BYTEField(r, dataSize); return true;
                 case "DATA": DATAs = new FMIDField<IDLERecord>[dataSize >> 2]; for (var i = 0; i < DATAs.Length; i++) DATAs[i] = new FMIDField<IDLERecord>(r, 4); return true;
                     

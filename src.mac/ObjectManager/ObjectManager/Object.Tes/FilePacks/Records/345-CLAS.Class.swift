@@ -25,11 +25,14 @@ public class CLASRecord: Record {
     }
 
     public var description: String { return "CLAS: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public STRVField FULL; // Name
-    public STRVField DESC; // Description
-    public STRVField? ICON; // Icon (Optional)
-    public DATAField DATA; // Data
+    public STRVField EDID  // Editor ID
+    public STRVField FULL // Name
+    public STRVField DESC // Description
+    public STRVField? ICON // Icon (Optional)
+    public DATAField DATA // Data
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
     {

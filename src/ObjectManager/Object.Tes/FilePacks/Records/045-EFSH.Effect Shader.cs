@@ -135,7 +135,7 @@ namespace OA.Tes.FilePacks.Records
         public FILEField ICO2; // Particle Shader Texture
         public DATAField DATA; // Data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

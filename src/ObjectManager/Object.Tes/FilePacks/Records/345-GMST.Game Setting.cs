@@ -8,9 +8,9 @@ namespace OA.Tes.FilePacks.Records
         public STRVField EDID { get; set; } // Editor ID
         public DATVField DATA; // Data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
-            if (formatId == GameFormatId.TES3)
+            if (format == GameFormatId.TES3)
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;

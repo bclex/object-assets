@@ -8,13 +8,16 @@
 
 public class LEVCRecord: Record {
     public var description: String { return "LEVC: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public IN32Field DATA; // List data - 1 = Calc from all levels <= PC level
-    public BYTEField NNAM; // Chance None?
-    public IN32Field INDX; // Number of items in list
-    public List<STRVField> CNAMs = new List<STRVField>(); // ID string of list item
-    public List<IN16Field> INTVs = new List<IN16Field>(); // PC level for previous CNAM
+    public var EDID: STRVField  // Editor ID
+    public var DATA: IN32Field // List data - 1 = Calc from all levels <= PC level
+    public var NNAM: BYTEField // Chance None?
+    public var INDX: IN32Field // Number of items in list
+    public var CNAMs = [STRVField]() // ID string of list item
+    public var INTVs = [IN16Field]() // PC level for previous CNAM
     // The CNAM/INTV can occur many times in pairs
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard format == .TES3 else {

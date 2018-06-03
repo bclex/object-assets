@@ -18,26 +18,29 @@ public class MISCRecord: Record, IHaveEDID, IHaveMODL {
         {
             if (formatId == GameFormatId.TES3)
             {
-                Weight = r.ReadLESingle();
-                Value = r.ReadLEUInt32();
-                Unknown = r.ReadLEUInt32();
+                Weight = r.readLESingle();
+                Value = r.readLEUInt32();
+                Unknown = r.readLEUInt32();
                 return;
             }
-            Value = r.ReadLEUInt32();
-            Weight = r.ReadLESingle();
+            Value = r.readLEUInt32();
+            Weight = r.readLESingle();
             Unknown = 0;
         }
     }
 
     public var description: String { return "MISC: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model
-    public STRVField FULL; // Item Name
-    public DATAField DATA; // Misc Item Data
-    public FILEField ICON; // Icon (optional)
-    public FMIDField<SCPTRecord> SCRI; // Script FormID (optional)
+    public STRVField EDID  // Editor ID
+    public MODLGroup MODL  // Model
+    public STRVField FULL // Item Name
+    public DATAField DATA // Misc Item Data
+    public FILEField ICON // Icon (optional)
+    public FMIDField<SCPTRecord> SCRI // Script FormID (optional)
     // TES3
-    public FMIDField<ENCHRecord> ENAM; // enchantment ID
+    public FMIDField<ENCHRecord> ENAM // enchantment ID
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

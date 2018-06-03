@@ -26,7 +26,7 @@ namespace OA.Tes.FilePacks.Records
         public BYTEField SOUL; // Type of soul contained in the gem
         public BYTEField SLCP; // Soul gem maximum capacity
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

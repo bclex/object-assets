@@ -45,7 +45,7 @@ namespace OA.Tes.FilePacks.Records
         public List<WLSTField> WLSTs = new List<WLSTField>(); // Climate
         public TNAMField TNAM; // Timing
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

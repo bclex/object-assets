@@ -30,9 +30,9 @@ namespace OA.Tes.FilePacks.Records
             public float FalloffExponent;
             public float FOV;
 
-            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     Weight = r.ReadLESingle();
                     Value = r.ReadLEInt32();
@@ -75,16 +75,16 @@ namespace OA.Tes.FilePacks.Records
         public FLTVField FNAM; // Fade Value
         public FMIDField<SOUNRecord> SNAM; // Sound FormId (optional)
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
                 case "EDID":
                 case "NAME": EDID = new STRVField(r, dataSize); return true;
                 case "FULL": FULL = new STRVField(r, dataSize); return true;
-                case "FNAM": if (formatId != GameFormatId.TES3) FNAM = new FLTVField(r, dataSize); else FULL = new STRVField(r, dataSize); return true;
+                case "FNAM": if (format != GameFormatId.TES3) FNAM = new FLTVField(r, dataSize); else FULL = new STRVField(r, dataSize); return true;
                 case "DATA":
-                case "LHDT": DATA = new DATAField(r, dataSize, formatId); return true;
+                case "LHDT": DATA = new DATAField(r, dataSize, format); return true;
                 case "SCPT": SCPT = new STRVField(r, dataSize); return true;
                 case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
                 case "ICON":

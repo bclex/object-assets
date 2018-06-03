@@ -111,7 +111,7 @@ namespace OA.Tes.FilePacks.Records
         public BYTEField? XSOL; // Contained Soul (optional)
         int _nextFull;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

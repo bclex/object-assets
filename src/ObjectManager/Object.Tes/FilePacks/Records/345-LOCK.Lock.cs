@@ -28,9 +28,9 @@ namespace OA.Tes.FilePacks.Records
         public FILEField ICON; // Inventory Icon
         public FMIDField<SCPTRecord> SCRI; // Script Name
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
-            if (formatId == GameFormatId.TES3)
+            if (format == GameFormatId.TES3)
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;

@@ -55,36 +55,36 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
         {
             if (dataSize == 52)
             {
-                Level = r.ReadLEInt16();
-                Strength = r.ReadByte();
-                Intelligence = r.ReadByte();
-                Willpower = r.ReadByte();
-                Agility = r.ReadByte();
-                Speed = r.ReadByte();
-                Endurance = r.ReadByte();
-                Personality = r.ReadByte();
-                Luck = r.ReadByte();
-                Skills = r.ReadBytes(27);
-                Reputation = r.ReadByte();
-                Health = r.ReadLEInt16();
-                SpellPts = r.ReadLEInt16();
-                Fatigue = r.ReadLEInt16();
-                Disposition = r.ReadByte();
-                FactionId = r.ReadByte();
-                Rank = r.ReadByte();
-                Unknown1 = r.ReadByte();
-                Gold = r.ReadLEInt32();
+                Level = r.readLEInt16();
+                Strength = r.readByte();
+                Intelligence = r.readByte();
+                Willpower = r.readByte();
+                Agility = r.readByte();
+                Speed = r.readByte();
+                Endurance = r.readByte();
+                Personality = r.readByte();
+                Luck = r.readByte();
+                Skills = r.readBytes(27);
+                Reputation = r.readByte();
+                Health = r.readLEInt16();
+                SpellPts = r.readLEInt16();
+                Fatigue = r.readLEInt16();
+                Disposition = r.readByte();
+                FactionId = r.readByte();
+                Rank = r.readByte();
+                Unknown1 = r.readByte();
+                Gold = r.readLEInt32();
             }
             else
             {
-                Level = r.ReadLEInt16();
-                Disposition = r.ReadByte();
-                FactionId = r.ReadByte();
-                Rank = r.ReadByte();
-                Unknown1 = r.ReadByte();
-                Unknown2 = r.ReadByte();
-                Unknown3 = r.ReadByte();
-                Gold = r.ReadLEInt32();
+                Level = r.readLEInt16();
+                Disposition = r.readByte();
+                FactionId = r.readByte();
+                Rank = r.readByte();
+                Unknown1 = r.readByte();
+                Unknown2 = r.readByte();
+                Unknown3 = r.readByte();
+                Gold = r.readLEInt32();
             }
         }
     }
@@ -100,39 +100,42 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
 
         public DODTField(UnityBinaryReader r, uint dataSize)
         {
-            XPos = r.ReadLESingle();
-            YPos = r.ReadLESingle();
-            ZPos = r.ReadLESingle();
-            XRot = r.ReadLESingle();
-            YRot = r.ReadLESingle();
-            ZRot = r.ReadLESingle();
+            XPos = r.readLESingle();
+            YPos = r.readLESingle();
+            ZPos = r.readLESingle();
+            XRot = r.readLESingle();
+            YRot = r.readLESingle();
+            ZRot = r.readLESingle();
         }
     }
 
     public var description: String { return "NPC_: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public STRVField FULL; // NPC name
-    public MODLGroup MODL { get; set; } // Animation
-    public STRVField RNAM; // Race Name
-    public STRVField ANAM; // Faction name
-    public STRVField BNAM; // Head model
-    public STRVField CNAM; // Class name
-    public STRVField KNAM; // Hair model
-    public NPDTField NPDT; // NPC Data
-    public INTVField FLAG; // NPC Flags
-    public List<CNTOField> NPCOs = new List<CNTOField>(); // NPC item
-    public List<STRVField> NPCSs = new List<STRVField>(); // NPC spell
-    public CREARecord.AIDTField AIDT; // AI data
-    public CREARecord.AI_WField? AI_W; // AI
-    public CREARecord.AI_TField? AI_T; // AI Travel
-    public CREARecord.AI_FField? AI_F; // AI Follow
-    public CREARecord.AI_FField? AI_E; // AI Escort
-    public STRVField? CNDT; // Cell escort/follow to string (optional)
-    public CREARecord.AI_AField? AI_A; // AI Activate
-    public DODTField DODT; // Cell Travel Destination
-    public STRVField DNAM; // Cell name for previous DODT, if interior
-    public FLTVField? XSCL; // Scale (optional) Only present if the scale is not 1.0
-    public FMIDField<SCPTRecord>? SCRI; // Unknown
+    public STRVField EDID  // Editor ID
+    public STRVField FULL // NPC name
+    public MODLGroup MODL  // Animation
+    public STRVField RNAM // Race Name
+    public STRVField ANAM // Faction name
+    public STRVField BNAM // Head model
+    public STRVField CNAM // Class name
+    public STRVField KNAM // Hair model
+    public NPDTField NPDT // NPC Data
+    public INTVField FLAG // NPC Flags
+    public List<CNTOField> NPCOs = List<CNTOField>() // NPC item
+    public List<STRVField> NPCSs = List<STRVField>() // NPC spell
+    public CREARecord.AIDTField AIDT // AI data
+    public CREARecord.AI_WField? AI_W // AI
+    public CREARecord.AI_TField? AI_T // AI Travel
+    public CREARecord.AI_FField? AI_F // AI Follow
+    public CREARecord.AI_FField? AI_E // AI Escort
+    public STRVField? CNDT // Cell escort/follow to string (optional)
+    public CREARecord.AI_AField? AI_A // AI Activate
+    public DODTField DODT // Cell Travel Destination
+    public STRVField DNAM // Cell name for previous DODT, if interior
+    public FLTVField? XSCL // Scale (optional) Only present if the scale is not 1.0
+    public FMIDField<SCPTRecord>? SCRI // Unknown
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

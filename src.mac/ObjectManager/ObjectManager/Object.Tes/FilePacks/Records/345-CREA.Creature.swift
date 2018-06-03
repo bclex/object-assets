@@ -25,7 +25,7 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
 
     public struct NPDTField
     {
-        public int Type; // 0 = Creature, 1 = Daedra, 2 = Undead, 3 = Humanoid
+        public int Type // 0 = Creature, 1 = Daedra, 2 = Undead, 3 = Humanoid
         public int Level;
         public int Strength;
         public int Intelligence;
@@ -52,30 +52,30 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
 
         public NPDTField(UnityBinaryReader r, uint dataSize)
         {
-            Type = r.ReadLEInt32();
-            Level = r.ReadLEInt32();
-            Strength = r.ReadLEInt32();
-            Intelligence = r.ReadLEInt32();
-            Willpower = r.ReadLEInt32();
-            Agility = r.ReadLEInt32();
-            Speed = r.ReadLEInt32();
-            Endurance = r.ReadLEInt32();
-            Personality = r.ReadLEInt32();
-            Luck = r.ReadLEInt32();
-            Health = r.ReadLEInt32();
-            SpellPts = r.ReadLEInt32();
-            Fatigue = r.ReadLEInt32();
-            Soul = r.ReadLEInt32();
-            Combat = r.ReadLEInt32();
-            Magic = r.ReadLEInt32();
-            Stealth = r.ReadLEInt32();
-            AttackMin1 = r.ReadLEInt32();
-            AttackMax1 = r.ReadLEInt32();
-            AttackMin2 = r.ReadLEInt32();
-            AttackMax2 = r.ReadLEInt32();
-            AttackMin3 = r.ReadLEInt32();
-            AttackMax3 = r.ReadLEInt32();
-            Gold = r.ReadLEInt32();
+            Type = r.readLEInt32();
+            Level = r.readLEInt32();
+            Strength = r.readLEInt32();
+            Intelligence = r.readLEInt32();
+            Willpower = r.readLEInt32();
+            Agility = r.readLEInt32();
+            Speed = r.readLEInt32();
+            Endurance = r.readLEInt32();
+            Personality = r.readLEInt32();
+            Luck = r.readLEInt32();
+            Health = r.readLEInt32();
+            SpellPts = r.readLEInt32();
+            Fatigue = r.readLEInt32();
+            Soul = r.readLEInt32();
+            Combat = r.readLEInt32();
+            Magic = r.readLEInt32();
+            Stealth = r.readLEInt32();
+            AttackMin1 = r.readLEInt32();
+            AttackMax1 = r.readLEInt32();
+            AttackMin2 = r.readLEInt32();
+            AttackMax2 = r.readLEInt32();
+            AttackMin3 = r.readLEInt32();
+            AttackMax3 = r.readLEInt32();
+            Gold = r.readLEInt32();
         }
     }
 
@@ -115,15 +115,15 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
 
         public AIDTField(UnityBinaryReader r, uint dataSize)
         {
-            Hello = r.ReadByte();
-            Unknown1 = r.ReadByte();
-            Fight = r.ReadByte();
-            Flee = r.ReadByte();
-            Alarm = r.ReadByte();
-            Unknown2 = r.ReadByte();
-            Unknown3 = r.ReadByte();
-            Unknown4 = r.ReadByte();
-            Flags = r.ReadLEUInt32();
+            Hello = r.readByte();
+            Unknown1 = r.readByte();
+            Fight = r.readByte();
+            Flee = r.readByte();
+            Alarm = r.readByte();
+            Unknown2 = r.readByte();
+            Unknown3 = r.readByte();
+            Unknown4 = r.readByte();
+            Flags = r.readLEUInt32();
         }
     }
 
@@ -137,11 +137,11 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
 
         public AI_WField(UnityBinaryReader r, uint dataSize, byte mode)
         {
-            Distance = r.ReadLEInt16();
-            Duration = r.ReadLEInt16();
-            TimeOfDay = r.ReadByte();
-            Idle = r.ReadBytes(8);
-            Unknown = r.ReadByte();
+            Distance = r.readLEInt16();
+            Duration = r.readLEInt16();
+            TimeOfDay = r.readByte();
+            Idle = r.readBytes(8);
+            Unknown = r.readByte();
         }
     }
 
@@ -154,10 +154,10 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
 
         public AI_TField(UnityBinaryReader r, uint dataSize)
         {
-            X = r.ReadLESingle();
-            Y = r.ReadLESingle();
-            Z = r.ReadLESingle();
-            Unknown = r.ReadLESingle();
+            X = r.readLESingle();
+            Y = r.readLESingle();
+            Z = r.readLESingle();
+            Unknown = r.readLESingle();
         }
     }
 
@@ -172,12 +172,12 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
 
         public AI_FField(UnityBinaryReader r, uint dataSize)
         {
-            X = r.ReadLESingle();
-            Y = r.ReadLESingle();
-            Z = r.ReadLESingle();
-            Duration = r.ReadLEInt16();
-            Id = r.ReadASCIIString(32, ASCIIFormat.ZeroPadded);
-            Unknown = r.ReadLEInt16();
+            X = r.readLESingle();
+            Y = r.readLESingle();
+            Z = r.readLESingle();
+            Duration = r.readLEInt16();
+            Id = r.readASCIIString(32, ASCIIFormat.ZeroPadded);
+            Unknown = r.readLEInt16();
         }
     }
 
@@ -188,28 +188,31 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
 
         public AI_AField(UnityBinaryReader r, uint dataSize)
         {
-            Name = r.ReadASCIIString(32, ASCIIFormat.ZeroPadded);
-            Unknown = r.ReadByte();
+            Name = r.readASCIIString(32, ASCIIFormat.ZeroPadded);
+            Unknown = r.readByte();
         }
     }
 
     public var description: String { return "CREA: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // NIF Model
-    public STRVField FNAM; // Creature name
-    public NPDTField NPDT; // Creature data
-    public IN32Field FLAG; // Creature Flags
-    public FMIDField<SCPTRecord> SCRI; // Script
-    public CNTOField NPCO; // Item record
-    public AIDTField AIDT; // AI data
-    public AI_WField AI_W; // AI Wander
-    public AI_TField? AI_T; // AI Travel
-    public AI_FField? AI_F; // AI Follow
-    public AI_FField? AI_E; // AI Escort
-    public AI_AField? AI_A; // AI Activate
-    public FLTVField? XSCL; // Scale (optional), Only present if the scale is not 1.0
+    public STRVField EDID  // Editor ID
+    public MODLGroup MODL  // NIF Model
+    public STRVField FNAM // Creature name
+    public NPDTField NPDT // Creature data
+    public IN32Field FLAG // Creature Flags
+    public FMIDField<SCPTRecord> SCRI // Script
+    public CNTOField NPCO // Item record
+    public AIDTField AIDT // AI data
+    public AI_WField AI_W // AI Wander
+    public AI_TField? AI_T // AI Travel
+    public AI_FField? AI_F // AI Follow
+    public AI_FField? AI_E // AI Escort
+    public AI_AField? AI_A // AI Activate
+    public FLTVField? XSCL // Scale (optional), Only present if the scale is not 1.0
     public STRVField? CNAM;
-    public List<STRVField> NPCSs = new List<STRVField>();
+    public List<STRVField> NPCSs = List<STRVField>();
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard format == .TES3) else {

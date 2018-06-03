@@ -24,20 +24,20 @@ public class REGNRecord: Record, IHaveEDID {
         public REGNType Flags;
         public byte Priority;
         // groups
-        public RDOTField[] RDOTs; // Objects
-        public STRVField RDMP; // MapName
-        public RDGSField[] RDGSs; // Grasses
-        public UI32Field RDMD; // Music Type
-        public RDSDField[] RDSDs; // Sounds
-        public RDWTField[] RDWTs; // Weather Types
+        public RDOTField[] RDOTs // Objects
+        public STRVField RDMP // MapName
+        public RDGSField[] RDGSs // Grasses
+        public UI32Field RDMD // Music Type
+        public RDSDField[] RDSDs // Sounds
+        public RDWTField[] RDWTs // Weather Types
 
         public RDATField() { }
         public RDATField(UnityBinaryReader r, uint dataSize)
         {
-            Type = r.ReadLEUInt32();
-            Flags = (REGNType)r.ReadByte();
-            Priority = r.ReadByte();
-            r.skipBytes(2); // Unused
+            Type = r.readLEUInt32();
+            Flags = (REGNType)r.readByte();
+            Priority = r.readByte();
+            r.skipBytes(2) // Unused
         }
     }
 
@@ -48,8 +48,8 @@ public class REGNRecord: Record, IHaveEDID {
         public ushort ParentIdx;
         public float Density;
         public byte Clustering;
-        public byte MinSlope; // (degrees)
-        public byte MaxSlope; // (degrees)
+        public byte MinSlope // (degrees)
+        public byte MaxSlope // (degrees)
         public byte Flags;
         public ushort RadiusWrtParent;
         public ushort Radius;
@@ -59,28 +59,28 @@ public class REGNRecord: Record, IHaveEDID {
         public float SinkVariance;
         public float SizeVariance;
         public Vector3Int AngleVariance;
-        public ColorRef VertexShading; // RGB + Shading radius (0 - 200) %
+        public ColorRef VertexShading // RGB + Shading radius (0 - 200) %
 
         public RDOTField(UnityBinaryReader r, uint dataSize)
         {
-            Object = new FormId<Record>(r.ReadLEUInt32());
-            ParentIdx = r.ReadLEUInt16();
-            r.skipBytes(2); // Unused
-            Density = r.ReadLESingle();
-            Clustering = r.ReadByte();
-            MinSlope = r.ReadByte();
-            MaxSlope = r.ReadByte();
-            Flags = r.ReadByte();
-            RadiusWrtParent = r.ReadLEUInt16();
-            Radius = r.ReadLEUInt16();
-            MinHeight = r.ReadLESingle();
-            MaxHeight = r.ReadLESingle();
-            Sink = r.ReadLESingle();
-            SinkVariance = r.ReadLESingle();
-            SizeVariance = r.ReadLESingle();
-            AngleVariance = new Vector3Int(r.ReadLEUInt16(), r.ReadLEUInt16(), r.ReadLEUInt16());
-            r.skipBytes(2); // Unused
-            VertexShading = new ColorRef(r);
+            Object = FormId<Record>(r.readLEUInt32());
+            ParentIdx = r.readLEUInt16();
+            r.skipBytes(2) // Unused
+            Density = r.readLESingle();
+            Clustering = r.readByte();
+            MinSlope = r.readByte();
+            MaxSlope = r.readByte();
+            Flags = r.readByte();
+            RadiusWrtParent = r.readLEUInt16();
+            Radius = r.readLEUInt16();
+            MinHeight = r.readLESingle();
+            MaxHeight = r.readLESingle();
+            Sink = r.readLESingle();
+            SinkVariance = r.readLESingle();
+            SizeVariance = r.readLESingle();
+            AngleVariance = Vector3Int(r.readLEUInt16(), r.readLEUInt16(), r.readLEUInt16());
+            r.skipBytes(2) // Unused
+            VertexShading = ColorRef(r);
         }
     }
 
@@ -91,8 +91,8 @@ public class REGNRecord: Record, IHaveEDID {
 
         public RDGSField(UnityBinaryReader r, uint dataSize)
         {
-            Grass = new FormId<GRASRecord>(r.ReadLEUInt32());
-            r.skipBytes(4); // Unused
+            Grass = FormId<GRASRecord>(r.readLEUInt32());
+            r.skipBytes(4) // Unused
         }
     }
 
@@ -107,14 +107,14 @@ public class REGNRecord: Record, IHaveEDID {
         {
             if (formatId == GameFormatId.TES3)
             {
-                Sound = new FormId<SOUNRecord>(r.ReadASCIIString(32, ASCIIFormat.ZeroPadded));
+                Sound = FormId<SOUNRecord>(r.readASCIIString(32, ASCIIFormat.ZeroPadded));
                 Flags = 0;
-                Chance = r.ReadByte();
+                Chance = r.readByte();
                 return;
             }
-            Sound = new FormId<SOUNRecord>(r.ReadLEUInt32());
-            Flags = r.ReadLEUInt32();
-            Chance = r.ReadLEUInt32(); //: float with TES5
+            Sound = FormId<SOUNRecord>(r.readLEUInt32());
+            Flags = r.readLEUInt32();
+            Chance = r.readLEUInt32() //: float with TES5
         }
     }
 
@@ -128,9 +128,9 @@ public class REGNRecord: Record, IHaveEDID {
 
         public RDWTField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
         {
-            Weather = new FormId<WTHRRecord>(r.ReadLEUInt32());
-            Chance = r.ReadLEUInt32();
-            Global = formatId == GameFormatId.TES5 ? new FormId<GLOBRecord>(r.ReadLEUInt32()) : new FormId<GLOBRecord>();
+            Weather = FormId<WTHRRecord>(r.readLEUInt32());
+            Chance = r.readLEUInt32();
+            Global = formatId == GameFormatId.TES5 ? FormId<GLOBRecord>(r.readLEUInt32()) : FormId<GLOBRecord>();
         }
     }
 
@@ -148,14 +148,14 @@ public class REGNRecord: Record, IHaveEDID {
 
         public WEATField(UnityBinaryReader r, uint dataSize)
         {
-            Clear = r.ReadByte();
-            Cloudy = r.ReadByte();
-            Foggy = r.ReadByte();
-            Overcast = r.ReadByte();
-            Rain = r.ReadByte();
-            Thunder = r.ReadByte();
-            Ash = r.ReadByte();
-            Blight = r.ReadByte();
+            Clear = r.readByte();
+            Cloudy = r.readByte();
+            Foggy = r.readByte();
+            Overcast = r.readByte();
+            Rain = r.readByte();
+            Thunder = r.readByte();
+            Ash = r.readByte();
+            Blight = r.readByte();
             // v1.3 ESM files add 2 bytes to WEAT subrecords.
             if (dataSize == 10)
                 r.skipBytes(2);
@@ -165,32 +165,35 @@ public class REGNRecord: Record, IHaveEDID {
     // TES4
     public class RPLIField
     {
-        public uint EdgeFalloff; // (World Units)
-        public Vector2[] Points; // Region Point List Data
+        public uint EdgeFalloff // (World Units)
+        public Vector2[] Points // Region Point List Data
 
         public RPLIField(UnityBinaryReader r, uint dataSize)
         {
-            EdgeFalloff = r.ReadLEUInt32();
+            EdgeFalloff = r.readLEUInt32();
         }
 
         public void RPLDField(UnityBinaryReader r, uint dataSize)
         {
-            Points = new Vector2[dataSize >> 3];
+            Points = Vector2[dataSize >> 3];
             for (var i = 0; i < Points.Length; i++)
-                Points[i] = new Vector2(r.ReadLESingle(), r.ReadLESingle());
+                Points[i] = Vector2(r.readLESingle(), r.readLESingle());
         }
     }
 
     public var description: String { return "REGN: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public STRVField ICON; // Icon / Sleep creature
-    public FMIDField<WRLDRecord> WNAM; // Worldspace - Region name
-    public CREFField RCLR; // Map Color (COLORREF)
-    public List<RDATField> RDATs = new List<RDATField>(); // Region Data Entries / TES3: Sound Record (order determines the sound priority)
+    public STRVField EDID  // Editor ID
+    public STRVField ICON // Icon / Sleep creature
+    public FMIDField<WRLDRecord> WNAM // Worldspace - Region name
+    public CREFField RCLR // Map Color (COLORREF)
+    public List<RDATField> RDATs = List<RDATField>() // Region Data Entries / TES3: Sound Record (order determines the sound priority)
     // TES3
-    public WEATField? WEAT; // Weather Data
+    public WEATField? WEAT // Weather Data
     // TES4
-    public List<RPLIField> RPLIs = new List<RPLIField>(); // Region Areas
+    public List<RPLIField> RPLIs = List<RPLIField>() // Region Areas
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

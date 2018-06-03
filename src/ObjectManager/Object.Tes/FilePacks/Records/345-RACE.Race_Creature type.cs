@@ -70,12 +70,12 @@ namespace OA.Tes.FilePacks.Records
             public Gender Female;
             public uint Flags; // 1 = Playable 2 = Beast Race
 
-            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
                 Male = new Gender();
                 Female = new Gender();
                 SkillBoosts = new SkillBoost[7];
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     for (var i = 0; i < SkillBoosts.Length; i++)
                         SkillBoosts[i] = new SkillBoost { SkillId = (byte)r.ReadLEInt32(), Bonus = (sbyte)r.ReadLEInt32() };
@@ -194,19 +194,19 @@ namespace OA.Tes.FilePacks.Records
         public List<FacePartGroup> FaceParts = new List<FacePartGroup>();
         public BodyGroup[] Bodys = new[] { new BodyGroup(), new BodyGroup() };
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
-            if (formatId == GameFormatId.TES3)
+            if (format == GameFormatId.TES3)
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;
                     case "FNAM": FULL = new STRVField(r, dataSize); return true;
-                    case "RADT": DATA = new DATAField(r, dataSize, formatId); return true;
+                    case "RADT": DATA = new DATAField(r, dataSize, format); return true;
                     case "NPCS": SPLOs.Add(new STRVField(r, dataSize)); return true;
                     case "DESC": DESC = new STRVField(r, dataSize); return true;
                     default: return false;
                 }
-            if (formatId == GameFormatId.TES4)
+            if (format == GameFormatId.TES4)
             {
                 switch (NameState)
                 {
@@ -216,7 +216,7 @@ namespace OA.Tes.FilePacks.Records
                             case "EDID": EDID = new STRVField(r, dataSize); return true;
                             case "FULL": FULL = new STRVField(r, dataSize); return true;
                             case "DESC": DESC = new STRVField(r, dataSize); return true;
-                            case "DATA": DATA = new DATAField(r, dataSize, formatId); return true;
+                            case "DATA": DATA = new DATAField(r, dataSize, format); return true;
                             case "SPLO": SPLOs.Add(new STRVField(r, dataSize)); return true;
                             case "VNAM": VNAM = new FMID2Field<RACERecord>(r, dataSize); return true;
                             case "DNAM": DNAM = new FMID2Field<HAIRRecord>(r, dataSize); return true;

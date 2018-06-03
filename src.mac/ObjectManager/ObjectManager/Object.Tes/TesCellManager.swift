@@ -16,7 +16,7 @@ public class TesCellManager, ICellManager {
     let _asset: TesAssetPack
     let _data: TesDataPack
     let _loadBalancer: TemporalLoadBalancer
-    //_cellObjects: Dictionary<Vector2i, InRangeCellInfo> = new Dictionary<Vector2i, InRangeCellInfo>();
+    //_cellObjects: Dictionary<Vector2i, InRangeCellInfo> = Dictionary<Vector2i, InRangeCellInfo>();
 
     init(asset: TesAssetPack, data: TesDataPack, loadBalancer: TemporalLoadBalancer) {
         _asset = asset

@@ -210,9 +210,9 @@ namespace OA.Tes.FilePacks.Records
         public STRVField? CNAM;
         public List<STRVField> NPCSs = new List<STRVField>();
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
-            if (formatId == GameFormatId.TES3)
+            if (format == GameFormatId.TES3)
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;
@@ -221,7 +221,7 @@ namespace OA.Tes.FilePacks.Records
                     case "NPDT": NPDT = new NPDTField(r, dataSize); return true;
                     case "FLAG": FLAG = new IN32Field(r, dataSize); return true;
                     case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-                    case "NPCO": NPCO = new CNTOField(r, dataSize, formatId); return true;
+                    case "NPCO": NPCO = new CNTOField(r, dataSize, format); return true;
                     case "AIDT": AIDT = new AIDTField(r, dataSize); return true;
                     case "AI_W": AI_W = new AI_WField(r, dataSize, 0); return true;
                     case "AI_T": AI_T = new AI_TField(r, dataSize); return true;

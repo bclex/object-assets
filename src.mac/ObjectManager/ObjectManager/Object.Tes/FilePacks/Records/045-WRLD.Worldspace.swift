@@ -7,52 +7,50 @@
 //
 
 public class WRLDRecord: Record {
-    public struct MNAMField
-    {
-        public Vector2Int UsableDimensions;
+    public struct MNAMField {
+        public let usableDimensions: Vector2Int
         // Cell Coordinates
-        public short NWCell_X;
-        public short NWCell_Y;
-        public short SECell_X;
-        public short SECell_Y;
+        public let nwCell_x: Int16
+        public let nwCell_y: Int16
+        public let seCell_x: Int16
+        public let seCell_y: Int16
 
-        public MNAMField(UnityBinaryReader r, uint dataSize)
-        {
-            UsableDimensions = new Vector2Int(r.ReadLEInt32(), r.ReadLEInt32());
-            NWCell_X = r.ReadLEInt16();
-            NWCell_Y = r.ReadLEInt16();
-            SECell_X = r.ReadLEInt16();
-            SECell_Y = r.ReadLEInt16();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            usableDimensions = Vector2Int(r.readLEInt32(), r.readLEInt32())
+            nwCell_x = r.readLEInt16()
+            nwCell_y = r.readLEInt16()
+            seCell_x = r.readLEInt16()
+            seCell_y = r.readLEInt16()
         }
     }
 
-    public class NAM0Field
-    {
-        public Vector2 Min;
-        public Vector2 Max;
+    public class NAM0Field {
+        public let min: CGVector 
+        public var max: CGVector
 
-        public NAM0Field(UnityBinaryReader r, uint dataSize)
-        {
-            Min = new Vector2(r.ReadLESingle(), r.ReadLESingle());
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            min = CGVector(dx: r.readLESingle(), dy: r.readLESingle())
         }
 
-        public void NAM9Field(UnityBinaryReader r, uint dataSize)
-        {
-            Max = new Vector2(r.ReadLESingle(), r.ReadLESingle());
+        func NAM9Field(_ r: BinaryReader, _ dataSize: Int) {
+            max = CGVector(dx: r.readLESingle(), dy: r.readLESingle())
         }
     }
 
     public var description: String { return "WRLD: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public STRVField FULL;
-    public FMIDField<WRLDRecord>? WNAM; // Parent Worldspace
-    public FMIDField<CLMTRecord>? CNAM; // Climate
-    public FMIDField<WATRRecord>? NAM2; // Water
-    public FILEField? ICON; // Icon
-    public MNAMField? MNAM; // Map Data
-    public BYTEField? DATA; // Flags
-    public NAM0Field NAM0; // Object Bounds
-    public UI32Field? SNAM; // Music
+    public var EDID: STRVField  // Editor ID
+    public var FULL: STRVField
+    public var WNAM: FMIDField<WRLDRecord>? // Parent Worldspace
+    public var CNAM: FMIDField<CLMTRecord>? // Climate
+    public var NAM2: FMIDField<WATRRecord>? // Water
+    public var ICON: FILEField? // Icon
+    public var MNAM: MNAMField? // Map Data
+    public var DATA: BYTEField? // Flags
+    public var NAM0: NAM0Field  // Object Bounds
+    public var SNAM: UI32Field? // Music
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

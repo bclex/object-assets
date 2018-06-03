@@ -19,6 +19,9 @@ public class ACHRRecord: Record {
     public var XSCL: FLTVField? // Scale (optional)
     public var XRGD: BYTVField? // Ragdoll Data (optional)
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

@@ -87,25 +87,25 @@ namespace OA.Tes.FilePacks
         public HeaderGroupType GroupType;
 
         public Header() { }
-        public Header(UnityBinaryReader r, GameFormatId formatId)
+        public Header(UnityBinaryReader r, GameFormatId format)
         {
             Type = r.ReadASCIIString(4);
             if (Type == "GRUP")
             {
-                DataSize = (uint)(r.ReadLEUInt32() - (formatId == GameFormatId.TES4 ? 20 : 24));
+                DataSize = (uint)(r.ReadLEUInt32() - (format == GameFormatId.TES4 ? 20 : 24));
                 Label = r.ReadASCIIString(4);
                 GroupType = (HeaderGroupType)r.ReadLEInt32();
                 r.ReadLEUInt32(); // stamp | stamp + uknown
-                if (formatId != GameFormatId.TES4)
+                if (format != GameFormatId.TES4)
                     r.ReadLEUInt32(); // version + uknown
                 Position = r.BaseStream.Position;
                 return;
             }
             DataSize = r.ReadLEUInt32();
-            if (formatId == GameFormatId.TES3)
+            if (format == GameFormatId.TES3)
                 r.ReadLEUInt32(); // Unknown
             Flags = (HeaderFlags)r.ReadLEUInt32();
-            if (formatId == GameFormatId.TES3)
+            if (format == GameFormatId.TES3)
             {
                 Position = r.BaseStream.Position;
                 return;
@@ -113,7 +113,7 @@ namespace OA.Tes.FilePacks
             // tes4
             FormId = r.ReadLEUInt32();
             r.ReadLEUInt32();
-            if (formatId == GameFormatId.TES4)
+            if (format == GameFormatId.TES4)
             {
                 Position = r.BaseStream.Position;
                 return;
@@ -250,11 +250,11 @@ namespace OA.Tes.FilePacks
         readonly byte _level;
         int _headerSkip;
 
-        public RecordGroup(UnityBinaryReader r, string filePath, GameFormatId formatId, byte level)
+        public RecordGroup(UnityBinaryReader r, string filePath, GameFormatId format, byte level)
         {
             _r = r;
             _filePath = filePath;
-            _formatId = formatId;
+            _formatId = format;
             _level = level;
         }
 
@@ -346,15 +346,15 @@ namespace OA.Tes.FilePacks
         /// Return an uninitialized subrecord to deserialize, or null to skip.
         /// </summary>
         /// <returns>Return an uninitialized subrecord to deserialize, or null to skip.</returns>
-        public abstract bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize);
+        public abstract bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize);
 
-        public void Read(UnityBinaryReader r, string filePath, GameFormatId formatId)
+        public void Read(UnityBinaryReader r, string filePath, GameFormatId format)
         {
             var startPosition = r.BaseStream.Position;
             var endPosition = startPosition + Header.DataSize;
             while (r.BaseStream.Position < endPosition)
             {
-                var fieldHeader = new FieldHeader(r, formatId);
+                var fieldHeader = new FieldHeader(r, format);
                 if (fieldHeader.Type == "XXXX")
                 {
                     if (fieldHeader.DataSize != 4)
@@ -369,7 +369,7 @@ namespace OA.Tes.FilePacks
                     //header.DataSize = (uint)(endPosition - r.BaseStream.Position);
                 }
                 var position = r.BaseStream.Position;
-                if (!CreateField(r, formatId, fieldHeader.Type, fieldHeader.DataSize))
+                if (!CreateField(r, format, fieldHeader.Type, fieldHeader.DataSize))
                 {
                     Utils.Warning($"Unsupported ESM record type: {Header.Type}:{fieldHeader.Type}");
                     r.BaseStream.Position += fieldHeader.DataSize;
@@ -391,10 +391,10 @@ namespace OA.Tes.FilePacks
         public string Type; // 4 bytes
         public int DataSize;
 
-        public FieldHeader(UnityBinaryReader r, GameFormatId formatId)
+        public FieldHeader(UnityBinaryReader r, GameFormatId format)
         {
             Type = r.ReadASCIIString(4);
-            DataSize = (int)(formatId == GameFormatId.TES3 ? r.ReadLEUInt32() : r.ReadLEUInt16());
+            DataSize = (int)(format == GameFormatId.TES3 ? r.ReadLEUInt32() : r.ReadLEUInt16());
         }
     }
 }

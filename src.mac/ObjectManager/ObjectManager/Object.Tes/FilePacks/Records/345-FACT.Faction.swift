@@ -11,10 +11,10 @@ public class FACTRecord: Record {
     public class RNAMGroup
     {
         public override string ToString() => $"{RNAM.Value}:{MNAM.Value}";
-        public IN32Field RNAM; // rank
-        public STRVField MNAM; // male
-        public STRVField FNAM; // female
-        public STRVField INAM; // insignia
+        public IN32Field RNAM // rank
+        public STRVField MNAM // male
+        public STRVField FNAM // female
+        public STRVField INAM // insignia
     }
 
     // TES3
@@ -36,23 +36,26 @@ public class FACTRecord: Record {
 
         public XNAMField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
         {
-            FormId = r.ReadLEInt32();
-            Mod = r.ReadLEInt32();
-            Combat = formatId > GameFormatId.TES4 ? r.ReadLEInt32() : 0; // 0 - Neutral, 1 - Enemy, 2 - Ally, 3 - Friend
+            FormId = r.readLEInt32();
+            Mod = r.readLEInt32();
+            Combat = formatId > GameFormatId.TES4 ? r.readLEInt32() : 0 // 0 - Neutral, 1 - Enemy, 2 - Ally, 3 - Friend
         }
     }
 
     public var description: String { return "FACT: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public STRVField FNAM; // Faction name
-    public List<RNAMGroup> RNAMs = new List<RNAMGroup>(); // Rank Name
-    public FADTField FADT; // Faction data
-    public List<STRVField> ANAMs = new List<STRVField>(); // Faction name
-    public List<INTVField> INTVs = new List<INTVField>(); // Faction reaction
+    public STRVField EDID  // Editor ID
+    public STRVField FNAM // Faction name
+    public List<RNAMGroup> RNAMs = List<RNAMGroup>() // Rank Name
+    public FADTField FADT // Faction data
+    public List<STRVField> ANAMs = List<STRVField>() // Faction name
+    public List<INTVField> INTVs = List<INTVField>() // Faction reaction
     // TES4
-    public XNAMField XNAM; // Interfaction Relations
-    public INTVField DATA; // Flags (byte, uint32)
+    public XNAMField XNAM // Interfaction Relations
+    public INTVField DATA // Flags (byte, uint32)
     public UI32Field CNAM;
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {

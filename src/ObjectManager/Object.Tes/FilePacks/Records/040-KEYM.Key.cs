@@ -24,7 +24,7 @@ namespace OA.Tes.FilePacks.Records
         public DATAField DATA; // Type of soul contained in the gem
         public FILEField ICON; // Icon (optional)
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

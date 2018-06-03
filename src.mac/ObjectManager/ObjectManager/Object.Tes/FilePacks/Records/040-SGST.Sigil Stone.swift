@@ -29,6 +29,9 @@ public class SGSTRecord: Record {
     public var EFITs = [ENCHRecord.EFITField]() // Effect Data
     public var SCITs = [ENCHRecord.SCITField]() // Script Effect Data
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

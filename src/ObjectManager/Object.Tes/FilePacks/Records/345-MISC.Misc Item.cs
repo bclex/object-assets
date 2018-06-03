@@ -11,9 +11,9 @@ namespace OA.Tes.FilePacks.Records
             public uint Value;
             public uint Unknown;
 
-            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     Weight = r.ReadLESingle();
                     Value = r.ReadLEUInt32();
@@ -36,7 +36,7 @@ namespace OA.Tes.FilePacks.Records
         // TES3
         public FMIDField<ENCHRecord> ENAM; // enchantment ID
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -48,7 +48,7 @@ namespace OA.Tes.FilePacks.Records
                 case "FULL":
                 case "FNAM": FULL = new STRVField(r, dataSize); return true;
                 case "DATA":
-                case "MCDT": DATA = new DATAField(r, dataSize, formatId); return true;
+                case "MCDT": DATA = new DATAField(r, dataSize, format); return true;
                 case "ICON":
                 case "ITEX": ICON = new FILEField(r, dataSize); return true;
                 case "ENAM": ENAM = new FMIDField<ENCHRecord>(r, dataSize); return true;

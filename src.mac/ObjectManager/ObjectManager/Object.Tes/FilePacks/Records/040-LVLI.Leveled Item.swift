@@ -31,6 +31,9 @@ public class LVLIRecord: Record {
     public var DATA: BYTEField? // Data (optional)
     public var LVLOs = [LVLOField]()
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

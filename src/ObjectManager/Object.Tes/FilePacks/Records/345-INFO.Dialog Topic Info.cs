@@ -112,9 +112,9 @@ namespace OA.Tes.FilePacks.Records
         public TES3Group TES3 = new TES3Group();
         public TES4Group TES4 = new TES4Group();
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
-            if (formatId == GameFormatId.TES3)
+            if (format == GameFormatId.TES3)
                 switch (type)
                 {
                     case "INAM": EDID = new STRVField(r, dataSize); DIALRecord.LastRecord?.INFOs.Add(this); return true;
@@ -132,7 +132,7 @@ namespace OA.Tes.FilePacks.Records
                     case "QSTN": TES3.QSTN = new BYTEField(r, dataSize); return true;
                     case "QSTF": TES3.QSTF = new BYTEField(r, dataSize); return true;
                     case "QSTR": TES3.QSTR = new BYTEField(r, dataSize); return true;
-                    case "SCVR": TES3.SCVR = new SCPTRecord.CTDAField(r, dataSize, formatId); return true;
+                    case "SCVR": TES3.SCVR = new SCPTRecord.CTDAField(r, dataSize, format); return true;
                     case "INTV": TES3.INTV = new UNKNField(r, dataSize); return true;
                     case "FLTV": TES3.FLTV = new UNKNField(r, dataSize); return true;
                     case "BNAM": TES3.BNAM = new STRVField(r, dataSize); return true;
@@ -148,7 +148,7 @@ namespace OA.Tes.FilePacks.Records
                 case "NAM1": ArrayUtils.Last(TES4.TRDTs).NAM1Field(r, dataSize); return true;
                 case "NAM2": ArrayUtils.Last(TES4.TRDTs).NAM2Field(r, dataSize); return true;
                 case "CTDA":
-                case "CTDT": TES4.CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, formatId)); return true;
+                case "CTDT": TES4.CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, format)); return true;
                 case "TCLT": TES4.TCLTs.Add(new FMIDField<DIALRecord>(r, dataSize)); return true;
                 case "TCLF": TES4.TCLFs.Add(new FMIDField<DIALRecord>(r, dataSize)); return true;
                 case "SCHR":

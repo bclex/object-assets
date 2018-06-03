@@ -8,8 +8,11 @@
 
 public class GMSTRecord: Record, IHaveEDID {
     public var description: String { return "GMST: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public DATVField DATA; // Data
+    public STRVField EDID  // Editor ID
+    public DATVField DATA // Data
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {

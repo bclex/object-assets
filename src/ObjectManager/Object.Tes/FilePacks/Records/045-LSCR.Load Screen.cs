@@ -29,7 +29,7 @@ namespace OA.Tes.FilePacks.Records
         public STRVField DESC; // Description
         public List<LNAMField> LNAMs; // LoadForm
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

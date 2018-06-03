@@ -149,7 +149,7 @@ namespace OA.Tes.FilePacks.Records
         public CSTDField CSTD; // Standard
         public CSADField CSAD; // Advanced
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

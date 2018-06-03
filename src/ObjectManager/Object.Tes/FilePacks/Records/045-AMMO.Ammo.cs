@@ -31,7 +31,7 @@ namespace OA.Tes.FilePacks.Records
         public IN16Field? ANAM; // Enchantment points (optional)
         public DATAField DATA; // Ammo Data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

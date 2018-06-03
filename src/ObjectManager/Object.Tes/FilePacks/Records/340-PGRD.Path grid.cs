@@ -14,9 +14,9 @@ namespace OA.Tes.FilePacks.Records
             public short Granularity;
             public short PointCount;
 
-            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     X = r.ReadLEInt32();
                     Y = r.ReadLEInt32();
@@ -94,13 +94,13 @@ namespace OA.Tes.FilePacks.Records
         public List<PGRLField> PGRLs; // Point-to-Reference Mappings
         public PGRIField[] PGRIs; // Inter-Cell Connections
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
                 case "EDID":
                 case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = new DATAField(r, dataSize, formatId); return true;
+                case "DATA": DATA = new DATAField(r, dataSize, format); return true;
                 case "PGRP": PGRPs = new PGRPField[dataSize >> 4]; for (var i = 0; i < PGRPs.Length; i++) PGRPs[i] = new PGRPField(r, 16); return true;
                 case "PGRC": PGRC = new UNKNField(r, dataSize); return true;
                 case "PGAG": PGAG = new UNKNField(r, dataSize); return true;

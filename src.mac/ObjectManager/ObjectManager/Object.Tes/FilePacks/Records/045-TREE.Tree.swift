@@ -7,61 +7,59 @@
 //
 
 public class TREERecord: Record {
-    public struct SNAMField
-    {
-        public int[] Values;
+    public struct SNAMField {
+        public let values: [Int32]
 
-        public SNAMField(UnityBinaryReader r, uint dataSize)
-        {
-            Values = new int[dataSize >> 2];
-            for (var i = 0; i < Values.Length; i++)
-                Values[i] = r.ReadLEInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            values = [Int32](); values.allocateCapacity(dataSize >> 2)
+            for i in 0..<values.capactiy {
+                values[i] = r.readLEInt32()
+            }
         }
     }
 
-    public struct CNAMField
-    {
-        public float LeafCurvature;
-        public float MinimumLeafAngle;
-        public float MaximumLeafAngle;
-        public float BranchDimmingValue;
-        public float LeafDimmingValue;
-        public int ShadowRadius;
-        public float RockSpeed;
-        public float RustleSpeed;
+    public struct CNAMField {
+        public let leafCurvature: Float
+        public let minimumLeafAngle: Float
+        public let maximumLeafAngle: Float
+        public let branchDimmingValue: Float
+        public let leafDimmingValue: Float
+        public let shadowRadius: Int32
+        public let rockSpeed: Float
+        public let rustleSpeed: Float
 
-        public CNAMField(UnityBinaryReader r, uint dataSize)
-        {
-            LeafCurvature = r.ReadLESingle();
-            MinimumLeafAngle = r.ReadLESingle();
-            MaximumLeafAngle = r.ReadLESingle();
-            BranchDimmingValue = r.ReadLESingle();
-            LeafDimmingValue = r.ReadLESingle();
-            ShadowRadius = r.ReadLEInt32();
-            RockSpeed = r.ReadLESingle();
-            RustleSpeed = r.ReadLESingle();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            leafCurvature = r.readLESingle()
+            minimumLeafAngle = r.readLESingle()
+            maximumLeafAngle = r.readLESingle()
+            branchDimmingValue = r.readLESingle()
+            leafDimmingValue = r.readLESingle()
+            shadowRadius = r.readLEInt32()
+            rockSpeed = r.readLESingle()
+            rustleSpeed = r.readLESingle()
         }
     }
 
-    public struct BNAMField
-    {
-        public float Width;
-        public float Height;
+    public struct BNAMField {
+        public let width: Float
+        public let height: Float
 
-        public BNAMField(UnityBinaryReader r, uint dataSize)
-        {
-            Width = r.ReadLESingle();
-            Height = r.ReadLESingle();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            width = r.readLESingle()
+            height = r.readLESingle()
         }
     }
 
     public var description: String { return "TREE: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL; // Model
-    public FILEField ICON; // Leaf Texture
-    public SNAMField SNAM; // SpeedTree Seeds, array of ints
-    public CNAMField CNAM; // Tree Parameters
-    public BNAMField BNAM; // Billboard Dimensions
+    public EDID: STRVField // Editor ID
+    public MODL: MODLGroup // Model
+    public ICON: FILEField // Leaf Texture
+    public SNAM: SNAMField // SpeedTree Seeds, array of ints
+    public CNAM: CNAMField // Tree Parameters
+    public BNAM: BNAMField // Billboard Dimensions
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

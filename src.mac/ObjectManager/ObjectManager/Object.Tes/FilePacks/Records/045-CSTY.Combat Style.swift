@@ -73,7 +73,7 @@ public class CSTYRecord: Record {
             powerAttack_back = r.readByte()
             powerAttack_left = r.readByte()
             powerAttack_right = r.readByte()
-            r.skipBytes(3); // Unused
+            r.skipBytes(3) // Unused
             holdTimer_min = r.readLESingle()
             holdTimer_max = r.readLESingle()
             flags1 = r.readByte()
@@ -162,6 +162,9 @@ public class CSTYRecord: Record {
     public var CSTD: CSTDField // Standard
     public var CSAD: CSADField // Advanced
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

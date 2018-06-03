@@ -49,9 +49,9 @@ namespace OA.Tes.FilePacks.Records
         {
             public uint[] TextureIndices;
 
-            public VTEXField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public VTEXField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     TextureIndices = new uint[dataSize >> 1];
                     for (var i = 0; i < TextureIndices.Length; i++)
@@ -146,7 +146,7 @@ namespace OA.Tes.FilePacks.Records
 
         public Vector2i GridCoords => new Vector2i(INTV.CellX, INTV.CellY);
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -154,7 +154,7 @@ namespace OA.Tes.FilePacks.Records
                 case "VNML": VNML = new VNMLField(r, dataSize); return true;
                 case "VHGT": VHGT = new VHGTField(r, dataSize); return true;
                 case "VCLR": VCLR = new VNMLField(r, dataSize); return true;
-                case "VTEX": VTEX = new VTEXField(r, dataSize, formatId); return true;
+                case "VTEX": VTEX = new VTEXField(r, dataSize, format); return true;
                 // TES3
                 case "INTV": INTV = new CORDField(r, dataSize); return true;
                 case "WNAM": WNAM = new WNAMField(r, dataSize); return true;

@@ -11,6 +11,9 @@ public class STATRecord: Record, IHaveEDID, IHaveMODL {
     public var EDID: STRVField // Editor ID
     public var MODL: MODLGroup // Model
 
+    init() {
+    }
+
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",

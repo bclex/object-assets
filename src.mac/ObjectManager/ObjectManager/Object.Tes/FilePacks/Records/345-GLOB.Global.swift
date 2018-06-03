@@ -8,9 +8,12 @@
 
 public class GLOBRecord: Record, IHaveEDID {
     public var description: String { return "GLOB: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public BYTEField? FNAM; // Type of global (s, l, f)
-    public FLTVField? FLTV; // Float data
+    public STRVField EDID  // Editor ID
+    public BYTEField? FNAM // Type of global (s, l, f)
+    public FLTVField? FLTV // Float data
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

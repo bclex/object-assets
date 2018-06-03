@@ -9,7 +9,7 @@ namespace OA.Tes.FilePacks.Records
         public BYTEField? FNAM; // Type of global (s, l, f)
         public FLTVField? FLTV; // Float data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

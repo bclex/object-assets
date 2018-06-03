@@ -11,7 +11,7 @@ namespace OA.Tes.FilePacks.Records
         public FMIDField<SCPTRecord> SCRI; // Script (optional)
         public IN32Field MNAM; // Active marker flags, required. A bit field with a bit value of 1 indicating that the matching marker position in the NIF file is active.
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

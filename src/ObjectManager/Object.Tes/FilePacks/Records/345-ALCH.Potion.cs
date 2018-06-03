@@ -12,10 +12,10 @@ namespace OA.Tes.FilePacks.Records
             public int Value;
             public int Flags; //: AutoCalc
 
-            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
                 Weight = r.ReadLESingle();
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     Value = r.ReadLEInt32();
                     Flags = r.ReadLEInt32();
@@ -67,7 +67,7 @@ namespace OA.Tes.FilePacks.Records
         public List<ENCHRecord.EFITField> EFITs = new List<ENCHRecord.EFITField>(); // Effect Data
         public List<ENCHRecord.SCITField> SCITs = new List<ENCHRecord.SCITField>(); // Script Effect Data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -79,7 +79,7 @@ namespace OA.Tes.FilePacks.Records
                 case "FULL": if (SCITs.Count == 0) FULL = new STRVField(r, dataSize); else ArrayUtils.Last(SCITs).FULLField(r, dataSize); return true;
                 case "FNAM": FULL = new STRVField(r, dataSize); return true;
                 case "DATA":
-                case "ALDT": DATA = new DATAField(r, dataSize, formatId); return true;
+                case "ALDT": DATA = new DATAField(r, dataSize, format); return true;
                 case "ENAM": ENAM = new ENAMField(r, dataSize); return true;
                 case "ICON":
                 case "TEXT": ICON = new FILEField(r, dataSize); return true;
@@ -87,7 +87,7 @@ namespace OA.Tes.FilePacks.Records
                 //
                 case "ENIT": DATA.ENITField(r, dataSize); return true;
                 case "EFID": r.SkipBytes(dataSize); return true;
-                case "EFIT": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, formatId)); return true;
+                case "EFIT": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, format)); return true;
                 case "SCIT": SCITs.Add(new ENCHRecord.SCITField(r, dataSize)); return true;
                 default: return false;
             }

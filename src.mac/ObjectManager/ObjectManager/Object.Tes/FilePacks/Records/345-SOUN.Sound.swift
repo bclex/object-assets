@@ -23,39 +23,42 @@ public class SOUNRecord: Record, IHaveEDID {
     // TESX
     public class DATAField
     {
-        public byte Volume; // (0=0.00, 255=1.00)
-        public byte MinRange; // Minimum attenuation distance
-        public byte MaxRange; // Maximum attenuation distance
+        public byte Volume // (0=0.00, 255=1.00)
+        public byte MinRange // Minimum attenuation distance
+        public byte MaxRange // Maximum attenuation distance
         // Tes4
-        public sbyte FrequencyAdjustment; // Frequency adjustment %
-        public ushort Flags; // Flags
-        public ushort StaticAttenuation; // Static Attenuation (db)
-        public byte StopTime; // Stop time
-        public byte StartTime; // Start time
+        public sbyte FrequencyAdjustment // Frequency adjustment %
+        public ushort Flags // Flags
+        public ushort StaticAttenuation // Static Attenuation (db)
+        public byte StopTime // Stop time
+        public byte StartTime // Start time
 
         public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
         {
-            Volume = formatId == GameFormatId.TES3 ? r.ReadByte() : (byte)0;
-            MinRange = r.ReadByte();
-            MaxRange = r.ReadByte();
+            Volume = formatId == GameFormatId.TES3 ? r.readByte() : (byte)0;
+            MinRange = r.readByte();
+            MaxRange = r.readByte();
             if (formatId == GameFormatId.TES3)
                 return;
-            FrequencyAdjustment = (sbyte)r.ReadByte();
-            r.ReadByte(); // Unused
-            Flags = r.ReadLEUInt16();
-            r.ReadLEUInt16(); // Unused
+            FrequencyAdjustment = (sbyte)r.readByte();
+            r.readByte() // Unused
+            Flags = r.readLEUInt16();
+            r.readLEUInt16() // Unused
             if (dataSize == 8)
                 return;
-            StaticAttenuation = r.ReadLEUInt16();
-            StopTime = r.ReadByte();
-            StartTime = r.ReadByte();
+            StaticAttenuation = r.readLEUInt16();
+            StopTime = r.readByte();
+            StartTime = r.readByte();
         }
     }
 
     public var description: String { return "SOUN: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public FILEField FNAM; // Sound Filename (relative to Sounds\)
-    public DATAField DATA; // Sound Data
+    public STRVField EDID  // Editor ID
+    public FILEField FNAM // Sound Filename (relative to Sounds\)
+    public DATAField DATA // Sound Data
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

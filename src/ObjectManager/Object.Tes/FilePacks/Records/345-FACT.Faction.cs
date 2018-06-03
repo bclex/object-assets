@@ -32,11 +32,11 @@ namespace OA.Tes.FilePacks.Records
             public int Mod;
             public int Combat;
 
-            public XNAMField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public XNAMField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
                 FormId = r.ReadLEInt32();
                 Mod = r.ReadLEInt32();
-                Combat = formatId > GameFormatId.TES4 ? r.ReadLEInt32() : 0; // 0 - Neutral, 1 - Enemy, 2 - Ally, 3 - Friend
+                Combat = format > GameFormatId.TES4 ? r.ReadLEInt32() : 0; // 0 - Neutral, 1 - Enemy, 2 - Ally, 3 - Friend
             }
         }
 
@@ -52,9 +52,9 @@ namespace OA.Tes.FilePacks.Records
         public INTVField DATA; // Flags (byte, uint32)
         public UI32Field CNAM;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
-            if (formatId == GameFormatId.TES3)
+            if (format == GameFormatId.TES3)
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;
@@ -69,7 +69,7 @@ namespace OA.Tes.FilePacks.Records
             {
                 case "EDID": EDID = new STRVField(r, dataSize); return true;
                 case "FULL": FNAM = new STRVField(r, dataSize); return true;
-                case "XNAM": XNAM = new XNAMField(r, dataSize, formatId); return true;
+                case "XNAM": XNAM = new XNAMField(r, dataSize, format); return true;
                 case "DATA": DATA = new INTVField(r, dataSize); return true;
                 case "CNAM": CNAM = new UI32Field(r, dataSize); return true;
                 case "RNAM": RNAMs.Add(new RNAMGroup { RNAM = new IN32Field(r, dataSize) }); return true;

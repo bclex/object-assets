@@ -202,7 +202,7 @@ public struct ColorRef: CustomStringConvertible {
         nullByte = r.readByte()
     }
 
-    //func toColor32() -> CGColor { return CGColor(red: red, green: green, blue: blue, alpha: 255) }
+    public func toColor32() -> CGColor { return CGColor(red: red, green: green, blue: blue, alpha: 255) }
 }
 
 public struct CREFField: CustomStringConvertible {

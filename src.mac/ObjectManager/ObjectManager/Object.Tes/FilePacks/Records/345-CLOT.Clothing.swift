@@ -34,14 +34,14 @@ public class CLOTRecord: Record, IHaveEDID, IHaveMODL {
         {
             if (formatId == GameFormatId.TES3)
             {
-                Type = r.ReadLEInt32();
-                Weight = r.ReadLESingle();
-                Value = r.ReadLEInt16();
-                EnchantPts = r.ReadLEInt16();
+                Type = r.readLEInt32();
+                Weight = r.readLESingle();
+                Value = r.readLEInt16();
+                EnchantPts = r.readLEInt16();
                 return;
             }
-            Value = r.ReadLEInt32();
-            Weight = r.ReadLESingle();
+            Value = r.readLEInt32();
+            Weight = r.readLESingle();
             Type = 0;
             EnchantPts = 0;
         }
@@ -56,22 +56,25 @@ public class CLOTRecord: Record, IHaveEDID, IHaveMODL {
     }
 
     public var description: String { return "CLOT: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model Name
-    public STRVField FULL; // Item Name
-    public DATAField DATA; // Clothing Data
-    public FILEField ICON; // Male Icon
-    public STRVField ENAM; // Enchantment Name
-    public FMIDField<SCPTRecord> SCRI; // Script Name
+    public STRVField EDID  // Editor ID
+    public MODLGroup MODL  // Model Name
+    public STRVField FULL // Item Name
+    public DATAField DATA // Clothing Data
+    public FILEField ICON // Male Icon
+    public STRVField ENAM // Enchantment Name
+    public FMIDField<SCPTRecord> SCRI // Script Name
     // TES3
-    public List<INDXFieldGroup> INDXs = new List<INDXFieldGroup>(); // Body Part Index (Moved to Race)
+    public List<INDXFieldGroup> INDXs = List<INDXFieldGroup>() // Body Part Index (Moved to Race)
     // TES4
-    public UI32Field BMDT; // Clothing Flags
-    public MODLGroup MOD2; // Male world model (optional)
-    public MODLGroup MOD3; // Female biped (optional)
-    public MODLGroup MOD4; // Female world model (optional)
-    public FILEField? ICO2; // Female icon (optional)
-    public IN16Field? ANAM; // Enchantment points (optional)
+    public UI32Field BMDT // Clothing Flags
+    public MODLGroup MOD2 // Male world model (optional)
+    public MODLGroup MOD3 // Female biped (optional)
+    public MODLGroup MOD4 // Female world model (optional)
+    public FILEField? ICO2 // Female icon (optional)
+    public IN16Field? ANAM // Enchantment points (optional)
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

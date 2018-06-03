@@ -27,7 +27,7 @@ namespace OA.Tes.FilePacks.Records
         public List<STRVField> MASTs;
         public List<INTVField> DATAs;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

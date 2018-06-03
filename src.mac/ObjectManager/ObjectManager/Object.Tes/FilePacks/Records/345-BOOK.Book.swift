@@ -9,8 +9,8 @@
 public class BOOKRecord: Record, IHaveEDID, IHaveMODL {
     public struct DATAField
     {
-        public byte Flags; //: Scroll - (1 is scroll, 0 not)
-        public byte Teaches; //: SkillId - (-1 is no skill)
+        public byte Flags //: Scroll - (1 is scroll, 0 not)
+        public byte Teaches //: SkillId - (-1 is no skill)
         public int Value;
         public float Weight;
         //
@@ -20,32 +20,35 @@ public class BOOKRecord: Record, IHaveEDID, IHaveMODL {
         {
             if (formatId == GameFormatId.TES3)
             {
-                Weight = r.ReadLESingle();
-                Value = r.ReadLEInt32();
-                Flags = (byte)r.ReadLEInt32();
-                Teaches = (byte)r.ReadLEInt32();
-                EnchantPts = r.ReadLEInt32();
+                Weight = r.readLESingle();
+                Value = r.readLEInt32();
+                Flags = (byte)r.readLEInt32();
+                Teaches = (byte)r.readLEInt32();
+                EnchantPts = r.readLEInt32();
                 return;
             }
-            Flags = r.ReadByte();
-            Teaches = r.ReadByte();
-            Value = r.ReadLEInt32();
-            Weight = r.ReadLESingle();
+            Flags = r.readByte();
+            Teaches = r.readByte();
+            Value = r.readLEInt32();
+            Weight = r.readLESingle();
             EnchantPts = 0;
         }
     }
 
     public var description: String { return "BOOK: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model (optional)
-    public STRVField FULL; // Item Name
-    public DATAField DATA; // Book Data
-    public STRVField DESC; // Book Text
-    public FILEField ICON; // Inventory Icon (optional)
-    public FMIDField<SCPTRecord> SCRI; // Script Name (optional)
-    public FMIDField<ENCHRecord> ENAM; // Enchantment FormId (optional)
+    public STRVField EDID  // Editor ID
+    public MODLGroup MODL  // Model (optional)
+    public STRVField FULL // Item Name
+    public DATAField DATA // Book Data
+    public STRVField DESC // Book Text
+    public FILEField ICON // Inventory Icon (optional)
+    public FMIDField<SCPTRecord> SCRI // Script Name (optional)
+    public FMIDField<ENCHRecord> ENAM // Enchantment FormId (optional)
     // TES4
-    public IN16Field? ANAM; // Enchantment points (optional)
+    public IN16Field? ANAM // Enchantment points (optional)
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

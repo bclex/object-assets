@@ -28,6 +28,9 @@ public class QUSTRecord: Record {
     public var SCTX: STRVField // Script Source
     public var SCROs = [FMIDField<Record>]() // Global variable reference
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

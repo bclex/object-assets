@@ -16,14 +16,14 @@ namespace OA.Tes.FilePacks.Records
         public BYTEField FNAM; // Flags
         public FMIDField<Record> TNAM; // Random teleport destination
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
                 case "EDID":
                 case "NAME": EDID = new STRVField(r, dataSize); return true;
                 case "FULL": FULL = new STRVField(r, dataSize); return true;
-                case "FNAM": if (formatId != GameFormatId.TES3) FNAM = new BYTEField(r, dataSize); else FULL = new STRVField(r, dataSize); return true;
+                case "FNAM": if (format != GameFormatId.TES3) FNAM = new BYTEField(r, dataSize); else FULL = new STRVField(r, dataSize); return true;
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "MODT": MODL.MODTField(r, dataSize); return true;

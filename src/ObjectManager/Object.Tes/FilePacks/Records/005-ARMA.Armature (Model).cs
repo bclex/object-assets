@@ -7,7 +7,7 @@ namespace OA.Tes.FilePacks.Records
         public override string ToString() => $"ARMA: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

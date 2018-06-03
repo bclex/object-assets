@@ -211,7 +211,7 @@ public class BsaFile {
         // Fill DDS Header
         else if file.tex.chunks != nil {
             // // Fill DDS Header
-            // var ddsHeader = new DDSHeader
+            // var ddsHeader = DDSHeader
             // {
             //     dwFlags = DDSFlags.HEADER_FLAGS_TEXTURE | DDSFlags.HEADER_FLAGS_LINEARSIZE | DDSFlags.HEADER_FLAGS_MIPMAP,
             //     dwHeight = file.Tex.Height,
@@ -220,7 +220,7 @@ public class BsaFile {
             //     dwCaps = DDSCaps.SURFACE_FLAGS_TEXTURE | DDSCaps.SURFACE_FLAGS_MIPMAP,
             //     dwCaps2 = file.Tex.Unk16 == 2049 ? DDSCaps2.CUBEMAP_ALLFACES : 0,
             // };
-            // var dx10Header = new DDSHeader_DXT10();
+            // var dx10Header = DDSHeader_DXT10();
             // var dx10 = false;
 
             // // map tex format
@@ -229,27 +229,27 @@ public class BsaFile {
             //     case DXGIFormat.BC1_UNORM:
             //         ddsHeader.ddspf.dwFlags = DDSPixelFormats.FourCC;
             //         ddsHeader.ddspf.dwFourCC = Encoding.ASCII.GetBytes("DXT1");
-            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height / 2U; // 4bpp
+            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height / 2U // 4bpp
             //         break;
             //     case DXGIFormat.BC2_UNORM:
             //         ddsHeader.ddspf.dwFlags = DDSPixelFormats.FourCC;
             //         ddsHeader.ddspf.dwFourCC = Encoding.ASCII.GetBytes("DXT3");
-            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height; // 8bpp
+            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height // 8bpp
             //         break;
             //     case DXGIFormat.BC3_UNORM:
             //         ddsHeader.ddspf.dwFlags = DDSPixelFormats.FourCC;
             //         ddsHeader.ddspf.dwFourCC = Encoding.ASCII.GetBytes("DXT5");
-            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height; // 8bpp
+            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height // 8bpp
             //         break;
             //     case DXGIFormat.BC5_UNORM:
             //         ddsHeader.ddspf.dwFlags = DDSPixelFormats.FourCC;
             //         ddsHeader.ddspf.dwFourCC = Encoding.ASCII.GetBytes("ATI2");
-            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height; // 8bpp
+            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height // 8bpp
             //         break;
             //     case DXGIFormat.BC7_UNORM:
             //         ddsHeader.ddspf.dwFlags = DDSPixelFormats.FourCC;
             //         ddsHeader.ddspf.dwFourCC = Encoding.ASCII.GetBytes("DX10");
-            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height; // 8bpp
+            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height // 8bpp
             //         dx10 = true;
             //         dx10Header.dxgiFormat = (int)DXGIFormat.BC7_UNORM;
             //         break;
@@ -260,15 +260,15 @@ public class BsaFile {
             //         ddsHeader.ddspf.dwGBitMask = 0x0000FF00;
             //         ddsHeader.ddspf.dwBBitMask = 0x000000FF;
             //         ddsHeader.ddspf.dwABitMask = 0xFF000000;
-            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height * 4; // 32bpp
+            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height * 4 // 32bpp
             //         break;
             //     case DXGIFormat.DXGI_FORMAT_R8_UNORM:
             //         ddsHeader.ddspf.dwFlags = DDSPixelFormats.RGB;
             //         ddsHeader.ddspf.dwRGBBitCount = 8;
             //         ddsHeader.ddspf.dwRBitMask = 0xFF;
-            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height; // 8bpp
+            //         ddsHeader.dwPitchOrLinearSize = (uint)file.Tex.Width * file.Tex.Height // 8bpp
             //         break;
-            //     default: throw new InvalidOperationException("DDS FAILED");
+            //     default: throw InvalidOperationException("DDS FAILED");
             // }
             // if (dx10)
             // {
@@ -490,7 +490,7 @@ public class BsaFile {
         //_filesByHash = _files.ToLookup(x => x.PathHash);
 
         // // Create a virtual directory tree.
-        // RootDir = new VirtualFileSystem.Directory();
+        // RootDir = VirtualFileSystem.Directory();
         // foreach (var fileMetadata in _files)
         //     RootDir.CreateDescendantFile(fileMetadata.Path);
     }

@@ -13,6 +13,9 @@ public class LVSPRecord: Record {
     public var LVLF: BYTEField // Flags
     public var LVLOs = [LVLIRecord.LVLOField]() // Number of items in list
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

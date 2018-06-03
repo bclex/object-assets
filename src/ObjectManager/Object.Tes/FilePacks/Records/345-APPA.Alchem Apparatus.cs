@@ -12,9 +12,9 @@ namespace OA.Tes.FilePacks.Records
             public float Weight;
             public int Value;
 
-            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     Type = (byte)r.ReadLEInt32();
                     Quality = r.ReadLESingle();
@@ -37,7 +37,7 @@ namespace OA.Tes.FilePacks.Records
         public FILEField ICON; // Inventory Icon
         public FMIDField<SCPTRecord> SCRI; // Script Name
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -49,7 +49,7 @@ namespace OA.Tes.FilePacks.Records
                 case "FULL":
                 case "FNAM": FULL = new STRVField(r, dataSize); return true;
                 case "DATA":
-                case "AADT": DATA = new DATAField(r, dataSize, formatId); return true;
+                case "AADT": DATA = new DATAField(r, dataSize, format); return true;
                 case "ICON":
                 case "ITEX": ICON = new FILEField(r, dataSize); return true;
                 case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;

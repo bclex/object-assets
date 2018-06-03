@@ -28,7 +28,7 @@ namespace OA.Tes.FilePacks.Records
         public STRVField SCTX; // Script Source
         public List<FMIDField<Record>> SCROs = new List<FMIDField<Record>>(); // Global variable reference
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

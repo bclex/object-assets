@@ -32,7 +32,7 @@ namespace OA.Tes.FilePacks.Records
         public BYTEField? DATA; // Data (optional)
         public List<LVLOField> LVLOs = new List<LVLOField>();
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

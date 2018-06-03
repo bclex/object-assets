@@ -8,24 +8,27 @@
 
 public class BSGNRecord: Record {
     public var description: String { return "BSGN: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public STRVField FULL; // Sign name
-    public FILEField ICON; // Texture
-    public STRVField DESC; // Description
-    public List<STRVField> NPCSs = new List<STRVField>(); // TES3: Spell/ability
-    public List<FMIDField<Record>> SPLOs = new List<FMIDField<Record>>(); // TES4: (points to a SPEL or LVSP record)
+    public var EDID: STRVField  // Editor ID
+    public var FULL: STRVField // Sign name
+    public var ICON: FILEField // Texture
+    public var DESC: STRVField // Description
+    public var NPCSs = [STRVField]() // TES3: Spell/ability
+    public var SPLOs = [FMIDField<Record>]() // TES4: (points to a SPEL or LVSP record)
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = new STRVField(r, dataSize)
+             "NAME": EDID = STRVField(r, dataSize)
         case "FULL",
-             "FNAM": FULL = new STRVField(r, dataSize)
+             "FNAM": FULL = STRVField(r, dataSize)
         case "ICON":
-        case "TNAM": ICON = new FILEField(r, dataSize)
-        case "DESC": DESC = new STRVField(r, dataSize)
-        case "SPLO": if SPLOs == nil { SPLOs = [FMIDField<Record>] } SPLOs.append(FMIDField<Record>(r, dataSize))
-        case "NPCS": if NPCSs == nil { NPCSs = [STRVField]() } NPCSs.append(STRVField(r, dataSize))
+        case "TNAM": ICON = FILEField(r, dataSize)
+        case "DESC": DESC = STRVField(r, dataSize)
+        case "SPLO": if SPLOs == nil { SPLOs = [FMIDField<Record>] }; SPLOs.append(FMIDField<Record>(r, dataSize))
+        case "NPCS": if NPCSs == nil { NPCSs = [STRVField]() }; NPCSs.append(STRVField(r, dataSize))
         default: return false
         }
         return true

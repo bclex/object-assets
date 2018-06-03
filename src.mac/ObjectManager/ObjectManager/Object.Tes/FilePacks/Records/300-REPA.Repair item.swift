@@ -7,29 +7,30 @@
 //
 
 public class REPARecord: Record, IHaveEDID, IHaveMODL {
-    public struct RIDTField
-    {
-        public float Weight;
-        public int Value;
-        public int Uses;
-        public float Quality;
+    public struct RIDTField {
+        public let weight: Float
+        public let value: Int32
+        public let uses: Int32
+        public let quality: Float
 
-        public RIDTField(UnityBinaryReader r, uint dataSize)
-        {
-            Weight = r.ReadLESingle();
-            Value = r.ReadLEInt32();
-            Uses = r.ReadLEInt32();
-            Quality = r.ReadLESingle();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            weight = r.readLESingle()
+            value = r.readLEInt32()
+            uses = r.readLEInt32()
+            quality = r.readLESingle()
         }
     }
 
     public var description: String { return "REPA: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model Name
-    public STRVField FNAM; // Item Name
-    public RIDTField RIDT; // Repair Data
-    public FILEField ICON; // Inventory Icon
-    public FMIDField<SCPTRecord> SCRI; // Script Name
+    public var EDID: STRVField  // Editor ID
+    public var MODL: MODLGroup  // Model Name
+    public var FNAM: STRVField // Item Name
+    public var RIDT: RIDTField // Repair Data
+    public var ICON: FILEField // Inventory Icon
+    public var SCRI: FMIDField<SCPTRecord> // Script Name
+    
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard format == .TES3 else {

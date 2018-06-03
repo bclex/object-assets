@@ -43,6 +43,9 @@ public class CLMTRecord: Record {
     public var WLSTs = [WLSTField]() // Climate
     public var TNAM: TNAMField // Timing
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

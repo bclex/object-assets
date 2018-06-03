@@ -102,9 +102,9 @@ namespace OA.Tes.FilePacks.Records
             public uint Flags;
             public uint Chance;
 
-            public RDSDField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public RDSDField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     Sound = new FormId<SOUNRecord>(r.ReadASCIIString(32, ASCIIFormat.ZeroPadded));
                     Flags = 0;
@@ -122,14 +122,14 @@ namespace OA.Tes.FilePacks.Records
             public override string ToString() => $"{Weather}";
             public FormId<WTHRRecord> Weather;
             public uint Chance;
-            public static byte SizeOf(GameFormatId formatId) => formatId == GameFormatId.TES4 ? (byte)8 : (byte)12;
+            public static byte SizeOf(GameFormatId format) => format == GameFormatId.TES4 ? (byte)8 : (byte)12;
             public FormId<GLOBRecord> Global;
 
-            public RDWTField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public RDWTField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
                 Weather = new FormId<WTHRRecord>(r.ReadLEUInt32());
                 Chance = r.ReadLEUInt32();
-                Global = formatId == GameFormatId.TES5 ? new FormId<GLOBRecord>(r.ReadLEUInt32()) : new FormId<GLOBRecord>();
+                Global = format == GameFormatId.TES5 ? new FormId<GLOBRecord>(r.ReadLEUInt32()) : new FormId<GLOBRecord>();
             }
         }
 
@@ -191,7 +191,7 @@ namespace OA.Tes.FilePacks.Records
         // TES4
         public List<RPLIField> RPLIs = new List<RPLIField>(); // Region Areas
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -204,7 +204,7 @@ namespace OA.Tes.FilePacks.Records
                 case "BNAM": ICON = new STRVField(r, dataSize); return true;
                 case "RCLR":
                 case "CNAM": RCLR = new CREFField(r, dataSize); return true;
-                case "SNAM": RDATs.Add(new RDATField { RDSDs = new[] { new RDSDField(r, dataSize, formatId) } }); return true;
+                case "SNAM": RDATs.Add(new RDATField { RDSDs = new[] { new RDSDField(r, dataSize, format) } }); return true;
                 case "RPLI": RPLIs.Add(new RPLIField(r, dataSize)); return true;
                 case "RPLD": ArrayUtils.Last(RPLIs).RPLDField(r, dataSize); return true;
                 case "RDAT": RDATs.Add(new RDATField(r, dataSize)); return true;
@@ -212,8 +212,8 @@ namespace OA.Tes.FilePacks.Records
                 case "RDMP": ArrayUtils.Last(RDATs).RDMP = new STRVField(r, dataSize); return true;
                 case "RDGS": var rdgs = ArrayUtils.Last(RDATs).RDGSs = new RDGSField[dataSize / 8]; for (var i = 0; i < rdgs.Length; i++) rdgs[i] = new RDGSField(r, dataSize); return true;
                 case "RDMD": ArrayUtils.Last(RDATs).RDMD = new UI32Field(r, dataSize); return true;
-                case "RDSD": var rdsd = ArrayUtils.Last(RDATs).RDSDs = new RDSDField[dataSize / 12]; for (var i = 0; i < rdsd.Length; i++) rdsd[i] = new RDSDField(r, dataSize, formatId); return true;
-                case "RDWT": var rdwt = ArrayUtils.Last(RDATs).RDWTs = new RDWTField[dataSize / RDWTField.SizeOf(formatId)]; for (var i = 0; i < rdwt.Length; i++) rdwt[i] = new RDWTField(r, dataSize, formatId); return true;
+                case "RDSD": var rdsd = ArrayUtils.Last(RDATs).RDSDs = new RDSDField[dataSize / 12]; for (var i = 0; i < rdsd.Length; i++) rdsd[i] = new RDSDField(r, dataSize, format); return true;
+                case "RDWT": var rdwt = ArrayUtils.Last(RDATs).RDWTs = new RDWTField[dataSize / RDWTField.SizeOf(format)]; for (var i = 0; i < rdwt.Length; i++) rdwt[i] = new RDWTField(r, dataSize, format); return true;
                 default: return false;
             }
         }

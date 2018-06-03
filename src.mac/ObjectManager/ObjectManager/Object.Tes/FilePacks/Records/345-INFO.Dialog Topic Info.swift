@@ -12,41 +12,41 @@ public class INFORecord: Record {
     {
         public int Unknown1;
         public int Disposition;
-        public byte Rank; // (0-10)
-        public byte Gender; // 0xFF = None, 0x00 = Male, 0x01 = Female
-        public byte PCRank; // (0-10)
+        public byte Rank // (0-10)
+        public byte Gender // 0xFF = None, 0x00 = Male, 0x01 = Female
+        public byte PCRank // (0-10)
         public byte Unknown2;
 
         public DATA3Field(UnityBinaryReader r, uint dataSize)
         {
-            Unknown1 = r.ReadLEInt32();
-            Disposition = r.ReadLEInt32();
-            Rank = r.ReadByte();
-            Gender = r.ReadByte();
-            PCRank = r.ReadByte();
-            Unknown2 = r.ReadByte();
+            Unknown1 = r.readLEInt32();
+            Disposition = r.readLEInt32();
+            Rank = r.readByte();
+            Gender = r.readByte();
+            PCRank = r.readByte();
+            Unknown2 = r.readByte();
         }
     }
 
     public class TES3Group
     {
-        public STRVField NNAM; // Next info ID (form a linked list of INFOs for the DIAL). First INFO has an empty PNAM, last has an empty NNAM.
-        public DATA3Field DATA; // Info data
-        public STRVField ONAM; // Actor
-        public STRVField RNAM; // Race
-        public STRVField CNAM; // Class
-        public STRVField FNAM; // Faction 
-        public STRVField ANAM; // Cell
-        public STRVField DNAM; // PC Faction
-        public STRVField NAME; // The info response string (512 max)
-        public FILEField SNAM; // Sound
-        public BYTEField QSTN; // Journal Name
-        public BYTEField QSTF; // Journal Finished
-        public BYTEField QSTR; // Journal Restart
-        public SCPTRecord.CTDAField SCVR; // String for the function/variable choice
-        public UNKNField INTV; //
-        public UNKNField FLTV; // The function/variable result for the previous SCVR
-        public STRVField BNAM; // Result text (not compiled)
+        public STRVField NNAM // Next info ID (form a linked list of INFOs for the DIAL). First INFO has an empty PNAM, last has an empty NNAM.
+        public DATA3Field DATA // Info data
+        public STRVField ONAM // Actor
+        public STRVField RNAM // Race
+        public STRVField CNAM // Class
+        public STRVField FNAM // Faction 
+        public STRVField ANAM // Cell
+        public STRVField DNAM // PC Faction
+        public STRVField NAME // The info response string (512 max)
+        public FILEField SNAM // Sound
+        public BYTEField QSTN // Journal Name
+        public BYTEField QSTF // Journal Finished
+        public BYTEField QSTR // Journal Restart
+        public SCPTRecord.CTDAField SCVR // String for the function/variable choice
+        public UNKNField INTV //
+        public UNKNField FLTV // The function/variable result for the previous SCVR
+        public STRVField BNAM // Result text (not compiled)
     }
 
     // TES4
@@ -58,9 +58,9 @@ public class INFORecord: Record {
 
         public DATA4Field(UnityBinaryReader r, uint dataSize)
         {
-            Type = r.ReadByte();
-            NextSpeaker = r.ReadByte();
-            Flags = dataSize == 3 ? r.ReadByte() : (byte)0;
+            Type = r.readByte();
+            NextSpeaker = r.readByte();
+            Flags = dataSize == 3 ? r.readByte() : (byte)0;
         }
     }
 
@@ -74,21 +74,21 @@ public class INFORecord: Record {
 
         public TRDTField(UnityBinaryReader r, uint dataSize)
         {
-            EmotionType = r.ReadLEUInt32();
-            EmotionValue = r.ReadLEInt32();
-            r.skipBytes(4); // Unused
-            ResponseNumber = r.ReadByte();
-            r.skipBytes(3); // Unused
+            EmotionType = r.readLEUInt32();
+            EmotionValue = r.readLEInt32();
+            r.skipBytes(4) // Unused
+            ResponseNumber = r.readByte();
+            r.skipBytes(3) // Unused
         }
 
         public void NAM1Field(UnityBinaryReader r, uint dataSize)
         {
-            ResponseText = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
+            ResponseText = r.readASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
         }
 
         public void NAM2Field(UnityBinaryReader r, uint dataSize)
         {
-            ActorNotes = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
+            ActorNotes = r.readASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
         }
     }
 
@@ -113,6 +113,9 @@ public class INFORecord: Record {
     public var PNAM: FMIDField<INFORecord> // Previous info ID
     public var TES3 = TES3Group()
     public var TES4 = TES4Group()
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {

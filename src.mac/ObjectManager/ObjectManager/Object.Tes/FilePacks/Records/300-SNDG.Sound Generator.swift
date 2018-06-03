@@ -7,23 +7,18 @@
 //
 
 public class SNDGRecord: Record {
-    public enum SNDGType : uint
-    {
-        LeftFoot = 0,
-        RightFoot = 1,
-        SwimLeft = 2,
-        SwimRight = 3,
-        Moan = 4,
-        Roar = 5,
-        Scream = 6,
-        Land = 7,
+    public enum SNDGType: UInt32 {
+        case leftFoot = 0, rightFoot, swimLeft, swimRight, moan, roar, scream, land = 7
     }
 
     public var description: String { return "SNDG: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public IN32Field DATA; // Sound Type Data
-    public STRVField SNAM; // Sound ID
-    public STRVField? CNAM; // Creature name (optional)
+    public var EDID: STRVField // Editor ID
+    public var DATA: IN32Field // Sound Type Data
+    public var SNAM: STRVField // Sound ID
+    public var CNAM: STRVField? // Creature name (optional)
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard format == .TES3 else {

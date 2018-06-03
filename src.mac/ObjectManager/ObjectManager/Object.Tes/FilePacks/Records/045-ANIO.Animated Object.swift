@@ -12,6 +12,9 @@ public class ANIORecord: Record {
     public var MODL: MODLGroup // Model
     public var DATA: FMIDField<IDLERecord> // IDLE animation
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

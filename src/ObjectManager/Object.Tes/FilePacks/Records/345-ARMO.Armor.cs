@@ -10,30 +10,20 @@ namespace OA.Tes.FilePacks.Records
         {
             public enum ARMOType
             {
-                Helmet = 0,
-                Cuirass = 1,
-                L_Pauldron = 2,
-                R_Pauldron = 3,
-                Greaves = 4,
-                Boots = 5,
-                L_Gauntlet = 6,
-                R_Gauntlet = 7,
-                Shield = 8,
-                L_Bracer = 9,
-                R_Bracer = 10,
+                Helmet = 0, Cuirass, L_Pauldron, R_Pauldron, Greaves, Boots, L_Gauntlet, R_Gauntlet, Shield, L_Bracer, R_Bracer,
             }
 
             public short Armour;
             public int Value;
             public int Health;
             public float Weight;
-            //
+            // TES3
             public int Type;
             public int EnchantPts;
 
-            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     Type = r.ReadLEInt32();
                     Weight = r.ReadLESingle();
@@ -70,7 +60,7 @@ namespace OA.Tes.FilePacks.Records
         public FILEField? ICO2; // Female icon (optional)
         public IN16Field? ANAM; // Enchantment points (optional)
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -82,7 +72,7 @@ namespace OA.Tes.FilePacks.Records
                 case "FULL":
                 case "FNAM": FULL = new STRVField(r, dataSize); return true;
                 case "DATA":
-                case "AODT": DATA = new DATAField(r, dataSize, formatId); return true;
+                case "AODT": DATA = new DATAField(r, dataSize, format); return true;
                 case "ICON":
                 case "ITEX": ICON = new FILEField(r, dataSize); return true;
                 case "INDX": INDXs.Add(new CLOTRecord.INDXFieldGroup { INDX = new INTVField(r, dataSize) }); return true;

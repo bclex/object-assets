@@ -32,6 +32,9 @@ public class AMMORecord: Record {
     public var ANAM: IN16Field? // Enchantment points (optional)
     public var DATA: DATAField // Ammo Data
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

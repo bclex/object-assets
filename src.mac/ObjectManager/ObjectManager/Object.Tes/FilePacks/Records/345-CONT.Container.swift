@@ -10,36 +10,39 @@ public class CONTRecord: Record, IHaveEDID, IHaveMODL {
     // TESX
     public class DATAField
     {
-        public byte Flags; // flags 0x0001 = Organic, 0x0002 = Respawns, organic only, 0x0008 = Default, unknown
+        public byte Flags // flags 0x0001 = Organic, 0x0002 = Respawns, organic only, 0x0008 = Default, unknown
         public float Weight;
 
         public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
         {
             if (formatId == GameFormatId.TES3)
             {
-                Weight = r.ReadLESingle();
+                Weight = r.readLESingle();
                 return;
             }
-            Flags = r.ReadByte();
-            Weight = r.ReadLESingle();
+            Flags = r.readByte();
+            Weight = r.readLESingle();
         }
 
         public void FLAGField(UnityBinaryReader r, uint dataSize)
         {
-            Flags = (byte)r.ReadLEUInt32();
+            Flags = (byte)r.readLEUInt32();
         }
     }
 
     public var description: String { return "CONT: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model
-    public STRVField FULL; // Container Name
-    public DATAField DATA; // Container Data
+    public STRVField EDID  // Editor ID
+    public MODLGroup MODL  // Model
+    public STRVField FULL // Container Name
+    public DATAField DATA // Container Data
     public FMIDField<SCPTRecord>? SCRI;
-    public List<CNTOField> CNTOs = new List<CNTOField>();
+    public List<CNTOField> CNTOs = List<CNTOField>();
     // TES4
-    public FMIDField<SOUNRecord> SNAM; // Open sound
-    public FMIDField<SOUNRecord> QNAM; // Close sound
+    public FMIDField<SOUNRecord> SNAM // Open sound
+    public FMIDField<SOUNRecord> QNAM // Close sound
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

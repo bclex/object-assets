@@ -112,7 +112,7 @@ namespace OA.Tes.FilePacks.Records
         public DATAField DATA; // DATA
         public GNAMField GNAM; // GNAM
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

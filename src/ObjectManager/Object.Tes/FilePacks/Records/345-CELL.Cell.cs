@@ -27,11 +27,11 @@ namespace OA.Tes.FilePacks.Records
             public int GridY;
             public uint Flags;
 
-            public XCLCField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public XCLCField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
                 GridX = r.ReadLEInt32();
                 GridY = r.ReadLEInt32();
-                Flags = formatId == GameFormatId.TES5 ? r.ReadLEUInt32() : 0;
+                Flags = format == GameFormatId.TES5 ? r.ReadLEUInt32() : 0;
             }
         }
 
@@ -50,13 +50,13 @@ namespace OA.Tes.FilePacks.Records
             // TES5
             public float FogPow;
 
-            public XCLLField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public XCLLField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
                 AmbientColor = new ColorRef(r);
                 DirectionalColor = new ColorRef(r);
                 FogColor = new ColorRef(r);
                 FogNear = r.ReadLESingle();
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     FogFar = DirectionalFade = FogClipDist = DirectionalRotationXY = DirectionalRotationZ = 0;
                     FogPow = 0;
@@ -67,7 +67,7 @@ namespace OA.Tes.FilePacks.Records
                 DirectionalRotationZ = r.ReadLEInt32();
                 DirectionalFade = r.ReadLESingle();
                 FogClipDist = r.ReadLESingle();
-                if (formatId == GameFormatId.TES4)
+                if (format == GameFormatId.TES4)
                 {
                     FogPow = 0;
                     return;
@@ -149,7 +149,7 @@ namespace OA.Tes.FilePacks.Records
         public Vector2i GridCoords => new Vector2i(XCLC.Value.GridX, XCLC.Value.GridY);
         public Color? AmbientLight => XCLL != null ? (Color?)XCLL.Value.AmbientColor.ToColor32() : null;
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             if (!InFRMR && type == "FRMR")
                 InFRMR = true;
@@ -160,10 +160,10 @@ namespace OA.Tes.FilePacks.Records
                     case "NAME": EDID = new STRVField(r, dataSize); return true;
                     case "FULL":
                     case "RGNN": FULL = new STRVField(r, dataSize); return true;
-                    case "DATA": DATA = new INTVField(r, formatId == GameFormatId.TES3 ? 4 : dataSize).ToUI16Field(); if (formatId == GameFormatId.TES3) goto case "XCLC"; return true;
-                    case "XCLC": XCLC = new XCLCField(r, dataSize, formatId); return true;
+                    case "DATA": DATA = new INTVField(r, format == GameFormatId.TES3 ? 4 : dataSize).ToUI16Field(); if (format == GameFormatId.TES3) goto case "XCLC"; return true;
+                    case "XCLC": XCLC = new XCLCField(r, dataSize, format); return true;
                     case "XCLL":
-                    case "AMBI": XCLL = new XCLLField(r, dataSize, formatId); return true;
+                    case "AMBI": XCLL = new XCLLField(r, dataSize, format); return true;
                     case "XCLW":
                     case "WHGT": XCLW = new FLTVField(r, dataSize); return true;
                     // TES3

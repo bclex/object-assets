@@ -14,7 +14,7 @@ namespace OA.Tes.FilePacks.Records
         // TES4
         public FMIDField<SOUNRecord> SNAM; // Sound (Optional)
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

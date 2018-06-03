@@ -15,6 +15,9 @@ public class LVLCRecord: Record {
     public var TNAM: FMIDField<CREARecord> // Creature Template (optional)
     public var LVLOs = [LVLIRecord.LVLOField]()
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

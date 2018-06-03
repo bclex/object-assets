@@ -23,7 +23,7 @@ namespace OA.Tes.FilePacks.Records
         public List<FMIDField<QUSTRecord>> QSTIs; // Quests (optional)
         public List<INFORecord> INFOs = new List<INFORecord>(); // Info Records
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {

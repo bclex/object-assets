@@ -263,9 +263,9 @@ namespace OA.Tes.FilePacks
         public uint ItemCount; // Number of the item
         public FormId<Record> Item; // The ID of the item
 
-        public CNTOField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+        public CNTOField(UnityBinaryReader r, int dataSize, GameFormatId format)
         {
-            if (formatId == GameFormatId.TES3)
+            if (format == GameFormatId.TES3)
             {
                 ItemCount = r.ReadLEUInt32();
                 Item = new FormId<Record>(r.ReadASCIIString(32, ASCIIFormat.ZeroPadded));

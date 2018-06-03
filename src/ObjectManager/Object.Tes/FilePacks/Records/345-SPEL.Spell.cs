@@ -16,11 +16,11 @@ namespace OA.Tes.FilePacks.Records
             // TES4
             public int SpellLevel;
 
-            public SPITField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public SPITField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
                 Type = r.ReadLEUInt32();
                 SpellCost = r.ReadLEInt32();
-                SpellLevel = formatId != GameFormatId.TES3 ? r.ReadLEInt32() : 0;
+                SpellLevel = format != GameFormatId.TES3 ? r.ReadLEInt32() : 0;
                 Flags = r.ReadLEUInt32();
             }
         }
@@ -33,7 +33,7 @@ namespace OA.Tes.FilePacks.Records
         // TES4
         public List<ENCHRecord.SCITField> SCITs = new List<ENCHRecord.SCITField>(); // Script effect data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -42,10 +42,10 @@ namespace OA.Tes.FilePacks.Records
                 case "FULL": if (SCITs.Count == 0) FULL = new STRVField(r, dataSize); else ArrayUtils.Last(SCITs).FULLField(r, dataSize); return true;
                 case "FNAM": FULL = new STRVField(r, dataSize); return true;
                 case "SPIT":
-                case "SPDT": SPIT = new SPITField(r, dataSize, formatId); return true;
+                case "SPDT": SPIT = new SPITField(r, dataSize, format); return true;
                 case "EFID": r.SkipBytes(dataSize); return true;
                 case "EFIT":
-                case "ENAM": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, formatId)); return true;
+                case "ENAM": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, format)); return true;
                 case "SCIT": SCITs.Add(new ENCHRecord.SCITField(r, dataSize)); return true;
                 default: return false;
             }

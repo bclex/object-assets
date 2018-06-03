@@ -61,7 +61,7 @@ namespace OA.Tes.FilePacks.Records
         public List<ENCHRecord.EFITField> EFITs = new List<ENCHRecord.EFITField>(); // Effect Data
         public List<ENCHRecord.SCITField> SCITs = new List<ENCHRecord.SCITField>(); // Script effect data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -80,7 +80,7 @@ namespace OA.Tes.FilePacks.Records
                     //
                 case "ENIT": DATA.ENITField(r, dataSize); return true;
                 case "EFID": r.SkipBytes(dataSize); return true;
-                case "EFIT": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, formatId)); return true;
+                case "EFIT": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, format)); return true;
                 case "SCIT": SCITs.Add(new ENCHRecord.SCITField(r, dataSize)); return true;
                 default: return false;
             }

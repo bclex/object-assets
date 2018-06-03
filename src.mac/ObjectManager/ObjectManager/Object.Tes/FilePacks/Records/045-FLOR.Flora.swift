@@ -15,6 +15,9 @@ public class FLORRecord: Record {
     public var PFIG: FMIDField<INGRRecord> // The ingredient the plant produces (optional)
     public var PFPC: BYTVField // Spring, Summer, Fall, Winter Ingredient Production (byte)
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)

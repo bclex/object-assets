@@ -8,161 +8,134 @@
 
 public class SCPTRecord: Record {
     // TESX
-    public struct CTDAField
-    {
-        public enum INFOType : byte
-        {
-            Nothing = 0,
-            Function = 1,
-            Global = 2,
-            Local = 3,
-            Journal = 4,
-            Item = 5,
-            Dead = 6,
-            NotID = 7,
-            NotFaction = 8,
-            NotClass = 9,
-            NotRace = 10,
-            NotCell = 11,
-            NotLocal = 12,
+    public struct CTDAField {
+        public enum INFOType: UInt8 {
+            nothing = 0, function, global, local, journal, item, dead, notId, notFaction, notClass, notRace, notCell, notLocal
         }
 
-        public byte CompareOp; // TES3: 0 = [=], 1 = [!=], 2 = [>], 3 = [>=], 4 = [<], 5 = [<=]
-                                // TES4: 0 = [=], 2 = [!=], 4 = [>], 6 = [>=], 8 = [<], 10 = [<=]
-        public string FunctionId; // (00-71) - sX = Global/Local/Not Local types, JX = Journal type, IX = Item Type, DX = Dead Type, XX = Not ID Type, FX = Not Faction, CX = Not Class, RX = Not Race, LX = Not Cell
+        // TES3: 0 = [=], 1 = [!=], 2 = [>], 3 = [>=], 4 = [<], 5 = [<=]
+        // TES4: 0 = [=], 2 = [!=], 4 = [>], 6 = [>=], 8 = [<], 10 = [<=]
+        public let compareOp: UInt8 
+        // (00-71) - sX = Global/Local/Not Local types, JX = Journal type, IX = Item Type, DX = Dead Type, XX = Not ID Type, FX = Not Faction, CX = Not Class, RX = Not Race, LX = Not Cell
+        public let functionId: String
                                     // TES3
-        public byte Index; // (0-5)
-        public byte Type;
-        public string Name; // Except for the function type, this is the ID for the global/local/etc. Is not nessecarily NULL terminated.The function type SCVR sub-record has
-                            // TES4
-        public float ComparisonValue;
-        public int Parameter1; // Parameter #1
-        public int Parameter2; // Parameter #2
+        public let index: UInt8 // (0-5)
+        public let type: UInt8
+        // Except for the function type, this is the ID for the global/local/etc. Is not nessecarily NULL terminated.The function type SCVR sub-record has
+        public let name: String 
+        // TES4
+        public let comparisonValue: Float
+        public let parameter1: Int32 // Parameter #1
+        public let parameter2: Int32 // Parameter #2
 
-        public CTDAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            if (formatId == GameFormatId.TES3)
-            {
-                Index = r.ReadByte();
-                Type = r.ReadByte();
-                FunctionId = r.ReadASCIIString(2);
-                CompareOp = (byte)(r.ReadByte() * 2);
-                Name = r.ReadASCIIString((int)dataSize - 5);
-                ComparisonValue = Parameter1 = Parameter2 = 0;
-                return;
+        init(_ r: BinaryReader, _ dataSize: Int, for format: GameFormatId) {
+            guard format != .TES3 else {
+                index = r.readByte()
+                type = r.readByte()
+                functionId = r.readASCIIString(2)
+                compareOp = r.readByte() << 1
+                name = r.readASCIIString(dataSize - 5)
+                comparisonValue = parameter1 = parameter2 = 0
+                return
             }
-            CompareOp = r.ReadByte();
-            r.skipBytes(3); // Unused
-            ComparisonValue = r.ReadLESingle();
-            FunctionId = r.ReadASCIIString(4);
-            Parameter1 = r.ReadLEInt32();
-            Parameter2 = r.ReadLEInt32();
-            if (dataSize == 24)
-                r.skipBytes(4); // Unused
-            Index = Type = 0;
-            Name = null;
+            compareOp = r.readByte();
+            r.skipBytes(3) // Unused
+            comparisonValue = r.readLESingle();
+            functionId = r.readASCIIString(4);
+            parameter1 = r.readLEInt32();
+            parameter2 = r.readLEInt32();
+            if dataSize == 24 {
+                r.skipBytes(4) // Unused
+            }
+            index = type = 0
+            name = nil
         }
     }
 
     // TES3
-    public class SCHDField
-    {
-        public override string ToString() => $"{Name}";
-        public string Name;
-        public int NumShorts;
-        public int NumLongs;
-        public int NumFloats;
-        public int ScriptDataSize;
-        public int LocalVarSize;
-        public string[] Variables;
+    public class SCHDField: CustomStringConvertible {
+        public var description: String { return "\(name)" }
+        public let name: String
+        public let numShorts: Int32
+        public let numLongs: Int32
+        public let numFloats: Int32
+        public let scriptDataSize: Int32
+        public let localVarSize: Int32
+        public var variables: [String]? = nil
 
-        public SCHDField(UnityBinaryReader r, uint dataSize)
-        {
-            Name = r.ReadASCIIString(32, ASCIIFormat.ZeroPadded);
-            NumShorts = r.ReadLEInt32();
-            NumLongs = r.ReadLEInt32();
-            NumFloats = r.ReadLEInt32();
-            ScriptDataSize = r.ReadLEInt32();
-            LocalVarSize = r.ReadLEInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            name = r.readASCIIString(32, .zeroPadded)
+            numShorts = r.readLEInt32()
+            numLongs = r.readLEInt32()
+            numFloats = r.readLEInt32()
+            scriptDataSize = r.readLEInt32()
+            localVarSize = r.readLEInt32()
             // SCVRField
-            Variables = null;
+            variables = nil
         }
 
-        public void SCVRField(UnityBinaryReader r, uint dataSize)
-        {
-            Variables = r.ReadASCIIMultiString((int)dataSize);
+        func SCVRField(_ r: BinaryReader, _ dataSize: Int) {
+            variables = r.readASCIIMultiString(dataSize)
         }
     }
-
-    //public struct SCVRField
-    //{
-    //    public override string ToString() => $"{string.Join(",", Values)}";
-    //    public string[] Values;
-
-    //    public SCVRField(UnityBinaryReader r, uint dataSize)
-    //    {
-    //        Values = r.ReadASCIIMultiString((int)dataSize);
-    //    }
-    //}
 
     // TES4
-    public struct SCHRField
-    {
-        public override string ToString() => $"{RefCount}";
-        public uint RefCount;
-        public uint CompiledSize;
-        public uint VariableCount;
-        public uint Type; // 0x000 = Object, 0x001 = Quest, 0x100 = Magic Effect
+    public struct SCHRField: CustomStringConvertible {
+        public var description: String { return "\(refCount)" }
+        public let refCount: UInt32
+        public let compiledSize: UInt32
+        public let variableCount: UInt32
+        public let type: UInt32 // 0x000 = Object, 0x001 = Quest, 0x100 = Magic Effect
 
-        public SCHRField(UnityBinaryReader r, uint dataSize)
-        {
-            r.ReadLEInt32(); // Unused
-            RefCount = r.ReadLEUInt32();
-            CompiledSize = r.ReadLEUInt32();
-            VariableCount = r.ReadLEUInt32();
-            Type = r.ReadLEUInt32();
-            if (dataSize == 20)
-                return;
-            r.skipBytes(dataSize - 20);
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            r.skipBytes(4) // Unused
+            refCount = r.readLEUInt32()
+            compiledSize = r.readLEUInt32()
+            variableCount = r.readLEUInt32()
+            type = r.readLEUInt32()
+            guard dataSize != 20 else {
+                return
+            }    
+            r.skipBytes(dataSize - 20)
         }
     }
 
-    public class SLSDField
-    {
-        public override string ToString() => $"{Idx}:{VariableName}";
-        public uint Idx;
-        public uint Type;
-        public string VariableName;
+    public class SLSDField: CustomStringConvertible {
+        public var description: String { return "\(idx):\(variableName)" }
+        public let idx: UInt32
+        public let type: UInt32
+        public let variableName: String
 
-        public SLSDField(UnityBinaryReader r, uint dataSize)
-        {
-            Idx = r.ReadLEUInt32();
-            r.ReadLEUInt32(); // Unknown
-            r.ReadLEUInt32(); // Unknown
-            r.ReadLEUInt32(); // Unknown
-            Type = r.ReadLEUInt32();
-            r.ReadLEUInt32(); // Unknown
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            idx = r.readLEUInt32()
+            _ = r.readLEUInt32() // Unknown
+            _ = r.readLEUInt32() // Unknown
+            _ = r.readLEUInt32() // Unknown
+            type = r.readLEUInt32()
+            _ = r.readLEUInt32() // Unknown
             // SCVRField
-            VariableName = null;
+            variableName = nil
         }
 
-        public void SCVRField(UnityBinaryReader r, uint dataSize)
-        {
-            VariableName = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
+        func SCVRField(_ r: BinaryReader, _ dataSize: Int) {
+            variableName = r.readASCIIString(dataSize, .possiblyNullTerminated)
         }
     }
 
     public var description: String { return "SCPT: \(EDID ?? SCHD)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public BYTVField SCDA; // Compiled Script
-    public STRVField SCTX; // Script Source
+    public var EDID: STRVField  // Editor ID
+    public var SCDA: BYTVField // Compiled Script
+    public var SCTX: STRVField // Script Source
     // TES3
-    public SCHDField SCHD; // Script Data
+    public var SCHD: SCHDField // Script Data
     // TES4
-    public SCHRField SCHR; // Script Data
-    public List<SLSDField> SLSDs = new List<SLSDField>(); // Variable data
-    public List<SLSDField> SCRVs = new List<SLSDField>(); // Ref variable data (one for each ref declared)
-    public List<FMIDField<Record>> SCROs = new List<FMIDField<Record>>(); // Global variable reference
+    public var SCHR: SCHRField // Script Data
+    public var SLSDs = [SLSDField]() // Variable data
+    public var SCRVs = [SLSDField]() // Ref variable data (one for each ref declared)
+    public var SCROs = [FMIDField<Record>]() // Global variable reference
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

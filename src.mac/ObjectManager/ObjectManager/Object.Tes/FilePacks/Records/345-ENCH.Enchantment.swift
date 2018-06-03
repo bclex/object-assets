@@ -10,39 +10,39 @@ public class ENCHRecord: Record {
     // TESX
     public struct ENITField
     {
-        public int Type; // TES3: 0 = Cast Once, 1 = Cast Strikes, 2 = Cast when Used, 3 = Constant Effect
+        public int Type // TES3: 0 = Cast Once, 1 = Cast Strikes, 2 = Cast when Used, 3 = Constant Effect
                             // TES4: 0 = Scroll, 1 = Staff, 2 = Weapon, 3 = Apparel
         public int EnchantCost;
-        public int ChargeAmount; //: Charge
-        public int Flags; //: AutoCalc
+        public int ChargeAmount //: Charge
+        public int Flags //: AutoCalc
 
         public ENITField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
         {
-            Type = r.ReadLEInt32();
+            Type = r.readLEInt32();
             if (formatId == GameFormatId.TES3)
             {
-                EnchantCost = r.ReadLEInt32();
-                ChargeAmount = r.ReadLEInt32();
+                EnchantCost = r.readLEInt32();
+                ChargeAmount = r.readLEInt32();
             }
             else
             {
-                ChargeAmount = r.ReadLEInt32();
-                EnchantCost = r.ReadLEInt32();
+                ChargeAmount = r.readLEInt32();
+                EnchantCost = r.readLEInt32();
             }
-            Flags = r.ReadLEInt32();
+            Flags = r.readLEInt32();
         }
     }
 
     public class EFITField
     {
         public string EffectId;
-        public int Type; //:RangeType - 0 = Self, 1 = Touch, 2 = Target
+        public int Type //:RangeType - 0 = Self, 1 = Touch, 2 = Target
         public int Area;
         public int Duration;
         public int MagnitudeMin;
         // TES3
-        public byte SkillId; // (-1 if NA)
-        public byte AttributeId; // (-1 if NA)
+        public byte SkillId // (-1 if NA)
+        public byte AttributeId // (-1 if NA)
         public int MagnitudeMax;
         // TES4
         public int ActorValue;
@@ -51,22 +51,22 @@ public class ENCHRecord: Record {
         {
             if (formatId == GameFormatId.TES3)
             {
-                EffectId = r.ReadASCIIString(2);
-                SkillId = r.ReadByte();
-                AttributeId = r.ReadByte();
-                Type = r.ReadLEInt32();
-                Area = r.ReadLEInt32();
-                Duration = r.ReadLEInt32();
-                MagnitudeMin = r.ReadLEInt32();
-                MagnitudeMax = r.ReadLEInt32();
+                EffectId = r.readASCIIString(2);
+                SkillId = r.readByte();
+                AttributeId = r.readByte();
+                Type = r.readLEInt32();
+                Area = r.readLEInt32();
+                Duration = r.readLEInt32();
+                MagnitudeMin = r.readLEInt32();
+                MagnitudeMax = r.readLEInt32();
                 return;
             }
-            EffectId = r.ReadASCIIString(4);
-            MagnitudeMin = r.ReadLEInt32();
-            Area = r.ReadLEInt32();
-            Duration = r.ReadLEInt32();
-            Type = r.ReadLEInt32();
-            ActorValue = r.ReadLEInt32();
+            EffectId = r.readASCIIString(4);
+            MagnitudeMin = r.readLEInt32();
+            Area = r.readLEInt32();
+            Duration = r.readLEInt32();
+            Type = r.readLEInt32();
+            ActorValue = r.readLEInt32();
         }
     }
 
@@ -75,34 +75,37 @@ public class ENCHRecord: Record {
     {
         public string Name;
         public int ScriptFormId;
-        public int School; // 0 = Alteration, 1 = Conjuration, 2 = Destruction, 3 = Illusion, 4 = Mysticism, 5 = Restoration
+        public int School // 0 = Alteration, 1 = Conjuration, 2 = Destruction, 3 = Illusion, 4 = Mysticism, 5 = Restoration
         public string VisualEffect;
         public uint Flags;
 
         public SCITField(UnityBinaryReader r, uint dataSize)
         {
             Name = "Script Effect";
-            ScriptFormId = r.ReadLEInt32();
+            ScriptFormId = r.readLEInt32();
             if (dataSize == 4)
                 return;
-            School = r.ReadLEInt32();
-            VisualEffect = r.ReadASCIIString(4);
-            Flags = dataSize > 12 ? r.ReadLEUInt32() : 0;
+            School = r.readLEInt32();
+            VisualEffect = r.readASCIIString(4);
+            Flags = dataSize > 12 ? r.readLEUInt32() : 0;
         }
 
         public void FULLField(UnityBinaryReader r, uint dataSize)
         {
-            Name = r.ReadASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
+            Name = r.readASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
         }
     }
 
     public var description: String { return "ENCH: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public STRVField FULL; // Enchant name
-    public ENITField ENIT; // Enchant Data
-    public List<EFITField> EFITs = new List<EFITField>(); // Effect Data
+    public STRVField EDID  // Editor ID
+    public STRVField FULL // Enchant name
+    public ENITField ENIT // Enchant Data
+    public List<EFITField> EFITs = List<EFITField>() // Effect Data
     // TES4
-    public List<SCITField> SCITs = new List<SCITField>(); // Script effect data
+    public List<SCITField> SCITs = List<SCITField>() // Script effect data
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

@@ -81,7 +81,10 @@ public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
     public let ENAM: FMIDField<ENCHRecord> // Enchantment ID
     public let SCRI: FMIDField<SCPTRecord> // Script (optional)
     // TES4
-    public let IN16Field? ANAM; // Enchantment points (optional)
+    public let IN16Field? ANAM // Enchantment points (optional)
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

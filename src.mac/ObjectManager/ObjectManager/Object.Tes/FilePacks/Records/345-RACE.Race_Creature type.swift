@@ -67,61 +67,61 @@ public class RACERecord: Record {
             public byte Luck;
         }
 
-        public SkillBoost[] SkillBoosts; // Skill Boosts
+        public SkillBoost[] SkillBoosts // Skill Boosts
         public Gender Male;
         public Gender Female;
-        public uint Flags; // 1 = Playable 2 = Beast Race
+        public uint Flags // 1 = Playable 2 = Beast Race
 
         public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
         {
-            Male = new Gender();
-            Female = new Gender();
-            SkillBoosts = new SkillBoost[7];
+            Male = Gender();
+            Female = Gender();
+            SkillBoosts = SkillBoost[7];
             if (formatId == GameFormatId.TES3)
             {
                 for (var i = 0; i < SkillBoosts.Length; i++)
-                    SkillBoosts[i] = new SkillBoost { SkillId = (byte)r.ReadLEInt32(), Bonus = (sbyte)r.ReadLEInt32() };
-                Male.Strength = (byte)r.ReadLEInt32(); Female.Strength = (byte)r.ReadLEInt32();
-                Male.Intelligence = (byte)r.ReadLEInt32(); Female.Intelligence = (byte)r.ReadLEInt32();
-                Male.Willpower = (byte)r.ReadLEInt32(); Female.Willpower = (byte)r.ReadLEInt32();
-                Male.Agility = (byte)r.ReadLEInt32(); Female.Agility = (byte)r.ReadLEInt32();
-                Male.Speed = (byte)r.ReadLEInt32(); Female.Speed = (byte)r.ReadLEInt32();
-                Male.Endurance = (byte)r.ReadLEInt32(); Female.Endurance = (byte)r.ReadLEInt32();
-                Male.Personality = (byte)r.ReadLEInt32(); Female.Personality = (byte)r.ReadLEInt32();
-                Male.Luck = (byte)r.ReadLEInt32(); Female.Luck = (byte)r.ReadLEInt32();
-                Male.Height = r.ReadLESingle(); Female.Height = r.ReadLESingle();
-                Male.Weight = r.ReadLESingle(); Female.Weight = r.ReadLESingle();
-                Flags = r.ReadLEUInt32();
+                    SkillBoosts[i] = SkillBoost { SkillId = (byte)r.readLEInt32(), Bonus = (sbyte)r.readLEInt32() };
+                Male.Strength = (byte)r.readLEInt32(); Female.Strength = (byte)r.readLEInt32();
+                Male.Intelligence = (byte)r.readLEInt32(); Female.Intelligence = (byte)r.readLEInt32();
+                Male.Willpower = (byte)r.readLEInt32(); Female.Willpower = (byte)r.readLEInt32();
+                Male.Agility = (byte)r.readLEInt32(); Female.Agility = (byte)r.readLEInt32();
+                Male.Speed = (byte)r.readLEInt32(); Female.Speed = (byte)r.readLEInt32();
+                Male.Endurance = (byte)r.readLEInt32(); Female.Endurance = (byte)r.readLEInt32();
+                Male.Personality = (byte)r.readLEInt32(); Female.Personality = (byte)r.readLEInt32();
+                Male.Luck = (byte)r.readLEInt32(); Female.Luck = (byte)r.readLEInt32();
+                Male.Height = r.readLESingle(); Female.Height = r.readLESingle();
+                Male.Weight = r.readLESingle(); Female.Weight = r.readLESingle();
+                Flags = r.readLEUInt32();
                 return;
             }
             for (var i = 0; i < SkillBoosts.Length; i++)
-                SkillBoosts[i] = new SkillBoost { SkillId = r.ReadByte(), Bonus = (sbyte)r.ReadByte() };
-            r.ReadLEInt16(); // padding
-            Male.Height = r.ReadLESingle();
-            Female.Height = r.ReadLESingle();
-            Male.Weight = r.ReadLESingle();
-            Female.Weight = r.ReadLESingle();
-            Flags = r.ReadLEUInt32();
+                SkillBoosts[i] = SkillBoost { SkillId = r.readByte(), Bonus = (sbyte)r.readByte() };
+            r.readLEInt16() // padding
+            Male.Height = r.readLESingle();
+            Female.Height = r.readLESingle();
+            Male.Weight = r.readLESingle();
+            Female.Weight = r.readLESingle();
+            Flags = r.readLEUInt32();
         }
 
         public void ATTRField(UnityBinaryReader r, uint dataSize)
         {
-            Male.Strength = r.ReadByte();
-            Male.Intelligence = r.ReadByte();
-            Male.Willpower = r.ReadByte();
-            Male.Agility = r.ReadByte();
-            Male.Speed = r.ReadByte();
-            Male.Endurance = r.ReadByte();
-            Male.Personality = r.ReadByte();
-            Male.Luck = r.ReadByte();
-            Female.Strength = r.ReadByte();
-            Female.Intelligence = r.ReadByte();
-            Female.Willpower = r.ReadByte();
-            Female.Agility = r.ReadByte();
-            Female.Speed = r.ReadByte();
-            Female.Endurance = r.ReadByte();
-            Female.Personality = r.ReadByte();
-            Female.Luck = r.ReadByte();
+            Male.Strength = r.readByte();
+            Male.Intelligence = r.readByte();
+            Male.Willpower = r.readByte();
+            Male.Agility = r.readByte();
+            Male.Speed = r.readByte();
+            Male.Endurance = r.readByte();
+            Male.Personality = r.readByte();
+            Male.Luck = r.readByte();
+            Female.Strength = r.readByte();
+            Female.Intelligence = r.readByte();
+            Female.Willpower = r.readByte();
+            Female.Agility = r.readByte();
+            Female.Speed = r.readByte();
+            Female.Endurance = r.readByte();
+            Female.Personality = r.readByte();
+            Female.Luck = r.readByte();
         }
     }
 
@@ -165,36 +165,39 @@ public class RACERecord: Record {
     {
         public FILEField MODL;
         public FLTVField MODB;
-        public List<BodyPartGroup> BodyParts = new List<BodyPartGroup>();
+        public List<BodyPartGroup> BodyParts = List<BodyPartGroup>();
     }
 
     public var description: String { return "RACE: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public STRVField FULL; // Race name
-    public STRVField DESC; // Race description
-    public List<STRVField> SPLOs = new List<STRVField>(); // NPCs: Special power/ability name
+    public STRVField EDID  // Editor ID
+    public STRVField FULL // Race name
+    public STRVField DESC // Race description
+    public List<STRVField> SPLOs = List<STRVField>() // NPCs: Special power/ability name
     // TESX
-    public DATAField DATA; // RADT:DATA/ATTR: Race data/Base Attributes
+    public DATAField DATA // RADT:DATA/ATTR: Race data/Base Attributes
     // TES4
-    public FMID2Field<RACERecord> VNAM; // Voice
-    public FMID2Field<HAIRRecord> DNAM; // Default Hair
-    public BYTEField CNAM; // Default Hair Color
-    public FLTVField PNAM; // FaceGen - Main clamp
-    public FLTVField UNAM; // FaceGen - Face clamp
-    public UNKNField XNAM; // Unknown
+    public FMID2Field<RACERecord> VNAM // Voice
+    public FMID2Field<HAIRRecord> DNAM // Default Hair
+    public BYTEField CNAM // Default Hair Color
+    public FLTVField PNAM // FaceGen - Main clamp
+    public FLTVField UNAM // FaceGen - Face clamp
+    public UNKNField XNAM // Unknown
     //
-    public List<FMIDField<HAIRRecord>> HNAMs = new List<FMIDField<HAIRRecord>>();
-    public List<FMIDField<EYESRecord>> ENAMs = new List<FMIDField<EYESRecord>>();
-    public BYTVField FGGS; // FaceGen Geometry-Symmetric
-    public BYTVField FGGA; // FaceGen Geometry-Asymmetric
-    public BYTVField FGTS; // FaceGen Texture-Symmetric
-    public UNKNField SNAM; // Unknown
+    public List<FMIDField<HAIRRecord>> HNAMs = List<FMIDField<HAIRRecord>>();
+    public List<FMIDField<EYESRecord>> ENAMs = List<FMIDField<EYESRecord>>();
+    public BYTVField FGGS // FaceGen Geometry-Symmetric
+    public BYTVField FGGA // FaceGen Geometry-Asymmetric
+    public BYTVField FGTS // FaceGen Texture-Symmetric
+    public UNKNField SNAM // Unknown
 
     // Parts
     public sbyte NameState;
     public sbyte GenderState;
-    public List<FacePartGroup> FaceParts = new List<FacePartGroup>();
-    public BodyGroup[] Bodys = new[] { new BodyGroup(), new BodyGroup() };
+    public List<FacePartGroup> FaceParts = List<FacePartGroup>();
+    public BodyGroup[] Bodys = new[] { BodyGroup(), BodyGroup() };
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {

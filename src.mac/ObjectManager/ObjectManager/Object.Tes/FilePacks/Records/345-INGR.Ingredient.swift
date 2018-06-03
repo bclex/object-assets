@@ -12,23 +12,23 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
     {
         public float Weight;
         public int Value;
-        public int[] EffectId; // 0 or -1 means no effect
-        public int[] SkillId; // only for Skill related effects, 0 or -1 otherwise
-        public int[] AttributeId; // only for Attribute related effects, 0 or -1 otherwise
+        public int[] EffectId // 0 or -1 means no effect
+        public int[] SkillId // only for Skill related effects, 0 or -1 otherwise
+        public int[] AttributeId // only for Attribute related effects, 0 or -1 otherwise
 
         public IRDTField(UnityBinaryReader r, uint dataSize)
         {
-            Weight = r.ReadLESingle();
-            Value = r.ReadLEInt32();
-            EffectId = new int[4];
+            Weight = r.readLESingle();
+            Value = r.readLEInt32();
+            EffectId = int[4];
             for (var i = 0; i < EffectId.Length; i++)
-                EffectId[i] = r.ReadLEInt32();
-            SkillId = new int[4];
+                EffectId[i] = r.readLEInt32();
+            SkillId = int[4];
             for (var i = 0; i < SkillId.Length; i++)
-                SkillId[i] = r.ReadLEInt32();
-            AttributeId = new int[4];
+                SkillId[i] = r.readLEInt32();
+            AttributeId = int[4];
             for (var i = 0; i < AttributeId.Length; i++)
-                AttributeId[i] = r.ReadLEInt32();
+                AttributeId[i] = r.readLEInt32();
         }
     }
 
@@ -41,27 +41,30 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
 
         public DATAField(UnityBinaryReader r, uint dataSize)
         {
-            Weight = r.ReadLESingle();
+            Weight = r.readLESingle();
         }
 
         public void ENITField(UnityBinaryReader r, uint dataSize)
         {
-            Value = r.ReadLEInt32();
-            Flags = r.ReadLEUInt32();
+            Value = r.readLEInt32();
+            Flags = r.readLEUInt32();
         }
     }
 
     public var description: String { return "INGR: \(EDID)" }
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model Name
-    public STRVField FULL; // Item Name
-    public IRDTField IRDT; // Ingrediant Data //: TES3
-    public DATAField DATA; // Ingrediant Data //: TES4
-    public FILEField ICON; // Inventory Icon
-    public FMIDField<SCPTRecord> SCRI; // Script Name
+    public STRVField EDID  // Editor ID
+    public MODLGroup MODL  // Model Name
+    public STRVField FULL // Item Name
+    public IRDTField IRDT // Ingrediant Data //: TES3
+    public DATAField DATA // Ingrediant Data //: TES4
+    public FILEField ICON // Inventory Icon
+    public FMIDField<SCPTRecord> SCRI // Script Name
     // TES4
-    public List<ENCHRecord.EFITField> EFITs = new List<ENCHRecord.EFITField>(); // Effect Data
-    public List<ENCHRecord.SCITField> SCITs = new List<ENCHRecord.SCITField>(); // Script effect data
+    public List<ENCHRecord.EFITField> EFITs = List<ENCHRecord.EFITField>() // Effect Data
+    public List<ENCHRecord.SCITField> SCITs = List<ENCHRecord.SCITField>() // Script effect data
+
+    init() {
+    }
 
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

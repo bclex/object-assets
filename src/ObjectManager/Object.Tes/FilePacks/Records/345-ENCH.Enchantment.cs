@@ -14,10 +14,10 @@ namespace OA.Tes.FilePacks.Records
             public int ChargeAmount; //: Charge
             public int Flags; //: AutoCalc
 
-            public ENITField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public ENITField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
                 Type = r.ReadLEInt32();
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     EnchantCost = r.ReadLEInt32();
                     ChargeAmount = r.ReadLEInt32();
@@ -45,9 +45,9 @@ namespace OA.Tes.FilePacks.Records
             // TES4
             public int ActorValue;
 
-            public EFITField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public EFITField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                if (formatId == GameFormatId.TES3)
+                if (format == GameFormatId.TES3)
                 {
                     EffectId = r.ReadASCIIString(2);
                     SkillId = r.ReadByte();
@@ -102,7 +102,7 @@ namespace OA.Tes.FilePacks.Records
         // TES4
         public List<SCITField> SCITs = new List<SCITField>(); // Script effect data
 
-        public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
+        public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
@@ -110,10 +110,10 @@ namespace OA.Tes.FilePacks.Records
                 case "NAME": EDID = new STRVField(r, dataSize); return true;
                 case "FULL": if (SCITs.Count == 0) FULL = new STRVField(r, dataSize); else ArrayUtils.Last(SCITs).FULLField(r, dataSize); return true;
                 case "ENIT":
-                case "ENDT": ENIT = new ENITField(r, dataSize, formatId); return true;
+                case "ENDT": ENIT = new ENITField(r, dataSize, format); return true;
                 case "EFID": r.SkipBytes(dataSize); return true;
                 case "EFIT":
-                case "ENAM": EFITs.Add(new EFITField(r, dataSize, formatId)); return true;
+                case "ENAM": EFITs.Add(new EFITField(r, dataSize, format)); return true;
                 case "SCIT": SCITs.Add(new SCITField(r, dataSize)); return true;
                 default: return false;
             }

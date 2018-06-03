@@ -13,6 +13,9 @@ public class EYESRecord: Record {
     public var ICON: FILEField
     public var DATA: BYTEField // Playable
 
+    init() {
+    }
+    
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
