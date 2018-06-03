@@ -23,7 +23,7 @@ public class LOCKRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override string ToString() => $"LOCK: {EDID.Value}";
+    public var description: String { return "LOCK: \(EDID)" }LOCK
     public STRVField EDID { get; set; } // Editor ID
     public MODLGroup MODL { get; set; } // Model Name
     public STRVField FNAM; // Item Name
@@ -31,19 +31,19 @@ public class LOCKRecord: Record, IHaveEDID, IHaveMODL {
     public FILEField ICON; // Inventory Icon
     public FMIDField<SCPTRecord> SCRI; // Script Name
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        if (formatId == GameFormatId.TES3)
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-                case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                case "LKDT": LKDT = new LKDTField(r, dataSize); return true;
-                case "ITEX": ICON = new FILEField(r, dataSize); return true;
-                case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-                default: return false;
-            }
-        return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        guard formatId == GameFormatId.TES3 else {
+            return false
+        }
+        switch type {
+        case "NAME": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "FNAM": FNAM = STRVField(r, dataSize)
+        case "LKDT": LKDT = LKDTField(r, dataSize)
+        case "ITEX": ICON = FILEField(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        default: return false
+        }
+        return true
     }
 }

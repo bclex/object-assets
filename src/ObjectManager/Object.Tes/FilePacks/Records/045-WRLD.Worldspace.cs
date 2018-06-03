@@ -67,7 +67,7 @@ namespace OA.Tes.FilePacks.Records
                 case "NAM0": NAM0 = new NAM0Field(r, dataSize); return true;
                 case "NAM9": NAM0.NAM9Field(r, dataSize); return true;
                 case "SNAM": SNAM = new UI32Field(r, dataSize); return true;
-                case "OFST": r.ReadBytes((int)dataSize); return true;
+                case "OFST": r.SkipBytes(dataSize); return true;
                 default: return false;
             }
         }

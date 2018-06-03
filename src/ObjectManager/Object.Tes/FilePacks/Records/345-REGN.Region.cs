@@ -36,7 +36,7 @@ namespace OA.Tes.FilePacks.Records
                 Type = r.ReadLEUInt32();
                 Flags = (REGNType)r.ReadByte();
                 Priority = r.ReadByte();
-                r.ReadBytes(2); // Unused
+                r.SkipBytes(2); // Unused
             }
         }
 
@@ -64,7 +64,7 @@ namespace OA.Tes.FilePacks.Records
             {
                 Object = new FormId<Record>(r.ReadLEUInt32());
                 ParentIdx = r.ReadLEUInt16();
-                r.ReadBytes(2); // Unused
+                r.SkipBytes(2); // Unused
                 Density = r.ReadLESingle();
                 Clustering = r.ReadByte();
                 MinSlope = r.ReadByte();
@@ -78,7 +78,7 @@ namespace OA.Tes.FilePacks.Records
                 SinkVariance = r.ReadLESingle();
                 SizeVariance = r.ReadLESingle();
                 AngleVariance = new Vector3Int(r.ReadLEUInt16(), r.ReadLEUInt16(), r.ReadLEUInt16());
-                r.ReadBytes(2); // Unused
+                r.SkipBytes(2); // Unused
                 VertexShading = new ColorRef(r);
             }
         }
@@ -91,7 +91,7 @@ namespace OA.Tes.FilePacks.Records
             public RDGSField(UnityBinaryReader r, int dataSize)
             {
                 Grass = new FormId<GRASRecord>(r.ReadLEUInt32());
-                r.ReadBytes(4); // Unused
+                r.SkipBytes(4); // Unused
             }
         }
 
@@ -157,7 +157,7 @@ namespace OA.Tes.FilePacks.Records
                 Blight = r.ReadByte();
                 // v1.3 ESM files add 2 bytes to WEAT subrecords.
                 if (dataSize == 10)
-                    r.ReadBytes(2);
+                    r.SkipBytes(2);
             }
         }
 

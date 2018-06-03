@@ -77,7 +77,7 @@ namespace OA.Core
                 {
                     // Read any extra values.
                     var subchunk1ExtraSize = r.ReadLEUInt16();
-                    r.ReadBytes(subchunk1ExtraSize);
+                    r.SkipBytes(subchunk1ExtraSize);
                 }
                 var subchunk2ID = r.ReadBytes(4); // "data"
                 if (!StringUtils.Equals(subchunk2ID, "data"))

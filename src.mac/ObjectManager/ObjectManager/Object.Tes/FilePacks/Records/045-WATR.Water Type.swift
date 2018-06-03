@@ -65,7 +65,7 @@ public class WATRRecord: Record {
             DeepColor = new ColorRef(r);
             ReflectionColor = new ColorRef(r);
             TextureBlend = r.ReadByte();
-            r.ReadBytes(3); // Unused
+            r.skipBytes(3); // Unused
             if (dataSize == 62)
             {
                 Damage = r.ReadLEUInt16();
@@ -105,7 +105,7 @@ public class WATRRecord: Record {
         }
     }
 
-    public override string ToString() => $"WATR: {EDID.Value}";
+    public var description: String { return "WATR: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public STRVField TNAM; // Texture
     public BYTEField ANAM; // Opacity
@@ -115,19 +115,18 @@ public class WATRRecord: Record {
     public DATAField DATA; // DATA
     public GNAMField GNAM; // GNAM
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "TNAM": TNAM = new STRVField(r, dataSize); return true;
-            case "ANAM": ANAM = new BYTEField(r, dataSize); return true;
-            case "FNAM": FNAM = new BYTEField(r, dataSize); return true;
-            case "MNAM": MNAM = new STRVField(r, dataSize); return true;
-            case "SNAM": SNAM = new FMIDField<SOUNRecord>(r, dataSize); return true;
-            case "DATA": DATA = new DATAField(r, dataSize); return true;
-            case "GNAM": GNAM = new GNAMField(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+            case "EDID": EDID = STRVField(r, dataSize)
+            case "TNAM": TNAM = STRVField(r, dataSize)
+            case "ANAM": ANAM = BYTEField(r, dataSize)
+            case "FNAM": FNAM = BYTEField(r, dataSize)
+            case "MNAM": MNAM = STRVField(r, dataSize)
+            case "SNAM": SNAM = FMIDField<SOUNRecord>(r, dataSize)
+            case "DATA": DATA = DATAField(r, dataSize)
+            case "GNAM": GNAM = GNAMField(r, dataSize)
+            default: return false
         }
+        return true
     }
 }

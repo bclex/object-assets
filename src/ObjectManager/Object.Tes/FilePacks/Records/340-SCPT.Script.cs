@@ -51,13 +51,13 @@ namespace OA.Tes.FilePacks.Records
                     return;
                 }
                 CompareOp = r.ReadByte();
-                r.ReadBytes(3); // Unused
+                r.SkipBytes(3); // Unused
                 ComparisonValue = r.ReadLESingle();
                 FunctionId = r.ReadASCIIString(4);
                 Parameter1 = r.ReadLEInt32();
                 Parameter2 = r.ReadLEInt32();
                 if (dataSize == 24)
-                    r.ReadBytes(4); // Unused
+                    r.SkipBytes(4); // Unused
                 Index = Type = 0;
                 Name = null;
             }
@@ -89,7 +89,7 @@ namespace OA.Tes.FilePacks.Records
 
             public void SCVRField(UnityBinaryReader r, int dataSize)
             {
-                Variables = r.ReadASCIIMultiString((int)dataSize);
+                Variables = r.ReadASCIIMultiString(dataSize);
             }
         }
 
@@ -100,7 +100,7 @@ namespace OA.Tes.FilePacks.Records
 
         //    public SCVRField(UnityBinaryReader r, int dataSize)
         //    {
-        //        Values = r.ReadASCIIMultiString((int)dataSize);
+        //        Values = r.ReadASCIIMultiString(dataSize);
         //    }
         //}
 
@@ -122,7 +122,7 @@ namespace OA.Tes.FilePacks.Records
                 Type = r.ReadLEUInt32();
                 if (dataSize == 20)
                     return;
-                r.ReadBytes((int)dataSize - 20);
+                r.SkipBytes(dataSize - 20);
             }
         }
 

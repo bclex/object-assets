@@ -7,159 +7,168 @@
 //
 
 public class CSTYRecord: Record {
-    public class CSTDField
-    {
-        public byte DodgePercentChance;
-        public byte LeftRightPercentChance;
-        public float DodgeLeftRightTimer_Min;
-        public float DodgeLeftRightTimer_Max;
-        public float DodgeForwardTimer_Min;
-        public float DodgeForwardTimer_Max;
-        public float DodgeBackTimer_Min;
-        public float DodgeBackTimer_Max;
-        public float IdleTimer_Min;
-        public float IdleTimer_Max;
-        public byte BlockPercentChance;
-        public byte AttackPercentChance;
-        public float RecoilStaggerBonusToAttack;
-        public float UnconsciousBonusToAttack;
-        public float HandToHandBonusToAttack;
-        public byte PowerAttackPercentChance;
-        public float RecoilStaggerBonusToPower;
-        public float UnconsciousBonusToPowerAttack;
-        public byte PowerAttack_Normal;
-        public byte PowerAttack_Forward;
-        public byte PowerAttack_Back;
-        public byte PowerAttack_Left;
-        public byte PowerAttack_Right;
-        public float HoldTimer_Min;
-        public float HoldTimer_Max;
-        public byte Flags1;
-        public byte AcrobaticDodgePercentChance;
-        public float RangeMult_Optimal;
-        public float RangeMult_Max;
-        public float SwitchDistance_Melee;
-        public float SwitchDistance_Ranged;
-        public float BuffStandoffDistance;
-        public float RangedStandoffDistance;
-        public float GroupStandoffDistance;
-        public byte RushingAttackPercentChance;
-        public float RushingAttackDistanceMult;
-        public uint Flags2;
+    public class CSTDField {
+        public let dodgePercentChance: UInt8
+        public let leftRightPercentChance: UInt8
+        public let dodgeLeftRightTimer_min: Float
+        public let dodgeLeftRightTimer_max: Float
+        public let dodgeForwardTimer_min: Float
+        public let dodgeForwardTimer_max: Float
+        public let dodgeBackTimer_min: Float
+        public let dodgeBackTimer_max: Float
+        public let idleTimer_min: Float
+        public let idleTimer_max: Float
+        public let blockPercentChance: UInt8
+        public let attackPercentChance: UInt8
+        public let recoilStaggerBonusToAttack: Float
+        public let unconsciousBonusToAttack: Float
+        public let handToHandBonusToAttack: Float
+        public let powerAttackPercentChance: UInt8
+        public let recoilStaggerBonusToPower: Float
+        public let unconsciousBonusToPowerAttack: Float
+        public let powerAttack_normal: UInt8
+        public let powerAttack_forward: UInt8
+        public let powerAttack_back: UInt8
+        public let powerAttack_left: UInt8
+        public let powerAttack_right: UInt8
+        public let holdTimer_min: Float
+        public let holdTimer_max: Float
+        public let flags1: UInt8
+        public let acrobaticDodgePercentChance: UInt8
+        public let rangeMult_optimal: Float
+        public let rangeMult_max: Float
+        public let switchDistance_melee: Float
+        public let switchDistance_ranged: Float
+        public let buffStandoffDistance: Float
+        public let rangedStandoffDistance: Float
+        public let groupStandoffDistance: Float
+        public let rushingAttackPercentChance: UInt8
+        public let rushingAttackDistanceMult: Float
+        public let flags2: UInt32
 
-        public CSTDField(UnityBinaryReader r, uint dataSize)
-        {
-            //if (dataSize != 124 && dataSize != 120 && dataSize != 112 && dataSize != 104 && dataSize != 92 && dataSize != 84)
-            //    DodgePercentChance = 0;
-            DodgePercentChance = r.ReadByte();
-            LeftRightPercentChance = r.ReadByte();
-            r.ReadBytes(2); // Unused
-            DodgeLeftRightTimer_Min = r.ReadLESingle();
-            DodgeLeftRightTimer_Max = r.ReadLESingle();
-            DodgeForwardTimer_Min = r.ReadLESingle();
-            DodgeForwardTimer_Max = r.ReadLESingle();
-            DodgeBackTimer_Min = r.ReadLESingle();
-            DodgeBackTimer_Max = r.ReadLESingle();
-            IdleTimer_Min = r.ReadLESingle();
-            IdleTimer_Max = r.ReadLESingle();
-            BlockPercentChance = r.ReadByte();
-            AttackPercentChance = r.ReadByte();
-            r.ReadBytes(2); // Unused
-            RecoilStaggerBonusToAttack = r.ReadLESingle();
-            UnconsciousBonusToAttack = r.ReadLESingle();
-            HandToHandBonusToAttack = r.ReadLESingle();
-            PowerAttackPercentChance = r.ReadByte();
-            r.ReadBytes(3); // Unused
-            RecoilStaggerBonusToPower = r.ReadLESingle();
-            UnconsciousBonusToPowerAttack = r.ReadLESingle();
-            PowerAttack_Normal = r.ReadByte();
-            PowerAttack_Forward = r.ReadByte();
-            PowerAttack_Back = r.ReadByte();
-            PowerAttack_Left = r.ReadByte();
-            PowerAttack_Right = r.ReadByte();
-            r.ReadBytes(3); // Unused
-            HoldTimer_Min = r.ReadLESingle();
-            HoldTimer_Max = r.ReadLESingle();
-            Flags1 = r.ReadByte();
-            AcrobaticDodgePercentChance = r.ReadByte();
-            r.ReadBytes(2); // Unused
-            if (dataSize == 84) return; RangeMult_Optimal = r.ReadLESingle();
-            RangeMult_Max = r.ReadLESingle();
-            if (dataSize == 92) return; SwitchDistance_Melee = r.ReadLESingle();
-            SwitchDistance_Ranged = r.ReadLESingle();
-            BuffStandoffDistance = r.ReadLESingle();
-            if (dataSize == 104) return; RangedStandoffDistance = r.ReadLESingle();
-            GroupStandoffDistance = r.ReadLESingle();
-            if (dataSize == 112) return; RushingAttackPercentChance = r.ReadByte();
-            r.ReadBytes(3); // Unused
-            RushingAttackDistanceMult = r.ReadLESingle();
-            if (dataSize == 120) return; Flags2 = r.ReadLEUInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            dodgePercentChance = r.readByte()
+            leftRightPercentChance = r.readByte()
+            r.skipBytes(2) // Unused
+            dodgeLeftRightTimer_min = r.readLESingle()
+            dodgeLeftRightTimer_max = r.readLESingle()
+            dodgeForwardTimer_min = r.readLESingle()
+            dodgeForwardTimer_max = r.readLESingle()
+            dodgeBackTimer_min = r.readLESingle()
+            dodgeBackTimer_max = r.readLESingle()
+            idleTimer_min = r.readLESingle()
+            idleTimer_max = r.readLESingle()
+            blockPercentChance = r.readByte()
+            attackPercentChance = r.readByte()
+            r.skipBytes(2) // Unused
+            recoilStaggerBonusToAttack = r.readLESingler()
+            unconsciousBonusToAttack = r.readLESingle()
+            handToHandBonusToAttack = r.readLESingle()
+            powerAttackPercentChance = r.readByte()
+            r.skipBytes(3) // Unused
+            recoilStaggerBonusToPower = r.readLESingle()
+            unconsciousBonusToPowerAttack = r.readLESingle()
+            powerAttack_normal = r.readByte()
+            powerAttack_forward = r.readByte()
+            powerAttack_back = r.readByte()
+            powerAttack_left = r.readByte()
+            powerAttack_right = r.readByte()
+            r.skipBytes(3); // Unused
+            holdTimer_min = r.readLESingle()
+            holdTimer_max = r.readLESingle()
+            flags1 = r.readByte()
+            acrobaticDodgePercentChance = r.readByte()
+            r.skipBytes(2) // Unused
+            guard dataSize != 84 else {
+                rangeMult_optimal = rangeMult_max = 0
+                return
+            }
+            rangeMult_optimal = r.readLESingle()
+            rangeMult_max = r.readLESingle()
+            guard dataSize != 92 else {
+                return
+            }
+            switchDistance_melee = r.readLESingle()
+            switchDistance_Ranged = r.readLESingle()
+            buffStandoffDistance = r.readLESingle()
+            guard dataSize != 104 else {
+                return
+            }
+            rangedStandoffDistance = r.readLESingle()
+            groupStandoffDistance = r.readLESingle()
+            guard dataSize != 112 else {
+                return
+            }
+            rushingAttackPercentChance = r.readByte()
+            r.skipBytes(3) // Unused
+            rushingAttackDistanceMult = r.readLESingle()
+            guard dataSize != 120 else {
+                return
+            }
+            flags2 = r.readLEUInt32()
         }
     }
 
-    public struct CSADField
-    {
-        public float DodgeFatigueModMult;
-        public float DodgeFatigueModBase;
-        public float EncumbSpeedModBase;
-        public float EncumbSpeedModMult;
-        public float DodgeWhileUnderAttackMult;
-        public float DodgeNotUnderAttackMult;
-        public float DodgeBackWhileUnderAttackMult;
-        public float DodgeBackNotUnderAttackMult;
-        public float DodgeForwardWhileAttackingMult;
-        public float DodgeForwardNotAttackingMult;
-        public float BlockSkillModifierMult;
-        public float BlockSkillModifierBase;
-        public float BlockWhileUnderAttackMult;
-        public float BlockNotUnderAttackMult;
-        public float AttackSkillModifierMult;
-        public float AttackSkillModifierBase;
-        public float AttackWhileUnderAttackMult;
-        public float AttackNotUnderAttackMult;
-        public float AttackDuringBlockMult;
-        public float PowerAttFatigueModBase;
-        public float PowerAttFatigueModMult;
+    public struct CSADField {
+        public let dodgeFatigueModMult: Float
+        public let dodgeFatigueModBase: Float
+        public let encumbSpeedModBase: Float
+        public let encumbSpeedModMult: Float
+        public let dodgeWhileUnderAttackMult: Float
+        public let dodgeNotUnderAttackMult: Float
+        public let dodgeBackWhileUnderAttackMult: Float
+        public let dodgeBackNotUnderAttackMult: Float
+        public let dodgeForwardWhileAttackingMult: Float
+        public let dodgeForwardNotAttackingMult: Float
+        public let blockSkillModifierMult: Float
+        public let blockSkillModifierBase: Float
+        public let blockWhileUnderAttackMult: Float
+        public let blockNotUnderAttackMult: Float
+        public let attackSkillModifierMult: Float
+        public let attackSkillModifierBase: Float
+        public let attackWhileUnderAttackMult: Float
+        public let attackNotUnderAttackMult: Float
+        public let attackDuringBlockMult: Float
+        public let powerAttFatigueModBase: Float
+        public let powerAttFatigueModMult: Float
 
-        public CSADField(UnityBinaryReader r, uint dataSize)
-        {
-            DodgeFatigueModMult = r.ReadLESingle();
-            DodgeFatigueModBase = r.ReadLESingle();
-            EncumbSpeedModBase = r.ReadLESingle();
-            EncumbSpeedModMult = r.ReadLESingle();
-            DodgeWhileUnderAttackMult = r.ReadLESingle();
-            DodgeNotUnderAttackMult = r.ReadLESingle();
-            DodgeBackWhileUnderAttackMult = r.ReadLESingle();
-            DodgeBackNotUnderAttackMult = r.ReadLESingle();
-            DodgeForwardWhileAttackingMult = r.ReadLESingle();
-            DodgeForwardNotAttackingMult = r.ReadLESingle();
-            BlockSkillModifierMult = r.ReadLESingle();
-            BlockSkillModifierBase = r.ReadLESingle();
-            BlockWhileUnderAttackMult = r.ReadLESingle();
-            BlockNotUnderAttackMult = r.ReadLESingle();
-            AttackSkillModifierMult = r.ReadLESingle();
-            AttackSkillModifierBase = r.ReadLESingle();
-            AttackWhileUnderAttackMult = r.ReadLESingle();
-            AttackNotUnderAttackMult = r.ReadLESingle();
-            AttackDuringBlockMult = r.ReadLESingle();
-            PowerAttFatigueModBase = r.ReadLESingle();
-            PowerAttFatigueModMult = r.ReadLESingle();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            dodgeFatigueModMult = r.readLESingle()
+            dodgeFatigueModBase = r.readLESingle()
+            encumbSpeedModBase = r.readLESingle()
+            encumbSpeedModMult = r.readLESingle()
+            dodgeWhileUnderAttackMult = r.readLESingle()
+            dodgeNotUnderAttackMult = r.readLESingle()
+            dodgeBackWhileUnderAttackMult = r.readLESingle()
+            dodgeBackNotUnderAttackMult = r.readLESingle()
+            dodgeForwardWhileAttackingMult = r.readLESingle()
+            dodgeForwardNotAttackingMult = r.readLESingle()
+            blockSkillModifierMult = r.readLESingle()
+            blockSkillModifierBase = r.readLESingle()
+            blockWhileUnderAttackMult = r.readLESingle()
+            blockNotUnderAttackMult = r.readLESingle()
+            attackSkillModifierMult = r.readLESingle()
+            attackSkillModifierBase = r.readLESingle()
+            attackWhileUnderAttackMult = r.readLESingle()
+            attackNotUnderAttackMult = r.readLESingle()
+            attackDuringBlockMult = r.readLESingle()
+            powerAttFatigueModBase = r.readLESingle()
+            powerAttFatigueModMult = r.readLESingle()
         }
     }
 
-    public override string ToString() => $"CSTY: {EDID.Value}";
-    public STRVField EDID { get; set; } // Editor ID
-    public CSTDField CSTD; // Standard
-    public CSADField CSAD; // Advanced
+    public var description: String { return "CSTY: \(EDID)" }
+    public var EDID: STRVField // Editor ID
+    public var CSTD: CSTDField // Standard
+    public var CSAD: CSADField // Advanced
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "CSTD": CSTD = new CSTDField(r, dataSize); return true;
-            case "CSAD": CSAD = new CSADField(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "CSTD": CSTD = CSTDField(r, dataSize)
+        case "CSAD": CSAD = CSADField(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

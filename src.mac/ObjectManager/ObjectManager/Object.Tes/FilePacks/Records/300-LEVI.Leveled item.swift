@@ -7,7 +7,7 @@
 //
 
 public class LEVIRecord: Record {
-    public override string ToString() => $"LEVI: {EDID.Value}";
+    public var description: String { return "LEVI: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public IN32Field DATA; // List data - 1 = Calc from all levels <= PC level, 2 = Calc for each item
     public BYTEField NNAM; // Chance None?
@@ -16,19 +16,19 @@ public class LEVIRecord: Record {
     public List<IN16Field> INTVs = new List<IN16Field>(); // PC level for previous INAM
     // The CNAM/INTV can occur many times in pairs
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        if (formatId == GameFormatId.TES3)
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = new IN32Field(r, dataSize); return true;
-                case "NNAM": NNAM = new BYTEField(r, dataSize); return true;
-                case "INDX": INDX = new IN32Field(r, dataSize); return true;
-                case "INAM": INAMs.Add(new STRVField(r, dataSize)); return true;
-                case "INTV": INTVs.Add(new IN16Field(r, dataSize)); return true;
-                default: return false;
-            }
-        return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        guard format == .TES3 else {
+            return false
+        }
+        switch type {
+        case "NAME": EDID = STRVField(r, dataSize)
+        case "DATA": DATA = IN32Field(r, dataSize)
+        case "NNAM": NNAM = BYTEField(r, dataSize)
+        case "INDX": INDX = IN32Field(r, dataSize)
+        case "INAM": INAMs.append(STRVField(r, dataSize))
+        case "INTV": INTVs.append(IN16Field(r, dataSize))
+        default: return false
+        }
+        return true
     }
 }

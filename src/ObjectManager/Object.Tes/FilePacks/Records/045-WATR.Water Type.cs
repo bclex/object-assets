@@ -62,7 +62,7 @@ namespace OA.Tes.FilePacks.Records
                 DeepColor = new ColorRef(r);
                 ReflectionColor = new ColorRef(r);
                 TextureBlend = r.ReadByte();
-                r.ReadBytes(3); // Unused
+                r.SkipBytes(3); // Unused
                 if (dataSize == 62)
                 {
                     Damage = r.ReadLEUInt16();

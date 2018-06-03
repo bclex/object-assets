@@ -26,7 +26,7 @@ public class SKILRecord: Record {
         }
     }
 
-    public override string ToString() => $"SKIL: {INDX.Value}:{EDID.Value}";
+    public var description: String { return "SKIL: \(INDX):\(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public IN32Field INDX; // Skill ID
     public DATAField DATA; // Skill Data
@@ -38,21 +38,20 @@ public class SKILRecord: Record {
     public STRVField ENAM; // Expert Text
     public STRVField MNAM; // Master Text
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "INDX": INDX = new IN32Field(r, dataSize); return true;
-            case "DATA":
-            case "SKDT": DATA = new DATAField(r, dataSize, formatId); return true;
-            case "DESC": DESC = new STRVField(r, dataSize); return true;
-            case "ICON": ICON = new FILEField(r, dataSize); return true;
-            case "ANAM": ANAM = new STRVField(r, dataSize); return true;
-            case "JNAM": JNAM = new STRVField(r, dataSize); return true;
-            case "ENAM": ENAM = new STRVField(r, dataSize); return true;
-            case "MNAM": MNAM = new STRVField(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "INDX": INDX = IN32Field(r, dataSize)
+        case "DATA",
+             "SKDT": DATA = DATAField(r, dataSize, format)
+        case "DESC": DESC = STRVField(r, dataSize)
+        case "ICON": ICON = FILEField(r, dataSize)
+        case "ANAM": ANAM = STRVField(r, dataSize)
+        case "JNAM": JNAM = STRVField(r, dataSize)
+        case "ENAM": ENAM = STRVField(r, dataSize)
+        case "MNAM": MNAM = STRVField(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

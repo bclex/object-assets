@@ -37,11 +37,11 @@ namespace OA.Tes.FilePacks.Records
                 case "ICON": ICON = new FILEField(r, dataSize); return true;
                 case "DATA": DATA = new DATAField(r, dataSize); return true;
                 case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-                case "CTDA": r.ReadBytes((int)dataSize); return true;
-                case "INDX": r.ReadBytes((int)dataSize); return true;
-                case "QSDT": r.ReadBytes((int)dataSize); return true;
-                case "CNAM": r.ReadBytes((int)dataSize); return true;
-                case "QSTA": r.ReadBytes((int)dataSize); return true;
+                case "CTDA": r.SkipBytes(dataSize); return true;
+                case "INDX": r.SkipBytes(dataSize); return true;
+                case "QSDT": r.SkipBytes(dataSize); return true;
+                case "CNAM": r.SkipBytes(dataSize); return true;
+                case "QSTA": r.SkipBytes(dataSize); return true;
                 case "SCHR": SCHR = new SCPTRecord.SCHRField(r, dataSize); return true;
                 case "SCDA": SCDA = new BYTVField(r, dataSize); return true;
                 case "SCTX": SCTX = new STRVField(r, dataSize); return true;

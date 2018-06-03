@@ -52,22 +52,21 @@ public class SOUNRecord: Record, IHaveEDID {
         }
     }
 
-    public override string ToString() => $"SOUN: {EDID.Value}";
+    public var description: String { return "SOUN: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public FILEField FNAM; // Sound Filename (relative to Sounds\)
     public DATAField DATA; // Sound Data
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID":
-            case "NAME": EDID = new STRVField(r, dataSize); return true;
-            case "FNAM": FNAM = new FILEField(r, dataSize); return true;
-            case "SNDX": DATA = new DATAField(r, dataSize, formatId); return true;
-            case "SNDD": DATA = new DATAField(r, dataSize, formatId); return true;
-            case "DATA": DATA = new DATAField(r, dataSize, formatId); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID",
+             "NAME": EDID = STRVField(r, dataSize)
+        case "FNAM": FNAM = FILEField(r, dataSize)
+        case "SNDX": DATA = DATAField(r, dataSize, format)
+        case "SNDD": DATA = DATAField(r, dataSize, format)
+        case "DATA": DATA = DATAField(r, dataSize, format)
+        default: return false
         }
+        return true
     }
 }

@@ -29,7 +29,7 @@ public class MISCRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override string ToString() => $"MISC: {EDID.Value}";
+    public var description: String { return "MISC: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public MODLGroup MODL { get; set; } // Model
     public STRVField FULL; // Item Name
@@ -39,24 +39,23 @@ public class MISCRecord: Record, IHaveEDID, IHaveMODL {
     // TES3
     public FMIDField<ENCHRecord> ENAM; // enchantment ID
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID":
-            case "NAME": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "MODT": MODL.MODTField(r, dataSize); return true;
-            case "FULL":
-            case "FNAM": FULL = new STRVField(r, dataSize); return true;
-            case "DATA":
-            case "MCDT": DATA = new DATAField(r, dataSize, formatId); return true;
-            case "ICON":
-            case "ITEX": ICON = new FILEField(r, dataSize); return true;
-            case "ENAM": ENAM = new FMIDField<ENCHRecord>(r, dataSize); return true;
-            case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID",
+             "NAME": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "FULL",
+             "FNAM": FULL = STRVField(r, dataSize)
+        case "DATA",
+             "MCDT": DATA = DATAField(r, dataSize, format)
+        case "ICON",
+             "ITEX": ICON = FILEField(r, dataSize)
+        case "ENAM": ENAM = FMIDField<ENCHRecord>(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

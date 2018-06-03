@@ -14,7 +14,7 @@ namespace OA.Tes.FilePacks.Records
             {
                 Flags = r.ReadLEUInt16();
                 Type = r.ReadByte();
-                r.ReadBytes((int)dataSize - 3); // Unused
+                r.SkipBytes(dataSize - 3); // Unused
             }
         }
 

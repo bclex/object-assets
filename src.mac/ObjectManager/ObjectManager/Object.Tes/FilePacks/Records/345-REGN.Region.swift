@@ -37,7 +37,7 @@ public class REGNRecord: Record, IHaveEDID {
             Type = r.ReadLEUInt32();
             Flags = (REGNType)r.ReadByte();
             Priority = r.ReadByte();
-            r.ReadBytes(2); // Unused
+            r.skipBytes(2); // Unused
         }
     }
 
@@ -65,7 +65,7 @@ public class REGNRecord: Record, IHaveEDID {
         {
             Object = new FormId<Record>(r.ReadLEUInt32());
             ParentIdx = r.ReadLEUInt16();
-            r.ReadBytes(2); // Unused
+            r.skipBytes(2); // Unused
             Density = r.ReadLESingle();
             Clustering = r.ReadByte();
             MinSlope = r.ReadByte();
@@ -79,7 +79,7 @@ public class REGNRecord: Record, IHaveEDID {
             SinkVariance = r.ReadLESingle();
             SizeVariance = r.ReadLESingle();
             AngleVariance = new Vector3Int(r.ReadLEUInt16(), r.ReadLEUInt16(), r.ReadLEUInt16());
-            r.ReadBytes(2); // Unused
+            r.skipBytes(2); // Unused
             VertexShading = new ColorRef(r);
         }
     }
@@ -92,7 +92,7 @@ public class REGNRecord: Record, IHaveEDID {
         public RDGSField(UnityBinaryReader r, uint dataSize)
         {
             Grass = new FormId<GRASRecord>(r.ReadLEUInt32());
-            r.ReadBytes(4); // Unused
+            r.skipBytes(4); // Unused
         }
     }
 
@@ -158,7 +158,7 @@ public class REGNRecord: Record, IHaveEDID {
             Blight = r.ReadByte();
             // v1.3 ESM files add 2 bytes to WEAT subrecords.
             if (dataSize == 10)
-                r.ReadBytes(2);
+                r.skipBytes(2);
         }
     }
 
@@ -181,7 +181,7 @@ public class REGNRecord: Record, IHaveEDID {
         }
     }
 
-    public override string ToString() => $"REGN: {EDID.Value}";
+    public var description: String { return "REGN: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public STRVField ICON; // Icon / Sleep creature
     public FMIDField<WRLDRecord> WNAM; // Worldspace - Region name
@@ -192,30 +192,29 @@ public class REGNRecord: Record, IHaveEDID {
     // TES4
     public List<RPLIField> RPLIs = new List<RPLIField>(); // Region Areas
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID":
-            case "NAME": EDID = new STRVField(r, dataSize); return true;
-            case "WNAM":
-            case "FNAM": WNAM = new FMIDField<WRLDRecord>(r, dataSize); return true;
-            case "WEAT": WEAT = new WEATField(r, dataSize); return true; //: TES3
-            case "ICON":
-            case "BNAM": ICON = new STRVField(r, dataSize); return true;
-            case "RCLR":
-            case "CNAM": RCLR = new CREFField(r, dataSize); return true;
-            case "SNAM": RDATs.Add(new RDATField { RDSDs = new[] { new RDSDField(r, dataSize, formatId) } }); return true;
-            case "RPLI": RPLIs.Add(new RPLIField(r, dataSize)); return true;
-            case "RPLD": ArrayUtils.Last(RPLIs).RPLDField(r, dataSize); return true;
-            case "RDAT": RDATs.Add(new RDATField(r, dataSize)); return true;
-            case "RDOT": var rdot = ArrayUtils.Last(RDATs).RDOTs = new RDOTField[dataSize / 52]; for (var i = 0; i < rdot.Length; i++) rdot[i] = new RDOTField(r, dataSize); return true;
-            case "RDMP": ArrayUtils.Last(RDATs).RDMP = new STRVField(r, dataSize); return true;
-            case "RDGS": var rdgs = ArrayUtils.Last(RDATs).RDGSs = new RDGSField[dataSize / 8]; for (var i = 0; i < rdgs.Length; i++) rdgs[i] = new RDGSField(r, dataSize); return true;
-            case "RDMD": ArrayUtils.Last(RDATs).RDMD = new UI32Field(r, dataSize); return true;
-            case "RDSD": var rdsd = ArrayUtils.Last(RDATs).RDSDs = new RDSDField[dataSize / 12]; for (var i = 0; i < rdsd.Length; i++) rdsd[i] = new RDSDField(r, dataSize, formatId); return true;
-            case "RDWT": var rdwt = ArrayUtils.Last(RDATs).RDWTs = new RDWTField[dataSize / RDWTField.SizeOf(formatId)]; for (var i = 0; i < rdwt.Length; i++) rdwt[i] = new RDWTField(r, dataSize, formatId); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID",
+             "NAME": EDID = STRVField(r, dataSize)
+        case "WNAM",
+             "FNAM": WNAM = FMIDField<WRLDRecord>(r, dataSize)
+        case "WEAT": WEAT = WEATField(r, dataSize)
+        case "ICON",
+             "BNAM": ICON = STRVField(r, dataSize)
+        case "RCLR",
+             "CNAM": RCLR = CREFField(r, dataSize)
+        case "SNAM": RDATs.append(RDATField(RDSDs: [RDSDField(r, dataSize, format)]))
+        case "RPLI": RPLIs.append(RPLIField(r, dataSize))
+        case "RPLD": RPLIs.last!.RPLDField(r, dataSize)
+        case "RDAT": RDATs.append(RDATField(r, dataSize))
+        case "RDOT": var rdot = RDATs.last!.RDOTs = [RDOTField](); rdot.reserveCapactiy(dataSize / 52); for i in 0..<rdot.capacity { rdot[i] = RDOTField(r, dataSize) }
+        case "RDMP": RDATs.last!.RDMP = STRVField(r, dataSize)
+        case "RDGS": var rdgs = RDATs.last!.RDGSs = [RDGSField](); rdgs.reserveCapacity(dataSize / 8); for i in 0..<rdgs.capacity { rdgs[i] = RDGSField(r, dataSize) }
+        case "RDMD": RDATs.last!.RDMD = UI32Field(r, dataSize)
+        case "RDSD": var rdsd = RDATs.last!.RDSDs = [RDSDField](); rdsd.reserveCapacity(dataSize / 12); for i in 0..<rdsd.capacity { rdsd[i] = RDSDField(r, dataSize, format) }
+        case "RDWT": var rdwt = RDATs.last!.RDWTs = [RDWTField](); rdwt.reserveCapactiy(dataSize / RDWTField.SizeOf(format)); for i in 0..<rdwt.capacity { rdwt[i] = RDWTField(r, dataSize, format) }
+        default: return false
         }
+        return true
     }
 }

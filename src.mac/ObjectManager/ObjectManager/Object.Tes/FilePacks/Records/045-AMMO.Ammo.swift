@@ -7,47 +7,44 @@
 //
 
 public class AMMORecord: Record {
-    public struct DATAField
-    {
-        public float Speed;
-        public uint Flags;
-        public uint Value;
-        public float Weight;
-        public ushort Damage;
+    public struct DATAField {
+        public let speed: Float
+        public let flags: UInt32
+        public let value: UInt32
+        public let weight: Float
+        public let damage: UInt16
 
-        public DATAField(UnityBinaryReader r, uint dataSize)
-        {
-            Speed = r.ReadLESingle();
-            Flags = r.ReadLEUInt32();
-            Value = r.ReadLEUInt32();
-            Weight = r.ReadLESingle();
-            Damage = r.ReadLEUInt16();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            speed = r.readLESingle()
+            flags = r.readLEUInt32()
+            value = r.readLEUInt32()
+            weight = r.readLESingle()
+            damage = r.readLEUInt16()
         }
     }
 
-    public override string ToString() => $"AMMO: {EDID.Value}";
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model
-    public STRVField FULL; // Item Name
-    public FILEField? ICON; // Male Icon (optional)
-    public FMIDField<ENCHRecord>? ENAM; // Enchantment ID (optional)
-    public IN16Field? ANAM; // Enchantment points (optional)
-    public DATAField DATA; // Ammo Data
+    public var description: String { return "AMMO: \(EDID)" }
+    public var EDID: STRVField // Editor ID
+    public var MODL: MODLGroup // Model
+    public var FULL: STRVField // Item Name
+    public var ICON: FILEField? // Male Icon (optional)
+    public var ENAM: FMIDField<ENCHRecord>?  // Enchantment ID (optional)
+    public var ANAM: IN16Field? // Enchantment points (optional)
+    public var DATA: DATAField // Ammo Data
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "MODT": MODL.MODTField(r, dataSize); return true;
-            case "FULL": FULL = new STRVField(r, dataSize); return true;
-            case "ICON": ICON = new FILEField(r, dataSize); return true;
-            case "ENAM": ENAM = new FMIDField<ENCHRecord>(r, dataSize); return true;
-            case "ANAM": ANAM = new IN16Field(r, dataSize); return true;
-            case "DATA": DATA = new DATAField(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "FULL": FULL = STRVField(r, dataSize)
+        case "ICON": ICON = FILEField(r, dataSize)
+        case "ENAM": ENAM = FMIDField<ENCHRecord>(r, dataSize)
+        case "ANAM": ANAM = IN16Field(r, dataSize)
+        case "DATA": DATA = DATAField(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

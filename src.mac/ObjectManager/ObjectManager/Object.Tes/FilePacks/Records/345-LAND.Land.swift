@@ -31,7 +31,7 @@ public class LANDRecord: Record {
             HeightData = new sbyte[dataSize - 4 - 3];
             for (var i = 0; i < HeightData.Length; i++)
                 HeightData[i] = r.ReadSByte();
-            r.ReadBytes(3); // Unused
+            r.skipBytes(3); // Unused
         }
     }
 
@@ -118,7 +118,7 @@ public class LANDRecord: Record {
         public VTXTField(UnityBinaryReader r, uint dataSize)
         {
             Position = r.ReadLEUInt16();
-            r.ReadBytes(2); // Unused
+            r.skipBytes(2); // Unused
             Opacity = r.ReadLESingle();
         }
     }
@@ -129,7 +129,7 @@ public class LANDRecord: Record {
         public VTXTField[] VTXTs;
     }
 
-    public override string ToString() => $"LAND: {INTV}";
+    public var description: String { return "LAND: \(INTV)" }
     public IN32Field DATA; // Unknown (default of 0x09) Changing this value makes the land 'disappear' in the editor.
     public VNMLField VNML; // A RGB color map 65x65 pixels in size representing the land normal vectors.
                             // The signed value of the 'color' represents the vector's component. Blue
@@ -148,23 +148,22 @@ public class LANDRecord: Record {
 
     public Vector2i GridCoords => new Vector2i(INTV.CellX, INTV.CellY);
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "DATA": DATA = new IN32Field(r, dataSize); return true;
-            case "VNML": VNML = new VNMLField(r, dataSize); return true;
-            case "VHGT": VHGT = new VHGTField(r, dataSize); return true;
-            case "VCLR": VCLR = new VNMLField(r, dataSize); return true;
-            case "VTEX": VTEX = new VTEXField(r, dataSize, formatId); return true;
-            // TES3
-            case "INTV": INTV = new CORDField(r, dataSize); return true;
-            case "WNAM": WNAM = new WNAMField(r, dataSize); return true;
-            // TES4
-            case "BTXT": var btxt = new BTXTField(r, dataSize); BTXTs[btxt.Quadrant] = btxt; return true;
-            case "ATXT": if (ATXTs == null) ATXTs = new ATXTGroup[4]; var atxt = new BTXTField(r, dataSize); _lastATXT = ATXTs[atxt.Quadrant] = new ATXTGroup { ATXT = atxt }; return true;
-            case "VTXT": var vtxt = new VTXTField[dataSize >> 3]; for (var i = 0; i < vtxt.Length; i++) vtxt[i] = new VTXTField(r, dataSize); _lastATXT.VTXTs = vtxt; return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "DATA": DATA = IN32Field(r, dataSize)
+        case "VNML": VNML = VNMLField(r, dataSize)
+        case "VHGT": VHGT = VHGTField(r, dataSize)
+        case "VCLR": VCLR = VNMLField(r, dataSize)
+        case "VTEX": VTEX = VTEXField(r, dataSize, format)
+        // TES3
+        case "INTV": INTV = CORDField(r, dataSize)
+        case "WNAM": WNAM = WNAMField(r, dataSize)
+        // TES4
+        case "BTXT": var btxt = BTXTField(r, dataSize); BTXTs[btxt.Quadrant] = btxt
+        case "ATXT": if ATXTs == nil { ATXTs = [ATXTGroup](); ATXTs.reserveCapacity(4) }; let atxt = BTXTField(r, dataSize); _lastATXT = ATXTs[atxt.Quadrant] = ATXTGroup(ATXT: atxt)
+        case "VTXT": var vtxt = [VTXTField](); vtx.reserveCapacity(dataSize >> 3); for i in 0..<vtxt.capacity { vtxt[i] = VTXTField(r, dataSize) }; _lastATXT.VTXTs = vtxt
+        default: return false
         }
+        return true
     }
 }

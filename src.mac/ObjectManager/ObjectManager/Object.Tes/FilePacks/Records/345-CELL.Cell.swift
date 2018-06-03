@@ -123,7 +123,7 @@ public class CELLRecord: Record, ICellRecord {
         public IN32Field? INDX; // Unknown
     }
 
-    public override string ToString() => $"CELL: {FULL.Value}";
+    public var description: String { return "CELL: \(FULL)" }
     public STRVField EDID { get; set; } // Editor ID. Can be an empty string for exterior cells in which case the region name is used instead.
     public STRVField FULL; // Full Name / TES3:RGNN - Region name
     public UI16Field DATA; // Flags
@@ -149,62 +149,65 @@ public class CELLRecord: Record, ICellRecord {
     public Vector2i GridCoords => new Vector2i(XCLC.Value.GridX, XCLC.Value.GridY);
     public Color? AmbientLight => XCLL != null ? (Color?)XCLL.Value.AmbientColor.ToColor32() : null;
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        if (!InFRMR && type == "FRMR")
-            InFRMR = true;
-        if (!InFRMR)
-            switch (type)
-            {
-                case "EDID":
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "FULL":
-                case "RGNN": FULL = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = new INTVField(r, formatId == GameFormatId.TES3 ? 4 : dataSize).ToUI16Field(); if (formatId == GameFormatId.TES3) goto case "XCLC"; return true;
-                case "XCLC": XCLC = new XCLCField(r, dataSize, formatId); return true;
-                case "XCLL":
-                case "AMBI": XCLL = new XCLLField(r, dataSize, formatId); return true;
-                case "XCLW":
-                case "WHGT": XCLW = new FLTVField(r, dataSize); return true;
-                // TES3
-                case "NAM0": NAM0 = new UI32Field(r, dataSize); return true;
-                case "INTV": INTV = new INTVField(r, dataSize); return true;
-                case "NAM5": NAM5 = new CREFField(r, dataSize); return true;
-                // TES4
-                case "XCLR": XCLRs = new FMIDField<REGNRecord>[dataSize >> 2]; for (var i = 0; i < XCLRs.Length; i++) XCLRs[i] = new FMIDField<REGNRecord>(r, 4); return true;
-                case "XCMT": XCMT = new BYTEField(r, dataSize); return true;
-                case "XCCM": XCCM = new FMIDField<CLMTRecord>(r, dataSize); return true;
-                case "XCWT": XCWT = new FMIDField<WATRRecord>(r, dataSize); return true;
-                case "XOWN": XOWNs.Add(new XOWNGroup { XOWN = new FMIDField<Record>(r, dataSize) }); return true;
-                case "XRNK": ArrayUtils.Last(XOWNs).XRNK = new IN32Field(r, dataSize); return true;
-                case "XGLB": ArrayUtils.Last(XOWNs).XGLB = new FMIDField<Record>(r, dataSize); return true;
-                default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        if !InFRMR && type == "FRMR" {
+            InFRMR = true
+        }
+        if !InFRMR {
+            switch type {
+            case "EDID",
+                 "NAME": EDID = STRVField(r, dataSize)
+            case "FULL":
+            case "RGNN": FULL = STRVField(r, dataSize)
+            case "DATA": DATA = INTVField(r, format == .TES3 ? 4 : dataSize).ToUI16Field(); if format == .TES3 { fallthrough }
+            case "XCLC": XCLC = XCLCField(r, dataSize, format)
+            case "XCLL":
+            case "AMBI": XCLL = XCLLField(r, dataSize, format)
+            case "XCLW":
+            case "WHGT": XCLW = FLTVField(r, dataSize)
+            // TES3
+            case "NAM0": NAM0 = UI32Field(r, dataSize)
+            case "INTV": INTV = INTVField(r, dataSize)
+            case "NAM5": NAM5 = CREFField(r, dataSize)
+            // TES4
+            case "XCLR": XCLRs = (FMIDField<REGNRecord>](); XCLRs.reserveCapacity(dataSize >> 2); for i in 0..<XCLRs.capactiy { XCLRs[i] = FMIDField<REGNRecord>(r, 4) }
+            case "XCMT": XCMT = BYTEField(r, dataSize)
+            case "XCCM": XCCM = FMIDField<CLMTRecord>(r, dataSize)
+            case "XCWT": XCWT = FMIDField<WATRRecord>(r, dataSize)
+            case "XOWN": XOWNs.Add(XOWNGroup(XOWN: FMIDField<Record>(r, dataSize)))
+            case "XRNK": XOWNs.last!.XRNK = IN32Field(r, dataSize)
+            case "XGLB": XOWNs.last!.XGLB = FMIDField<Record>(r, dataSize)
+            default: return false
             }
+            return true
+        }
         // Referenced Object Data Grouping
-        else switch (type)
-            {
-                // RefObjDataGroup sub-records
-                case "FRMR": RefObjs.Add(new RefObj()); ArrayUtils.Last(RefObjs).FRMR = new UI32Field(r, dataSize); return true;
-                case "NAME": ArrayUtils.Last(RefObjs).EDID = new STRVField(r, dataSize); return true;
-                case "XSCL": ArrayUtils.Last(RefObjs).XSCL = new FLTVField(r, dataSize); return true;
-                case "DODT": ArrayUtils.Last(RefObjs).DODT = new RefObj.XYZAField(r, dataSize); return true;
-                case "DNAM": ArrayUtils.Last(RefObjs).DNAM = new STRVField(r, dataSize); return true;
-                case "FLTV": ArrayUtils.Last(RefObjs).FLTV = new FLTVField(r, dataSize); return true;
-                case "KNAM": ArrayUtils.Last(RefObjs).KNAM = new STRVField(r, dataSize); return true;
-                case "TNAM": ArrayUtils.Last(RefObjs).TNAM = new STRVField(r, dataSize); return true;
-                case "UNAM": ArrayUtils.Last(RefObjs).UNAM = new BYTEField(r, dataSize); return true;
-                case "ANAM": ArrayUtils.Last(RefObjs).ANAM = new STRVField(r, dataSize); return true;
-                case "BNAM": ArrayUtils.Last(RefObjs).BNAM = new STRVField(r, dataSize); return true;
-                case "INTV": ArrayUtils.Last(RefObjs).INTV = new IN32Field(r, dataSize); return true;
-                case "NAM9": ArrayUtils.Last(RefObjs).NAM9 = new UI32Field(r, dataSize); return true;
-                case "XSOL": ArrayUtils.Last(RefObjs).XSOL = new STRVField(r, dataSize); return true;
-                case "DATA": ArrayUtils.Last(RefObjs).DATA = new RefObj.XYZAField(r, dataSize); return true;
-                //
-                case "CNAM": ArrayUtils.Last(RefObjs).CNAM = new STRVField(r, dataSize); return true;
-                case "NAM0": ArrayUtils.Last(RefObjs).NAM0 = new UI32Field(r, dataSize); return true;
-                case "XCHG": ArrayUtils.Last(RefObjs).XCHG = new IN32Field(r, dataSize); return true;
-                case "INDX": ArrayUtils.Last(RefObjs).INDX = new IN32Field(r, dataSize); return true;
-                default: return false;
+        else {
+            switch type {
+            // RefObjDataGroup sub-records
+            case "FRMR": RefObjs.append(RefObj()); RefObjs.last!.FRMR = UI32Field(r, dataSize)
+            case "NAME": RefObjs.last!.EDID = STRVField(r, dataSize)
+            case "XSCL": RefObjs.last!.XSCL = FLTVField(r, dataSize)
+            case "DODT": RefObjs.last!.DODT = RefObj.XYZAField(r, dataSize)
+            case "DNAM": RefObjs.last!.DNAM = STRVField(r, dataSize)
+            case "FLTV": RefObjs.last!.FLTV = FLTVField(r, dataSize)
+            case "KNAM": RefObjs.last!.KNAM = STRVField(r, dataSize)
+            case "TNAM": RefObjs.last!.TNAM = STRVField(r, dataSize)
+            case "UNAM": RefObjs.last!.UNAM = BYTEField(r, dataSize)
+            case "ANAM": RefObjs.last!.ANAM = STRVField(r, dataSize)
+            case "BNAM": RefObjs.last!.BNAM = STRVField(r, dataSize)
+            case "INTV": RefObjs.last!.INTV = IN32Field(r, dataSize)
+            case "NAM9": RefObjs.last!.NAM9 = UI32Field(r, dataSize)
+            case "XSOL": RefObjs.last!.XSOL = STRVField(r, dataSize)
+            case "DATA": RefObjs.last!.DATA = RefObj.XYZAField(r, dataSize)
+            //
+            case "CNAM": RefObjs.last!.CNAM = STRVField(r, dataSize)
+            case "NAM0": RefObjs.last!.NAM0 = UI32Field(r, dataSize)
+            case "XCHG": RefObjs.last!.XCHG = IN32Field(r, dataSize)
+            case "INDX": RefObjs.last!.INDX = IN32Field(r, dataSize)
+            default: return false
             }
+            return true
+        }
     }
 }

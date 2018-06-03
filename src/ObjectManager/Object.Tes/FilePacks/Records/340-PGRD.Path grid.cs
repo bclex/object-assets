@@ -38,7 +38,7 @@ namespace OA.Tes.FilePacks.Records
             {
                 Point = new Vector3(r.ReadLESingle(), r.ReadLESingle(), r.ReadLESingle());
                 Connections = r.ReadByte();
-                r.ReadBytes(3); // Unused
+                r.SkipBytes(3); // Unused
             }
         }
 
@@ -62,7 +62,7 @@ namespace OA.Tes.FilePacks.Records
             public PGRIField(UnityBinaryReader r, int dataSize)
             {
                 PointId = r.ReadLEInt16();
-                r.ReadBytes(2); // Unused (can merge back)
+                r.SkipBytes(2); // Unused (can merge back)
                 ForeignNode = new Vector3(r.ReadLESingle(), r.ReadLESingle(), r.ReadLESingle());
             }
         }
@@ -79,7 +79,7 @@ namespace OA.Tes.FilePacks.Records
                 for (var i = 0; i < PointIds.Length; i++)
                 {
                     PointIds[i] = r.ReadLEInt16();
-                    r.ReadBytes(2); // Unused (can merge back)
+                    r.SkipBytes(2); // Unused (can merge back)
                 }
             }
         }
@@ -104,7 +104,7 @@ namespace OA.Tes.FilePacks.Records
                 case "PGRP": PGRPs = new PGRPField[dataSize >> 4]; for (var i = 0; i < PGRPs.Length; i++) PGRPs[i] = new PGRPField(r, 16); return true;
                 case "PGRC": PGRC = new UNKNField(r, dataSize); return true;
                 case "PGAG": PGAG = new UNKNField(r, dataSize); return true;
-                case "PGRR": PGRRs = new PGRRField[dataSize >> 2]; for (var i = 0; i < PGRRs.Length; i++) PGRRs[i] = new PGRRField(r, 4); r.ReadBytes((int)(dataSize % 4)); return true;
+                case "PGRR": PGRRs = new PGRRField[dataSize >> 2]; for (var i = 0; i < PGRRs.Length; i++) PGRRs[i] = new PGRRField(r, 4); r.SkipBytes(dataSize % 4); return true;
                 case "PGRL": if (PGRLs == null) PGRLs = new List<PGRLField>(); PGRLs.Add(new PGRLField(r, dataSize)); return true;
                 case "PGRI": PGRIs = new PGRIField[dataSize >> 4]; for (var i = 0; i < PGRIs.Length; i++) PGRIs[i] = new PGRIField(r, 16); return true;
                 default: return false;

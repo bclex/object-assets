@@ -32,6 +32,9 @@ public class TES3Record: Record {
     }
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        guard format == .TES3 else {
+            return false
+        }
         switch type {
         case "HEDR": HEDR = HEDRField(r, dataSize)
         case "MAST": if MASTs == nil { MASTs = [STRVField]() }; MASTs!.append(STRVField(r, dataSize))

@@ -14,15 +14,15 @@ namespace OA.Tes.FilePacks.Records
                 switch (type)
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "STRV": DATA = DATVField.Create(r, dataSize, 's'); return true;
-                    case "INTV": DATA = DATVField.Create(r, dataSize, 'i'); return true;
-                    case "FLTV": DATA = DATVField.Create(r, dataSize, 'f'); return true;
+                    case "STRV": DATA = new DATVField(r, dataSize, 's'); return true;
+                    case "INTV": DATA = new DATVField(r, dataSize, 'i'); return true;
+                    case "FLTV": DATA = new DATVField(r, dataSize, 'f'); return true;
                     default: return false;
                 }
             switch (type)
             {
                 case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = DATVField.Create(r, dataSize, EDID.Value[0]); return true;
+                case "DATA": DATA = new DATVField(r, dataSize, EDID.Value[0]); return true;
                 default: return false;
             }
         }

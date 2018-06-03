@@ -52,13 +52,13 @@ public class SCPTRecord: Record {
                 return;
             }
             CompareOp = r.ReadByte();
-            r.ReadBytes(3); // Unused
+            r.skipBytes(3); // Unused
             ComparisonValue = r.ReadLESingle();
             FunctionId = r.ReadASCIIString(4);
             Parameter1 = r.ReadLEInt32();
             Parameter2 = r.ReadLEInt32();
             if (dataSize == 24)
-                r.ReadBytes(4); // Unused
+                r.skipBytes(4); // Unused
             Index = Type = 0;
             Name = null;
         }
@@ -123,7 +123,7 @@ public class SCPTRecord: Record {
             Type = r.ReadLEUInt32();
             if (dataSize == 20)
                 return;
-            r.ReadBytes((int)dataSize - 20);
+            r.skipBytes(dataSize - 20);
         }
     }
 
@@ -152,7 +152,7 @@ public class SCPTRecord: Record {
         }
     }
 
-    public override string ToString() => $"SCPT: {EDID.Value ?? SCHD.Name}";
+    public var description: String { return "SCPT: \(EDID ?? SCHD)" }
     public STRVField EDID { get; set; } // Editor ID
     public BYTVField SCDA; // Compiled Script
     public STRVField SCTX; // Script Source
@@ -164,22 +164,21 @@ public class SCPTRecord: Record {
     public List<SLSDField> SCRVs = new List<SLSDField>(); // Ref variable data (one for each ref declared)
     public List<FMIDField<Record>> SCROs = new List<FMIDField<Record>>(); // Global variable reference
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "SCHD": SCHD = new SCHDField(r, dataSize); return true;
-            case "SCVR": if (formatId != GameFormatId.TES3) ArrayUtils.Last(SLSDs).SCVRField(r, dataSize); else SCHD.SCVRField(r, dataSize); return true;
-            case "SCDA":
-            case "SCDT": SCDA = new BYTVField(r, dataSize); return true;
-            case "SCTX": SCTX = new STRVField(r, dataSize); return true;
-            // TES4
-            case "SCHR": SCHR = new SCHRField(r, dataSize); return true;
-            case "SLSD": SLSDs.Add(new SLSDField(r, dataSize)); return true;
-            case "SCRO": SCROs.Add(new FMIDField<Record>(r, dataSize)); return true;
-            case "SCRV": var idx = r.ReadLEUInt32(); SCRVs.Add(SLSDs.Single(x => x.Idx == idx)); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "SCHD": SCHD = SCHDField(r, dataSize)
+        case "SCVR": if format != .TES3 { SLSDs.last!.SCVRField(r, dataSize) } else { SCHD.SCVRField(r, dataSize) }
+        case "SCDA":
+        case "SCDT": SCDA = BYTVField(r, dataSize)
+        case "SCTX": SCTX = STRVField(r, dataSize)
+        // TES4
+        case "SCHR": SCHR = SCHRField(r, dataSize)
+        case "SLSD": SLSDs.append(SLSDField(r, dataSize))
+        case "SCRO": SCROs.append(FMIDField<Record>(r, dataSize))
+        case "SCRV": let idx = r.readLEUInt32(); SCRVs.append(SLSDs.first(where: { $0.idx == idx }))
+        default: return false
         }
+        return true
     }
 }

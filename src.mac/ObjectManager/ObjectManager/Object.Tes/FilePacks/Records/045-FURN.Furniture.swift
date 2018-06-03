@@ -7,25 +7,24 @@
 //
 
 public class FURNRecord: Record {
-    public override string ToString() => $"FURN: {EDID.Value}";
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL; // Model
-    public STRVField FULL; // Furniture Name
-    public FMIDField<SCPTRecord> SCRI; // Script (optional)
-    public IN32Field MNAM; // Active marker flags, required. A bit field with a bit value of 1 indicating that the matching marker position in the NIF file is active.
+    public var description: String { return "FURN: \(EDID)" }
+    public var EDID: STRVField // Editor ID
+    public var MODL: MODLGroup // Model
+    public var FULL: STRVField // Furniture Name
+    public var SCRI: FMIDField<SCPTRecord> // Script (optional)
+    public var MNAM: IN32Field // Active marker flags, required. A bit field with a bit value of 1 indicating that the matching marker position in the NIF file is active.
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "MODT": MODL.MODTField(r, dataSize); return true;
-            case "FULL": FULL = new STRVField(r, dataSize); return true;
-            case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-            case "MNAM": MNAM = new IN32Field(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "FULL": FULL = STRVField(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        case "MNAM": MNAM = IN32Field(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

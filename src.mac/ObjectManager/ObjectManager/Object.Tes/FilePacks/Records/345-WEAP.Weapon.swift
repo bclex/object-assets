@@ -72,7 +72,7 @@ public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    // public override string ToString() => $"WEAP: {EDID.Value}";
+    public var description: String { return "WEAP: \(EDID)" }
     public let EDID: STRVField // Editor ID
     public let MODL: MODLGroup // Model
     public let FULL: STRVField // Item Name
@@ -83,24 +83,23 @@ public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
     // TES4
     public let IN16Field? ANAM; // Enchantment points (optional)
 
-    override func createField(r: BinaryReader, forFormat: GameFormatId, type: String, dataSize: UInt) -> Bool
-    {
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-            case "EDID",
-                 "NAME": EDID = STRVField(r, dataSize)
-            case "MODL": MODL = MODLGroup(r, dataSize)
-            case "MODB": MODL.MODBField(r, dataSize)
-            case "MODT": MODL.MODTField(r, dataSize)
-            case "FULL",
-                 "FNAM": FULL = STRVField(r, dataSize)
-            case "DATA",
-                 "WPDT": DATA = DATAField(r, dataSize, formatId)
-            case "ICON",
-                 "ITEX": ICON = FILEField(r, dataSize)
-            case "ENAM": ENAM = FMIDField<ENCHRecord>(r, dataSize)
-            case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
-            case "ANAM": ANAM = IN16Field(r, dataSize)
-            default: return false
+        case "EDID",
+             "NAME": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "FULL",
+             "FNAM": FULL = STRVField(r, dataSize)
+        case "DATA",
+             "WPDT": DATA = DATAField(r, dataSize, formatId)
+        case "ICON",
+             "ITEX": ICON = FILEField(r, dataSize)
+        case "ENAM": ENAM = FMIDField<ENCHRecord>(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        case "ANAM": ANAM = IN16Field(r, dataSize)
+        default: return false
         }
         return true
     }

@@ -55,7 +55,7 @@ public class TREERecord: Record {
         }
     }
 
-    public override string ToString() => $"TREE: {EDID.Value}";
+    public var description: String { return "TREE: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public MODLGroup MODL; // Model
     public FILEField ICON; // Leaf Texture
@@ -63,19 +63,18 @@ public class TREERecord: Record {
     public CNAMField CNAM; // Tree Parameters
     public BNAMField BNAM; // Billboard Dimensions
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "MODT": MODL.MODTField(r, dataSize); return true;
-            case "ICON": ICON = new FILEField(r, dataSize); return true;
-            case "SNAM": SNAM = new SNAMField(r, dataSize); return true;
-            case "CNAM": CNAM = new CNAMField(r, dataSize); return true;
-            case "BNAM": BNAM = new BNAMField(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "ICON": ICON = FILEField(r, dataSize)
+        case "SNAM": SNAM = SNAMField(r, dataSize)
+        case "CNAM": CNAM = CNAMField(r, dataSize)
+        case "BNAM": BNAM = BNAMField(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

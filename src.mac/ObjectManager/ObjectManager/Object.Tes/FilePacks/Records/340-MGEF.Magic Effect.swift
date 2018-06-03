@@ -117,7 +117,7 @@ public class MGEFRecord: Record {
         }
     }
 
-    public override string ToString() => $"MGEF: {INDX.Value}:{EDID.Value}";
+    public var description: String { return "MGEF: \(INDX):\(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public STRVField DESC; // Description
     // TES3
@@ -139,37 +139,37 @@ public class MGEFRecord: Record {
     public DATAField DATA;
     public List<STRVField> ESCEs;
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        if (formatId == GameFormatId.TES3)
-            switch (type)
-            {
-                case "INDX": INDX = new INTVField(r, dataSize); return true;
-                case "MEDT": MEDT = new MEDTField(r, dataSize); return true;
-                case "ITEX": ICON = new FILEField(r, dataSize); return true;
-                case "PTEX": PTEX = new STRVField(r, dataSize); return true;
-                case "CVFX": CVFX = new STRVField(r, dataSize); return true;
-                case "BVFX": BVFX = new STRVField(r, dataSize); return true;
-                case "HVFX": HVFX = new STRVField(r, dataSize); return true;
-                case "AVFX": AVFX = new STRVField(r, dataSize); return true;
-                case "DESC": DESC = new STRVField(r, dataSize); return true;
-                case "CSND": CSND = new STRVField(r, dataSize); return true;
-                case "BSND": BSND = new STRVField(r, dataSize); return true;
-                case "HSND": HSND = new STRVField(r, dataSize); return true;
-                case "ASND": ASND = new STRVField(r, dataSize); return true;
-                default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        if format == .TES3 {
+            switch type {
+            case "INDX": INDX = INTVField(r, dataSize)
+            case "MEDT": MEDT = MEDTField(r, dataSize)
+            case "ITEX": ICON = FILEField(r, dataSize)
+            case "PTEX": PTEX = STRVField(r, dataSize)
+            case "CVFX": CVFX = STRVField(r, dataSize)
+            case "BVFX": BVFX = STRVField(r, dataSize)
+            case "HVFX": HVFX = STRVField(r, dataSize)
+            case "AVFX": AVFX = STRVField(r, dataSize)
+            case "DESC": DESC = STRVField(r, dataSize)
+            case "CSND": CSND = STRVField(r, dataSize)
+            case "BSND": BSND = STRVField(r, dataSize)
+            case "HSND": HSND = STRVField(r, dataSize)
+            case "ASND": ASND = STRVField(r, dataSize)
+            default: return false
             }
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "FULL": FULL = new STRVField(r, dataSize); return true;
-            case "DESC": DESC = new STRVField(r, dataSize); return true;
-            case "ICON": ICON = new FILEField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "DATA": DATA = new DATAField(r, dataSize); return true;
-            case "ESCE": ESCEs = new List<STRVField>(); for (var i = 0; i < dataSize >> 2; i++) ESCEs.Add(new STRVField(r, 4)); return true;
-            default: return false;
+            return true
         }
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "FULL": FULL = STRVField(r, dataSize)
+        case "DESC": DESC = STRVField(r, dataSize)
+        case "ICON": ICON = FILEField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "DATA": DATA = DATAField(r, dataSize)
+        case "ESCE": ESCEs = [STRVField](); for i in 0..<(dataSize >> 2) { ESCEs.append(STRVField(r, 4)) }
+        default: return false
+        }
+        return true
     }
 }

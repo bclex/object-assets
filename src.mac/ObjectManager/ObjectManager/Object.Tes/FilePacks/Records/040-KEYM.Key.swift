@@ -7,15 +7,13 @@
 //
 
 public class KEYMRecord: Record {
-    public struct DATAField
-    {
-        public int Value;
-        public float Weight;
+    public struct DATAField {
+        public let value: Int32
+        public let weight: Float
 
-        public DATAField(UnityBinaryReader r, uint dataSize)
-        {
-            Value = r.ReadLEInt32();
-            Weight = r.ReadLESingle();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            value = r.readLEInt32()
+            weight = r.readLESingle()
         }
     }
 
@@ -27,19 +25,18 @@ public class KEYMRecord: Record {
     public var DATA: DATAField // Type of soul contained in the gem
     public var ICON: FILEField // Icon (optional)
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "MODT": MODL.MODTField(r, dataSize); return true;
-            case "FULL": FULL = new STRVField(r, dataSize); return true;
-            case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-            case "DATA": DATA = new DATAField(r, dataSize); return true;
-            case "ICON": ICON = new FILEField(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "FULL": FULL = Field(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        case "DATA": DATA = DATAField(r, dataSize)
+        case "ICON": ICON = FILEField(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

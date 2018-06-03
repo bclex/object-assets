@@ -32,14 +32,14 @@ namespace OA.Tes.FilePacks.Records
                 MaxSlope = r.ReadByte();
                 r.ReadByte();
                 UnitFromWaterAmount = r.ReadLEUInt16();
-                r.ReadBytes(2);
+                r.SkipBytes(2);
                 UnitFromWaterType = r.ReadLEUInt32();
                 PositionRange = r.ReadLESingle();
                 HeightRange = r.ReadLESingle();
                 ColorRange = r.ReadLESingle();
                 WavePeriod = r.ReadLESingle();
                 Flags = r.ReadByte();
-                r.ReadBytes(3);
+                r.SkipBytes(3);
             }
         }
 

@@ -33,7 +33,7 @@ namespace OA.Tes.FilePacks
 
         public void MODTField(UnityBinaryReader r, int dataSize)
         {
-            Textures = r.ReadBytes((int)dataSize);
+            Textures = r.ReadBytes(dataSize);
         }
 
     }

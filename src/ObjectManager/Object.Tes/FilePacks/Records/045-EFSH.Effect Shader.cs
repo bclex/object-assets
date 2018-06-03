@@ -68,7 +68,7 @@ namespace OA.Tes.FilePacks.Records
                 if (dataSize != 224 && dataSize != 96)
                     Flags = 0;
                 Flags = r.ReadByte();
-                r.ReadBytes(3); // Unused
+                r.SkipBytes(3); // Unused
                 MembraneShader_SourceBlendMode = r.ReadLEUInt32();
                 MembraneShader_BlendOperation = r.ReadLEUInt32();
                 MembraneShader_ZTestFunction = r.ReadLEUInt32();

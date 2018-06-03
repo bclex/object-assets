@@ -21,7 +21,7 @@ public class LTEXRecord: Record, IHaveEDID {
         }
     }
 
-    public override string ToString() => $"LTEX: {EDID.Value}";
+    public var description: String { return "LTEX: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public FILEField ICON; // Texture
     // TES3
@@ -31,20 +31,19 @@ public class LTEXRecord: Record, IHaveEDID {
     public BYTEField SNAM; // Texture specular exponent
     public List<FMIDField<GRASRecord>> GNAMs = new List<FMIDField<GRASRecord>>(); // Potential grass
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID":
-            case "NAME": EDID = new STRVField(r, dataSize); return true;
-            case "INTV": INTV = new INTVField(r, dataSize); return true;
-            case "ICON":
-            case "DATA": ICON = new FILEField(r, dataSize); return true;
-            // TES4
-            case "HNAM": HNAM = new HNAMField(r, dataSize); return true;
-            case "SNAM": SNAM = new BYTEField(r, dataSize); return true;
-            case "GNAM": GNAMs.Add(new FMIDField<GRASRecord>(r, dataSize)); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID",
+             "NAME": EDID = STRVField(r, dataSize)
+        case "INTV": INTV = INTVField(r, dataSize)
+        case "ICON":
+        case "DATA": ICON = FILEField(r, dataSize)
+        // TES4
+        case "HNAM": HNAM = HNAMField(r, dataSize)
+        case "SNAM": SNAM = BYTEField(r, dataSize)
+        case "GNAM": GNAMs.append(FMIDField<GRASRecord>(r, dataSize))
+        default: return false
         }
+        return true
     }
 }

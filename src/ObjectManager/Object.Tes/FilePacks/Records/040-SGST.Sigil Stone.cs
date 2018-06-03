@@ -5,13 +5,13 @@ namespace OA.Tes.FilePacks.Records
 {
     public class SGSTRecord : Record
     {
-        public class DATAField
+        public struct DATAField
         {
             public byte Uses;
             public int Value;
             public float Weight;
 
-            public DATAField(UnityBinaryReader r, int dataSize, GameFormatId formatId)
+            public DATAField(UnityBinaryReader r, int dataSize)
             {
                 Uses = r.ReadByte();
                 Value = r.ReadLEInt32();
@@ -38,10 +38,10 @@ namespace OA.Tes.FilePacks.Records
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "MODT": MODL.MODTField(r, dataSize); return true;
                 case "FULL": if (SCITs.Count == 0) FULL = new STRVField(r, dataSize); else ArrayUtils.Last(SCITs).FULLField(r, dataSize); return true;
-                case "DATA": DATA = new DATAField(r, dataSize, formatId); return true;
+                case "DATA": DATA = new DATAField(r, dataSize); return true;
                 case "ICON": ICON = new FILEField(r, dataSize); return true;
                 case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-                case "EFID": r.ReadBytes((int)dataSize); return true;
+                case "EFID": r.SkipBytes(dataSize); return true;
                 case "EFIT": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, formatId)); return true;
                 case "SCIT": SCITs.Add(new ENCHRecord.SCITField(r, dataSize)); return true;
                 default: return false;

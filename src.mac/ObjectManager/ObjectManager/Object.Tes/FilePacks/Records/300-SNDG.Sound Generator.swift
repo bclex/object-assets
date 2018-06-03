@@ -19,23 +19,23 @@ public class SNDGRecord: Record {
         Land = 7,
     }
 
-    public override string ToString() => $"SNDG: {EDID.Value}";
+    public var description: String { return "SNDG: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public IN32Field DATA; // Sound Type Data
     public STRVField SNAM; // Sound ID
     public STRVField? CNAM; // Creature name (optional)
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        if (formatId == GameFormatId.TES3)
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = new IN32Field(r, dataSize); return true;
-                case "SNAM": SNAM = new STRVField(r, dataSize); return true;
-                case "CNAM": CNAM = new STRVField(r, dataSize); return true;
-                default: return false;
-            }
-        return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        guard format == .TES3 else {
+            return false
+        }
+        switch type {
+        case "NAME": EDID = STRVField(r, dataSize)
+        case "DATA": DATA = IN32Field(r, dataSize)
+        case "SNAM": SNAM = STRVField(r, dataSize)
+        case "CNAM": CNAM = STRVField(r, dataSize)
+        default: return false
+        }
+        return true
     }
 }

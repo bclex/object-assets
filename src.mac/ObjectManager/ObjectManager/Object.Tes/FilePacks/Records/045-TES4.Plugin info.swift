@@ -30,21 +30,20 @@ public class TES4Record: Record {
     public IN32Field INTV; // unknown
     public IN32Field? INCC; // unknown (Optional)
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "HEDR": HEDR = new HEDRField(r, dataSize); return true;
-            case "OFST": r.ReadBytes((int)dataSize); return true;
-            case "DELE": r.ReadBytes((int)dataSize); return true;
-            case "CNAM": CNAM = new STRVField(r, dataSize); return true;
-            case "SNAM": SNAM = new STRVField(r, dataSize); return true;
-            case "MAST": if (MASTs == null) MASTs = new List<STRVField>(); MASTs.Add(new STRVField(r, dataSize)); return true;
-            case "DATA": if (DATAs == null) DATAs = new List<INTVField>(); DATAs.Add(new INTVField(r, dataSize)); return true;
-            case "ONAM": ONAM = new UNKNField(r, dataSize); return true;
-            case "INTV": INTV = new IN32Field(r, dataSize); return true;
-            case "INCC": INCC = new IN32Field(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "HEDR": HEDR = HEDRField(r, dataSize)
+        case "OFST": r.skipBytes(dataSize)
+        case "DELE": r.skipBytes(dataSize)
+        case "CNAM": CNAM = STRVField(r, dataSize)
+        case "SNAM": SNAM = STRVField(r, dataSize)
+        case "MAST": if MASTs == nil { MASTs = [STRVField]() } MASTs.append(STRVField(r, dataSize))
+        case "DATA": if DATAs == nil { DATAs = [INTVField]() } DATAs.append(INTVField(r, dataSize))
+        case "ONAM": ONAM = UNKNField(r, dataSize)
+        case "INTV": INTV = IN32Field(r, dataSize)
+        case "INCC": INCC = IN32Field(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

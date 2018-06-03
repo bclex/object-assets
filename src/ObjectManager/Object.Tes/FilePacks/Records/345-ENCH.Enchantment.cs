@@ -111,7 +111,7 @@ namespace OA.Tes.FilePacks.Records
                 case "FULL": if (SCITs.Count == 0) FULL = new STRVField(r, dataSize); else ArrayUtils.Last(SCITs).FULLField(r, dataSize); return true;
                 case "ENIT":
                 case "ENDT": ENIT = new ENITField(r, dataSize, formatId); return true;
-                case "EFID": r.ReadBytes((int)dataSize); return true;
+                case "EFID": r.SkipBytes(dataSize); return true;
                 case "EFIT":
                 case "ENAM": EFITs.Add(new EFITField(r, dataSize, formatId)); return true;
                 case "SCIT": SCITs.Add(new SCITField(r, dataSize)); return true;

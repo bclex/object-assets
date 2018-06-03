@@ -79,7 +79,7 @@ namespace OA.Tes.FilePacks.Records
                 case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
                     //
                 case "ENIT": DATA.ENITField(r, dataSize); return true;
-                case "EFID": r.ReadBytes((int)dataSize); return true;
+                case "EFID": r.SkipBytes(dataSize); return true;
                 case "EFIT": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, formatId)); return true;
                 case "SCIT": SCITs.Add(new ENCHRecord.SCITField(r, dataSize)); return true;
                 default: return false;

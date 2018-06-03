@@ -27,7 +27,7 @@ public class SPELRecord: Record {
         }
     }
 
-    public override string ToString() => $"SPEL: {EDID.Value}";
+    public var description: String { return "SPEL: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public STRVField FULL; // Spell name
     public SPITField SPIT; // Spell data
@@ -35,21 +35,20 @@ public class SPELRecord: Record {
     // TES4
     public List<ENCHRecord.SCITField> SCITs = new List<ENCHRecord.SCITField>(); // Script effect data
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID":
-            case "NAME": EDID = new STRVField(r, dataSize); return true;
-            case "FULL": if (SCITs.Count == 0) FULL = new STRVField(r, dataSize); else ArrayUtils.Last(SCITs).FULLField(r, dataSize); return true;
-            case "FNAM": FULL = new STRVField(r, dataSize); return true;
-            case "SPIT":
-            case "SPDT": SPIT = new SPITField(r, dataSize, formatId); return true;
-            case "EFID": r.ReadBytes((int)dataSize); return true;
-            case "EFIT":
-            case "ENAM": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, formatId)); return true;
-            case "SCIT": SCITs.Add(new ENCHRecord.SCITField(r, dataSize)); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID",
+             "NAME": EDID = STRVField(r, dataSize)
+        case "FULL": if SCITs.count == 0 { FULL = STRVField(r, dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
+        case "FNAM": FULL = STRVField(r, dataSize)
+        case "SPIT":
+        case "SPDT": SPIT = SPITField(r, dataSize, format)
+        case "EFID": r.skipBytes(dataSize)
+        case "EFIT",
+             "ENAM": EFITs.append(ENCHRecord.EFITField(r, dataSize, format))
+        case "SCIT": SCITs.append(ENCHRecord.SCITField(r, dataSize))
+        default: return false
         }
+        return true
     }
 }

@@ -30,7 +30,7 @@ public class CONTRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override string ToString() => $"CONT: {EDID.Value}";
+    public var description: String { return "CONT: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public MODLGroup MODL { get; set; } // Model
     public STRVField FULL; // Container Name
@@ -41,26 +41,25 @@ public class CONTRecord: Record, IHaveEDID, IHaveMODL {
     public FMIDField<SOUNRecord> SNAM; // Open sound
     public FMIDField<SOUNRecord> QNAM; // Close sound
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID":
-            case "NAME": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "MODT": MODL.MODTField(r, dataSize); return true;
-            case "FULL":
-            case "FNAM": FULL = new STRVField(r, dataSize); return true;
-            case "DATA":
-            case "CNDT": DATA = new DATAField(r, dataSize, formatId); return true;
-            case "FLAG": DATA.FLAGField(r, dataSize); return true;
-            case "CNTO":
-            case "NPCO": CNTOs.Add(new CNTOField(r, dataSize, formatId)); return true;
-            case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-            case "SNAM": SNAM = new FMIDField<SOUNRecord>(r, dataSize); return true;
-            case "QNAM": QNAM = new FMIDField<SOUNRecord>(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID",
+                "NAME": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "FULL",
+                "FNAM": FULL = STRVField(r, dataSize)
+        case "DATA",
+                "CNDT": DATA = DATAField(r, dataSize, format)
+        case "FLAG": DATA.FLAGField(r, dataSize)
+        case "CNTO",
+                "NPCO": CNTOs.append(CNTOField(r, dataSize, format))
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        case "SNAM": SNAM = FMIDField<SOUNRecord>(r, dataSize)
+        case "QNAM": QNAM = FMIDField<SOUNRecord>(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

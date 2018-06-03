@@ -20,7 +20,7 @@ namespace OA.Tes.FilePacks.Records
         {
             public FADTField(UnityBinaryReader r, int dataSize)
             {
-                r.ReadBytes((int)dataSize);
+                r.SkipBytes(dataSize);
             }
         }
 

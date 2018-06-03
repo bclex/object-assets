@@ -29,7 +29,7 @@ namespace OA.Tes.FilePacks.Records
                 HeightData = new sbyte[dataSize - 4 - 3];
                 for (var i = 0; i < HeightData.Length; i++)
                     HeightData[i] = r.ReadSByte();
-                r.ReadBytes(3); // Unused
+                r.SkipBytes(3); // Unused
             }
         }
 
@@ -116,7 +116,7 @@ namespace OA.Tes.FilePacks.Records
             public VTXTField(UnityBinaryReader r, int dataSize)
             {
                 Position = r.ReadLEUInt16();
-                r.ReadBytes(2); // Unused
+                r.SkipBytes(2); // Unused
                 Opacity = r.ReadLESingle();
             }
         }

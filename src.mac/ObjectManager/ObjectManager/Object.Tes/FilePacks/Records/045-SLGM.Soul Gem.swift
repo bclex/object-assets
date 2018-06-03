@@ -19,7 +19,7 @@ public class SLGMRecord: Record {
         }
     }
 
-    public override string ToString() => $"SLGM: {EDID.Value}";
+    public var description: String { return "SLGM: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public MODLGroup MODL; // Model
     public STRVField FULL; // Item Name
@@ -29,21 +29,20 @@ public class SLGMRecord: Record {
     public BYTEField SOUL; // Type of soul contained in the gem
     public BYTEField SLCP; // Soul gem maximum capacity
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "MODT": MODL.MODTField(r, dataSize); return true;
-            case "FULL": FULL = new STRVField(r, dataSize); return true;
-            case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-            case "DATA": DATA = new DATAField(r, dataSize); return true;
-            case "ICON": ICON = new FILEField(r, dataSize); return true;
-            case "SOUL": SOUL = new BYTEField(r, dataSize); return true;
-            case "SLCP": SLCP = new BYTEField(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "FULL": FULL = STRVField(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        case "DATA": DATA = DATAField(r, dataSize)
+        case "ICON": ICON = FILEField(r, dataSize)
+        case "SOUL": SOUL = BYTEField(r, dataSize)
+        case "SLCP": SLCP = BYTEField(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

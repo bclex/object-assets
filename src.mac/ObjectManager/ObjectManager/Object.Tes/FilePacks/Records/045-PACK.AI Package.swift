@@ -7,85 +7,77 @@
 //
 
 public class PACKRecord: Record {
-    public struct PKDTField
-    {
-        public ushort Flags;
-        public byte Type;
+    public struct PKDTField {
+        public let flags: UInt16
+        public let type: UInt8;
 
-        public PKDTField(UnityBinaryReader r, uint dataSize)
-        {
-            Flags = r.ReadLEUInt16();
-            Type = r.ReadByte();
-            r.ReadBytes((int)dataSize - 3); // Unused
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            flags = r.readLEUInt16()
+            type = r.readByte()
+            r.skipBytes(dataSize - 3) // Unused
         }
     }
 
-    public struct PLDTField
-    {
-        public int Type;
-        public uint Target;
-        public int Radius;
+    public struct PLDTField {
+        public let type: Int32
+        public let target: UInt32
+        public let radius: Int32
 
-        public PLDTField(UnityBinaryReader r, uint dataSize)
-        {
-            Type = r.ReadLEInt32();
-            Target = r.ReadLEUInt32();
-            Radius = r.ReadLEInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            type = r.readLEInt32()
+            target = r.readLEUInt32()
+            radius = r.readLEInt32()
         }
     }
 
-    public struct PSDTField
-    {
-        public byte Month;
-        public byte DayOfWeek;
-        public byte Date;
-        public sbyte Time;
-        public int Duration;
+    public struct PSDTField {
+        public let month: UInt8
+        public let dayOfWeek: UInt8
+        public let date: UInt8
+        public let time: Int8
+        public let duration: Int32
 
-        public PSDTField(UnityBinaryReader r, uint dataSize)
-        {
-            Month = r.ReadByte();
-            DayOfWeek = r.ReadByte();
-            Date = r.ReadByte();
-            Time = (sbyte)r.ReadByte();
-            Duration = r.ReadLEInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            month = r.readByte()
+            dayOfWeek = r.readByte()
+            date = r.readByte()
+            time = Int8(r.readByte())
+            duration = r.readLEInt32()
         }
     }
 
     public struct PTDTField
     {
-        public int Type;
-        public uint Target;
-        public int Count;
+        public let type: Int32
+        public let target: UInt32
+        public let count: Int32
 
-        public PTDTField(UnityBinaryReader r, uint dataSize)
-        {
-            Type = r.ReadLEInt32();
-            Target = r.ReadLEUInt32();
-            Count = r.ReadLEInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            type = r.readLEInt32()
+            target = r.readLEUInt32()
+            count = r.readLEInt32()
         }
     }
 
-    public override string ToString() => $"PACK: {EDID.Value}";
-    public STRVField EDID { get; set; } // Editor ID
-    public PKDTField PKDT; // General
-    public PLDTField PLDT; // Location
-    public PSDTField PSDT; // Schedule
-    public PTDTField PTDT; // Target
-    public List<SCPTRecord.CTDAField> CTDAs = new List<SCPTRecord.CTDAField>(); // Conditions
+    public var description: String { return "PACK: \(EDID)" }
+    public var EDID: STRVField // Editor ID
+    public var PKDT: PKDTField // General
+    public var PLDT: PLDTField // Location
+    public var PSDT: PSDTField // Schedule
+    public var PTDT: PTDTField // Target
+    public var CTDAs = [SCPTRecord.CTDAField]() // Conditions
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "PKDT": PKDT = new PKDTField(r, dataSize); return true;
-            case "PLDT": PLDT = new PLDTField(r, dataSize); return true;
-            case "PSDT": PSDT = new PSDTField(r, dataSize); return true;
-            case "PTDT": PTDT = new PTDTField(r, dataSize); return true;
-            case "CTDA":
-            case "CTDT": CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, formatId)); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "PKDT": PKDT = PKDTField(r, dataSize)
+        case "PLDT": PLDT = PLDTField(r, dataSize)
+        case "PSDT": PSDT = PSDTField(r, dataSize)
+        case "PTDT": PTDT = PTDTField(r, dataSize)
+        case "CTDA",
+             "CTDT": CTDAs.append(SCPTRecord.CTDAField(r, dataSize, format))
+        default: return false
         }
+        return true
     }
 }

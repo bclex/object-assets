@@ -168,7 +168,7 @@ public class RACERecord: Record {
         public List<BodyPartGroup> BodyParts = new List<BodyPartGroup>();
     }
 
-    public override string ToString() => $"RACE: {EDID.Value}";
+    public var description: String { return "RACE: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public STRVField FULL; // Race name
     public STRVField DESC; // Race description
@@ -196,77 +196,78 @@ public class RACERecord: Record {
     public List<FacePartGroup> FaceParts = new List<FacePartGroup>();
     public BodyGroup[] Bodys = new[] { new BodyGroup(), new BodyGroup() };
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        if (formatId == GameFormatId.TES3)
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "FNAM": FULL = new STRVField(r, dataSize); return true;
-                case "RADT": DATA = new DATAField(r, dataSize, formatId); return true;
-                case "NPCS": SPLOs.Add(new STRVField(r, dataSize)); return true;
-                case "DESC": DESC = new STRVField(r, dataSize); return true;
-                default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        if format == .TES3 {
+            switch type {
+            case "NAME": EDID = STRVField(r, dataSize)
+            case "FNAM": FULL = STRVField(r, dataSize)
+            case "RADT": DATA = DATAField(r, dataSize, format)
+            case "NPCS": SPLOs.append(STRVField(r, dataSize))
+            case "DESC": DESC = STRVField(r, dataSize)
+            default: return false
             }
-        if (formatId == GameFormatId.TES4)
-        {
-            switch (NameState)
-            {
-                case 0:
-                    switch (type)
-                    {
-                        case "EDID": EDID = new STRVField(r, dataSize); return true;
-                        case "FULL": FULL = new STRVField(r, dataSize); return true;
-                        case "DESC": DESC = new STRVField(r, dataSize); return true;
-                        case "DATA": DATA = new DATAField(r, dataSize, formatId); return true;
-                        case "SPLO": SPLOs.Add(new STRVField(r, dataSize)); return true;
-                        case "VNAM": VNAM = new FMID2Field<RACERecord>(r, dataSize); return true;
-                        case "DNAM": DNAM = new FMID2Field<HAIRRecord>(r, dataSize); return true;
-                        case "CNAM": CNAM = new BYTEField(r, dataSize); return true;
-                        case "PNAM": PNAM = new FLTVField(r, dataSize); return true;
-                        case "UNAM": UNAM = new FLTVField(r, dataSize); return true;
-                        case "XNAM": XNAM = new UNKNField(r, dataSize); return true;
-                        case "ATTR": DATA.ATTRField(r, dataSize); return true;
-                        case "NAM0": NameState++; return true;
-                        default: return false;
-                    }
-                case 1: // Face Data
-                    switch (type)
-                    {
-                        case "INDX": FaceParts.Add(new FacePartGroup { INDX = new UI32Field(r, dataSize) }); return true;
-                        case "MODL": ArrayUtils.Last(FaceParts).MODL = new MODLGroup(r, dataSize); return true;
-                        case "ICON": ArrayUtils.Last(FaceParts).ICON = new FILEField(r, dataSize); return true;
-                        case "MODB": ArrayUtils.Last(FaceParts).MODL.MODBField(r, dataSize); return true;
-                        case "NAM1": NameState++; return true;
-                        default: return false;
-                    }
-                case 2: // Body Data
-                    switch (type)
-                    {
-                        case "MNAM": GenderState = 0; return true;
-                        case "FNAM": GenderState = 1; return true;
-                        case "MODL": Bodys[GenderState].MODL = new FILEField(r, dataSize); return true;
-                        case "MODB": Bodys[GenderState].MODB = new FLTVField(r, dataSize); return true;
-                        case "INDX": Bodys[GenderState].BodyParts.Add(new BodyPartGroup { INDX = new UI32Field(r, dataSize) }); return true;
-                        case "ICON": ArrayUtils.Last(Bodys[GenderState].BodyParts).ICON = new FILEField(r, dataSize); return true;
-                        case "HNAM": NameState++; break;
-                        default: return false;
-                    }
-                    goto case 3;
-                case 3: // Postamble
-                    switch (type)
-                    {
-                        case "HNAM": for (var i = 0; i < dataSize >> 2; i++) HNAMs.Add(new FMIDField<HAIRRecord>(r, 4)); return true;
-                        case "ENAM": for (var i = 0; i < dataSize >> 2; i++) ENAMs.Add(new FMIDField<EYESRecord>(r, 4)); return true;
-                        case "FGGS": FGGS = new BYTVField(r, dataSize); return true;
-                        case "FGGA": FGGA = new BYTVField(r, dataSize); return true;
-                        case "FGTS": FGTS = new BYTVField(r, dataSize); return true;
-                        case "SNAM": SNAM = new UNKNField(r, dataSize); return true;
-                        default: return false;
-                    }
-                default: return false;
-            }
+            return true
         }
-        return false;
+        else if format == .TES4 {
+            switch NameState {
+            case 0:
+                switch type {
+                case "EDID": EDID = STRVField(r, dataSize)
+                case "FULL": FULL = STRVField(r, dataSize)
+                case "DESC": DESC = STRVField(r, dataSize)
+                case "DATA": DATA = DATAField(r, dataSize, format)
+                case "SPLO": SPLOs.append(STRVField(r, dataSize))
+                case "VNAM": VNAM = FMID2Field<RACERecord>(r, dataSize)
+                case "DNAM": DNAM = FMID2Field<HAIRRecord>(r, dataSize)
+                case "CNAM": CNAM = BYTEField(r, dataSize)
+                case "PNAM": PNAM = FLTVField(r, dataSize)
+                case "UNAM": UNAM = FLTVField(r, dataSize)
+                case "XNAM": XNAM = UNKNField(r, dataSize)
+                case "ATTR": DATA.ATTRField(r, dataSize)
+                case "NAM0": NameState++
+                default: return false
+                }
+                return true
+            case 1: // Face ata
+                switch type {
+                case "INDX": FaceParts.append(FacePartGroup(INDX: UI32Field(r, dataSize)))
+                case "MODL": FaceParts.last!.MODL = MODLGroup(r, dataSize)
+                case "ICON": FaceParts.last!.ICON = FILEField(r, dataSize)
+                case "MODB": FaceParts.last!.MODL.MODBField(r, dataSize)
+                case "NAM1": NameState++
+                default: return false
+                }
+                return true
+            case 2: // Body Data
+                switch type {
+                case "MNAM": GenderState = 0
+                case "FNAM": GenderState = 1
+                case "MODL": Bodys[GenderState].MODL = FILEField(r, dataSize)
+                case "MODB": Bodys[GenderState].MODB = FLTVField(r, dataSize)
+                case "INDX": Bodys[GenderState].BodyParts.append(BodyPartGroup(INDX: UI32Field(r, dataSize)))
+                case "ICON": Bodys[GenderState].BodyParts.last!.ICON = FILEField(r, dataSize)
+                case "HNAM": NameState++
+                default: return false
+                }
+                if NameState == 2 {
+                    return true    
+                }
+                fallthrough
+            case 3: // Postamble
+                switch type {
+                case "HNAM": for i in 0..<(dataSize >> 2) { HNAMs.append(FMIDField<HAIRRecord>(r, 4)) }
+                case "ENAM": for i in 0..<(dataSize >> 2) { ENAMs.append(FMIDField<EYESRecord>(r, 4)) }
+                case "FGGS": FGGS = BYTVField(r, dataSize)
+                case "FGGA": FGGA = BYTVField(r, dataSize)
+                case "FGTS": FGTS = BYTVField(r, dataSize)
+                case "SNAM": SNAM = UNKNField(r, dataSize)
+                default: return false
+                }
+                return true
+            default: return false
+            }
+            return true
+        }
+        fatalError("")
     }
 }

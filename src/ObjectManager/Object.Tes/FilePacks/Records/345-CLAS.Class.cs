@@ -17,7 +17,7 @@ namespace OA.Tes.FilePacks.Records
 
             public DATAField(UnityBinaryReader r, int dataSize)
             {
-                r.ReadBytes((int)dataSize);
+                r.SkipBytes(dataSize);
             }
         }
 
@@ -35,7 +35,7 @@ namespace OA.Tes.FilePacks.Records
                 {
                     case "NAME": EDID = new STRVField(r, dataSize); return true;
                     case "FNAM": FULL = new STRVField(r, dataSize); return true;
-                    case "CLDT": r.ReadBytes((int)dataSize); return true;
+                    case "CLDT": r.SkipBytes(dataSize); return true;
                     case "DESC": DESC = new STRVField(r, dataSize); return true;
                     default: return false;
                 }

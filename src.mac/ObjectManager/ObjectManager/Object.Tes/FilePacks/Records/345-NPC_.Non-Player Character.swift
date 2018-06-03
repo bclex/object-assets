@@ -109,7 +109,7 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override string ToString() => $"NPC_: {EDID.Value}";
+    public var description: String { return "NPC_: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public STRVField FULL; // NPC name
     public MODLGroup MODL { get; set; } // Animation
@@ -134,37 +134,36 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
     public FLTVField? XSCL; // Scale (optional) Only present if the scale is not 1.0
     public FMIDField<SCPTRecord>? SCRI; // Unknown
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID":
-            case "NAME": EDID = new STRVField(r, dataSize); return true;
-            case "FULL":
-            case "FNAM": FULL = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "RNAM": RNAM = new STRVField(r, dataSize); return true;
-            case "ANAM": ANAM = new STRVField(r, dataSize); return true;
-            case "BNAM": BNAM = new STRVField(r, dataSize); return true;
-            case "CNAM": CNAM = new STRVField(r, dataSize); return true;
-            case "KNAM": KNAM = new STRVField(r, dataSize); return true;
-            case "NPDT": NPDT = new NPDTField(r, dataSize); return true;
-            case "FLAG": FLAG = new INTVField(r, dataSize); return true;
-            case "NPCO": NPCOs.Add(new CNTOField(r, dataSize, formatId)); return true;
-            case "NPCS": NPCSs.Add(new STRVField(r, dataSize, ASCIIFormat.ZeroPadded)); return true;
-            case "AIDT": AIDT = new CREARecord.AIDTField(r, dataSize); return true;
-            case "AI_W": AI_W = new CREARecord.AI_WField(r, dataSize, 1); return true;
-            case "AI_T": AI_T = new CREARecord.AI_TField(r, dataSize); return true;
-            case "AI_F": AI_F = new CREARecord.AI_FField(r, dataSize); return true;
-            case "AI_E": AI_E = new CREARecord.AI_FField(r, dataSize); return true;
-            case "CNDT": CNDT = new STRVField(r, dataSize); return true;
-            case "AI_A": AI_A = new CREARecord.AI_AField(r, dataSize); return true;
-            case "DODT": DODT = new DODTField(r, dataSize); return true;
-            case "DNAM": DNAM = new STRVField(r, dataSize); return true;
-            case "XSCL": XSCL = new FLTVField(r, dataSize); return true;
-            case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID",
+             "NAME": EDID = STRVField(r, dataSize)
+        case "FULL",
+             "FNAM": FULL = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "RNAM": RNAM = STRVField(r, dataSize)
+        case "ANAM": ANAM = STRVField(r, dataSize)
+        case "BNAM": BNAM = STRVField(r, dataSize)
+        case "CNAM": CNAM = STRVField(r, dataSize)
+        case "KNAM": KNAM = STRVField(r, dataSize)
+        case "NPDT": NPDT = NPDTField(r, dataSize)
+        case "FLAG": FLAG = INTVField(r, dataSize)
+        case "NPCO": NPCOs.append(CNTOField(r, dataSize, format))
+        case "NPCS": NPCSs.append(STRVField(r, dataSize, .zeroPadded))
+        case "AIDT": AIDT = CREARecord.AIDTField(r, dataSize)
+        case "AI_W": AI_W = CREARecord.AI_WField(r, dataSize, 1)
+        case "AI_T": AI_T = CREARecord.AI_TField(r, dataSize)
+        case "AI_F": AI_F = CREARecord.AI_FField(r, dataSize)
+        case "AI_E": AI_E = CREARecord.AI_FField(r, dataSize)
+        case "CNDT": CNDT = STRVField(r, dataSize)
+        case "AI_A": AI_A = CREARecord.AI_AField(r, dataSize)
+        case "DODT": DODT = DODTField(r, dataSize)
+        case "DNAM": DNAM = STRVField(r, dataSize)
+        case "XSCL": XSCL = FLTVField(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

@@ -7,27 +7,26 @@
 //
 
 public class FLORRecord: Record {
-    public override string ToString() => $"FLOR: {EDID.Value}";
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL; // Model
-    public STRVField FULL; // Plant Name
-    public FMIDField<SCPTRecord> SCRI; // Script (optional)
-    public FMIDField<INGRRecord> PFIG; // The ingredient the plant produces (optional)
-    public BYTVField PFPC; // Spring, Summer, Fall, Winter Ingredient Production (byte)
+    public var description: String { return "FLOR: \(EDID)" }
+    public var EDID: STRVField // Editor ID
+    public var MODL: MODLGroup // Model
+    public var FULL: STRVField // Plant Name
+    public var SCRI: FMIDField<SCPTRecord> // Script (optional)
+    public var PFIG: FMIDField<INGRRecord> // The ingredient the plant produces (optional)
+    public var PFPC: BYTVField // Spring, Summer, Fall, Winter Ingredient Production (byte)
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "MODT": MODL.MODTField(r, dataSize); return true;
-            case "FULL": FULL = new STRVField(r, dataSize); return true;
-            case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-            case "PFIG": PFIG = new FMIDField<INGRRecord>(r, dataSize); return true;
-            case "PFPC": PFPC = new BYTVField(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "FULL": FULL = STRVField(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        case "PFIG": PFIG = FMIDField<INGRRecord>(r, dataSize)
+        case "PFPC": PFPC = BYTVField(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

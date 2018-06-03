@@ -7,43 +7,39 @@
 //
 
 public class LVLIRecord: Record {
-    public struct LVLOField
-    {
-        public short Level;
-        public FormId<Record> ItemFormId;
-        public int Count;
+    public struct LVLOField {
+        public let level: Int16
+        public let itemFormId: FormId<Record>
+        public let count: Int32
 
-        public LVLOField(UnityBinaryReader r, uint dataSize)
-        {
-            Level = r.ReadLEInt16();
-            r.ReadBytes(2); // Unused
-            ItemFormId = new FormId<Record>(r.ReadLEUInt32());
-            if (dataSize == 12)
-            {
-                Count = r.ReadLEInt16();
-                r.ReadBytes(2); // Unused
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            level = r.readLEInt16()
+            r.skipBytes(2) // Unused
+            itemFormId = FormId<Record>(r.readLEUInt32())
+            if dataSize == 12 {
+                count = r.readLEInt16()
+                r.skipBytes(2) // Unused
             }
-            else Count = 0;
+            else count = 0;
         }
     }
 
-    public override string ToString() => $"LVLI: {EDID.Value}";
-    public STRVField EDID { get; set; } // Editor ID
-    public BYTEField LVLD; // Chance
-    public BYTEField LVLF; // Flags - 0x01 = Calculate from all levels <= player's level, 0x02 = Calculate for each item in count
-    public BYTEField? DATA; // Data (optional)
-    public List<LVLOField> LVLOs = new List<LVLOField>();
+    public var description: String { return "LVLI: \(EDID)" }
+    public var EDID: STRVField // Editor ID
+    public var LVLD: BYTEField // Chance
+    public var LVLF: BYTEField // Flags - 0x01 = Calculate from all levels <= player's level, 0x02 = Calculate for each item in count
+    public var DATA: BYTEField? // Data (optional)
+    public var LVLOs = [LVLOField]()
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "LVLD": LVLD = new BYTEField(r, dataSize); return true;
-            case "LVLF": LVLF = new BYTEField(r, dataSize); return true;
-            case "DATA": DATA = new BYTEField(r, dataSize); return true;
-            case "LVLO": LVLOs.Add(new LVLOField(r, dataSize)); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "LVLD": LVLD = BYTEField(r, dataSize)
+        case "LVLF": LVLF = BYTEField(r, dataSize)
+        case "DATA": DATA = BYTEField(r, dataSize)
+        case "LVLO": LVLOs.append(LVLOField(r, dataSize))
+        default: return false
         }
+        return true
     }
 }

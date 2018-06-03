@@ -7,18 +7,18 @@
 //
 
 public class STATRecord: Record, IHaveEDID, IHaveMODL {
-    //public override string ToString() => $"STAT: {EDID.Value}";
+    public var description: String { return "STAT: \(EDID)" }
     public var EDID: STRVField // Editor ID
     public var MODL: MODLGroup // Model
 
-    override func createField(r: BinaryReader, forFormat: GameFormatId, type: String, dataSize: UInt) -> Bool {
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-            case "EDID",
-                 "NAME": EDID = STRVField(r, dataSize)
-            case "MODL": MODL = MODLGroup(r, dataSize)
-            case "MODB": MODL.MODBField(r, dataSize)
-            case "MODT": MODL.MODTField(r, dataSize)
-            default: return false
+        case "EDID",
+             "NAME": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        default: return false
         }
         return true
     }

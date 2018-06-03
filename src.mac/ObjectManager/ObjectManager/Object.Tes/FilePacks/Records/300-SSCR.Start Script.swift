@@ -7,19 +7,19 @@
 //
 
 public class SSCRRecord: Record {
-    public override string ToString() => $"SSCR: {EDID.Value}";
+    public var description: String { return "SSCR: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public STRVField DATA; // Digits
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        if (formatId == GameFormatId.TES3)
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = new STRVField(r, dataSize); return true;
-                default: return false;
-            }
-        return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        guard format == .TES3 else {
+            return false
+        }
+        switch type {
+        case "NAME": EDID = STRVField(r, dataSize)
+        case "DATA": DATA = STRVField(r, dataSize)
+        default: return false
+        }
+        return true
     }
 }

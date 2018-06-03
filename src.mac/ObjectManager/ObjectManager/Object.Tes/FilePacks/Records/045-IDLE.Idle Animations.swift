@@ -7,26 +7,24 @@
 //
 
 public class IDLERecord: Record {
-    public override string ToString() => $"IDLE: {EDID.Value}";
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL;
-    public List<SCPTRecord.CTDAField> CTDAs = new List<SCPTRecord.CTDAField>(); // Conditions
-    public BYTEField ANAM;
-    public FMIDField<IDLERecord>[] DATAs;
+    public var description: String { return "IDLE: \(EDID)" }
+    public var EDID: STRVField // Editor ID
+    public var MODL: MODLGroup
+    public var CTDAs = [SCPTRecord.CTDAField]() // Conditions
+    public var ANAM: BYTEField
+    public var DATAs: [FMIDField<IDLERecord>]
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "CTDA":
-            case "CTDT": CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, formatId)); return true;
-            case "ANAM": ANAM = new BYTEField(r, dataSize); return true;
-            case "DATA": DATAs = new FMIDField<IDLERecord>[dataSize >> 2]; for (var i = 0; i < DATAs.Length; i++) DATAs[i] = new FMIDField<IDLERecord>(r, 4); return true;
-                
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSiz
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "CTDA",
+             "CTDT": CTDAs.append(SCPTRecord.CTDAField(r, dataSize, format))
+        case "ANAM": ANAM = BYTEField(r, dataSize)
+        case "DATA": DATAs = [FMIDField<IDLERecord>](); DATAs.reservedCapactiy(dataSize >> 2); for i in 0..< DATAs.capacity { DATAs[i] = FMIDField<IDLERecord>(r, 4) }
+        default: return false
         }
+        return true
     }
 }

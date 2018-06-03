@@ -38,7 +38,7 @@ public class PGRDRecord: Record {
         {
             Point = new Vector3(r.ReadLESingle(), r.ReadLESingle(), r.ReadLESingle());
             Connections = r.ReadByte();
-            r.ReadBytes(3); // Unused
+            r.skipBytes(3); // Unused
         }
     }
 
@@ -62,7 +62,7 @@ public class PGRDRecord: Record {
         public PGRIField(UnityBinaryReader r, uint dataSize)
         {
             PointId = r.ReadLEInt16();
-            r.ReadBytes(2); // Unused (can merge back)
+            r.skipBytes(2); // Unused (can merge back)
             ForeignNode = new Vector3(r.ReadLESingle(), r.ReadLESingle(), r.ReadLESingle());
         }
     }
@@ -79,35 +79,34 @@ public class PGRDRecord: Record {
             for (var i = 0; i < PointIds.Length; i++)
             {
                 PointIds[i] = r.ReadLEInt16();
-                r.ReadBytes(2); // Unused (can merge back)
+                r.skipBytes(2); // Unused (can merge back)
             }
         }
     }
 
-    public override string ToString() => $"PGRD: {EDID.Value}";
+    public var description: String { return "PGRD: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public DATAField DATA; // Number of nodes
     public PGRPField[] PGRPs;
     public UNKNField PGRC;
     public UNKNField PGAG;
     public PGRRField[] PGRRs; // Point-to-Point Connections
-    public List<PGRLField> PGRLs; // Point-to-Reference Mappings
+    public PGRLs: [PGRLField]? // Point-to-Reference Mappings
     public PGRIField[] PGRIs; // Inter-Cell Connections
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID":
-            case "NAME": EDID = new STRVField(r, dataSize); return true;
-            case "DATA": DATA = new DATAField(r, dataSize, formatId); return true;
-            case "PGRP": PGRPs = new PGRPField[dataSize >> 4]; for (var i = 0; i < PGRPs.Length; i++) PGRPs[i] = new PGRPField(r, 16); return true;
-            case "PGRC": PGRC = new UNKNField(r, dataSize); return true;
-            case "PGAG": PGAG = new UNKNField(r, dataSize); return true;
-            case "PGRR": PGRRs = new PGRRField[dataSize >> 2]; for (var i = 0; i < PGRRs.Length; i++) PGRRs[i] = new PGRRField(r, 4); r.ReadBytes((int)(dataSize % 4)); return true;
-            case "PGRL": if (PGRLs == null) PGRLs = new List<PGRLField>(); PGRLs.Add(new PGRLField(r, dataSize)); return true;
-            case "PGRI": PGRIs = new PGRIField[dataSize >> 4]; for (var i = 0; i < PGRIs.Length; i++) PGRIs[i] = new PGRIField(r, 16); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID",
+             "NAME": EDID = STRVField(r, dataSize)
+        case "DATA": DATA = DATAField(r, dataSize, format)
+        case "PGRP": PGRPs = [PGRPField](); PGRPs.reserveCapacity(dataSize >> 4); for i in 0..<PGRPs.capacity { PGRPs[i] = PGRPField(r, 16) }
+        case "PGRC": PGRC = UNKNField(r, dataSize)
+        case "PGAG": PGAG = UNKNField(r, dataSize)
+        case "PGRR": PGRRs = [PGRRField](); PGRRs.reserveCapacity(dataSize >> 2); for i in 0..<PGRRs.capacity { PGRRs[i] = PGRRField(r, 4); } r.skipBytes(dataSize % 4)
+        case "PGRL": if PGRLs == nil { PGRLs = [PGRLField]() }; PGRLs.append(PGRLField(r, dataSize))
+        case "PGRI": PGRIs = [PGRIField](); PGRIs.reserveCapacity(dataSize >> 4); for i in 0..<PGRIs.capacity { PGRIs[i] = PGRIField(r, 16) }
+        default: return false
         }
+        return true
     }
 }

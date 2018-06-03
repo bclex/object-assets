@@ -72,6 +72,11 @@ namespace OA.Core
             r.Read(buffer, index, count);
         }
 
+        public void SkipBytes(int count)
+        {
+            r.ReadBytes(count);
+        }
+
         public byte[] ReadBytes(int count)
         {
             return r.ReadBytes(count);

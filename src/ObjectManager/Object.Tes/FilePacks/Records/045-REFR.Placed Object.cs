@@ -42,12 +42,12 @@ namespace OA.Tes.FilePacks.Records
             public XLOCField(UnityBinaryReader r, int dataSize)
             {
                 LockLevel = r.ReadByte();
-                r.ReadBytes(3); // Unused
+                r.SkipBytes(3); // Unused
                 Key = new FormId<KEYMRecord>(r.ReadLEUInt32());
                 if (dataSize == 16)
-                    r.ReadBytes(4); // Unused
+                    r.SkipBytes(4); // Unused
                 Flags = r.ReadByte();
-                r.ReadBytes(3); // Unused
+                r.SkipBytes(3); // Unused
             }
         }
 
@@ -61,7 +61,7 @@ namespace OA.Tes.FilePacks.Records
             {
                 Reference = new FormId<Record>(r.ReadLEUInt32());
                 Flags = r.ReadByte();
-                r.ReadBytes(3); // Unused
+                r.SkipBytes(3); // Unused
             }
         }
 
@@ -74,7 +74,7 @@ namespace OA.Tes.FilePacks.Records
             {
                 Seed = r.ReadByte();
                 if (dataSize == 4)
-                    r.ReadBytes(3); // Unused
+                    r.SkipBytes(3); // Unused
             }
         }
 
@@ -109,7 +109,7 @@ namespace OA.Tes.FilePacks.Records
         public BYTVField? XRGD; // Ragdoll Data (optional)
         public FLTVField? XSCL; // Scale (optional)
         public BYTEField? XSOL; // Contained Soul (optional)
-        int NextFull;
+        int _nextFull;
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, int dataSize)
         {
@@ -129,17 +129,17 @@ namespace OA.Tes.FilePacks.Records
                 case "XLOD": XLOD = new BYTVField(r, dataSize); return true;
                 case "XCHG": XCHG = new FLTVField(r, dataSize); return true;
                 case "XHLT": XCHG = new FLTVField(r, dataSize); return true;
-                case "XPCI": XPCI = new FMIDField<CELLRecord>(r, dataSize); NextFull = 1; return true;
+                case "XPCI": XPCI = new FMIDField<CELLRecord>(r, dataSize); _nextFull = 1; return true;
                 case "FULL":
-                    if (NextFull == 1) XPCI.Value.AddName(r.ReadASCIIString((int)dataSize));
-                    else if (NextFull == 2) ArrayUtils.Last(XMRKs).FULL = new STRVField(r, dataSize);
-                    NextFull = 0;
+                    if (_nextFull == 1) XPCI.Value.AddName(r.ReadASCIIString(dataSize));
+                    else if (_nextFull == 2) ArrayUtils.Last(XMRKs).FULL = new STRVField(r, dataSize);
+                    _nextFull = 0;
                     return true;
                 case "XLCM": XLCM = new IN32Field(r, dataSize); return true;
                 case "XRTM": XRTM = new FMIDField<REFRRecord>(r, dataSize); return true;
                 case "XACT": XACT = new UI32Field(r, dataSize); return true;
                 case "XCNT": XCNT = new IN32Field(r, dataSize); return true;
-                case "XMRK": if (XMRKs == null) XMRKs = new List<XMRKGroup>(); XMRKs.Add(new XMRKGroup()); NextFull = 2; return true;
+                case "XMRK": if (XMRKs == null) XMRKs = new List<XMRKGroup>(); XMRKs.Add(new XMRKGroup()); _nextFull = 2; return true;
                 case "FNAM": ArrayUtils.Last(XMRKs).FNAM = new BYTEField(r, dataSize); return true;
                 case "TNAM": ArrayUtils.Last(XMRKs).TNAM = new BYTEField(r, dataSize); r.ReadByte(); return true;
                 case "ONAM": return true;

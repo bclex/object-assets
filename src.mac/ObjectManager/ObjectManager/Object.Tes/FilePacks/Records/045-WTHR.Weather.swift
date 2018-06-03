@@ -105,7 +105,7 @@ public class WTHRRecord: Record {
         }
     }
 
-    public override string ToString() => $"WTHR: {EDID.Value}";
+    public var description: String { return "WTHR: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public MODLGroup MODL { get; set; } // Model
     public FILEField CNAM; // Lower Cloud Layer
@@ -116,21 +116,20 @@ public class WTHRRecord: Record {
     public DATAField DATA; // Weather Data
     public List<SNAMField> SNAMs = new List<SNAMField>(); // Sounds
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "CNAM": CNAM = new FILEField(r, dataSize); return true;
-            case "DNAM": DNAM = new FILEField(r, dataSize); return true;
-            case "NAM0": NAM0 = new BYTVField(r, dataSize); return true;
-            case "FNAM": FNAM = new FNAMField(r, dataSize); return true;
-            case "HNAM": HNAM = new HNAMField(r, dataSize); return true;
-            case "DATA": DATA = new DATAField(r, dataSize); return true;
-            case "SNAM": SNAMs.Add(new SNAMField(r, dataSize)); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "CNAM": CNAM = FILEField(r, dataSize)
+        case "DNAM": DNAM = FILEField(r, dataSize)
+        case "NAM0": NAM0 = BYTVField(r, dataSize)
+        case "FNAM": FNAM = FNAMField(r, dataSize)
+        case "HNAM": HNAM = HNAMField(r, dataSize)
+        case "DATA": DATA = DATAField(r, dataSize)
+        case "SNAM": SNAMs.append(SNAMField(r, dataSize))
+        default: return false
         }
+        return true
     }
 }

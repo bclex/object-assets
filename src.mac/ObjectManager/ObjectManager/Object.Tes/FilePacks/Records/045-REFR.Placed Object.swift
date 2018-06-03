@@ -35,7 +35,7 @@ public class REFRRecord: Record {
 
     public struct XLOCField
     {
-        public override string ToString() => $"{Key}";
+        public var description: String { return "\(Key)" }
         public byte LockLevel;
         public FormId<KEYMRecord> Key;
         public byte Flags;
@@ -43,18 +43,18 @@ public class REFRRecord: Record {
         public XLOCField(UnityBinaryReader r, uint dataSize)
         {
             LockLevel = r.ReadByte();
-            r.ReadBytes(3); // Unused
+            r.skipBytes(3); // Unused
             Key = new FormId<KEYMRecord>(r.ReadLEUInt32());
             if (dataSize == 16)
-                r.ReadBytes(4); // Unused
+                r.skipBytes(4); // Unused
             Flags = r.ReadByte();
-            r.ReadBytes(3); // Unused
+            r.skipBytes(3); // Unused
         }
     }
 
     public struct XESPField
     {
-        public override string ToString() => $"{Reference}";
+        public var description: String { return "\(Reference)" }
         public FormId<Record> Reference;
         public byte Flags;
 
@@ -62,32 +62,32 @@ public class REFRRecord: Record {
         {
             Reference = new FormId<Record>(r.ReadLEUInt32());
             Flags = r.ReadByte();
-            r.ReadBytes(3); // Unused
+            r.skipBytes(3); // Unused
         }
     }
 
     public struct XSEDField
     {
-        public override string ToString() => $"{Seed}";
+        public var description: String { return "\(Seed)" }
         public byte Seed;
 
         public XSEDField(UnityBinaryReader r, uint dataSize)
         {
             Seed = r.ReadByte();
             if (dataSize == 4)
-                r.ReadBytes(3); // Unused
+                r.skipBytes(3); // Unused
         }
     }
 
     public class XMRKGroup
     {
-        public override string ToString() => $"{FULL.Value}";
+        public var description: String { return "\(FULL)" }
         public BYTEField FNAM; // Map Flags
         public STRVField FULL; // Name
         public BYTEField TNAM; // Type
     }
 
-    public override string ToString() => $"REFR: {EDID.Value}";
+    public var description: String { return "REFR: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public FMIDField<Record> NAME; // Base
     public XTELField? XTEL; // Teleport Destination (optional)
@@ -110,44 +110,42 @@ public class REFRRecord: Record {
     public BYTVField? XRGD; // Ragdoll Data (optional)
     public FLTVField? XSCL; // Scale (optional)
     public BYTEField? XSOL; // Contained Soul (optional)
-    int NextFull;
+    var _nextFull: Int
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "NAME": NAME = new FMIDField<Record>(r, dataSize); return true;
-            case "XTEL": XTEL = new XTELField(r, dataSize); return true;
-            case "DATA": DATA = new DATAField(r, dataSize); return true;
-            case "XLOC": XLOC = new XLOCField(r, dataSize); return true;
-            case "XOWN": if (XOWNs == null) XOWNs = new List<CELLRecord.XOWNGroup>(); XOWNs.Add(new CELLRecord.XOWNGroup { XOWN = new FMIDField<Record>(r, dataSize) }); return true;
-            case "XRNK": ArrayUtils.Last(XOWNs).XRNK = new IN32Field(r, dataSize); return true;
-            case "XGLB": ArrayUtils.Last(XOWNs).XGLB = new FMIDField<Record>(r, dataSize); return true;
-            case "XESP": XESP = new XESPField(r, dataSize); return true;
-            case "XTRG": XTRG = new FMIDField<Record>(r, dataSize); return true;
-            case "XSED": XSED = new XSEDField(r, dataSize); return true;
-            case "XLOD": XLOD = new BYTVField(r, dataSize); return true;
-            case "XCHG": XCHG = new FLTVField(r, dataSize); return true;
-            case "XHLT": XCHG = new FLTVField(r, dataSize); return true;
-            case "XPCI": XPCI = new FMIDField<CELLRecord>(r, dataSize); NextFull = 1; return true;
-            case "FULL":
-                if (NextFull == 1) XPCI.Value.AddName(r.ReadASCIIString((int)dataSize));
-                else if (NextFull == 2) ArrayUtils.Last(XMRKs).FULL = new STRVField(r, dataSize);
-                NextFull = 0;
-                return true;
-            case "XLCM": XLCM = new IN32Field(r, dataSize); return true;
-            case "XRTM": XRTM = new FMIDField<REFRRecord>(r, dataSize); return true;
-            case "XACT": XACT = new UI32Field(r, dataSize); return true;
-            case "XCNT": XCNT = new IN32Field(r, dataSize); return true;
-            case "XMRK": if (XMRKs == null) XMRKs = new List<XMRKGroup>(); XMRKs.Add(new XMRKGroup()); NextFull = 2; return true;
-            case "FNAM": ArrayUtils.Last(XMRKs).FNAM = new BYTEField(r, dataSize); return true;
-            case "TNAM": ArrayUtils.Last(XMRKs).TNAM = new BYTEField(r, dataSize); r.ReadByte(); return true;
-            case "ONAM": return true;
-            case "XRGD": XRGD = new BYTVField(r, dataSize); return true;
-            case "XSCL": XSCL = new FLTVField(r, dataSize); return true;
-            case "XSOL": XSOL = new BYTEField(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "NAME": NAME = FMIDField<Record>(r, dataSize)
+        case "XTEL": XTEL = XTELField(r, dataSize)
+        case "DATA": DATA = DATAField(r, dataSize)
+        case "XLOC": XLOC = XLOCField(r, dataSize)
+        case "XOWN": if XOWNs == nil { XOWNs = [CELLRecord.XOWNGroup]() } XOWNs.append(CELLRecord.XOWNGroup(XOWN: FMIDField<Record>(r, dataSize)))
+        case "XRNK": XOWNs.last!.XRNK = IN32Field(r, dataSize)
+        case "XGLB": XOWNs.last!.XGLB = FMIDField<Record>(r, dataSize)
+        case "XESP": XESP = XESPField(r, dataSize)
+        case "XTRG": XTRG = FMIDField<Record>(r, dataSize)
+        case "XSED": XSED = XSEDField(r, dataSize)
+        case "XLOD": XLOD = BYTVField(r, dataSize)
+        case "XCHG": XCHG = FLTVField(r, dataSize)
+        case "XHLT": XCHG = FLTVField(r, dataSize)
+        case "XPCI": XPCI = FMIDField<CELLRecord>(r, dataSize); NextFull = 1
+        case "FULL":
+            if _nextFull == 1 { XPCI.addName(r.readASCIIString(dataSize)) }
+            else if _nextFull == 2 { XMRKs.last!.FULL = STRVField(r, dataSize) }
+            _nextFull = 0
+        case "XLCM": XLCM = IN32Field(r, dataSize)
+        case "XRTM": XRTM = FMIDField<REFRRecord>(r, dataSize)
+        case "XACT": XACT = UI32Field(r, dataSize)
+        case "XCNT": XCNT = IN32Field(r, dataSize)
+        case "XMRK": if XMRKs == nil { XMRKs = [XMRKGroup]() } XMRKs.append(XMRKGroup()); _nextFull = 2
+        case "FNAM": XMRKs.last!.FNAM = BYTEField(r, dataSize)
+        case "TNAM": XMRKs.last!.TNAM = BYTEField(r, dataSize); _ = r.ReadByte()
+        case "ONAM": break
+        case "XRGD": XRGD = BYTVField(r, dataSize)
+        case "XSCL": XSCL = FLTVField(r, dataSize)
+        case "XSOL": XSOL = BYTEField(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

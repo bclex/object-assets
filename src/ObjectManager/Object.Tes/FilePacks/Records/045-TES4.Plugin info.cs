@@ -33,8 +33,8 @@ namespace OA.Tes.FilePacks.Records
             switch (type)
             {
                 case "HEDR": HEDR = new HEDRField(r, dataSize); return true;
-                case "OFST": r.ReadBytes((int)dataSize); return true;
-                case "DELE": r.ReadBytes((int)dataSize); return true;
+                case "OFST": r.SkipBytes(dataSize); return true;
+                case "DELE": r.SkipBytes(dataSize); return true;
                 case "CNAM": CNAM = new STRVField(r, dataSize); return true;
                 case "SNAM": SNAM = new STRVField(r, dataSize); return true;
                 case "MAST": if (MASTs == null) MASTs = new List<STRVField>(); MASTs.Add(new STRVField(r, dataSize)); return true;

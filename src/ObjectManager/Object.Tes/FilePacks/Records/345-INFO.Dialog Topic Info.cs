@@ -74,9 +74,9 @@ namespace OA.Tes.FilePacks.Records
             {
                 EmotionType = r.ReadLEUInt32();
                 EmotionValue = r.ReadLEInt32();
-                r.ReadBytes(4); // Unused
+                r.SkipBytes(4); // Unused
                 ResponseNumber = r.ReadByte();
-                r.ReadBytes(3); // Unused
+                r.SkipBytes(3); // Unused
             }
 
             public void NAM1Field(UnityBinaryReader r, int dataSize)

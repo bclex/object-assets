@@ -51,7 +51,7 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override string ToString() => $"INGR: {EDID.Value}";
+    public var description: String { return "INGR: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public MODLGroup MODL { get; set; } // Model Name
     public STRVField FULL; // Item Name
@@ -63,28 +63,27 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
     public List<ENCHRecord.EFITField> EFITs = new List<ENCHRecord.EFITField>(); // Effect Data
     public List<ENCHRecord.SCITField> SCITs = new List<ENCHRecord.SCITField>(); // Script effect data
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID":
-            case "NAME": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "MODT": MODL.MODTField(r, dataSize); return true;
-            case "FULL": if (SCITs.Count == 0) FULL = new STRVField(r, dataSize); else ArrayUtils.Last(SCITs).FULLField(r, dataSize); return true;
-            case "FNAM": FULL = new STRVField(r, dataSize); return true;
-            case "DATA": DATA = new DATAField(r, dataSize); return true;
-            case "IRDT": IRDT = new IRDTField(r, dataSize); return true;
-            case "ICON":
-            case "ITEX": ICON = new FILEField(r, dataSize); return true;
-            case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-                //
-            case "ENIT": DATA.ENITField(r, dataSize); return true;
-            case "EFID": r.ReadBytes((int)dataSize); return true;
-            case "EFIT": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, formatId)); return true;
-            case "SCIT": SCITs.Add(new ENCHRecord.SCITField(r, dataSize)); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID",
+                "NAME": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "FULL": if SCITs.count == 0 { FULL = STRVField(r, dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
+        case "FNAM": FULL = STRVField(r, dataSize)
+        case "DATA": DATA = DATAField(r, dataSize)
+        case "IRDT": IRDT = IRDTField(r, dataSize)
+        case "ICON",
+                "ITEX": ICON = FILEField(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+            //
+        case "ENIT": DATA.ENITField(r, dataSize)
+        case "EFID": r.skipBytes(dataSize)
+        case "EFIT": EFITs.append(ENCHRecord.EFITField(r, dataSize, format))
+        case "SCIT": SCITs.append(ENCHRecord.SCITField(r, dataSize))
+        default: return false
         }
+        return true
     }
 }

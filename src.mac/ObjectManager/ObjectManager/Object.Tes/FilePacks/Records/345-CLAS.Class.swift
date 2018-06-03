@@ -20,36 +20,37 @@ public class CLASRecord: Record {
 
         public DATAField(UnityBinaryReader r, uint dataSize)
         {
-            r.ReadBytes((int)dataSize);
+            r.skipBytes((int)dataSize);
         }
     }
 
-    public override string ToString() => $"CLAS: {EDID.Value}";
+    public var description: String { return "CLAS: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public STRVField FULL; // Name
     public STRVField DESC; // Description
     public STRVField? ICON; // Icon (Optional)
     public DATAField DATA; // Data
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
     {
-        if (formatId == GameFormatId.TES3)
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "FNAM": FULL = new STRVField(r, dataSize); return true;
-                case "CLDT": r.ReadBytes((int)dataSize); return true;
-                case "DESC": DESC = new STRVField(r, dataSize); return true;
-                default: return false;
+        if format == .TES3 {
+            switch type {
+            case "NAME": EDID = STRVField(r, dataSize)
+            case "FNAM": FULL = STRVField(r, dataSize)
+            case "CLDT": r.skipBytes(dataSize)
+            case "DESC": DESC = STRVField(r, dataSize)
+            default: return false
             }
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "FULL": FULL = new STRVField(r, dataSize); return true;
-            case "DESC": DESC = new STRVField(r, dataSize); return true;
-            case "ICON": ICON = new STRVField(r, dataSize); return true;
-            case "DATA": DATA = new DATAField(r, dataSize); return true;
-            default: return false;
+            return true
         }
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "FULL": FULL = STRVField(r, dataSize)
+        case "DESC": DESC = STRVField(r, dataSize)
+        case "ICON": ICON = STRVField(r, dataSize)
+        case "DATA": DATA = DATAField(r, dataSize)
+        default: return false
+        }
+        return true
     }
 }

@@ -67,7 +67,7 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override string ToString() => $"LIGH: {EDID.Value}";
+    public var description: String { return "LIGH: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public MODLGroup MODL { get; set; } // Model
     public STRVField? FULL; // Item Name (optional)
@@ -78,25 +78,24 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
     public FLTVField FNAM; // Fade Value
     public FMIDField<SOUNRecord> SNAM; // Sound FormId (optional)
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID":
-            case "NAME": EDID = new STRVField(r, dataSize); return true;
-            case "FULL": FULL = new STRVField(r, dataSize); return true;
-            case "FNAM": if (formatId != GameFormatId.TES3) FNAM = new FLTVField(r, dataSize); else FULL = new STRVField(r, dataSize); return true;
-            case "DATA":
-            case "LHDT": DATA = new DATAField(r, dataSize, formatId); return true;
-            case "SCPT": SCPT = new STRVField(r, dataSize); return true;
-            case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-            case "ICON":
-            case "ITEX": ICON = new FILEField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "MODT": MODL.MODTField(r, dataSize); return true;
-            case "SNAM": SNAM = new FMIDField<SOUNRecord>(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID",
+             "NAME": EDID = STRVField(r, dataSize)
+        case "FULL": FULL = STRVField(r, dataSize)
+        case "FNAM": if format != .TES3 { FNAM = FLTVField(r, dataSize) } else { FULL = STRVField(r, dataSize) }
+        case "DATA":
+        case "LHDT": DATA = DATAField(r, dataSize, format)
+        case "SCPT": SCPT = STRVField(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        case "ICON",
+             "ITEX": ICON = FILEField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "SNAM": SNAM = FMIDField<SOUNRecord>(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

@@ -7,13 +7,12 @@
 //
 
 public class GRASRecord: Record {
-    public struct DATAField
-    {
-        public byte Density;
-        public byte MinSlope;
-        public byte MaxSlope;
-        public ushort UnitFromWaterAmount;
-        public uint UnitFromWaterType;
+    public struct DATAField {
+        public let density: UInt8
+        public let minSlope: UInt8
+        public let maxSlope: UInt8
+        public let unitFromWaterAmount: UInt16
+        public let unitFromWaterType: UInt32
         //Above - At Least,
         //Above - At Most,
         //Below - At Least,
@@ -22,45 +21,43 @@ public class GRASRecord: Record {
         //Either - At Most,
         //Either - At Most Above,
         //Either - At Most Below
-        public float PositionRange;
-        public float HeightRange;
-        public float ColorRange;
-        public float WavePeriod;
-        public byte Flags;
+        public let positionRange: Float
+        public let heightRange: Float
+        public let colorRange: Float
+        public let wavePeriod: Float
+        public let flags: UInt8
 
-        public DATAField(UnityBinaryReader r, uint dataSize)
-        {
-            Density = r.ReadByte();
-            MinSlope = r.ReadByte();
-            MaxSlope = r.ReadByte();
-            r.ReadByte();
-            UnitFromWaterAmount = r.ReadLEUInt16();
-            r.ReadBytes(2);
-            UnitFromWaterType = r.ReadLEUInt32();
-            PositionRange = r.ReadLESingle();
-            HeightRange = r.ReadLESingle();
-            ColorRange = r.ReadLESingle();
-            WavePeriod = r.ReadLESingle();
-            Flags = r.ReadByte();
-            r.ReadBytes(3);
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            density = r.readByte()
+            minSlope = r.readByte()
+            maxSlope = r.readByte()
+            r.readByte()
+            unitFromWaterAmount = r.readLEUInt16()
+            r.skipBytes(2)
+            unitFromWaterType = r.readLEUInt32()
+            positionRange = r.readLESingle()
+            heightRange = r.readLESingle()
+            colorRange = r.readLESingle()
+            wavePeriod = r.readLESingle()
+            flags = r.readByte()
+            r.skipBytes(3)
         }
     }
 
-    public override string ToString() => $"GRAS: {EDID.Value}";
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL;
-    public DATAField DATA;
+    public var description: String { return "GRAS: \(EDID)" }
+    public var EDID: STRVField // Editor ID
+    public var MODL: MODLGroup
+    public var DATA: DATAField
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "MODT": MODL.MODTField(r, dataSize); return true;
-            case "DATA": DATA = new DATAField(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "DATA": DATA = DATAField(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

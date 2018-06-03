@@ -43,7 +43,7 @@ namespace OA.Tes.FilePacks.Records
                 case "FNAM": FULL = new STRVField(r, dataSize); return true;
                 case "SPIT":
                 case "SPDT": SPIT = new SPITField(r, dataSize, formatId); return true;
-                case "EFID": r.ReadBytes((int)dataSize); return true;
+                case "EFID": r.SkipBytes(dataSize); return true;
                 case "EFIT":
                 case "ENAM": EFITs.Add(new ENCHRecord.EFITField(r, dataSize, formatId)); return true;
                 case "SCIT": SCITs.Add(new ENCHRecord.SCITField(r, dataSize)); return true;

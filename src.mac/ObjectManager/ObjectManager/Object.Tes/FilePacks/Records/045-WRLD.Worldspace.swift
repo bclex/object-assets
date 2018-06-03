@@ -42,7 +42,7 @@ public class WRLDRecord: Record {
         }
     }
 
-    public override string ToString() => $"WRLD: {EDID.Value}";
+    public var description: String { return "WRLD: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public STRVField FULL;
     public FMIDField<WRLDRecord>? WNAM; // Parent Worldspace
@@ -54,23 +54,22 @@ public class WRLDRecord: Record {
     public NAM0Field NAM0; // Object Bounds
     public UI32Field? SNAM; // Music
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "FULL": FULL = new STRVField(r, dataSize); return true;
-            case "WNAM": WNAM = new FMIDField<WRLDRecord>(r, dataSize); return true;
-            case "CNAM": CNAM = new FMIDField<CLMTRecord>(r, dataSize); return true;
-            case "NAM2": NAM2 = new FMIDField<WATRRecord>(r, dataSize); return true;
-            case "ICON": ICON = new FILEField(r, dataSize); return true;
-            case "MNAM": MNAM = new MNAMField(r, dataSize); return true;
-            case "DATA": DATA = new BYTEField(r, dataSize); return true;
-            case "NAM0": NAM0 = new NAM0Field(r, dataSize); return true;
-            case "NAM9": NAM0.NAM9Field(r, dataSize); return true;
-            case "SNAM": SNAM = new UI32Field(r, dataSize); return true;
-            case "OFST": r.ReadBytes((int)dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "FULL": FULL = STRVField(r, dataSize)
+        case "WNAM": WNAM = FMIDField<WRLDRecord>(r, dataSize)
+        case "CNAM": CNAM = FMIDField<CLMTRecord>(r, dataSize)
+        case "NAM2": NAM2 = FMIDField<WATRRecord>(r, dataSize)
+        case "ICON": ICON = FILEField(r, dataSize)
+        case "MNAM": MNAM = MNAMField(r, dataSize)
+        case "DATA": DATA = BYTEField(r, dataSize)
+        case "NAM0": NAM0 = NAM0Field(r, dataSize)
+        case "NAM9": NAM0.NAM9Field(r, dataSize)
+        case "SNAM": SNAM = UI32Field(r, dataSize)
+        case "OFST": r.skipBytes(dataSize)
+        default: return false
         }
+        return true
     }
 }

@@ -14,12 +14,12 @@ namespace OA.Tes.FilePacks.Records
             public LVLOField(UnityBinaryReader r, int dataSize)
             {
                 Level = r.ReadLEInt16();
-                r.ReadBytes(2); // Unused
+                r.SkipBytes(2); // Unused
                 ItemFormId = new FormId<Record>(r.ReadLEUInt32());
                 if (dataSize == 12)
                 {
                     Count = r.ReadLEInt16();
-                    r.ReadBytes(2); // Unused
+                    r.SkipBytes(2); // Unused
                 }
                 else Count = 0;
             }

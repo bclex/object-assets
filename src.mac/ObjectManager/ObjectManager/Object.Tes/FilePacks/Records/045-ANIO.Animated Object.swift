@@ -7,20 +7,19 @@
 //
 
 public class ANIORecord: Record {
-    public override string ToString() => $"ANIO: {EDID.Value}";
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL; // Model
-    public FMIDField<IDLERecord> DATA; // IDLE animation
+    public var description: String { return "ANIO: \(EDID)" }
+    public var EDID: STRVField // Editor ID
+    public var MODL: MODLGroup // Model
+    public var DATA: FMIDField<IDLERecord> // IDLE animation
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "DATA": DATA = new FMIDField<IDLERecord>(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "DATA": DATA = FMIDField<IDLERecord>(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

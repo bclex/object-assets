@@ -68,10 +68,14 @@ public class BinaryReader {
         return Int8(bitPattern: baseStream.readData(ofLength: 1).first!)
     }
     
-    public func read(buffer: Data) {
-        // NOT IMPLEMENTED
-    }
+    // public func read(buffer: Data) {
+    //     // NOT IMPLEMENTED
+    // }
     
+    public func skipBytes(_ count: Int) {
+        _ = baseStream.readData(ofLength: count)
+    }
+
     public func readBytes(_ count: Int) -> Data {
         return baseStream.readData(ofLength: count)
     }

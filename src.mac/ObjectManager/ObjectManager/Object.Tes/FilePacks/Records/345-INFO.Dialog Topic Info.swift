@@ -76,9 +76,9 @@ public class INFORecord: Record {
         {
             EmotionType = r.ReadLEUInt32();
             EmotionValue = r.ReadLEInt32();
-            r.ReadBytes(4); // Unused
+            r.skipBytes(4); // Unused
             ResponseNumber = r.ReadByte();
-            r.ReadBytes(3); // Unused
+            r.skipBytes(3); // Unused
         }
 
         public void NAM1Field(UnityBinaryReader r, uint dataSize)
@@ -94,71 +94,71 @@ public class INFORecord: Record {
 
     public class TES4Group
     {
-        public DATA4Field DATA; // Info data
-        public FMIDField<QUSTRecord> QSTI; // Quest
-        public FMIDField<DIALRecord> TPIC; // Topic
-        public List<FMIDField<DIALRecord>> NAMEs = new List<FMIDField<DIALRecord>>(); // Topics
-        public List<TRDTField> TRDTs = new List<TRDTField>(); // Responses
-        public List<SCPTRecord.CTDAField> CTDAs = new List<SCPTRecord.CTDAField>(); // Conditions
-        public List<FMIDField<DIALRecord>> TCLTs = new List<FMIDField<DIALRecord>>(); // Choices
-        public List<FMIDField<DIALRecord>> TCLFs = new List<FMIDField<DIALRecord>>(); // Link From Topics
-        public SCPTRecord.SCHRField SCHR; // Script Data
-        public BYTVField SCDA; // Compiled Script
-        public STRVField SCTX; // Script Source
-        public List<FMIDField<Record>> SCROs = new List<FMIDField<Record>>(); // Global variable reference
+        public var DATA: DATA4Field // Info data
+        public var QSTI: FMIDField<QUSTRecord> // Quest
+        public var TPIC: FMIDField<DIALRecord> // Topic
+        public var NAMEs = [FMIDField<DIALRecord>]() // Topics
+        public var RDTs = [TRDTField]() // Responses
+        public var CTDAs = [SCPTRecord.CTDAField>]() // Conditions
+        public var TCLTs = [FMIDField<DIALRecord>]() // Choices
+        public var TCLFs = [FMIDField<DIALRecord] // Link From Topics
+        public var SCHR: SCPTRecord.SCHRField // Script Data
+        public var SCDA: BYTVField // Compiled Script
+        public var SCTX: STRVField // Script Source
+        public var SCROs = [FMIDField<Record>]() // Global variable reference
     }
 
-    public override string ToString() => $"INFO: {EDID.Value}";
-    public STRVField EDID { get; set; } // Editor ID - Info name string (unique sequence of #'s), ID
-    public FMIDField<INFORecord> PNAM; // Previous info ID
-    public TES3Group TES3 = new TES3Group();
-    public TES4Group TES4 = new TES4Group();
+    public var description: String { return "INFO: \(EDID)" }
+    public var EDID: STRVField // Editor ID - Info name string (unique sequence of #'s), ID
+    public var PNAM: FMIDField<INFORecord> // Previous info ID
+    public var TES3 = TES3Group()
+    public var TES4 = TES4Group()
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        if (formatId == GameFormatId.TES3)
-            switch (type)
-            {
-                case "INAM": EDID = new STRVField(r, dataSize); DIALRecord.LastRecord?.INFOs.Add(this); return true;
-                case "PNAM": PNAM = new FMIDField<INFORecord>(r, dataSize); return true;
-                case "NNAM": TES3.NNAM = new STRVField(r, dataSize); return true;
-                case "DATA": TES3.DATA = new DATA3Field(r, dataSize); return true;
-                case "ONAM": TES3.ONAM = new STRVField(r, dataSize); return true;
-                case "RNAM": TES3.RNAM = new STRVField(r, dataSize); return true;
-                case "CNAM": TES3.CNAM = new STRVField(r, dataSize); return true;
-                case "FNAM": TES3.FNAM = new STRVField(r, dataSize); return true;
-                case "ANAM": TES3.ANAM = new STRVField(r, dataSize); return true;
-                case "DNAM": TES3.DNAM = new STRVField(r, dataSize); return true;
-                case "NAME": TES3.NAME = new STRVField(r, dataSize); return true;
-                case "SNAM": TES3.SNAM = new FILEField(r, dataSize); return true;
-                case "QSTN": TES3.QSTN = new BYTEField(r, dataSize); return true;
-                case "QSTF": TES3.QSTF = new BYTEField(r, dataSize); return true;
-                case "QSTR": TES3.QSTR = new BYTEField(r, dataSize); return true;
-                case "SCVR": TES3.SCVR = new SCPTRecord.CTDAField(r, dataSize, formatId); return true;
-                case "INTV": TES3.INTV = new UNKNField(r, dataSize); return true;
-                case "FLTV": TES3.FLTV = new UNKNField(r, dataSize); return true;
-                case "BNAM": TES3.BNAM = new STRVField(r, dataSize); return true;
-                default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        if format == .TES3 {
+            switch type {
+            case "INAM": EDID = STRVField(r, dataSize); DIALRecord.LastRecord?.INFOs.append(self)
+            case "PNAM": PNAM = FMIDField<INFORecord>(r, dataSize)
+            case "NNAM": TES3.NNAM = STRVField(r, dataSize)
+            case "DATA": TES3.DATA = DATA3Field(r, dataSize)
+            case "ONAM": TES3.ONAM = STRVField(r, dataSize)
+            case "RNAM": TES3.RNAM = STRVField(r, dataSize)
+            case "CNAM": TES3.CNAM = STRVField(r, dataSize)
+            case "FNAM": TES3.FNAM = STRVField(r, dataSize)
+            case "ANAM": TES3.ANAM = STRVField(r, dataSize)
+            case "DNAM": TES3.DNAM = STRVField(r, dataSize)
+            case "NAME": TES3.NAME = STRVField(r, dataSize)
+            case "SNAM": TES3.SNAM = FILEField(r, dataSize)
+            case "QSTN": TES3.QSTN = BYTEField(r, dataSize)
+            case "QSTF": TES3.QSTF = BYTEField(r, dataSize)
+            case "QSTR": TES3.QSTR = BYTEField(r, dataSize)
+            case "SCVR": TES3.SCVR = SCPTRecord.CTDAField(r, dataSize, format)
+            case "INTV": TES3.INTV = UNKNField(r, dataSize)
+            case "FLTV": TES3.FLTV = UNKNField(r, dataSize)
+            case "BNAM": TES3.BNAM = STRVField(r, dataSize)
+            default: return false
             }
-        switch (type)
-        {
-            case "DATA": TES4.DATA = new DATA4Field(r, dataSize); return true;
-            case "QSTI": TES4.QSTI = new FMIDField<QUSTRecord>(r, dataSize); return true;
-            case "TPIC": TES4.TPIC = new FMIDField<DIALRecord>(r, dataSize); return true;
-            case "NAME": TES4.NAMEs.Add(new FMIDField<DIALRecord>(r, dataSize)); return true;
-            case "TRDT": TES4.TRDTs.Add(new TRDTField(r, dataSize)); return true;
-            case "NAM1": ArrayUtils.Last(TES4.TRDTs).NAM1Field(r, dataSize); return true;
-            case "NAM2": ArrayUtils.Last(TES4.TRDTs).NAM2Field(r, dataSize); return true;
-            case "CTDA":
-            case "CTDT": TES4.CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, formatId)); return true;
-            case "TCLT": TES4.TCLTs.Add(new FMIDField<DIALRecord>(r, dataSize)); return true;
-            case "TCLF": TES4.TCLFs.Add(new FMIDField<DIALRecord>(r, dataSize)); return true;
-            case "SCHR":
-            case "SCHD": TES4.SCHR = new SCPTRecord.SCHRField(r, dataSize); return true;
-            case "SCDA": TES4.SCDA = new BYTVField(r, dataSize); return true;
-            case "SCTX": TES4.SCTX = new STRVField(r, dataSize); return true;
-            case "SCRO": TES4.SCROs.Add(new FMIDField<Record>(r, dataSize)); return true;
-            default: return false;
+            return true
         }
+        switch type {
+        case "DATA": TES4.DATA = DATA4Field(r, dataSize)
+        case "QSTI": TES4.QSTI = FMIDField<QUSTRecord>(r, dataSize)
+        case "TPIC": TES4.TPIC = FMIDField<DIALRecord>(r, dataSize)
+        case "NAME": TES4.NAMEs.append(FMIDField<DIALRecord>(r, dataSize))
+        case "TRDT": TES4.TRDTs.append(TRDTField(r, dataSize))
+        case "NAM1": TES4.TRDTs.last!.NAM1Field(r, dataSize)
+        case "NAM2": TES4.TRDTs.last!.NAM2Field(r, dataSize)
+        case "CTDA",
+             "CTDT": TES4.CTDAs.append(SCPTRecord.CTDAField(r, dataSize, format))
+        case "TCLT": TES4.TCLTs.append(FMIDField<DIALRecord>(r, dataSize))
+        case "TCLF": TES4.TCLFs.append(FMIDField<DIALRecord>(r, dataSize))
+        case "SCHR",
+             "SCHD": TES4.SCHR = SCPTRecord.SCHRField(r, dataSize)
+        case "SCDA": TES4.SCDA = BYTVField(r, dataSize)
+        case "SCTX": TES4.SCTX = STRVField(r, dataSize)
+        case "SCRO": TES4.SCROs.append(FMIDField<Record>(r, dataSize))
+        default: return false
+        }
+        return true
     }
 }

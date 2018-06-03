@@ -54,7 +54,7 @@ public class ARMORecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override string ToString() => $"ARMO: {EDID.Value}";
+    public var description: String { return "ARMO: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public MODLGroup MODL { get; set; } // Male biped model
     public STRVField FULL; // Item Name
@@ -72,39 +72,38 @@ public class ARMORecord: Record, IHaveEDID, IHaveMODL {
     public FILEField? ICO2; // Female icon (optional)
     public IN16Field? ANAM; // Enchantment points (optional)
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID":
-            case "NAME": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "MODT": MODL.MODTField(r, dataSize); return true;
-            case "FULL":
-            case "FNAM": FULL = new STRVField(r, dataSize); return true;
-            case "DATA":
-            case "AODT": DATA = new DATAField(r, dataSize, formatId); return true;
-            case "ICON":
-            case "ITEX": ICON = new FILEField(r, dataSize); return true;
-            case "INDX": INDXs.Add(new CLOTRecord.INDXFieldGroup { INDX = new INTVField(r, dataSize) }); return true;
-            case "BNAM": ArrayUtils.Last(INDXs).BNAM = new STRVField(r, dataSize); return true;
-            case "CNAM": ArrayUtils.Last(INDXs).CNAM = new STRVField(r, dataSize); return true;
-            case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-            case "ENAM": ENAM = new FMIDField<ENCHRecord>(r, dataSize); return true;
-            case "BMDT": BMDT = new UI32Field(r, dataSize); return true;
-            case "MOD2": MOD2 = new MODLGroup(r, dataSize); return true;
-            case "MO2B": MOD2.MODBField(r, dataSize); return true;
-            case "MO2T": MOD2.MODTField(r, dataSize); return true;
-            case "MOD3": MOD3 = new MODLGroup(r, dataSize); return true;
-            case "MO3B": MOD3.MODBField(r, dataSize); return true;
-            case "MO3T": MOD3.MODTField(r, dataSize); return true;
-            case "MOD4": MOD4 = new MODLGroup(r, dataSize); return true;
-            case "MO4B": MOD4.MODBField(r, dataSize); return true;
-            case "MO4T": MOD4.MODTField(r, dataSize); return true;
-            case "ICO2": ICO2 = new FILEField(r, dataSize); return true;
-            case "ANAM": ANAM = new IN16Field(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID",
+             "NAME": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "FULL",
+             "FNAM": FULL = STRVField(r, dataSize)
+        case "DATA":
+        case "AODT": DATA = DATAField(r, dataSize, format)
+        case "ICON",
+             "ITEX": ICON = FILEField(r, dataSize)
+        case "INDX": INDXs.append(CLOTRecord.INDXFieldGroup(INDX: INTVField(r, dataSize)))
+        case "BNAM": INDXs.last!.BNAM = STRVField(r, dataSize)
+        case "CNAM": INDXs.last!.CNAM = STRVField(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        case "ENAM": ENAM = FMIDField<ENCHRecord>(r, dataSize)
+        case "BMDT": BMDT = UI32Field(r, dataSize)
+        case "MOD2": MOD2 = MODLGroup(r, dataSize)
+        case "MO2B": MOD2.MODBField(r, dataSize)
+        case "MO2T": MOD2.MODTField(r, dataSize)
+        case "MOD3": MOD3 = MODLGroup(r, dataSize)
+        case "MO3B": MOD3.MODBField(r, dataSize)
+        case "MO3T": MOD3.MODTField(r, dataSize)
+        case "MOD4": MOD4 = MODLGroup(r, dataSize)
+        case "MO4B": MOD4.MODBField(r, dataSize)
+        case "MO4T": MOD4.MODTField(r, dataSize)
+        case "ICO2": ICO2 = FILEField(r, dataSize)
+        case "ANAM": ANAM = IN16Field(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

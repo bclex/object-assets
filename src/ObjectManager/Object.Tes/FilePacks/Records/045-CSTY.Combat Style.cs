@@ -50,7 +50,7 @@ namespace OA.Tes.FilePacks.Records
                 //    DodgePercentChance = 0;
                 DodgePercentChance = r.ReadByte();
                 LeftRightPercentChance = r.ReadByte();
-                r.ReadBytes(2); // Unused
+                r.SkipBytes(2); // Unused
                 DodgeLeftRightTimer_Min = r.ReadLESingle();
                 DodgeLeftRightTimer_Max = r.ReadLESingle();
                 DodgeForwardTimer_Min = r.ReadLESingle();
@@ -61,12 +61,12 @@ namespace OA.Tes.FilePacks.Records
                 IdleTimer_Max = r.ReadLESingle();
                 BlockPercentChance = r.ReadByte();
                 AttackPercentChance = r.ReadByte();
-                r.ReadBytes(2); // Unused
+                r.SkipBytes(2); // Unused
                 RecoilStaggerBonusToAttack = r.ReadLESingle();
                 UnconsciousBonusToAttack = r.ReadLESingle();
                 HandToHandBonusToAttack = r.ReadLESingle();
                 PowerAttackPercentChance = r.ReadByte();
-                r.ReadBytes(3); // Unused
+                r.SkipBytes(3); // Unused
                 RecoilStaggerBonusToPower = r.ReadLESingle();
                 UnconsciousBonusToPowerAttack = r.ReadLESingle();
                 PowerAttack_Normal = r.ReadByte();
@@ -74,12 +74,12 @@ namespace OA.Tes.FilePacks.Records
                 PowerAttack_Back = r.ReadByte();
                 PowerAttack_Left = r.ReadByte();
                 PowerAttack_Right = r.ReadByte();
-                r.ReadBytes(3); // Unused
+                r.SkipBytes(3); // Unused
                 HoldTimer_Min = r.ReadLESingle();
                 HoldTimer_Max = r.ReadLESingle();
                 Flags1 = r.ReadByte();
                 AcrobaticDodgePercentChance = r.ReadByte();
-                r.ReadBytes(2); // Unused
+                r.SkipBytes(2); // Unused
                 if (dataSize == 84) return; RangeMult_Optimal = r.ReadLESingle();
                 RangeMult_Max = r.ReadLESingle();
                 if (dataSize == 92) return; SwitchDistance_Melee = r.ReadLESingle();
@@ -88,7 +88,7 @@ namespace OA.Tes.FilePacks.Records
                 if (dataSize == 104) return; RangedStandoffDistance = r.ReadLESingle();
                 GroupStandoffDistance = r.ReadLESingle();
                 if (dataSize == 112) return; RushingAttackPercentChance = r.ReadByte();
-                r.ReadBytes(3); // Unused
+                r.SkipBytes(3); // Unused
                 RushingAttackDistanceMult = r.ReadLESingle();
                 if (dataSize == 120) return; Flags2 = r.ReadLEUInt32();
             }

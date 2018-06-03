@@ -193,7 +193,7 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override string ToString() => $"CREA: {EDID.Value}";
+    public var description: String { return "CREA: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public MODLGroup MODL { get; set; } // NIF Model
     public STRVField FNAM; // Creature name
@@ -211,29 +211,29 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
     public STRVField? CNAM;
     public List<STRVField> NPCSs = new List<STRVField>();
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        if (formatId == GameFormatId.TES3)
-            switch (type)
-            {
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-                case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                case "NPDT": NPDT = new NPDTField(r, dataSize); return true;
-                case "FLAG": FLAG = new IN32Field(r, dataSize); return true;
-                case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-                case "NPCO": NPCO = new CNTOField(r, dataSize, formatId); return true;
-                case "AIDT": AIDT = new AIDTField(r, dataSize); return true;
-                case "AI_W": AI_W = new AI_WField(r, dataSize, 0); return true;
-                case "AI_T": AI_T = new AI_TField(r, dataSize); return true;
-                case "AI_F": AI_F = new AI_FField(r, dataSize); return true;
-                case "AI_E": AI_E = new AI_FField(r, dataSize); return true;
-                case "AI_A": AI_A = new AI_AField(r, dataSize); return true;
-                case "XSCL": XSCL = new FLTVField(r, dataSize); return true;
-                case "CNAM": CNAM = new STRVField(r, dataSize); return true;
-                case "NPCS": NPCSs.Add(new STRVField(r, dataSize, ASCIIFormat.ZeroPadded)); return true;
-                default: return false;
-            }
-        return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        guard format == .TES3) else {
+            return false
+        }
+        switch type {
+        case "NAME": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "FNAM": FNAM = STRVField(r, dataSize)
+        case "NPDT": NPDT = NPDTField(r, dataSize)
+        case "FLAG": FLAG = IN32Field(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        case "NPCO": NPCO = CNTOField(r, dataSize, formatId)
+        case "AIDT": AIDT = AIDTField(r, dataSize)
+        case "AI_W": AI_W = AI_WField(r, dataSize, 0)
+        case "AI_T": AI_T = AI_TField(r, dataSize)
+        case "AI_F": AI_F = AI_FField(r, dataSize)
+        case "AI_E": AI_E = AI_FField(r, dataSize)
+        case "AI_A": AI_A = AI_AField(r, dataSize)
+        case "XSCL": XSCL = FLTVField(r, dataSize)
+        case "CNAM": CNAM = STRVField(r, dataSize)
+        case "NPCS": NPCSs.append(STRVField(r, dataSize, ASCIIFormat.ZeroPadded))
+        default: return false
+        }
+        return true
     }
 }

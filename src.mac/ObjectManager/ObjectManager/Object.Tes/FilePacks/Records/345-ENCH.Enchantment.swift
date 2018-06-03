@@ -96,7 +96,7 @@ public class ENCHRecord: Record {
         }
     }
 
-    public override string ToString() => $"ENCH: {EDID.Value}";
+    public var description: String { return "ENCH: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public STRVField FULL; // Enchant name
     public ENITField ENIT; // Enchant Data
@@ -104,20 +104,19 @@ public class ENCHRecord: Record {
     // TES4
     public List<SCITField> SCITs = new List<SCITField>(); // Script effect data
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID":
-            case "NAME": EDID = new STRVField(r, dataSize); return true;
-            case "FULL": if (SCITs.Count == 0) FULL = new STRVField(r, dataSize); else ArrayUtils.Last(SCITs).FULLField(r, dataSize); return true;
-            case "ENIT":
-            case "ENDT": ENIT = new ENITField(r, dataSize, formatId); return true;
-            case "EFID": r.ReadBytes((int)dataSize); return true;
-            case "EFIT":
-            case "ENAM": EFITs.Add(new EFITField(r, dataSize, formatId)); return true;
-            case "SCIT": SCITs.Add(new SCITField(r, dataSize)); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID",
+             "NAME": EDID = STRVField(r, dataSize)
+        case "FULL": if SCITs.count == 0 { FULL = STRVField(r, dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
+        case "ENIT",
+             "ENDT": ENIT = ENITField(r, dataSize, format)
+        case "EFID": r.skipBytes(dataSize)
+        case "EFIT",
+             "ENAM": EFITs.append(EFITField(r, dataSize, format))
+        case "SCIT": SCITs.append(SCITField(r, dataSize))
+        default: return false
         }
+        return true
     }
 }

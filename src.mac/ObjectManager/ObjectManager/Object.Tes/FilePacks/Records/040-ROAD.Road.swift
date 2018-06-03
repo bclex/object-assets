@@ -7,17 +7,16 @@
 //
 
 public class ROADRecord: Record {
-    public override string ToString() => $"ROAD:";
-    public PGRDRecord.PGRPField[] PGRPs { get; set; }
-    public UNKNField PGRR { get; set; }
+    public var description: String { return "ROAD:" }
+    public var PGRPs: [PGRDRecord.PGRPField]
+    public var PGRR: UNKNField
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "PGRP": PGRPs = new PGRDRecord.PGRPField[dataSize >> 4]; for (var i = 0; i < PGRPs.Length; i++) PGRPs[i] = new PGRDRecord.PGRPField(r, dataSize); return true;
-            case "PGRR": PGRR = new UNKNField(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "PGRP": PGRPs = [PGRDRecord.PGRPField](); PGRPs.allocateCapacity(dataSize >> 4); for i in 0..<PGRPs.capacity { PGRPs[i] = PGRDRecord.PGRPField(r, dataSize) }
+        case "PGRR": PGRR = UNKNField(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

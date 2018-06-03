@@ -7,7 +7,7 @@
 //
 
 public class DOORRecord: Record, IHaveEDID, IHaveMODL {
-    public override string ToString() => $"DOOR: {EDID.Value}";
+    public var description: String { return "DOOR: \(EDID)" }
     public STRVField EDID { get; set; } // Editor ID
     public STRVField FULL; // Door name
     public MODLGroup MODL { get; set; } // NIF model filename
@@ -19,23 +19,22 @@ public class DOORRecord: Record, IHaveEDID, IHaveMODL {
     public BYTEField FNAM; // Flags
     public FMIDField<Record> TNAM; // Random teleport destination
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID":
-            case "NAME": EDID = new STRVField(r, dataSize); return true;
-            case "FULL": FULL = new STRVField(r, dataSize); return true;
-            case "FNAM": if (formatId != GameFormatId.TES3) FNAM = new BYTEField(r, dataSize); else FULL = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "MODT": MODL.MODTField(r, dataSize); return true;
-            case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-            case "SNAM": SNAM = new FMIDField<SOUNRecord>(r, dataSize); return true;
-            case "ANAM": ANAM = new FMIDField<SOUNRecord>(r, dataSize); return true;
-            case "BNAM": ANAM = new FMIDField<SOUNRecord>(r, dataSize); return true;
-            case "TNAM": TNAM = new FMIDField<Record>(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID",
+                "NAME": EDID = STRVField(r, dataSize)
+        case "FULL": FULL = STRVField(r, dataSize)
+        case "FNAM": if format != .TES3 { FNAM = new BYTEField(r, dataSize) } else { FULL = STRVField(r, dataSize) }
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODT": MODL.MODTField(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        case "SNAM": SNAM = FMIDField<SOUNRecord>(r, dataSize)
+        case "ANAM": ANAM = FMIDField<SOUNRecord>(r, dataSize)
+        case "BNAM": ANAM = FMIDField<SOUNRecord>(r, dataSize)
+        case "TNAM": TNAM = FMIDField<Record>(r, dataSize)
+        default: return false
         }
+        return true
     }
 }

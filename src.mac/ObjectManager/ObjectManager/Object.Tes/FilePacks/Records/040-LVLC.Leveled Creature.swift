@@ -15,17 +15,16 @@ public class LVLCRecord: Record {
     public var TNAM: FMIDField<CREARecord> // Creature Template (optional)
     public var LVLOs = [LVLIRecord.LVLOField]()
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "LVLD": LVLD = new BYTEField(r, dataSize); return true;
-            case "LVLF": LVLF = new BYTEField(r, dataSize); return true;
-            case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-            case "TNAM": TNAM = new FMIDField<CREARecord>(r, dataSize); return true;
-            case "LVLO": LVLOs.Add(new LVLIRecord.LVLOField(r, dataSize)); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "LVLD": LVLD = BYTEField(r, dataSize)
+        case "LVLF": LVLF = BYTEField(r, dataSize)
+        case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
+        case "TNAM": TNAM = FMIDField<CREARecord>(r, dataSize)
+        case "LVLO": LVLOs.append(LVLIRecord.LVLOField(r, dataSize))
+        default: return false
         }
+        return true
     }
 }

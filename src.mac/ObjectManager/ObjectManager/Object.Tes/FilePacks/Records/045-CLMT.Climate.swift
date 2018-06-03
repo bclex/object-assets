@@ -7,58 +7,53 @@
 //
 
 public class CLMTRecord: Record {
-    public struct WLSTField
-    {
-        public FormId<WTHRRecord> Weather;
-        public int Chance;
+    public struct WLSTField {
+        public let weather: FormId<WTHRRecord>
+        public let chance: Int32
 
-        public WLSTField(UnityBinaryReader r, uint dataSize)
-        {
-            Weather = new FormId<WTHRRecord>(r.ReadLEUInt32());
-            Chance = r.ReadLEInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            weather = FormId<WTHRRecord>(r.readLEUInt32())
+            chance = r.readLEInt32()
         }
     }
 
-    public struct TNAMField
-    {
-        public byte Sunrise_Begin;
-        public byte Sunrise_End;
-        public byte Sunset_Begin;
-        public byte Sunset_End;
-        public byte Volatility;
-        public byte MoonsPhaseLength;
+    public struct TNAMField {
+        public let sunrise_begin: UInt8
+        public let sunrise_end: UInt8
+        public let sunset_begin: UInt8
+        public let sunset_end: UInt8
+        public let volatility: UInt8
+        public let moonsPhaseLength: UInt8
 
-        public TNAMField(UnityBinaryReader r, uint dataSize)
-        {
-            Sunrise_Begin = r.ReadByte();
-            Sunrise_End = r.ReadByte();
-            Sunset_Begin = r.ReadByte();
-            Sunset_End = r.ReadByte();
-            Volatility = r.ReadByte();
-            MoonsPhaseLength = r.ReadByte();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            sunrise_begin = r.readByte()
+            sunrise_end = r.readByte()
+            sunset_begin = r.readByte()
+            sunset_end = r.readByte()
+            volatility = r.readByte()
+            moonsPhaseLength = r.readByte()
         }
     }
 
-    public override string ToString() => $"CLMT: {EDID.Value}";
-    public STRVField EDID { get; set; } // Editor ID
-    public MODLGroup MODL { get; set; } // Model
-    public FILEField FNAM; // Sun Texture
-    public FILEField GNAM; // Sun Glare Texture
-    public List<WLSTField> WLSTs = new List<WLSTField>(); // Climate
-    public TNAMField TNAM; // Timing
+    public var description: String { return "CLMT: \(EDID)" }
+    public var EDID: STRVField // Editor ID
+    public var MODL: MODLGroup // Model
+    public var FNAM: FILEField // Sun Texture
+    public var GNAM: FILEField // Sun Glare Texture
+    public var WLSTs = [WLSTField]() // Climate
+    public var TNAM: TNAMField // Timing
 
-    public override bool CreateField(UnityBinaryReader r, GameFormatId formatId, string type, uint dataSize)
-    {
-        switch (type)
-        {
-            case "EDID": EDID = new STRVField(r, dataSize); return true;
-            case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-            case "MODB": MODL.MODBField(r, dataSize); return true;
-            case "FNAM": FNAM = new FILEField(r, dataSize); return true;
-            case "GNAM": GNAM = new FILEField(r, dataSize); return true;
-            case "WLST": for (var i = 0; i < dataSize >> 3; i++) WLSTs.Add(new WLSTField(r, dataSize)); return true;
-            case "TNAM": TNAM = new TNAMField(r, dataSize); return true;
-            default: return false;
+    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        switch type {
+        case "EDID": EDID = STRVField(r, dataSize)
+        case "MODL": MODL = MODLGroup(r, dataSize)
+        case "MODB": MODL.MODBField(r, dataSize)
+        case "FNAM": FNAM = FILEField(r, dataSize)
+        case "GNAM": GNAM = FILEField(r, dataSize)
+        case "WLST": for i in 0..<(dataSize >> 3) { WLSTs.append(WLSTField(r, dataSize)) }
+        case "TNAM": TNAM = TNAMField(r, dataSize)
+        default: return false
         }
+        return true
     }
 }
