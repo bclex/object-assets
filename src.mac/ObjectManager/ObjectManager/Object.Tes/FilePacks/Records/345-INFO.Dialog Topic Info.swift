@@ -8,92 +8,82 @@
 
 public class INFORecord: Record {
     // TES3
-    public struct DATA3Field
-    {
-        public int Unknown1;
-        public int Disposition;
-        public byte Rank // (0-10)
-        public byte Gender // 0xFF = None, 0x00 = Male, 0x01 = Female
-        public byte PCRank // (0-10)
-        public byte Unknown2;
+    public struct DATA3Field {
+        public let Unknown1: Int32
+        public let Disposition: Int32
+        public let Rank: UInt8 // (0-10)
+        public let Gender: UInt8 // 0xFF = None, 0x00 = Male, 0x01 = Female
+        public let pcRank: UInt8 // (0-10)
+        public let Unknown2: UInt8
 
-        public DATA3Field(UnityBinaryReader r, uint dataSize)
-        {
-            Unknown1 = r.readLEInt32();
-            Disposition = r.readLEInt32();
-            Rank = r.readByte();
-            Gender = r.readByte();
-            PCRank = r.readByte();
-            Unknown2 = r.readByte();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            unknown1 = r.readLEInt32()
+            disposition = r.readLEInt32()
+            rank = r.readByte()
+            gender = r.readByte()
+            pcRank = r.readByte()
+            unknown2 = r.readByte()
         }
     }
 
-    public class TES3Group
-    {
-        public STRVField NNAM // Next info ID (form a linked list of INFOs for the DIAL). First INFO has an empty PNAM, last has an empty NNAM.
-        public DATA3Field DATA // Info data
-        public STRVField ONAM // Actor
-        public STRVField RNAM // Race
-        public STRVField CNAM // Class
-        public STRVField FNAM // Faction 
-        public STRVField ANAM // Cell
-        public STRVField DNAM // PC Faction
-        public STRVField NAME // The info response string (512 max)
-        public FILEField SNAM // Sound
-        public BYTEField QSTN // Journal Name
-        public BYTEField QSTF // Journal Finished
-        public BYTEField QSTR // Journal Restart
-        public SCPTRecord.CTDAField SCVR // String for the function/variable choice
-        public UNKNField INTV //
-        public UNKNField FLTV // The function/variable result for the previous SCVR
-        public STRVField BNAM // Result text (not compiled)
+    public class TES3Group {
+        public var NNAM: STRVField  // Next info ID (form a linked list of INFOs for the DIAL). First INFO has an empty PNAM, last has an empty NNAM.
+        public var DATA: DATA3Field // Info data
+        public var ONAM: STRVField  // Actor
+        public var RNAM: STRVField  // Race
+        public var CNAM: STRVField  // Class
+        public var FNAM: STRVField  // Faction 
+        public var ANAM: STRVField  // Cell
+        public var DNAM: STRVField  // PC Faction
+        public var NAME: STRVField  // The info response string (512 max)
+        public var SNAM: FILEField  // Sound
+        public var QSTN: BYTEField  // Journal Name
+        public var QSTF: BYTEField  // Journal Finished
+        public var QSTR: BYTEField  // Journal Restart
+        public var SCVR: SCPTRecord.CTDAField // String for the function/variable choice
+        public var INTV: UNKNField //
+        public var FLTV: UNKNField // The function/variable result for the previous SCVR
+        public var BNAM: STRVField // Result text (not compiled)
     }
 
     // TES4
-    public struct DATA4Field
-    {
-        public byte Type;
-        public byte NextSpeaker;
-        public byte Flags;
+    public struct DATA4Field {
+        public let type: UInt8
+        public let nextSpeaker: UInt8
+        public let flags: UInt8
 
-        public DATA4Field(UnityBinaryReader r, uint dataSize)
-        {
-            Type = r.readByte();
-            NextSpeaker = r.readByte();
-            Flags = dataSize == 3 ? r.readByte() : (byte)0;
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            type = r.readByte()
+            nextSpeaker = r.readByte()
+            flags = dataSize == 3 ? r.readByte() : 0
         }
     }
 
-    public class TRDTField
-    {
-        public uint EmotionType;
-        public int EmotionValue;
-        public byte ResponseNumber;
-        public string ResponseText;
-        public string ActorNotes;
+    public class TRDTField {
+        public let emotionType: UInt32
+        public let emotionValue: Int32
+        public let responseNumber: UInt8
+        public var responseText: String
+        public var actorNotes: String
 
-        public TRDTField(UnityBinaryReader r, uint dataSize)
-        {
-            EmotionType = r.readLEUInt32();
-            EmotionValue = r.readLEInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            emotionType = r.readLEUInt32()
+            emotionValue = r.readLEInt32()
             r.skipBytes(4) // Unused
-            ResponseNumber = r.readByte();
+            responseNumber = r.readByte()
             r.skipBytes(3) // Unused
         }
 
-        public void NAM1Field(UnityBinaryReader r, uint dataSize)
-        {
-            ResponseText = r.readASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
+        func NAM1Field(_ r: BinaryReader, _ dataSize: Int) {
+            responseText = r.readASCIIString(dataSize, .possiblyNullTerminated)
         }
 
-        public void NAM2Field(UnityBinaryReader r, uint dataSize)
-        {
-            ActorNotes = r.readASCIIString((int)dataSize, ASCIIFormat.PossiblyNullTerminated);
+        func NAM2Field(_ r: BinaryReader, _ dataSize: Int) {
+            sctorNotes = r.readASCIIString(dataSize, .possiblyNullTerminated)
         }
     }
 
-    public class TES4Group
-    {
+    public class TES4Group {
         public var DATA: DATA4Field // Info data
         public var QSTI: FMIDField<QUSTRecord> // Quest
         public var TPIC: FMIDField<DIALRecord> // Topic

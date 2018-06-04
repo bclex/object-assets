@@ -8,193 +8,179 @@
 
 public class RACERecord: Record {
     // TESX
-    public class DATAField
-    {
-        public enum RaceFlag : uint
-        {
-            Playable = 0x00000001,
-            FaceGenHead = 0x00000002,
-            Child = 0x00000004,
-            TiltFrontBack = 0x00000008,
-            TiltLeftRight = 0x00000010,
-            NoShadow = 0x00000020,
-            Swims = 0x00000040,
-            Flies = 0x00000080,
-            Walks = 0x00000100,
-            Immobile = 0x00000200,
-            NotPushable = 0x00000400,
-            NoCombatInWater = 0x00000800,
-            NoRotatingToHeadTrack = 0x00001000,
-            DontShowBloodSpray = 0x00002000,
-            DontShowBloodDecal = 0x00004000,
-            UsesHeadTrackAnims = 0x00008000,
-            SpellsAlignWMagicNode = 0x00010000,
-            UseWorldRaycastsForFootIK = 0x00020000,
-            AllowRagdollCollision = 0x00040000,
-            RegenHPInCombat = 0x00080000,
-            CantOpenDoors = 0x00100000,
-            AllowPCDialogue = 0x00200000,
-            NoKnockdowns = 0x00400000,
-            AllowPickpocket = 0x00800000,
-            AlwaysUseProxyController = 0x01000000,
-            DontShowWeaponBlood = 0x02000000,
-            OverlayHeadPartList = 0x04000000, //{> Only one can be active <}
-            OverrideHeadPartList = 0x08000000, //{> Only one can be active <}
-            CanPickupItems = 0x10000000,
-            AllowMultipleMembraneShaders = 0x20000000,
-            CanDualWield = 0x40000000,
-            AvoidsRoads = 0x80000000,
+    public class DATAField {
+        public enum RaceFlag: UInt32 {
+            playable = 0x00000001
+            faceGenHead = 0x00000002
+            child = 0x00000004
+            tiltFrontBack = 0x00000008
+            tiltLeftRight = 0x00000010
+            noShadow = 0x00000020
+            swims = 0x00000040
+            flies = 0x00000080
+            walks = 0x00000100
+            immobile = 0x00000200
+            notPushable = 0x00000400
+            noCombatInWater = 0x00000800
+            noRotatingToHeadTrack = 0x00001000
+            dontShowBloodSpray = 0x00002000
+            dontShowBloodDecal = 0x00004000
+            usesHeadTrackAnims = 0x00008000
+            spellsAlignWMagicNode = 0x00010000
+            useWorldRaycastsForFootIK = 0x00020000
+            allowRagdollCollision = 0x00040000
+            regenHPInCombat = 0x00080000
+            cantOpenDoors = 0x00100000
+            allowPCDialogue = 0x00200000
+            noKnockdowns = 0x00400000
+            allowPickpocket = 0x00800000
+            alwaysUseProxyController = 0x01000000
+            dontShowWeaponBlood = 0x02000000
+            overlayHeadPartList = 0x04000000 //{> Only one can be active <}
+            overrideHeadPartList = 0x08000000 //{> Only one can be active <}
+            canPickupItems = 0x10000000
+            allowMultipleMembraneShaders = 0x20000000
+            canDualWield = 0x40000000
+            avoidsRoads = 0x80000000
         }
 
-        public struct SkillBoost
-        {
-            public byte SkillId;
-            public sbyte Bonus;
-        }
+        public struct SkillBoost {
+            public let skillId: UInt8
+            public let bonus: Int8
 
-        public struct Gender
-        {
-            public float Height;
-            public float Weight;
-            // Attributes;
-            public byte Strength;
-            public byte Intelligence;
-            public byte Willpower;
-            public byte Agility;
-            public byte Speed;
-            public byte Endurance;
-            public byte Personality;
-            public byte Luck;
-        }
-
-        public SkillBoost[] SkillBoosts // Skill Boosts
-        public Gender Male;
-        public Gender Female;
-        public uint Flags // 1 = Playable 2 = Beast Race
-
-        public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            Male = Gender();
-            Female = Gender();
-            SkillBoosts = SkillBoost[7];
-            if (formatId == GameFormatId.TES3)
-            {
-                for (var i = 0; i < SkillBoosts.Length; i++)
-                    SkillBoosts[i] = SkillBoost { SkillId = (byte)r.readLEInt32(), Bonus = (sbyte)r.readLEInt32() };
-                Male.Strength = (byte)r.readLEInt32(); Female.Strength = (byte)r.readLEInt32();
-                Male.Intelligence = (byte)r.readLEInt32(); Female.Intelligence = (byte)r.readLEInt32();
-                Male.Willpower = (byte)r.readLEInt32(); Female.Willpower = (byte)r.readLEInt32();
-                Male.Agility = (byte)r.readLEInt32(); Female.Agility = (byte)r.readLEInt32();
-                Male.Speed = (byte)r.readLEInt32(); Female.Speed = (byte)r.readLEInt32();
-                Male.Endurance = (byte)r.readLEInt32(); Female.Endurance = (byte)r.readLEInt32();
-                Male.Personality = (byte)r.readLEInt32(); Female.Personality = (byte)r.readLEInt32();
-                Male.Luck = (byte)r.readLEInt32(); Female.Luck = (byte)r.readLEInt32();
-                Male.Height = r.readLESingle(); Female.Height = r.readLESingle();
-                Male.Weight = r.readLESingle(); Female.Weight = r.readLESingle();
-                Flags = r.readLEUInt32();
-                return;
+            init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
+                guard format != .TES3 else {
+                    skillId = UInt8(r.readLEInt32())
+                    bonus = Int8(r.readLEInt32())
+                    return
+                }
+                skillId = r.readByte()
+                bonus = r.readSByte()
             }
-            for (var i = 0; i < SkillBoosts.Length; i++)
-                SkillBoosts[i] = SkillBoost { SkillId = r.readByte(), Bonus = (sbyte)r.readByte() };
-            r.readLEInt16() // padding
-            Male.Height = r.readLESingle();
-            Female.Height = r.readLESingle();
-            Male.Weight = r.readLESingle();
-            Female.Weight = r.readLESingle();
-            Flags = r.readLEUInt32();
         }
 
-        public void ATTRField(UnityBinaryReader r, uint dataSize)
-        {
-            Male.Strength = r.readByte();
-            Male.Intelligence = r.readByte();
-            Male.Willpower = r.readByte();
-            Male.Agility = r.readByte();
-            Male.Speed = r.readByte();
-            Male.Endurance = r.readByte();
-            Male.Personality = r.readByte();
-            Male.Luck = r.readByte();
-            Female.Strength = r.readByte();
-            Female.Intelligence = r.readByte();
-            Female.Willpower = r.readByte();
-            Female.Agility = r.readByte();
-            Female.Speed = r.readByte();
-            Female.Endurance = r.readByte();
-            Female.Personality = r.readByte();
-            Female.Luck = r.readByte();
+        public class RaceStats {
+            public let height: Float
+            public let weight: Float
+            // Attributes
+            public let strength: UInt8
+            public let intelligence: UInt8
+            public let willpower: UInt8
+            public let agility: UInt8
+            public let speed: UInt8
+            public let endurance: UInt8
+            public let personality: UInt8
+            public let luck: UInt8
+        }
+
+        public let skillBoosts = [SkillBoost]() // Skill Boosts
+        public let male = RaceStats()
+        public let female = RaceStats()
+        public let flags: UInt32 // 1 = Playable 2 = Beast Race
+
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
+            skillBoosts.allocateCapacity(7)
+            guard format != .TES3 {
+                for i in 0..<skillBoosts.capacity {
+                    skillBoosts[i] = SkillBoost(r, 8, format)
+                }
+                male.strength = UInt8(r.readLEInt32()); female.strength = UInt8(r.readLEInt32())
+                male.intelligence = UInt8(r.readLEInt32()); female.intelligence = UInt8(r.readLEInt32())
+                male.willpower = UInt8(r.readLEInt32()); female.willpower = UInt8(r.readLEInt32())
+                male.agility = UInt8(r.readLEInt32()); female.agility = UInt8(r.readLEInt32())
+                male.speed = UInt8(r.readLEInt32()); female.speed = UInt8(r.readLEInt32())
+                male.endurance = UInt8(r.readLEInt32()); female.endurance = UInt8(r.readLEInt32())
+                male.personality = UInt8(r.readLEInt32()); female.personality = UInt8(r.readLEInt32())
+                male.luck = UInt8(r.readLEInt32()); female.luck = UInt8(r.readLEInt32())
+                male.height = r.readLESingle(); female.height = r.readLESingle()
+                male.weight = r.readLESingle(); female.weight = r.readLESingle()
+                flags = r.readLEUInt32()
+                return
+            }
+            for i in 0..<skillBoosts.capacity {
+                skillBoosts[i] = skillBoost(r, 2, format)
+            }
+            r.readLEInt16() // padding
+            male.height = r.readLESingle(); female.height = r.readLESingle()
+            male.weight = r.readLESingle(); female.weight = r.readLESingle()
+            flags = r.readLEUInt32()
+        }
+
+        func ATTRField(_ r: BinaryReader, _ dataSize: Int) {
+            male.strength = r.readByte()
+            male.intelligence = r.readByte()
+            male.willpower = r.readByte()
+            male.agility = r.readByte()
+            male.speed = r.readByte()
+            male.endurance = r.readByte()
+            male.personality = r.readByte()
+            male.luck = r.readByte()
+            female.strength = r.readByte()
+            female.intelligence = r.readByte()
+            female.willpower = r.readByte()
+            female.agility = r.readByte()
+            female.speed = r.readByte()
+            female.endurance = r.readByte()
+            female.personality = r.readByte()
+            female.luck = r.readByte()
         }
     }
 
     // TES4
     public class FacePartGroup
     {
-        public enum Indx : uint
-        {
-            Head,
-            Ear_Male,
-            Ear_Female,
-            Mouth,
-            Teeth_Lower,
-            Teeth_Upper,
-            Tongue,
-            Eye_Left,
-            Eye_Right,
+        public enum Indx: UInt32 {
+            case head, ear_male, ear_female, mouth, teeth_lower, teeth_upper, tongue, eye_left, eye_right
         }
 
-        public UI32Field INDX;
-        public MODLGroup MODL;
-        public FILEField ICON;
+        public var INDX: UI32Field
+        public var MODL: MODLGroup
+        public var ICON: FILEField
     }
 
     public class BodyPartGroup
     {
-        public enum Indx : uint
-        {
-            UpperBody,
-            LowerBody,
-            Hand,
-            Foot,
-            Tail
+        public enum Indx: UInt32 {
+            upperBody, lowerBody, hand, foot, tail
         }
 
-        public UI32Field INDX;
-        public FILEField ICON;
+        public var INDX: UI32Field
+        public var ICON: FILEField
     }
 
-    public class BodyGroup
-    {
-        public FILEField MODL;
-        public FLTVField MODB;
-        public List<BodyPartGroup> BodyParts = List<BodyPartGroup>();
+    public class BodyGroup {
+        public var MODL: FILEField
+        public var MODB: FLTVField 
+        public var BodyParts: [BodyPartGroup]()
     }
 
     public var description: String { return "RACE: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public STRVField FULL // Race name
-    public STRVField DESC // Race description
-    public List<STRVField> SPLOs = List<STRVField>() // NPCs: Special power/ability name
+    public var EDID: STRVField  // Editor ID
+    public var FULL: STRVField // Race name
+    public var DESC: STRVField // Race description
+    public var SPLOs = [STRVField]() // NPCs: Special power/ability name
     // TESX
-    public DATAField DATA // RADT:DATA/ATTR: Race data/Base Attributes
+    public var DATA: DATAField // RADT:DATA/ATTR: Race data/Base Attributes
     // TES4
-    public FMID2Field<RACERecord> VNAM // Voice
-    public FMID2Field<HAIRRecord> DNAM // Default Hair
-    public BYTEField CNAM // Default Hair Color
-    public FLTVField PNAM // FaceGen - Main clamp
-    public FLTVField UNAM // FaceGen - Face clamp
-    public UNKNField XNAM // Unknown
+    public var VNAM: FMID2Field<RACERecord> // Voice
+    public var DNAM: FMID2Field<HAIRRecord> // Default Hair
+    public var CNAM: BYTEField // Default Hair Color
+    public var PNAM: FLTVField // FaceGen - Main clamp
+    public var UNAM: FLTVField // FaceGen - Face clamp
+    public var XNAM: UNKNField // Unknown
     //
-    public List<FMIDField<HAIRRecord>> HNAMs = List<FMIDField<HAIRRecord>>();
-    public List<FMIDField<EYESRecord>> ENAMs = List<FMIDField<EYESRecord>>();
-    public BYTVField FGGS // FaceGen Geometry-Symmetric
-    public BYTVField FGGA // FaceGen Geometry-Asymmetric
-    public BYTVField FGTS // FaceGen Texture-Symmetric
-    public UNKNField SNAM // Unknown
+    public var HNAMs = [FMIDField<HAIRRecord>]()
+    public var ENAMs = [FMIDField<EYESRecord>]()
+    public var FGGS: BYTVField // FaceGen Geometry-Symmetric
+    public var FGGA: BYTVField // FaceGen Geometry-Asymmetric
+    public var FGTS: BYTVField // FaceGen Texture-Symmetric
+    public var SNAM: UNKNField // Unknown
 
     // Parts
-    public sbyte NameState;
-    public sbyte GenderState;
-    public List<FacePartGroup> FaceParts = List<FacePartGroup>();
-    public BodyGroup[] Bodys = new[] { BodyGroup(), BodyGroup() };
+    public var faceParts = [FacePartGroup]()
+    public var bodys = [BodyGroup(), BodyGroup()]
+    var _nameState: Int8
+    var _genderState: Int8
 
     init() {
     }
@@ -212,7 +198,7 @@ public class RACERecord: Record {
             return true
         }
         else if format == .TES4 {
-            switch NameState {
+            switch _nameState {
             case 0:
                 switch type {
                 case "EDID": EDID = STRVField(r, dataSize)
@@ -227,32 +213,32 @@ public class RACERecord: Record {
                 case "UNAM": UNAM = FLTVField(r, dataSize)
                 case "XNAM": XNAM = UNKNField(r, dataSize)
                 case "ATTR": DATA.ATTRField(r, dataSize)
-                case "NAM0": NameState++
+                case "NAM0": _nameState += 1
                 default: return false
                 }
                 return true
-            case 1: // Face ata
+            case 1: // Face Data
                 switch type {
                 case "INDX": FaceParts.append(FacePartGroup(INDX: UI32Field(r, dataSize)))
                 case "MODL": FaceParts.last!.MODL = MODLGroup(r, dataSize)
                 case "ICON": FaceParts.last!.ICON = FILEField(r, dataSize)
                 case "MODB": FaceParts.last!.MODL.MODBField(r, dataSize)
-                case "NAM1": NameState++
+                case "NAM1": _nameState += 1
                 default: return false
                 }
                 return true
             case 2: // Body Data
                 switch type {
-                case "MNAM": GenderState = 0
-                case "FNAM": GenderState = 1
-                case "MODL": Bodys[GenderState].MODL = FILEField(r, dataSize)
-                case "MODB": Bodys[GenderState].MODB = FLTVField(r, dataSize)
-                case "INDX": Bodys[GenderState].BodyParts.append(BodyPartGroup(INDX: UI32Field(r, dataSize)))
-                case "ICON": Bodys[GenderState].BodyParts.last!.ICON = FILEField(r, dataSize)
-                case "HNAM": NameState++
+                case "MNAM": _genderState = 0
+                case "FNAM": _genderState = 1
+                case "MODL": Bodys[_genderState].MODL = FILEField(r, dataSize)
+                case "MODB": Bodys[_genderState].MODB = FLTVField(r, dataSize)
+                case "INDX": Bodys[_genderState].BodyParts.append(BodyPartGroup(INDX: UI32Field(r, dataSize)))
+                case "ICON": Bodys[_genderState].BodyParts.last!.ICON = FILEField(r, dataSize)
+                case "HNAM": _nameState += 1
                 default: return false
                 }
-                if NameState == 2 {
+                guard _nameState != 2 else {
                     return true    
                 }
                 fallthrough
@@ -271,6 +257,6 @@ public class RACERecord: Record {
             }
             return true
         }
-        fatalError("")
+        fatalError("Error")
     }
 }

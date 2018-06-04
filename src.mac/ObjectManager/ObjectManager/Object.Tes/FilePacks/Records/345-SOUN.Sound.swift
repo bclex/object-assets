@@ -7,55 +7,53 @@
 //
 
 public class SOUNRecord: Record, IHaveEDID {
-    [Flags]
-    public enum SOUNFlags : ushort
-    {
-        RandomFrequencyShift = 0x0001,
-        PlayAtRandom = 0x0002,
-        EnvironmentIgnored = 0x0004,
-        RandomLocation = 0x0008,
-        Loop = 0x0010,
-        MenuSound = 0x0020,
-        _2D = 0x0040,
-        _360LFE = 0x0080,
+    public enum SOUNFlags: UInt16 {
+        case randomFrequencyShift = 0x0001
+        case playAtRandom = 0x0002
+        case environmentIgnored = 0x0004
+        case randomLocation = 0x0008
+        case loop = 0x0010
+        case menuSound = 0x0020
+        case _2D = 0x0040
+        case _360LFE = 0x0080
     }
 
     // TESX
-    public class DATAField
-    {
-        public byte Volume // (0=0.00, 255=1.00)
-        public byte MinRange // Minimum attenuation distance
-        public byte MaxRange // Maximum attenuation distance
+    public class DATAField {
+        public let volume: UInt8 // (0=0.00, 255=1.00)
+        public let minRange: UInt8 // Minimum attenuation distance
+        public let maxRange: UInt8 // Maximum attenuation distance
         // Tes4
-        public sbyte FrequencyAdjustment // Frequency adjustment %
-        public ushort Flags // Flags
-        public ushort StaticAttenuation // Static Attenuation (db)
-        public byte StopTime // Stop time
-        public byte StartTime // Start time
+        public let frequencyAdjustment: Int8 // Frequency adjustment %
+        public let flags: UInt16 // Flags
+        public let staticAttenuation: UInt16 // Static Attenuation (db)
+        public let stopTime: UInt8 // Stop time
+        public let startTime: UInt8 // Start time
 
-        public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            Volume = formatId == GameFormatId.TES3 ? r.readByte() : (byte)0;
-            MinRange = r.readByte();
-            MaxRange = r.readByte();
-            if (formatId == GameFormatId.TES3)
-                return;
-            FrequencyAdjustment = (sbyte)r.readByte();
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
+            volume = format == .TES3 ? r.readByte() : 0
+            minRange = r.readByte()
+            maxRange = r.readByte()
+            guard format != .TES3 else {
+                return
+            }
+            frequencyAdjustment = r.readSByte()
             r.readByte() // Unused
-            Flags = r.readLEUInt16();
+            flags = r.readLEUInt16()
             r.readLEUInt16() // Unused
-            if (dataSize == 8)
-                return;
-            StaticAttenuation = r.readLEUInt16();
-            StopTime = r.readByte();
-            StartTime = r.readByte();
+            guard dataSize != 8 else {
+                return
+            }
+            staticAttenuation = r.readLEUInt16()
+            stopTime = r.readByte()
+            startTime = r.readByte()
         }
     }
 
     public var description: String { return "SOUN: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public FILEField FNAM // Sound Filename (relative to Sounds\)
-    public DATAField DATA // Sound Data
+    public var EDID: STRVField  // Editor ID
+    public var FNAM: FILEField // Sound Filename (relative to Sounds\)
+    public var DATA: DATAField // Sound Data
 
     init() {
     }

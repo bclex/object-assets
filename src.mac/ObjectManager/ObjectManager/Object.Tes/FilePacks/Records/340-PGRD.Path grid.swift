@@ -13,7 +13,7 @@ public class PGRDRecord: Record {
         public let granularity: Int16
         public let pointCount: Int16
 
-        init(_ r: BinaryReader, _ dataSize: Int, for format: GameFormatId) {
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             guard formatId != .TES3 else {
                 x = y = granularity = 0
                 pointCount = r.readLEInt16()

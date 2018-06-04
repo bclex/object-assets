@@ -8,70 +8,56 @@
 
 public class CLOTRecord: Record, IHaveEDID, IHaveMODL {
     // TESX
-    public struct DATAField
-    {
-        public enum CLOTType
-        {
-            Pants = 0,
-            Shoes = 1,
-            Shirt = 2,
-            Belt = 3,
-            Robe = 4,
-            R_Glove = 5,
-            L_Glove = 6,
-            Skirt = 7,
-            Ring = 8,
-            Amulet = 9,
+    public struct DATAField {
+        public enum CLOTType {
+            pants = 0, shoes, shirt, belt, robe, r_glove, l_glove, skirt, ring, amulet
         }
 
-        public int Value;
-        public float Weight;
+        public let value: Int32
+        public let weight: Float
         //
-        public int Type;
-        public short EnchantPts;
+        public let type: Int32
+        public let enchantPts: Int16
 
-        public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            if (formatId == GameFormatId.TES3)
-            {
-                Type = r.readLEInt32();
-                Weight = r.readLESingle();
-                Value = r.readLEInt16();
-                EnchantPts = r.readLEInt16();
-                return;
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
+            guard format != .TES3 else {
+                type = r.readLEInt32()
+                weight = r.readLESingle()
+                value = r.readLEInt16()
+                enchantPts = r.readLEInt16()
+                return
             }
-            Value = r.readLEInt32();
-            Weight = r.readLESingle();
-            Type = 0;
-            EnchantPts = 0;
+            value = r.readLEInt32()
+            weight = r.readLESingle()
+            type = 0
+            enchantPts = 0
         }
     }
 
-    public class INDXFieldGroup
-    {
-        public override string ToString() => $"{INDX.Value}: {BNAM.Value}";
-        public INTVField INDX;
-        public STRVField BNAM;
-        public STRVField CNAM;
+    public class INDXFieldGroup: CustomStringConvertible {
+        public var description: String { return "\(INDX.value): \(BNAM.value)" }
+        public var INDX: INTVField
+        public var BNAM: STRVField
+        public var CNAM: STRVField
     }
 
     public var description: String { return "CLOT: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public MODLGroup MODL  // Model Name
-    public STRVField FULL // Item Name
-    public DATAField DATA // Clothing Data
-    public FILEField ICON // Male Icon
-    public STRVField ENAM // Enchantment Name
-    public FMIDField<SCPTRecord> SCRI // Script Name
+    public var EDID: STRVField  // Editor ID
+    public var MODL: MODLGroup  // Model Name
+    public var FULL: STRVField // Item Name
+    public var DATA: DATAField // Clothing Data
+    public var ICON: FILEField // Male Icon
+    public var ENAM: STRVField // Enchantment Name
+    public var SCRI: FMIDField<SCPTRecord> // Script Name
     // TES3
-    public List<INDXFieldGroup> INDXs = List<INDXFieldGroup>() // Body Part Index (Moved to Race)
+    public var INDXs = [INDXFieldGroup]() // Body Part Index (Moved to Race)
     // TES4
-    public UI32Field BMDT // Clothing Flags
-    public MODLGroup MOD2 // Male world model (optional)
-    public MODLGroup MOD3 // Female biped (optional)
-    public MODLGroup MOD4 // Female world model (optional)
-    public FILEField? ICO2 // Female icon (optional)
-    public IN16Field? ANAM // Enchantment points (optional)
+    public var BMDT: UI32Field  // Clothing Flags
+    public var MOD2: MODLGroup  // Male world model (optional)
+    public var MOD3: MODLGroup  // Female biped (optional)
+    public var MOD4: MODLGroup  // Female world model (optional)
+    public var ICO2: FILEField? // Female icon (optional)
+    public var ANAM: IN16Field? // Enchantment points (optional)
 
     init() {
     }
@@ -103,7 +89,7 @@ public class CLOTRecord: Record, IHaveEDID, IHaveMODL {
         case "MO3T": MOD3.MODTField(r, dataSize)
         case "MOD4": MOD4 = MODLGroup(r, dataSize)
         case "MO4B": MOD4.MODBField(r, dataSize)
- 
+        case "MO4T": MOD4.MODTField(r, dataSize)
         case "ICO2": ICO2 = FILEField(r, dataSize)
         case "ANAM": ANAM = IN16Field(r, dataSize)
         default: return false

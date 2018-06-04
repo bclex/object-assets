@@ -153,7 +153,7 @@ namespace OA.Tes.FilePacks.Records
                 case "NPCO": NPCOs.Add(new CNTOField(r, dataSize, format)); return true;
                 case "NPCS": NPCSs.Add(new STRVField(r, dataSize, ASCIIFormat.ZeroPadded)); return true;
                 case "AIDT": AIDT = new CREARecord.AIDTField(r, dataSize); return true;
-                case "AI_W": AI_W = new CREARecord.AI_WField(r, dataSize, 1); return true;
+                case "AI_W": AI_W = new CREARecord.AI_WField(r, dataSize); return true;
                 case "AI_T": AI_T = new CREARecord.AI_TField(r, dataSize); return true;
                 case "AI_F": AI_F = new CREARecord.AI_FField(r, dataSize); return true;
                 case "AI_E": AI_E = new CREARecord.AI_FField(r, dataSize); return true;

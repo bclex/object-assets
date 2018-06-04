@@ -7,39 +7,36 @@
 //
 
 public class NPC_Record: Record, IHaveEDID, IHaveMODL {
-    [Flags]
-    public enum NPC_Flags : uint
-    {
-        Female = 0x0001,
-        Essential = 0x0002,
-        Respawn = 0x0004,
-        None = 0x0008,
-        Autocalc = 0x0010,
-        BloodSkel = 0x0400,
-        BloodMetal = 0x0800,
+    public enum NPC_Flags: UInt32 {
+        case female = 0x0001
+        case essential = 0x0002
+        case respawn = 0x0004
+        case none = 0x0008
+        case autocalc = 0x0010
+        case bloodSkel = 0x0400
+        case bloodMetal = 0x0800
     }
 
-    public class NPDTField
-    {
-        public short Level;
-        public byte Strength;
-        public byte Intelligence;
-        public byte Willpower;
-        public byte Agility;
-        public byte Speed;
-        public byte Endurance;
-        public byte Personality;
-        public byte Luck;
-        public byte[] Skills;
-        public byte Reputation;
-        public short Health;
-        public short SpellPts;
-        public short Fatigue;
-        public byte Disposition;
-        public byte FactionId;
-        public byte Rank;
-        public byte Unknown1;
-        public int Gold;
+    public class NPDTField {
+        public let level: Int16
+        public let strength: UInt8
+        public let intelligence: UInt8
+        public let willpower: UInt8
+        public let agility: UInt8
+        public let speed: UInt8
+        public let endurance: UInt8
+        public let personality: UInt8
+        public let luck: UInt8
+        public let skills: [UInt8]
+        public let reputation: UInt8
+        public let health: Int16
+        public let spellPts: Int16
+        public let fatigue: Int16
+        public let disposition: UInt8
+        public let factionId: UInt8
+        public let rank: UInt8
+        public let unknown1: UInt8
+        public let gold: Int32
 
         // 12 byte version
         //public short Level;
@@ -47,92 +44,87 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
         //public byte FactionId;
         //public byte Rank;
         //public byte Unknown1;
-        public byte Unknown2;
-        public byte Unknown3;
+        public let unknown2: UInt8
+        public let unknown3: UInt8
         //public int Gold;
 
-        public NPDTField(UnityBinaryReader r, uint dataSize)
-        {
-            if (dataSize == 52)
-            {
-                Level = r.readLEInt16();
-                Strength = r.readByte();
-                Intelligence = r.readByte();
-                Willpower = r.readByte();
-                Agility = r.readByte();
-                Speed = r.readByte();
-                Endurance = r.readByte();
-                Personality = r.readByte();
-                Luck = r.readByte();
-                Skills = r.readBytes(27);
-                Reputation = r.readByte();
-                Health = r.readLEInt16();
-                SpellPts = r.readLEInt16();
-                Fatigue = r.readLEInt16();
-                Disposition = r.readByte();
-                FactionId = r.readByte();
-                Rank = r.readByte();
-                Unknown1 = r.readByte();
-                Gold = r.readLEInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            if dataSize == 52 {
+                level = r.readLEInt16()
+                strength = r.readByte()
+                intelligence = r.readByte()
+                willpower = r.readByte()
+                agility = r.readByte()
+                speed = r.readByte()
+                endurance = r.readByte()
+                personality = r.readByte()
+                luck = r.readByte()
+                skills = r.readBytes(27)
+                reputation = r.readByte()
+                health = r.readLEInt16()
+                spellPts = r.readLEInt16()
+                fatigue = r.readLEInt16()
+                disposition = r.readByte()
+                factionId = r.readByte()
+                rank = r.readByte()
+                unknown1 = r.readByte()
+                gold = r.readLEInt32()
             }
-            else
-            {
-                Level = r.readLEInt16();
-                Disposition = r.readByte();
-                FactionId = r.readByte();
-                Rank = r.readByte();
-                Unknown1 = r.readByte();
-                Unknown2 = r.readByte();
-                Unknown3 = r.readByte();
-                Gold = r.readLEInt32();
+            else {
+                level = r.readLEInt16()
+                disposition = r.readByte()
+                factionId = r.readByte()
+                rank = r.readByte()
+                unknown1 = r.readByte()
+                unknown2 = r.readByte()
+                unknown3 = r.readByte()
+                gold = r.readLEInt32()
             }
         }
     }
 
-    public struct DODTField
-    {
-        public float XPos;
-        public float YPos;
-        public float ZPos;
-        public float XRot;
-        public float YRot;
-        public float ZRot;
+    public struct DODTField {
+        public let xpos: Float
+        public let ypos: Float
+        public let zpos: Float
+        public let xrot: Float
+        public let yrot: Float
+        public let zrot: Float
 
-        public DODTField(UnityBinaryReader r, uint dataSize)
-        {
-            XPos = r.readLESingle();
-            YPos = r.readLESingle();
-            ZPos = r.readLESingle();
-            XRot = r.readLESingle();
-            YRot = r.readLESingle();
-            ZRot = r.readLESingle();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            xpos = r.readLESingle()
+            ypos = r.readLESingle()
+            zpos = r.readLESingle()
+            xrot = r.readLESingle()
+            yrot = r.readLESingle()
+            zrot = r.readLESingle()
         }
     }
 
     public var description: String { return "NPC_: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public STRVField FULL // NPC name
-    public MODLGroup MODL  // Animation
-    public STRVField RNAM // Race Name
-    public STRVField ANAM // Faction name
-    public STRVField BNAM // Head model
-    public STRVField CNAM // Class name
-    public STRVField KNAM // Hair model
-    public NPDTField NPDT // NPC Data
-    public INTVField FLAG // NPC Flags
-    public List<CNTOField> NPCOs = List<CNTOField>() // NPC item
-    public List<STRVField> NPCSs = List<STRVField>() // NPC spell
-    public CREARecord.AIDTField AIDT // AI data
-    public CREARecord.AI_WField? AI_W // AI
-    public CREARecord.AI_TField? AI_T // AI Travel
-    public CREARecord.AI_FField? AI_F // AI Follow
-    public CREARecord.AI_FField? AI_E // AI Escort
-    public STRVField? CNDT // Cell escort/follow to string (optional)
-    public CREARecord.AI_AField? AI_A // AI Activate
-    public DODTField DODT // Cell Travel Destination
-    public STRVField DNAM // Cell name for previous DODT, if interior
-    public FLTVField? XSCL // Scale (optional) Only present if the scale is not 1.0
-    public FMIDField<SCPTRecord>? SCRI // Unknown
+    public var EDID: STRVField  // Editor ID
+    public var FULL: STRVField // NPC name
+    public var MODL: MODLGroup  // Animation
+    public var RNAM: STRVField // Race Name
+    public var ANAM: STRVField // Faction name
+    public var BNAM: STRVField // Head model
+    public var CNAM: STRVField // Class name
+    public var KNAM: STRVField // Hair model
+    public var NPDT: NPDTField // NPC Data
+    public var FLAG: INTVField // NPC Flags
+    public var NPCOs = [CNTOField]() // NPC item
+    public var NPCSs = [STRVField]() // NPC spell
+    public var AIDT: CREARecord.AIDTField  // AI data
+    public var AI_W: CREARecord.AI_WField? // AI
+    public var AI_T: CREARecord.AI_TField? // AI Travel
+    public var AI_F: CREARecord.AI_FField? // AI Follow
+    public var AI_E: CREARecord.AI_FField? // AI Escort
+    public var CNDT: STRVField? // Cell escort/follow to string (optional)
+    public var AI_A: CREARecord.AI_AField? // AI Activate
+    public var DODT: DODTField // Cell Travel Destination
+    public var DNAM: STRVField // Cell name for previous DODT, if interior
+    public var XSCL: FLTVField? // Scale (optional) Only present if the scale is not 1.0
+    public var SCRI: FMIDField<SCPTRecord>? // Unknown
 
     init() {
     }

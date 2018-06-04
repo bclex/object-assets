@@ -11,12 +11,7 @@ namespace OA.Tes.FilePacks.Records
         {
             public enum REGNType : byte
             {
-                Objects = 0x02,
-                Weather = 0x03,
-                Map = 0x04,
-                Landscape = 0x05, // (CK will save but not show data entered here)
-                Grass = 0x06,
-                Sound = 0x07,
+                Objects = 2, Weather, Map, Landscape, Grass, Sound
             }
 
             public uint Type;

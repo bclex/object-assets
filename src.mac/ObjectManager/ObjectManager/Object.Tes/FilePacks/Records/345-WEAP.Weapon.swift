@@ -11,20 +11,7 @@ import Foundation
 public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
     public struct DATAField {
         public enum WEAPType {
-            case shortBladeOneHand = 0
-            case longBladeOneHand = 1
-            case longBladeTwoClose = 2
-            case bluntOneHand = 3
-            case bluntTwoClose = 4
-            case bluntTwoWide = 5
-            case spearTwoWide = 6
-            case axeOneHand = 7
-            case axeTwoHand = 8
-            case marksmanBow = 9
-            case marksmanCrossbow = 10
-            case marksmanThrown = 11
-            case arrow = 12
-            case bolt = 13
+            case shortBladeOneHand = 0, longBladeOneHand, longBladeTwoClose, bluntOneHand, bluntTwoClose, bluntTwoWide, spearTwoWide, axeOneHand, axeTwoHand, marksmanBow, marksmanCrossbow, marksmanThrown, arrow, bolt
         }
 
         public let weight: Float
@@ -42,8 +29,8 @@ public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
         public let thrustMax: UInt8
         public let flags: Int32 // 0 = ?, 1 = Ignore Normal Weapon Resistance?
 
-        init(r: BinaryReader, dataSize: UInt32, forFormat: GameFormatId) {
-            if forFormat == .TES3 {
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
+            guard format != .TES3 else {
                 weight = r.readLESingle()
                 value = r.readLEInt32()
                 type = r.readLEUInt16()
@@ -58,7 +45,7 @@ public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
                 thrustMin = r.readByte()
                 thrustMax = r.readByte()
                 flags = r.readLEInt32()
-                return;
+                return
             }
             type = UInt16(r.readLEUInt32())
             speed = r.readLESingle()
@@ -81,7 +68,7 @@ public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
     public let ENAM: FMIDField<ENCHRecord> // Enchantment ID
     public let SCRI: FMIDField<SCPTRecord> // Script (optional)
     // TES4
-    public let IN16Field? ANAM // Enchantment points (optional)
+    public let ANAM: IN16Field? // Enchantment points (optional)
 
     init() {
     }

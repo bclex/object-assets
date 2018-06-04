@@ -13,7 +13,7 @@ public class ALCHRecord: Record, IHaveEDID, IHaveMODL {
         public let value: Int32
         public let flags: Int32 //: AutoCalc
 
-        init(_ r: BinaryReader, _ dataSize: Int, for format: GameFormatId) {
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             weight = r.readLESingle()
             if format == .TES3 {
                 value = r.readLEInt32()

@@ -8,35 +8,34 @@
 
 public class SKILRecord: Record {
     // TESX
-    public struct DATAField
-    {
-        public int Action;
-        public int Attribute;
-        public uint Specialization // 0 = Combat, 1 = Magic, 2 = Stealth
-        public float[] UseValue // The use types for each skill are hard-coded.
+    public struct DATAField {
+        public let action: Int32
+        public let attribute: Int32
+        public let specialization: UInt32 // 0 = Combat, 1 = Magic, 2 = Stealth
+        public let useValue: [Float] // The use types for each skill are hard-coded.
 
-        public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            Action = formatId == GameFormatId.TES3 ? 0 : r.readLEInt32();
-            Attribute = r.readLEInt32();
-            Specialization = r.readLEUInt32();
-            UseValue = float[formatId == GameFormatId.TES3 ? 4 : 2];
-            for (var i = 0; i < UseValue.Length; i++)
-                UseValue[i] = r.readLESingle();
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
+            action = format == .TES3 ? 0 : r.readLEInt32()
+            attribute = r.readLEInt32()
+            specialization = r.readLEUInt32()
+            useValue = [Float](); useValue.allocateCapacity(format == .TES3 ? 4 : 2)
+            for i in 0..<useValue.capacity {
+                useValue[i] = r.readLESingle()
+            }
         }
     }
 
     public var description: String { return "SKIL: \(INDX):\(EDID)" }
-    public STRVField EDID  // Editor ID
-    public IN32Field INDX // Skill ID
-    public DATAField DATA // Skill Data
-    public STRVField DESC // Skill description
+    public var EDID: STRVField  // Editor ID
+    public var INDX: IN32Field // Skill ID
+    public var DATA: DATAField // Skill Data
+    public var DESC: STRVField // Skill description
     // TES4
-    public FILEField ICON // Icon
-    public STRVField ANAM // Apprentice Text
-    public STRVField JNAM // Journeyman Text
-    public STRVField ENAM // Expert Text
-    public STRVField MNAM // Master Text
+    public var ICON: FILEField // Icon
+    public var ANAM: STRVField // Apprentice Text
+    public var JNAM: STRVField // Journeyman Text
+    public var ENAM: STRVField // Expert Text
+    public var MNAM: STRVField // Master Text
 
     init() {
     }

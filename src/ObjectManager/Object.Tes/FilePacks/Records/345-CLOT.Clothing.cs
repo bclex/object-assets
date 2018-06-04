@@ -10,16 +10,7 @@ namespace OA.Tes.FilePacks.Records
         {
             public enum CLOTType
             {
-                Pants = 0,
-                Shoes = 1,
-                Shirt = 2,
-                Belt = 3,
-                Robe = 4,
-                R_Glove = 5,
-                L_Glove = 6,
-                Skirt = 7,
-                Ring = 8,
-                Amulet = 9,
+                Pants = 0, Shoes, Shirt, Belt, Robe, R_Glove, L_Glove, Skirt, Ring, Amulet
             }
 
             public int Value;

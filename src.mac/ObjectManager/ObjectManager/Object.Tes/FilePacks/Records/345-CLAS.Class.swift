@@ -7,8 +7,7 @@
 //
 
 public class CLASRecord: Record {
-    public struct DATAField
-    {
+    public struct DATAField {
         //wbArrayS('Primary Attributes', wbInteger('Primary Attribute', itS32, wbActorValueEnum), 2),
         //wbInteger('Specialization', itU32, wbSpecializationEnum),
         //wbArrayS('Major Skills', wbInteger('Major Skill', itS32, wbActorValueEnum), 7),
@@ -18,18 +17,17 @@ public class CLASRecord: Record {
         //wbInteger('Maximum training level', itU8),
         //wbInteger('Unused', itU16)
 
-        public DATAField(UnityBinaryReader r, uint dataSize)
-        {
-            r.skipBytes((int)dataSize);
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            r.skipBytes(dataSize)
         }
     }
 
     public var description: String { return "CLAS: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public STRVField FULL // Name
-    public STRVField DESC // Description
-    public STRVField? ICON // Icon (Optional)
-    public DATAField DATA // Data
+    public var EDID: STRVField   // Editor ID
+    public var FULL: STRVField  // Name
+    public var DESC: STRVField  // Description
+    public var ICON: STRVField? // Icon (Optional)
+    public var DATA: DATAField  // Data
 
     init() {
     }

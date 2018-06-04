@@ -8,16 +8,16 @@
 
 public class DOORRecord: Record, IHaveEDID, IHaveMODL {
     public var description: String { return "DOOR: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public STRVField FULL // Door name
-    public MODLGroup MODL  // NIF model filename
-    public FMIDField<SCPTRecord>? SCRI // Script (optional)
-    public FMIDField<SOUNRecord> SNAM // Open Sound
-    public FMIDField<SOUNRecord> ANAM // Close Sound
+    public var EDID: STRVField  // Editor ID
+    public var FULL: STRVField // Door name
+    public var MODL: MODLGroup  // NIF model filename
+    public var SCRI: FMIDField<SCPTRecord>? // Script (optional)
+    public var SNAM: FMIDField<SOUNRecord>  // Open Sound
+    public var ANAM: FMIDField<SOUNRecord>  // Close Sound
     // TES4
-    public FMIDField<SOUNRecord> BNAM // Loop Sound
-    public BYTEField FNAM // Flags
-    public FMIDField<Record> TNAM // Random teleport destination
+    public var BNAM: FMIDField<SOUNRecord> // Loop Sound
+    public var FNAM: BYTEField // Flags
+    public var TNAM: FMIDField<Record> // Random teleport destination
 
     init() {
     }
@@ -25,7 +25,7 @@ public class DOORRecord: Record, IHaveEDID, IHaveMODL {
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-                "NAME": EDID = STRVField(r, dataSize)
+             "NAME": EDID = STRVField(r, dataSize)
         case "FULL": FULL = STRVField(r, dataSize)
         case "FNAM": if format != .TES3 { FNAM = BYTEField(r, dataSize) } else { FULL = STRVField(r, dataSize) }
         case "MODL": MODL = MODLGroup(r, dataSize)

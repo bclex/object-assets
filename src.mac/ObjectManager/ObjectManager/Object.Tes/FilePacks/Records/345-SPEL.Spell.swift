@@ -8,32 +8,31 @@
 
 public class SPELRecord: Record {
     // TESX
-    public struct SPITField
-    {
-        public override string ToString() => $"{Type}";
-        public uint Type // TES3: 0 = Spell, 1 = Ability, 2 = Blight, 3 = Disease, 4 = Curse, 5 = Power
-                            // TES4: 0 = Spell, 1 = Disease, 2 = Power, 3 = Lesser Power, 4 = Ability, 5 = Poison
-        public int SpellCost;
-        public uint Flags // 0x0001 = AutoCalc, 0x0002 = PC Start, 0x0004 = Always Succeeds
+    public struct SPITField: CustomStringConvertible {
+        public var description: String { return "\(type)" }
+        // TES3: 0 = Spell, 1 = Ability, 2 = Blight, 3 = Disease, 4 = Curse, 5 = Power
+        // TES4: 0 = Spell, 1 = Disease, 2 = Power, 3 = Lesser Power, 4 = Ability, 5 = Poison
+        public let type: UInt32
+        public let spellCost: Int32
+        public let flags: UInt32 // 0x0001 = AutoCalc, 0x0002 = PC Start, 0x0004 = Always Succeeds
         // TES4
-        public int SpellLevel;
+        public let spellLevel: Int32
 
-        public SPITField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            Type = r.readLEUInt32();
-            SpellCost = r.readLEInt32();
-            SpellLevel = formatId != GameFormatId.TES3 ? r.readLEInt32() : 0;
-            Flags = r.readLEUInt32();
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
+            type = r.readLEUInt32()
+            spellCost = r.readLEInt32()
+            spellLevel = format != .TES3 ? r.readLEInt32() : 0
+            flags = r.readLEUInt32()
         }
     }
 
     public var description: String { return "SPEL: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public STRVField FULL // Spell name
-    public SPITField SPIT // Spell data
-    public List<ENCHRecord.EFITField> EFITs = List<ENCHRecord.EFITField>() // Effect Data
+    public var EDID: STRVField // Editor ID
+    public var FULL: STRVField // Spell name
+    public var SPIT: SPITField // Spell data
+    public var EFITs = [ENCHRecord.EFITField]() // Effect Data
     // TES4
-    public List<ENCHRecord.SCITField> SCITs = List<ENCHRecord.SCITField>() // Script effect data
+    public var SCITs = [ENCHRecord.SCITField]() // Script effect data
 
     init() {
     }

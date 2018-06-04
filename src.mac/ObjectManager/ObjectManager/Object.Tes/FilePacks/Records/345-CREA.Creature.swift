@@ -7,209 +7,194 @@
 //
 
 public class CREARecord: Record, IHaveEDID, IHaveMODL {
-    [Flags]
-    public enum CREAFlags : uint
-    {
-        Biped = 0x0001,
-        Respawn = 0x0002,
-        WeaponAndShield = 0x0004,
-        None = 0x0008,
-        Swims = 0x0010,
-        Flies = 0x0020,
-        Walks = 0x0040,
-        DefaultFlags = 0x0048,
-        Essential = 0x0080,
-        SkeletonBlood = 0x0400,
-        MetalBlood = 0x0800
+    public enum CREAFlags: UInt32 {
+        case Biped = 0x0001
+        case Respawn = 0x0002
+        case WeaponAndShield = 0x0004
+        case None = 0x0008
+        case Swims = 0x0010
+        case Flies = 0x0020
+        case Walks = 0x0040
+        case DefaultFlags = 0x0048
+        case Essential = 0x0080
+        case SkeletonBlood = 0x0400
+        case MetalBlood = 0x0800
     }
 
-    public struct NPDTField
-    {
-        public int Type // 0 = Creature, 1 = Daedra, 2 = Undead, 3 = Humanoid
-        public int Level;
-        public int Strength;
-        public int Intelligence;
-        public int Willpower;
-        public int Agility;
-        public int Speed;
-        public int Endurance;
-        public int Personality;
-        public int Luck;
-        public int Health;
-        public int SpellPts;
-        public int Fatigue;
-        public int Soul;
-        public int Combat;
-        public int Magic;
-        public int Stealth;
-        public int AttackMin1;
-        public int AttackMax1;
-        public int AttackMin2;
-        public int AttackMax2;
-        public int AttackMin3;
-        public int AttackMax3;
-        public int Gold;
+    public struct NPDTField {
+        public let type: Int32 // 0 = Creature, 1 = Daedra, 2 = Undead, 3 = Humanoid
+        public let level: Int32
+        public let strength: Int32
+        public let intelligence: Int32
+        public let willpower: Int32
+        public let agility: Int32
+        public let speed: Int32
+        public let endurance: Int32
+        public let personality: Int32
+        public let luck: Int32
+        public let health: Int32
+        public let spellPts: Int32
+        public let fatigue: Int32
+        public let soul: Int32
+        public let combat: Int32
+        public let magic: Int32
+        public let stealth: Int32
+        public let attackMin1: Int32
+        public let attackMax1: Int32
+        public let attackMin2: Int32
+        public let attackMax2: Int32
+        public let attackMin3: Int32
+        public let attackMax3: Int32
+        public let gold: Int32
 
-        public NPDTField(UnityBinaryReader r, uint dataSize)
-        {
-            Type = r.readLEInt32();
-            Level = r.readLEInt32();
-            Strength = r.readLEInt32();
-            Intelligence = r.readLEInt32();
-            Willpower = r.readLEInt32();
-            Agility = r.readLEInt32();
-            Speed = r.readLEInt32();
-            Endurance = r.readLEInt32();
-            Personality = r.readLEInt32();
-            Luck = r.readLEInt32();
-            Health = r.readLEInt32();
-            SpellPts = r.readLEInt32();
-            Fatigue = r.readLEInt32();
-            Soul = r.readLEInt32();
-            Combat = r.readLEInt32();
-            Magic = r.readLEInt32();
-            Stealth = r.readLEInt32();
-            AttackMin1 = r.readLEInt32();
-            AttackMax1 = r.readLEInt32();
-            AttackMin2 = r.readLEInt32();
-            AttackMax2 = r.readLEInt32();
-            AttackMin3 = r.readLEInt32();
-            AttackMax3 = r.readLEInt32();
-            Gold = r.readLEInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            type = r.readLEInt32()
+            level = r.readLEInt32()
+            strength = r.readLEInt32()
+            intelligence = r.readLEInt32()
+            willpower = r.readLEInt32()
+            agility = r.readLEInt32()
+            speed = r.readLEInt32()
+            endurance = r.readLEInt32()
+            personality = r.readLEInt32()
+            luck = r.readLEInt32()
+            health = r.readLEInt32()
+            spellPts = r.readLEInt32()
+            fatigue = r.readLEInt32()
+            soul = r.readLEInt32()
+            combat = r.readLEInt32()
+            magic = r.readLEInt32()
+            stealth = r.readLEInt32()
+            attackMin1 = r.readLEInt32()
+            attackMax1 = r.readLEInt32()
+            attackMin2 = r.readLEInt32()
+            attackMax2 = r.readLEInt32()
+            attackMin3 = r.readLEInt32()
+            attackMax3 = r.readLEInt32()
+            gold = r.readLEInt32()
         }
     }
 
-    public struct AIDTField
-    {
-        public enum AIFlags : uint
-        {
-            Weapon = 0x00001,
-            Armor = 0x00002,
-            Clothing = 0x00004,
-            Books = 0x00008,
-            Ingrediant = 0x00010,
-            Picks = 0x00020,
-            Probes = 0x00040,
-            Lights = 0x00080,
-            Apparatus = 0x00100,
-            Repair = 0x00200,
-            Misc = 0x00400,
-            Spells = 0x00800,
-            MagicItems = 0x01000,
-            Potions = 0x02000,
-            Training = 0x04000,
-            Spellmaking = 0x08000,
-            Enchanting = 0x10000,
-            RepairItem = 0x20000
+    public struct AIDTField {
+        public enum AIFlags: UInt32 {
+            case Weapon = 0x00001
+            case Armor = 0x00002
+            case Clothing = 0x00004
+            case Books = 0x00008
+            case Ingrediant = 0x00010
+            case Picks = 0x00020
+            case Probes = 0x00040
+            case Lights = 0x00080
+            case Apparatus = 0x00100
+            case Repair = 0x00200
+            case Misc = 0x00400
+            case Spells = 0x00800
+            case MagicItems = 0x01000
+            case Potions = 0x02000
+            case Training = 0x04000
+            case Spellmaking = 0x08000
+            case Enchanting = 0x10000
+            case RepairItem = 0x20000
         }
 
-        public byte Hello;
-        public byte Unknown1;
-        public byte Fight;
-        public byte Flee;
-        public byte Alarm;
-        public byte Unknown2;
-        public byte Unknown3;
-        public byte Unknown4;
-        public uint Flags;
+        public let hello: UInt8
+        public let unknown1: UInt8
+        public let fight: UInt8
+        public let flee: UInt8
+        public let alarm: UInt8
+        public let unknown2: UInt8
+        public let unknown3: UInt8
+        public let unknown4: UInt8
+        public let flags: UInt32
 
-        public AIDTField(UnityBinaryReader r, uint dataSize)
-        {
-            Hello = r.readByte();
-            Unknown1 = r.readByte();
-            Fight = r.readByte();
-            Flee = r.readByte();
-            Alarm = r.readByte();
-            Unknown2 = r.readByte();
-            Unknown3 = r.readByte();
-            Unknown4 = r.readByte();
-            Flags = r.readLEUInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            hello = r.readByte()
+            unknown1 = r.readByte()
+            fight = r.readByte()
+            flee = r.readByte()
+            alarm = r.readByte()
+            unknown2 = r.readByte()
+            unknown3 = r.readByte()
+            unknown4 = r.readByte()
+            flags = r.readLEUInt32()
         }
     }
 
-    public struct AI_WField
-    {
-        public short Distance;
-        public short Duration;
-        public byte TimeOfDay;
-        public byte[] Idle;
-        public byte Unknown;
+    public struct AI_WField {
+        public let distance: Int16
+        public let duration: Int16
+        public let timeOfDay: UInt8
+        public let idle: [UInt8]
+        public let unknown: Int8
 
-        public AI_WField(UnityBinaryReader r, uint dataSize, byte mode)
-        {
-            Distance = r.readLEInt16();
-            Duration = r.readLEInt16();
-            TimeOfDay = r.readByte();
-            Idle = r.readBytes(8);
-            Unknown = r.readByte();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            distance = r.readLEInt16()
+            duration = r.readLEInt16()
+            timeOfDay = r.readByte()
+            idle = r.readBytes(8)
+            unknown = r.readByte()
         }
     }
 
-    public struct AI_TField
-    {
-        public float X;
-        public float Y;
-        public float Z;
-        public float Unknown;
+    public struct AI_TField {
+        public let x: Float
+        public let y: Float
+        public let z: Float
+        public let unknown: Float
 
-        public AI_TField(UnityBinaryReader r, uint dataSize)
-        {
-            X = r.readLESingle();
-            Y = r.readLESingle();
-            Z = r.readLESingle();
-            Unknown = r.readLESingle();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            x = r.readLESingle()
+            y = r.readLESingle()
+            z = r.readLESingle()
+            unknown = r.readLESingle()
         }
     }
 
-    public struct AI_FField
-    {
-        public float X;
-        public float Y;
-        public float Z;
-        public short Duration;
-        public string Id;
-        public short Unknown;
+    public struct AI_FField {
+        public let x: Float
+        public let y: Float
+        public let z: Float
+        public let duration: Int16
+        public let id: String
+        public let unknown: Int16
 
-        public AI_FField(UnityBinaryReader r, uint dataSize)
-        {
-            X = r.readLESingle();
-            Y = r.readLESingle();
-            Z = r.readLESingle();
-            Duration = r.readLEInt16();
-            Id = r.readASCIIString(32, ASCIIFormat.ZeroPadded);
-            Unknown = r.readLEInt16();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            x = r.readLESingle()
+            y = r.readLESingle()
+            z = r.readLESingle()
+            duration = r.readLEInt16()
+            id = r.readASCIIString(32, .zeroPadded)
+            unknown = r.readLEInt16()
         }
     }
 
-    public struct AI_AField
-    {
-        public string Name;
-        public byte Unknown;
+    public struct AI_AField {
+        public let name: String
+        public let unknown: UInt8
 
-        public AI_AField(UnityBinaryReader r, uint dataSize)
-        {
-            Name = r.readASCIIString(32, ASCIIFormat.ZeroPadded);
-            Unknown = r.readByte();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            name = r.readASCIIString(32, .zeroPadded)
+            uUnknown = r.readByte()
         }
     }
 
     public var description: String { return "CREA: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public MODLGroup MODL  // NIF Model
-    public STRVField FNAM // Creature name
-    public NPDTField NPDT // Creature data
-    public IN32Field FLAG // Creature Flags
-    public FMIDField<SCPTRecord> SCRI // Script
-    public CNTOField NPCO // Item record
-    public AIDTField AIDT // AI data
-    public AI_WField AI_W // AI Wander
-    public AI_TField? AI_T // AI Travel
-    public AI_FField? AI_F // AI Follow
-    public AI_FField? AI_E // AI Escort
-    public AI_AField? AI_A // AI Activate
-    public FLTVField? XSCL // Scale (optional), Only present if the scale is not 1.0
-    public STRVField? CNAM;
-    public List<STRVField> NPCSs = List<STRVField>();
+    public var EDID: STRVField  // Editor ID
+    public var MODL: MODLGroup  // NIF Model
+    public var FNAM: STRVField // Creature name
+    public var NPDT: NPDTField // Creature data
+    public var FLAG: IN32Field // Creature Flags
+    public var SCRI: FMIDField<SCPTRecord> // Script
+    public var NPCO: CNTOField // Item record
+    public var AIDT: AIDTField // AI data
+    public var AI_W: AI_WField // AI Wander
+    public var AI_T: AI_TField? // AI Travel
+    public var AI_F: AI_FField? // AI Follow
+    public var AI_E: AI_FField? // AI Escort
+    public var AI_A: AI_AField? // AI Activate
+    public var XSCL: FLTVField? // Scale (optional), Only present if the scale is not 1.0
+    public var CNAM: STRVField?
+    public var NPCSs = [STRVField]()
 
     init() {
     }

@@ -48,9 +48,21 @@ namespace OA.Tes.FilePacks.Records
             {
                 public byte SkillId;
                 public sbyte Bonus;
+
+                public SkillBoost(UnityBinaryReader r, int dataSize, GameFormatId format)
+                {
+                    if (format == GameFormatId.TES3)
+                    {
+                        SkillId = (byte)r.ReadLEInt32();
+                        Bonus = (sbyte)r.ReadLEInt32();
+                        return;
+                    }
+                    SkillId = r.ReadByte();
+                    Bonus = r.ReadSByte();
+                }
             }
 
-            public struct Gender
+            public struct RaceStats
             {
                 public float Height;
                 public float Weight;
@@ -65,20 +77,17 @@ namespace OA.Tes.FilePacks.Records
                 public byte Luck;
             }
 
-            public SkillBoost[] SkillBoosts; // Skill Boosts
-            public Gender Male;
-            public Gender Female;
+            public SkillBoost[] SkillBoosts = new SkillBoost[7]; // Skill Boosts
+            public RaceStats Male = new RaceStats();
+            public RaceStats Female = new RaceStats();
             public uint Flags; // 1 = Playable 2 = Beast Race
 
             public DATAField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                Male = new Gender();
-                Female = new Gender();
-                SkillBoosts = new SkillBoost[7];
                 if (format == GameFormatId.TES3)
                 {
                     for (var i = 0; i < SkillBoosts.Length; i++)
-                        SkillBoosts[i] = new SkillBoost { SkillId = (byte)r.ReadLEInt32(), Bonus = (sbyte)r.ReadLEInt32() };
+                        SkillBoosts[i] = new SkillBoost(r, 8, format);
                     Male.Strength = (byte)r.ReadLEInt32(); Female.Strength = (byte)r.ReadLEInt32();
                     Male.Intelligence = (byte)r.ReadLEInt32(); Female.Intelligence = (byte)r.ReadLEInt32();
                     Male.Willpower = (byte)r.ReadLEInt32(); Female.Willpower = (byte)r.ReadLEInt32();
@@ -93,12 +102,10 @@ namespace OA.Tes.FilePacks.Records
                     return;
                 }
                 for (var i = 0; i < SkillBoosts.Length; i++)
-                    SkillBoosts[i] = new SkillBoost { SkillId = r.ReadByte(), Bonus = (sbyte)r.ReadByte() };
+                    SkillBoosts[i] = new SkillBoost(r, 2, format);
                 r.ReadLEInt16(); // padding
-                Male.Height = r.ReadLESingle();
-                Female.Height = r.ReadLESingle();
-                Male.Weight = r.ReadLESingle();
-                Female.Weight = r.ReadLESingle();
+                Male.Height = r.ReadLESingle(); Female.Height = r.ReadLESingle();
+                Male.Weight = r.ReadLESingle(); Female.Weight = r.ReadLESingle();
                 Flags = r.ReadLEUInt32();
             }
 
@@ -128,15 +135,7 @@ namespace OA.Tes.FilePacks.Records
         {
             public enum Indx : uint
             {
-                Head,
-                Ear_Male,
-                Ear_Female,
-                Mouth,
-                Teeth_Lower,
-                Teeth_Upper,
-                Tongue,
-                Eye_Left,
-                Eye_Right,
+                Head, Ear_Male, Ear_Female, Mouth, Teeth_Lower, Teeth_Upper, Tongue, Eye_Left, Eye_Right,
             }
 
             public UI32Field INDX;
@@ -148,11 +147,7 @@ namespace OA.Tes.FilePacks.Records
         {
             public enum Indx : uint
             {
-                UpperBody,
-                LowerBody,
-                Hand,
-                Foot,
-                Tail
+                UpperBody, LowerBody, Hand, Foot, Tail
             }
 
             public UI32Field INDX;
@@ -189,10 +184,10 @@ namespace OA.Tes.FilePacks.Records
         public UNKNField SNAM; // Unknown
 
         // Parts
-        public sbyte NameState;
-        public sbyte GenderState;
         public List<FacePartGroup> FaceParts = new List<FacePartGroup>();
         public BodyGroup[] Bodys = new[] { new BodyGroup(), new BodyGroup() };
+        sbyte _nameState;
+        sbyte _genderState;
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
@@ -208,7 +203,7 @@ namespace OA.Tes.FilePacks.Records
                 }
             if (format == GameFormatId.TES4)
             {
-                switch (NameState)
+                switch (_nameState)
                 {
                     case 0:
                         switch (type)
@@ -225,7 +220,7 @@ namespace OA.Tes.FilePacks.Records
                             case "UNAM": UNAM = new FLTVField(r, dataSize); return true;
                             case "XNAM": XNAM = new UNKNField(r, dataSize); return true;
                             case "ATTR": DATA.ATTRField(r, dataSize); return true;
-                            case "NAM0": NameState++; return true;
+                            case "NAM0": _nameState++; return true;
                             default: return false;
                         }
                     case 1: // Face Data
@@ -235,19 +230,19 @@ namespace OA.Tes.FilePacks.Records
                             case "MODL": ArrayUtils.Last(FaceParts).MODL = new MODLGroup(r, dataSize); return true;
                             case "ICON": ArrayUtils.Last(FaceParts).ICON = new FILEField(r, dataSize); return true;
                             case "MODB": ArrayUtils.Last(FaceParts).MODL.MODBField(r, dataSize); return true;
-                            case "NAM1": NameState++; return true;
+                            case "NAM1": _nameState++; return true;
                             default: return false;
                         }
                     case 2: // Body Data
                         switch (type)
                         {
-                            case "MNAM": GenderState = 0; return true;
-                            case "FNAM": GenderState = 1; return true;
-                            case "MODL": Bodys[GenderState].MODL = new FILEField(r, dataSize); return true;
-                            case "MODB": Bodys[GenderState].MODB = new FLTVField(r, dataSize); return true;
-                            case "INDX": Bodys[GenderState].BodyParts.Add(new BodyPartGroup { INDX = new UI32Field(r, dataSize) }); return true;
-                            case "ICON": ArrayUtils.Last(Bodys[GenderState].BodyParts).ICON = new FILEField(r, dataSize); return true;
-                            case "HNAM": NameState++; break;
+                            case "MNAM": _genderState = 0; return true;
+                            case "FNAM": _genderState = 1; return true;
+                            case "MODL": Bodys[_genderState].MODL = new FILEField(r, dataSize); return true;
+                            case "MODB": Bodys[_genderState].MODB = new FLTVField(r, dataSize); return true;
+                            case "INDX": Bodys[_genderState].BodyParts.Add(new BodyPartGroup { INDX = new UI32Field(r, dataSize) }); return true;
+                            case "ICON": ArrayUtils.Last(Bodys[_genderState].BodyParts).ICON = new FILEField(r, dataSize); return true;
+                            case "HNAM": _nameState++; break;
                             default: return false;
                         }
                         goto case 3;

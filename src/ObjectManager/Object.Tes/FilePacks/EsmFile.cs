@@ -14,7 +14,7 @@ namespace OA.Tes.FilePacks
         public override string ToString() => $"{Path.GetFileName(FilePath)}";
         UnityBinaryReader _r;
         public string FilePath;
-        public GameFormatId FormatId;
+        public GameFormatId Format;
         public Dictionary<string, RecordGroup> Groups;
         public Dictionary<Type, List<IRecord>> recordsByType;
         public Dictionary<string, IRecord> objectsByIDString;
@@ -26,7 +26,7 @@ namespace OA.Tes.FilePacks
             if (filePath == null)
                 return;
             FilePath = filePath;
-            FormatId = GetFormatId();
+            Format = GetFormatId();
             _r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             var watch = new Stopwatch();
             watch.Start();
@@ -77,26 +77,26 @@ namespace OA.Tes.FilePacks
 
         void Read(byte level)
         {
-            var rootHeader = new Header(_r, FormatId);
-            if ((FormatId == GameFormatId.TES3 && rootHeader.Type != "TES3") || (FormatId != GameFormatId.TES3 && rootHeader.Type != "TES4"))
-                throw new FormatException($"{FilePath} record header {rootHeader.Type} is not valid for this {FormatId}");
+            var rootHeader = new Header(_r, Format);
+            if ((Format == GameFormatId.TES3 && rootHeader.Type != "TES3") || (Format != GameFormatId.TES3 && rootHeader.Type != "TES4"))
+                throw new FormatException($"{FilePath} record header {rootHeader.Type} is not valid for this {Format}");
             var rootRecord = rootHeader.CreateRecord(rootHeader.Position);
-            rootRecord.Read(_r, FilePath, FormatId);
+            rootRecord.Read(_r, FilePath, Format);
             // morrowind hack
-            if (FormatId == GameFormatId.TES3)
+            if (Format == GameFormatId.TES3)
             {
-                var group = new RecordGroup(_r, FilePath, FormatId, level);
+                var group = new RecordGroup(_r, FilePath, Format, level);
                 group.AddHeader(new Header
                 {
                     Label = string.Empty,
                     DataSize = (uint)(_r.BaseStream.Length - _r.BaseStream.Position),
                     Position = _r.BaseStream.Position,
                 }, int.MaxValue);
-                //group.Read();
+                group.Load();
                 Groups = group.Records.GroupBy(x => x.Header.Type)
                     .ToDictionary(x => x.Key, x =>
                     {
-                        var s = new RecordGroup(_r, FilePath, FormatId, level) { Records = x.ToList() };
+                        var s = new RecordGroup(_r, FilePath, Format, level) { Records = x.ToList() };
                         s.AddHeader(new Header { Label = x.Key });
                         return s;
                     });
@@ -107,13 +107,13 @@ namespace OA.Tes.FilePacks
             var endPosition = _r.BaseStream.Length;
             while (_r.BaseStream.Position < endPosition)
             {
-                var header = new Header(_r, FormatId);
+                var header = new Header(_r, Format);
                 if (header.Type != "GRUP")
                     throw new InvalidOperationException($"{header.Type} not GRUP");
                 var nextPosition = _r.BaseStream.Position + header.DataSize;
                 if (!Groups.TryGetValue(header.Label, out RecordGroup group))
                 {
-                    group = new RecordGroup(_r, FilePath, FormatId, level);
+                    group = new RecordGroup(_r, FilePath, Format, level);
                     Groups.Add(header.Label, group);
                 }
                 group.AddHeader(header); Console.WriteLine($"Read: {group}");

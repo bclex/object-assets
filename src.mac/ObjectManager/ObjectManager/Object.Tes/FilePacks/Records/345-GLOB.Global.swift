@@ -8,9 +8,9 @@
 
 public class GLOBRecord: Record, IHaveEDID {
     public var description: String { return "GLOB: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public BYTEField? FNAM // Type of global (s, l, f)
-    public FLTVField? FLTV // Float data
+    public var EDID: STRVField // Editor ID
+    public var FNAM: BYTEField? // Type of global (s, l, f)
+    public var FLTV: FLTVField? // Float data
 
     init() {
     }

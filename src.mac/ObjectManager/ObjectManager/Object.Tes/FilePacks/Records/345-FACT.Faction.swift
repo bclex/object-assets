@@ -8,51 +8,46 @@
 
 public class FACTRecord: Record {
     // TESX
-    public class RNAMGroup
-    {
-        public override string ToString() => $"{RNAM.Value}:{MNAM.Value}";
-        public IN32Field RNAM // rank
-        public STRVField MNAM // male
-        public STRVField FNAM // female
-        public STRVField INAM // insignia
+    public class RNAMGroup: CustomStringConvertible {
+        public var description: String { return "FACT: \(RNAM.value):\(MNAM.value)" }
+        public var RNAM: IN32Field // rank
+        public var MNAM: STRVField // male
+        public var FNAM: STRVField // female
+        public var INAM: STRVField // insignia
     }
 
     // TES3
-    public struct FADTField
-    {
-        public FADTField(UnityBinaryReader r, uint dataSize)
-        {
-            r.skipBytes(dataSize);
+    public struct FADTField {
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            r.skipBytes(dataSize)
         }
     }
 
     // TES4
-    public struct XNAMField
-    {
-        public override string ToString() => $"{FormId}";
-        public int FormId;
-        public int Mod;
-        public int Combat;
+    public struct XNAMField: CustomStringConvertible {
+        public var description: String { return "FACT: \(formId)" }
+        public let formId: Int32
+        public let mod: Int32
+        public let combat: Int32
 
-        public XNAMField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            FormId = r.readLEInt32();
-            Mod = r.readLEInt32();
-            Combat = formatId > GameFormatId.TES4 ? r.readLEInt32() : 0 // 0 - Neutral, 1 - Enemy, 2 - Ally, 3 - Friend
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
+            formId = r.readLEInt32()
+            mod = r.readLEInt32()
+            combat = format > .TES4 ? r.readLEInt32() : 0 // 0 - Neutral, 1 - Enemy, 2 - Ally, 3 - Friend
         }
     }
 
     public var description: String { return "FACT: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public STRVField FNAM // Faction name
-    public List<RNAMGroup> RNAMs = List<RNAMGroup>() // Rank Name
-    public FADTField FADT // Faction data
-    public List<STRVField> ANAMs = List<STRVField>() // Faction name
-    public List<INTVField> INTVs = List<INTVField>() // Faction reaction
+    public var EDID: STRVField  // Editor ID
+    public var FNAM: STRVField // Faction name
+    public var RNAMs = [RNAMGroup]() // Rank Name
+    public var FADTField FADT // Faction data
+    public var ANAMs = [STRVField]() // Faction name
+    public var INTVs = [INTVField]() // Faction reaction
     // TES4
-    public XNAMField XNAM // Interfaction Relations
-    public INTVField DATA // Flags (byte, uint32)
-    public UI32Field CNAM;
+    public var XNAM: XNAMField // Interfaction Relations
+    public var DATA: INTVField // Flags (byte, uint32)
+    public var CNAM: UI32Field
 
     init() {
     }

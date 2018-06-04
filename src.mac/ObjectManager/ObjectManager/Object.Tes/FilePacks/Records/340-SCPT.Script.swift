@@ -28,7 +28,7 @@ public class SCPTRecord: Record {
         public let parameter1: Int32 // Parameter #1
         public let parameter2: Int32 // Parameter #2
 
-        init(_ r: BinaryReader, _ dataSize: Int, for format: GameFormatId) {
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             guard format != .TES3 else {
                 index = r.readByte()
                 type = r.readByte()

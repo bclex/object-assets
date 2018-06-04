@@ -134,7 +134,7 @@ namespace OA.Tes.FilePacks.Records
             public byte[] Idle;
             public byte Unknown;
 
-            public AI_WField(UnityBinaryReader r, int dataSize, byte mode)
+            public AI_WField(UnityBinaryReader r, int dataSize)
             {
                 Distance = r.ReadLEInt16();
                 Duration = r.ReadLEInt16();
@@ -223,7 +223,7 @@ namespace OA.Tes.FilePacks.Records
                     case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
                     case "NPCO": NPCO = new CNTOField(r, dataSize, format); return true;
                     case "AIDT": AIDT = new AIDTField(r, dataSize); return true;
-                    case "AI_W": AI_W = new AI_WField(r, dataSize, 0); return true;
+                    case "AI_W": AI_W = new AI_WField(r, dataSize); return true;
                     case "AI_T": AI_T = new AI_TField(r, dataSize); return true;
                     case "AI_F": AI_F = new AI_FField(r, dataSize); return true;
                     case "AI_E": AI_E = new AI_FField(r, dataSize); return true;

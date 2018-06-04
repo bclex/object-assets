@@ -8,60 +8,58 @@
 
 public class INGRRecord: Record, IHaveEDID, IHaveMODL {
     // TES3
-    public struct IRDTField
-    {
-        public float Weight;
-        public int Value;
-        public int[] EffectId // 0 or -1 means no effect
-        public int[] SkillId // only for Skill related effects, 0 or -1 otherwise
-        public int[] AttributeId // only for Attribute related effects, 0 or -1 otherwise
+    public struct IRDTField {
+        public let weight: Float
+        public let value: Int32
+        public let effectId: [Int32] // 0 or -1 means no effect
+        public let skillId: [Int32] // only for Skill related effects, 0 or -1 otherwise
+        public let attributeId: [Int32] // only for Attribute related effects, 0 or -1 otherwise
 
-        public IRDTField(UnityBinaryReader r, uint dataSize)
-        {
-            Weight = r.readLESingle();
-            Value = r.readLEInt32();
-            EffectId = int[4];
-            for (var i = 0; i < EffectId.Length; i++)
-                EffectId[i] = r.readLEInt32();
-            SkillId = int[4];
-            for (var i = 0; i < SkillId.Length; i++)
-                SkillId[i] = r.readLEInt32();
-            AttributeId = int[4];
-            for (var i = 0; i < AttributeId.Length; i++)
-                AttributeId[i] = r.readLEInt32();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            weight = r.readLESingle();
+            value = r.readLEInt32();
+            effectId = [Int32](); effectId.allocateCapacity(4)
+            for i in 0..<effectId.capacity {
+                effectId[i] = r.readLEInt32()
+            }
+            skillId = [Int32](); skillId.allocateCapacity(4)
+            for i in 0..<skillId.capacity {
+                skillId[i] = r.readLEInt32()
+            }
+            attributeId = [Int32](); attributeId.allocateCapacity(4)
+            for i in 0..< attributeId.capacity {
+                attributeId[i] = r.readLEInt32()
+            }
         }
     }
 
     // TES4
-    public class DATAField
-    {
-        public float Weight;
-        public int Value;
-        public uint Flags;
+    public class DATAField {
+        public let weight: Float
+        public var value: Int32
+        public var flags: UInt32
 
-        public DATAField(UnityBinaryReader r, uint dataSize)
-        {
-            Weight = r.readLESingle();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            weight = r.readLESingle()
         }
 
-        public void ENITField(UnityBinaryReader r, uint dataSize)
-        {
-            Value = r.readLEInt32();
-            Flags = r.readLEUInt32();
+        func ENITField(_ r: BinaryReader, _ dataSize: Int) {
+            value = r.readLEInt32()
+            flags = r.readLEUInt32()
         }
     }
 
     public var description: String { return "INGR: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public MODLGroup MODL  // Model Name
-    public STRVField FULL // Item Name
-    public IRDTField IRDT // Ingrediant Data //: TES3
-    public DATAField DATA // Ingrediant Data //: TES4
-    public FILEField ICON // Inventory Icon
-    public FMIDField<SCPTRecord> SCRI // Script Name
+    public var EDID: STRVField // Editor ID
+    public var MODL: MODLGroup // Model Name
+    public var FULL: STRVField // Item Name
+    public var IRDT: IRDTField // Ingrediant Data //: TES3
+    public var DATA: DATAField // Ingrediant Data //: TES4
+    public var ICON: FILEField // Inventory Icon
+    public var SCRI: FMIDField<SCPTRecord> // Script Name
     // TES4
-    public List<ENCHRecord.EFITField> EFITs = List<ENCHRecord.EFITField>() // Effect Data
-    public List<ENCHRecord.SCITField> SCITs = List<ENCHRecord.SCITField>() // Script effect data
+    public var EFITs = [ENCHRecord.EFITField]() // Effect Data
+    public var SCITs = [ENCHRecord.SCITField]() // Script effect data
 
     init() {
     }
@@ -69,7 +67,7 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
     override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-                "NAME": EDID = STRVField(r, dataSize)
+             "NAME": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL.MODBField(r, dataSize)
         case "MODT": MODL.MODTField(r, dataSize)
@@ -78,7 +76,7 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
         case "DATA": DATA = DATAField(r, dataSize)
         case "IRDT": IRDT = IRDTField(r, dataSize)
         case "ICON",
-                "ITEX": ICON = FILEField(r, dataSize)
+             "ITEX": ICON = FILEField(r, dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
             //
         case "ENIT": DATA.ENITField(r, dataSize)

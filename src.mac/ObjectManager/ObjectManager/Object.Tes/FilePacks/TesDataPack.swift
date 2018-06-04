@@ -8,8 +8,7 @@
 
 import Foundation
 
-public class TesDataPack: EsmFile //, IDataPack
-{
+public class TesDataPack: EsmFile, IDataPack {
     let _webPath: String
 
     init(filePath: String, string webPath: String, for game: gameId) {

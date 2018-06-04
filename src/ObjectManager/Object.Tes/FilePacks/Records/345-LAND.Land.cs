@@ -56,13 +56,11 @@ namespace OA.Tes.FilePacks.Records
                     TextureIndices = new uint[dataSize >> 1];
                     for (var i = 0; i < TextureIndices.Length; i++)
                         TextureIndices[i] = r.ReadLEUInt16();
+                    return;
                 }
-                else
-                {
-                    TextureIndices = new uint[dataSize >> 2];
-                    for (var i = 0; i < TextureIndices.Length; i++)
-                        TextureIndices[i] = r.ReadLEUInt32();
-                }
+                TextureIndices = new uint[dataSize >> 2];
+                for (var i = 0; i < TextureIndices.Length; i++)
+                    TextureIndices[i] = r.ReadLEUInt32();
             }
         }
 
@@ -129,10 +127,11 @@ namespace OA.Tes.FilePacks.Records
 
         public override string ToString() => $"LAND: {INTV}";
         public IN32Field DATA; // Unknown (default of 0x09) Changing this value makes the land 'disappear' in the editor.
-        public VNMLField VNML; // A RGB color map 65x65 pixels in size representing the land normal vectors.
-                               // The signed value of the 'color' represents the vector's component. Blue
-                               // is vertical(Z), Red the X direction and Green the Y direction.Note that
-                               // the y-direction of the data is from the bottom up.
+        // A RGB color map 65x65 pixels in size representing the land normal vectors.
+        // The signed value of the 'color' represents the vector's component. Blue
+        // is vertical(Z), Red the X direction and Green the Y direction.Note that
+        // the y-direction of the data is from the bottom up.
+        public VNMLField VNML;
         public VHGTField VHGT; // Height data
         public VNMLField? VCLR; // Vertex color array, looks like another RBG image 65x65 pixels in size. (Optional)
         public VTEXField? VTEX; // A 16x16 array of short texture indices. (Optional)

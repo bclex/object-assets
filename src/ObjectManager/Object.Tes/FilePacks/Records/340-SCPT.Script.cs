@@ -48,12 +48,9 @@ namespace OA.Tes.FilePacks.Records
                 Parameter1 = r.ReadLEInt32();
                 Parameter2 = r.ReadLEInt32();
                 if (dataSize != 24)
-                {
-                    Index = Type = 0;
-                    Name = null;
-                    return;
-                }
-                r.SkipBytes(4); // Unused
+                    r.SkipBytes(4); // Unused
+                Index = Type = 0;
+                Name = null;
             }
         }
 

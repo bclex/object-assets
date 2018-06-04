@@ -8,36 +8,33 @@
 
 public class MISCRecord: Record, IHaveEDID, IHaveMODL {
     // TESX
-    public struct DATAField
-    {
-        public float Weight;
-        public uint Value;
-        public uint Unknown;
+    public struct DATAField {
+        public let weight: Float
+        public let value: UInt32
+        public let unknown: UInt32
 
-        public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            if (formatId == GameFormatId.TES3)
-            {
-                Weight = r.readLESingle();
-                Value = r.readLEUInt32();
-                Unknown = r.readLEUInt32();
-                return;
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
+            guard format != .TES3 else {
+                weight = r.readLESingle()
+                value = r.readLEUInt32()
+                unknown = r.readLEUInt32()
+                return
             }
-            Value = r.readLEUInt32();
-            Weight = r.readLESingle();
-            Unknown = 0;
+            value = r.readLEUInt32()
+            weight = r.readLESingle()
+            unknown = 0
         }
     }
 
     public var description: String { return "MISC: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public MODLGroup MODL  // Model
-    public STRVField FULL // Item Name
-    public DATAField DATA // Misc Item Data
-    public FILEField ICON // Icon (optional)
-    public FMIDField<SCPTRecord> SCRI // Script FormID (optional)
+    public EDID: STRVField  // Editor ID
+    public MODL: MODLGroup  // Model
+    public FULL: STRVField // Item Name
+    public DATA: DATAField // Misc Item Data
+    public ICON: FILEField // Icon (optional)
+    public SCRI: FMIDField<SCPTRecord> // Script FormID (optional)
     // TES3
-    public FMIDField<ENCHRecord> ENAM // enchantment ID
+    public ENAM: FMIDField<ENCHRecord> // enchantment ID
 
     init() {
     }

@@ -21,7 +21,7 @@ public class ARMORecord: Record, IHaveEDID, IHaveMODL {
         public let type: Int32
         public let enchantPts: Int32
 
-        init(_ r: BinaryReader, _ dataSize: Int, for format: GameFormatId) {
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             guard format != .TES3 else {
                 type = r.readLEInt32()
                 weight = r.readLESingle()

@@ -38,7 +38,7 @@ namespace OA.Tes.FilePacks.Records
                 MaxRange = r.ReadByte();
                 if (format == GameFormatId.TES3)
                     return;
-                FrequencyAdjustment = (sbyte)r.ReadByte();
+                FrequencyAdjustment = r.ReadSByte();
                 r.ReadByte(); // Unused
                 Flags = r.ReadLEUInt16();
                 r.ReadLEUInt16(); // Unused

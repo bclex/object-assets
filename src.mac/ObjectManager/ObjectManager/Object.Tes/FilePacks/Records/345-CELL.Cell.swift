@@ -7,147 +7,136 @@
 //
 
 public class CELLRecord: Record, ICellRecord {
-    [Flags]
-    public enum CELLFlags : ushort
-    {
-        Interior = 0x0001,
-        HasWater = 0x0002,
-        InvertFastTravel = 0x0004, //: IllegalToSleepHere
-        BehaveLikeExterior = 0x0008, //: BehaveLikeExterior (Tribunal), Force hide land (exterior cell) / Oblivion interior (interior cell)
-        Unknown1 = 0x0010,
-        PublicArea = 0x0020, // Public place
-        HandChanged = 0x0040,
-        ShowSky = 0x0080, // Behave like exterior
-        UseSkyLighting = 0x0100,
+    
+    public enum CELLFlags: UInt16 {
+        case interior = 0x0001
+        case hasWater = 0x0002
+        case invertFastTravel = 0x0004 //: IllegalToSleepHere
+        case behaveLikeExterior = 0x0008 //: BehaveLikeExterior (Tribunal), Force hide land (exterior cell) / Oblivion interior (interior cell)
+        case unknown1 = 0x0010
+        case publicArea = 0x0020 // Public place
+        case handChanged = 0x0040
+        case showSky = 0x0080 // Behave like exterior
+        case useSkyLighting = 0x0100
     }
 
-    public struct XCLCField
-    {
-        public int GridX;
-        public int GridY;
-        public uint Flags;
+    public struct XCLCField {
+        public let gridX: Int32
+        public let gridY: Int32
+        public let flags: UInt32
 
-        public XCLCField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            GridX = r.readLEInt32();
-            GridY = r.readLEInt32();
-            Flags = formatId == GameFormatId.TES5 ? r.readLEUInt32() : 0;
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
+            gridX = r.readLEInt32()
+            gridY = r.readLEInt32()
+            flags = format == .TES5 ? r.readLEUInt32() : 0
         }
     }
 
-    public struct XCLLField
-    {
-        public ColorRef AmbientColor;
-        public ColorRef DirectionalColor //: SunlightColor
-        public ColorRef FogColor;
-        public float FogNear //: FogDensity
+    public struct XCLLField {
+        public let ambientColor: ColorRef
+        public let directionalColor: ColorRef //: SunlightColor
+        public let fogColor: ColorRef
+        public let fogNear: Float //: FogDensity
         // TES4
-        public float FogFar;
-        public int DirectionalRotationXY;
-        public int DirectionalRotationZ;
-        public float DirectionalFade;
-        public float FogClipDist;
+        public let fogFar: Float
+        public let directionalRotationXY: Int32
+        public let directionalRotationZ: Int32
+        public let directionalFade: Float
+        public let fogClipDist: Float
         // TES5
-        public float FogPow;
+        public let fogPow: Float
 
-        public XCLLField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            AmbientColor = ColorRef(r);
-            DirectionalColor = ColorRef(r);
-            FogColor = ColorRef(r);
-            FogNear = r.readLESingle();
-            if (formatId == GameFormatId.TES3)
-            {
-                FogFar = DirectionalFade = FogClipDist = DirectionalRotationXY = DirectionalRotationZ = 0;
-                FogPow = 0;
-                return;
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
+            ambientColor = ColorRef(r);
+            directionalColor = ColorRef(r);
+            fogColor = ColorRef(r);
+            fogNear = r.readLESingle();
+            guard format == .TES3 else {
+                fogFar = directionalFade = fogClipDist = directionalRotationXY = directionalRotationZ = 0
+                fogPow = 0
+                return
             }
-            FogFar = r.readLESingle();
-            DirectionalRotationXY = r.readLEInt32();
-            DirectionalRotationZ = r.readLEInt32();
-            DirectionalFade = r.readLESingle();
-            FogClipDist = r.readLESingle();
-            if (formatId == GameFormatId.TES4)
-            {
-                FogPow = 0;
-                return;
+            fogFar = r.readLESingle()
+            directionalRotationXY = r.readLEInt32()
+            directionalRotationZ = r.readLEInt32()
+            directionalFade = r.readLESingle()
+            fogClipDist = r.readLESingle()
+            guard format == .TES4 else {
+                fogPow = 0
+                return
             }
-            FogPow = r.readLESingle();
+            fogPow = r.readLESingle()
         }
     }
 
-    public class XOWNGroup
-    {
-        public FMIDField<Record> XOWN;
-        public IN32Field XRNK // Faction rank
-        public FMIDField<Record> XGLB;
+    public class XOWNGroup {
+        public var XOWN: FMIDField<Record>
+        public var XRNK: IN32Field // Faction rank
+        public var XGLB: FMIDField<Record>
     }
 
-    public class RefObj
-    {
-        public struct XYZAField
-        {
-            public Vector3 Position;
-            public Vector3 EulerAngles;
+    public class RefObj: CustomStringConvertible {
+        public struct XYZAField {
+            public let position: SCNVector3
+            public let eulerAngles: SCNVector3
 
-            public XYZAField(UnityBinaryReader r, uint dataSize)
-            {
-                Position = r.readLEVector3();
-                EulerAngles = r.readLEVector3();
+            init(_ r: BinaryReader, _ dataSize: Int) {
+                position = r.readLEVector3()
+                eulerAngles = r.readLEVector3()
             }
         }
 
-        public UI32Field? FRMR // Object Index (starts at 1)
-                                // This is used to uniquely identify objects in the cell. For files the index starts at 1 and is incremented for each object added. For modified
-                                // objects the index is kept the same.
-        public override string ToString() => $"CREF: {EDID.Value}";
-        public STRVField EDID // Object ID
-        public FLTVField? XSCL // Scale (Static)
-        public IN32Field? DELE // Indicates that the reference is deleted.
-        public XYZAField? DODT // XYZ Pos, XYZ Rotation of exit
-        public STRVField DNAM // Door exit name (Door objects)
-        public FLTVField? FLTV // Follows the DNAM optionally, lock level
-        public STRVField KNAM // Door key
-        public STRVField TNAM // Trap name
-        public BYTEField? UNAM // Reference Blocked (only occurs once in MORROWIND.ESM)
-        public STRVField ANAM // Owner ID string
-        public STRVField BNAM // Global variable/rank ID
-        public IN32Field? INTV // Number of uses, occurs even for objects that don't use it
-        public UI32Field? NAM9 // Unknown
-        public STRVField XSOL // Soul Extra Data (ID string of creature)
-        public XYZAField DATA // Ref Position Data
+        public var FRMR: UI32Field? // Object Index (starts at 1)
+                            // This is used to uniquely identify objects in the cell. For files the index starts at 1 and is incremented for each object added. For modified
+                            // objects the index is kept the same.
+        public var description: String { return "CREF: \(EDID)" }
+        public var EDID: STRVField // Object ID
+        public var XSCL: FLTVField? // Scale (Static)
+        public var DELE: IN32Field? // Indicates that the reference is deleted.
+        public var DODT: XYZAField? // XYZ Pos, XYZ Rotation of exit
+        public var DNAM: STRVField // Door exit name (Door objects)
+        public var FLTV: FLTVField? // Follows the DNAM optionally, lock level
+        public var KNAM: STRVField // Door key
+        public var TNAM: STRVField // Trap name
+        public var UNAM: BYTEField? // Reference Blocked (only occurs once in MORROWIND.ESM)
+        public var ANAM: STRVField // Owner ID string
+        public var BNAM: STRVField // Global variable/rank ID
+        public var INTV: IN32Field? // Number of uses, occurs even for objects that don't use it
+        public var NAM9: UI32Field? // Unknown
+        public var XSOL: STRVField // Soul Extra Data (ID string of creature)
+        public var DATA: XYZAField // Ref Position Data
         //
-        public STRVField CNAM // Unknown
-        public UI32Field? NAM0 // Unknown
-        public IN32Field? XCHG // Unknown
-        public IN32Field? INDX // Unknown
+        public var CNAM: STRVField  // Unknown
+        public var NAM0: UI32Field? // Unknown
+        public var XCHG: IN32Field? // Unknown
+        public var INDX: IN32Field? // Unknown
     }
 
     public var description: String { return "CELL: \(FULL)" }
-    public STRVField EDID  // Editor ID. Can be an empty string for exterior cells in which case the region name is used instead.
-    public STRVField FULL // Full Name / TES3:RGNN - Region name
-    public UI16Field DATA // Flags
-    public XCLCField? XCLC // Cell Data (only used for exterior cells)
-    public XCLLField? XCLL // Lighting (only used for interior cells)
-    public FLTVField? XCLW // Water Height
+    public var EDID: STRVField  // Editor ID. Can be an empty string for exterior cells in which case the region name is used instead.
+    public var FULL: STRVField // Full Name / TES3:RGNN - Region name
+    public var DATA: UI16Field // Flags
+    public var XCLC: XCLCField? // Cell Data (only used for exterior cells)
+    public var XCLL: XCLLField? // Lighting (only used for interior cells)
+    public var XCLW: FLTVField? // Water Height
     // TES3
-    public UI32Field? NAM0 // Number of objects in cell in current file (Optional)
-    public INTVField INTV // Unknown
-    public CREFField? NAM5 // Map Color (COLORREF)
+    public var NAM0: UI32Field? // Number of objects in cell in current file (Optional)
+    public var INTV: INTVField // Unknown
+    public var NAM5: CREFField? // Map Color (COLORREF)
     // TES4
-    public FMIDField<REGNRecord>[] XCLRs // Regions
-    public BYTEField? XCMT // Music (optional)
-    public FMIDField<CLMTRecord>? XCCM // Climate
-    public FMIDField<WATRRecord>? XCWT // Water
-    public List<XOWNGroup> XOWNs = List<XOWNGroup>() // Ownership
+    public var XCLRs: [FMIDField<REGNRecord>]  // Regions
+    public var XCMT: BYTEField? // Music (optional)
+    public var XCCM: FMIDField<CLMTRecord>? // Climate
+    public var XCWT: FMIDField<WATRRecord>? // Water
+    public var XOWNs = [XOWNGroup]() // Ownership
 
     // Referenced Object Data Grouping
-    public bool InFRMR = false;
-    public List<RefObj> RefObjs = List<RefObj>();
+    public var InFRMR = false
+    public var RefObjs = [RefObj]()
 
-    public bool IsInterior => Utils.ContainsBitFlags(DATA.Value, 0x01);
-    public Vector2i GridCoords => Vector2i(XCLC.Value.GridX, XCLC.Value.GridY);
-    public Color? AmbientLight => XCLL != null ? (Color?)XCLL.Value.AmbientColor.ToColor32() : null;
+    public var isInterior: Bool => Utils.containsBitFlags(DATA.value, 0x01)
+    public var gridCoords: Vector2Int => Vector2Int(XCLC.gridX, XCLC.gridY)
+    public var ambientLight: Color? => XCLL != nil ? XCLL.ambientColor.toColor32() : nil
 
     init() {
     }
@@ -162,7 +151,7 @@ public class CELLRecord: Record, ICellRecord {
                  "NAME": EDID = STRVField(r, dataSize)
             case "FULL":
             case "RGNN": FULL = STRVField(r, dataSize)
-            case "DATA": DATA = INTVField(r, format == .TES3 ? 4 : dataSize).ToUI16Field(); if format == .TES3 { fallthrough }
+            case "DATA": DATA = INTVField(r, format == .TES3 ? 4 : dataSize).toUI16Field(); if format == .TES3 { fallthrough }
             case "XCLC": XCLC = XCLCField(r, dataSize, format)
             case "XCLL":
             case "AMBI": XCLL = XCLLField(r, dataSize, format)
@@ -177,7 +166,7 @@ public class CELLRecord: Record, ICellRecord {
             case "XCMT": XCMT = BYTEField(r, dataSize)
             case "XCCM": XCCM = FMIDField<CLMTRecord>(r, dataSize)
             case "XCWT": XCWT = FMIDField<WATRRecord>(r, dataSize)
-            case "XOWN": XOWNs.Add(XOWNGroup(XOWN: FMIDField<Record>(r, dataSize)))
+            case "XOWN": XOWNs.append(XOWNGroup(XOWN: FMIDField<Record>(r, dataSize)))
             case "XRNK": XOWNs.last!.XRNK = IN32Field(r, dataSize)
             case "XGLB": XOWNs.last!.XGLB = FMIDField<Record>(r, dataSize)
             default: return false

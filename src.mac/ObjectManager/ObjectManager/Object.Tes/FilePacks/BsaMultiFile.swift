@@ -20,26 +20,22 @@ public class BsaMultiFile {
             .forEach { packs.append($0) }
     }
 
-    deinit()
-    {
+    deinit() {
         close()
     }
 
-    public void close()
-    {
+    public void close() {
         for var pack in Packs {
             pack.close()
         }
     }
 
-    public func containsFile(filePath: String) -> Bool
-    {
+    public func containsFile(filePath: String) -> Bool {
         return packs.contains { $0.containsFile(filePath) }
     }
 
-    public func loadFileData(filePath: String) -> Data
-    {
-        guard let pack = packs.first { $0.containsFile(filePath) } else {
+    public func loadFileData(filePath: String) -> Data {
+        guard let pack = packs.first(where: { $0.containsFile(filePath) }) else {
             fatalError("Could not find file '\(filePath)' in a BSA file.")
         }
         return pack.loadFileData(filePath)

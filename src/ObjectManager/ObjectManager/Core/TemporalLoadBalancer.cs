@@ -38,7 +38,7 @@ namespace OA.Core
             {
                 if (!_tasks[0].MoveNext()) // Try to execute an iteration of a task. Remove the task if it's execution has completed.
                     _tasks.RemoveAt(0);
-            } while ((_tasks.Count > 0) && (_stopwatch.Elapsed.TotalSeconds < desiredWorkTime));
+            } while (_tasks.Count > 0 && _stopwatch.Elapsed.TotalSeconds < desiredWorkTime);
             _stopwatch.Stop();
         }
 

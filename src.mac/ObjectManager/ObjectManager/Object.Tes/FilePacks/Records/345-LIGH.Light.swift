@@ -8,75 +8,68 @@
 
 public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
     // TESX
-    public struct DATAField
-    {
-        public enum ColorFlags
-        {
-            Dynamic = 0x0001,
-            CanCarry = 0x0002,
-            Negative = 0x0004,
-            Flicker = 0x0008,
-            Fire = 0x0010,
-            OffDefault = 0x0020,
-            FlickerSlow = 0x0040,
-            Pulse = 0x0080,
-            PulseSlow = 0x0100
+    public struct DATAField {
+        public enum ColorFlags {
+            case dynamic = 0x0001
+            case canCarry = 0x0002
+            case negative = 0x0004
+            case flicker = 0x0008
+            case fire = 0x0010
+            case offDefault = 0x0020
+            case flickerSlow = 0x0040
+            case pulse = 0x0080
+            case pulseSlow = 0x0100
         }
 
-        public float Weight;
-        public int Value;
-        public int Time;
-        public int Radius;
-        public ColorRef LightColor;
-        public int Flags;
+        public let weight: Float
+        public let value: Int32
+        public let time: Int32
+        public let radius: Int32
+        public let lightColor: ColorRef
+        public let flags: Int32
         // TES4
-        public float FalloffExponent;
-        public float FOV;
+        public let falloffExponent: Float
+        public let fov: Float
 
-        public DATAField(UnityBinaryReader r, uint dataSize, GameFormatId formatId)
-        {
-            if (formatId == GameFormatId.TES3)
-            {
-                Weight = r.readLESingle();
-                Value = r.readLEInt32();
-                Time = r.readLEInt32();
-                Radius = r.readLEInt32();
-                LightColor = ColorRef(r);
-                Flags = r.readLEInt32();
-                FalloffExponent = 1;
-                FOV = 90;
-                return;
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
+            guard format != .TES3 else {
+                weight = r.readLESingle()
+                value = r.readLEInt32()
+                time = r.readLEInt32()
+                radius = r.readLEInt32()
+                lightColor = ColorRef(r)
+                flags = r.readLEInt32()
+                falloffExponent = 1
+                fov = 90
+                return
             }
-
-            Time = r.readLEInt32();
-            Radius = r.readLEInt32();
-            LightColor = ColorRef(r);
-            Flags = r.readLEInt32();
-            if (dataSize == 32)
-            {
-                FalloffExponent = r.readLESingle();
-                FOV = r.readLESingle();
+            time = r.readLEInt32()
+            radius = r.readLEInt32()
+            lightColor = ColorRef(r)
+            flags = r.readLEInt32()
+            if dataSize == 32 {
+                falloffExponent = r.readLESingle()
+                fov = r.readLESingle()
             }
-            else
-            {
-                FalloffExponent = 1;
-                FOV = 90;
+            else {
+                falloffExponent = 1
+                fov = 90
             }
-            Value = r.readLEInt32();
-            Weight = r.readLESingle();
+            value = r.readLEInt32()
+            weight = r.readLESingle()
         }
     }
 
     public var description: String { return "LIGH: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public MODLGroup MODL  // Model
-    public STRVField? FULL // Item Name (optional)
-    public DATAField DATA // Light Data
-    public STRVField? SCPT // Script Name (optional)??
-    public FMIDField<SCPTRecord>? SCRI // Script FormId (optional)
-    public FILEField? ICON // Male Icon (optional)
-    public FLTVField FNAM // Fade Value
-    public FMIDField<SOUNRecord> SNAM // Sound FormId (optional)
+    public var EDID: STRVField  // Editor ID
+    public var MODL: MODLGroup  // Model
+    public var FULL: STRVField? // Item Name (optional)
+    public var DATA: DATAField  // Light Data
+    public var SCPT: STRVField? // Script Name (optional)??
+    public var SCRI: FMIDField<SCPTRecord>? // Script FormId (optional)
+    public var ICON: FILEField? // Male Icon (optional)
+    public var FNAM: FLTVField  // Fade Value
+    public var SNAM: FMIDField<SOUNRecord> // Sound FormId (optional)
 
     init() {
     }

@@ -14,7 +14,7 @@ public class APPARecord: Record, IHaveEDID, IHaveMODL {
         public let weight: Float
         public let value: Int32
 
-        init(_ r: BinaryReader, _ dataSize: Int, for format: GameFormatId) {
+        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             guard format != .TES3 else {
                 type = (byte)r.readLEInt32()
                 quality = r.readLESingle()

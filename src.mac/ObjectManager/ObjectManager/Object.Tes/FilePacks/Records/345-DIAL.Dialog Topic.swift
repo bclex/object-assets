@@ -10,19 +10,15 @@ public class DIALRecord: Record {
     internal static var LastRecord: DIALRecord
 
     public enum DIALType: UInt8 {
-        case RegularTopic = 0
-        case Voice = 1
-        case Greeting = 2
-        case Persuasion = 3
-        case Journal = 4
+        case regularTopic = 0, voice, greeting, persuasion, journal
     }
 
     public var description: String { return "DIAL: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public STRVField FULL // Dialogue Name
-    public BYTEField DATA // Dialogue Type
-    public List<FMIDField<QUSTRecord>> QSTIs // Quests (optional)
-    public List<INFORecord> INFOs = List<INFORecord>() // Info Records
+    public var EDID: STRVField  // Editor ID
+    public var FULL: STRVField // Dialogue Name
+    public var DATA: BYTEField // Dialogue Type
+    public var QSTIs: [FMIDField<QUSTRecord>] // Quests (optional)
+    public var INFOs = [INFORecord]() // Info Records
 
     init() {
     }

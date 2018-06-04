@@ -9,11 +9,7 @@ namespace OA.Tes.FilePacks.Records
 
         public enum DIALType : byte
         {
-            RegularTopic = 0,
-            Voice = 1,
-            Greeting = 2,
-            Persuasion = 3,
-            Journal = 4,
+            RegularTopic = 0, Voice, Greeting, Persuasion, Journal
         }
 
         public override string ToString() => $"DIAL: {EDID.Value}";

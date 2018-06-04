@@ -8,8 +8,8 @@
 
 public class GMSTRecord: Record, IHaveEDID {
     public var description: String { return "GMST: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public DATVField DATA // Data
+    public var EDID: STRVField // Editor ID
+    public var DATA: DATVField // Data
 
     init() {
     }

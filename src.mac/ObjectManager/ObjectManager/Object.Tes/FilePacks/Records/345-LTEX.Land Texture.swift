@@ -9,27 +9,26 @@
 public class LTEXRecord: Record, IHaveEDID {
     public struct HNAMField
     {
-        public byte MaterialType;
-        public byte Friction;
-        public byte Restitution;
+        public let materialType: UInt8
+        public let friction: UInt8
+        public let restitution: UInt8
         
-        public HNAMField(UnityBinaryReader r, uint dataSize)
-        {
-            MaterialType = r.readByte();
-            Friction = r.readByte();
-            Restitution = r.readByte();
+        init(_ r: BinaryReader, _ dataSize: Int) {
+            materialType = r.readByte()
+            friction = r.readByte()
+            restitution = r.readByte()
         }
     }
 
     public var description: String { return "LTEX: \(EDID)" }
-    public STRVField EDID  // Editor ID
-    public FILEField ICON // Texture
+    public EDID: STRVField // Editor ID
+    public ICON: FILEField // Texture
     // TES3
-    public INTVField INTV;
+    public INTV: INTVField
     // TES4
-    public HNAMField HNAM // Havok data
-    public BYTEField SNAM // Texture specular exponent
-    public List<FMIDField<GRASRecord>> GNAMs = List<FMIDField<GRASRecord>>() // Potential grass
+    public HNAM: HNAMField // Havok data
+    public SNAM: BYTEField // Texture specular exponent
+    public GNAMs = [FMIDField<GRASRecord>]() // Potential grass
 
     init() {
     }
