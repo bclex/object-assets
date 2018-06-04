@@ -89,10 +89,10 @@ public class BsaFile {
         public let chunks: [F4TexChunk]?
         
         init(height: UInt16,
-             width: UInt16,
-             numMips: UInt8,
-             format: DXGIFormat,
-             unk16: UInt16,
+             width: UInt16,
+             numMips: UInt8,
+             format: DXGIFormat,
+             unk16: UInt16,
              chunks: [F4TexChunk]?) {
             self.height = height
             self.width = width
@@ -112,10 +112,10 @@ public class BsaFile {
         public let unk14: UInt32
         
         init(offset: UInt64,
-             packedSize: UInt32,
-             unpackedSize: UInt32,
-             startMip: UInt16,
-             endMip: UInt16,
+             packedSize: UInt32,
+             unpackedSize: UInt32,
+             startMip: UInt16,
+             endMip: UInt16,
              unk14: UInt32) {
             self.offset = offset
             self.packedSize = packedSize
@@ -160,7 +160,7 @@ public class BsaFile {
         _r = nil
     }
 
-    public func containsFile(filePath: String) -> Bool {
+    public func containsFile(_ filePath: String) -> Bool {
         return _filesByHash[hashFilePath(filePath)] != nil
     }
 
@@ -178,7 +178,7 @@ public class BsaFile {
         return loadFileData(file)
     }
 
-    public func loadFileData(_ file: FileMetadata) -> Data {
+    public func loadFileData(file: FileMetadata) -> Data {
         _r.baseStream.position = file.offset
         var fileSize = Int(file.size)
         if _hasNamePrefix {

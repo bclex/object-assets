@@ -75,7 +75,7 @@ public class Header: CustomStringConvertible {
             if format != .TES4 {
                 _ = r.readLEUInt32() // version + uknown
             }
-            position = r.baseStream.offsetInFile;
+            position = r.baseStream.position
             return;
         }
         dataSize = r.readLEUInt32()
@@ -84,19 +84,19 @@ public class Header: CustomStringConvertible {
         }
         flags = Flags(rawValue: r.readLEUInt32())!
         if format == .TES3 {
-            position = r.baseStream.offsetInFile
+            position = r.baseStream.position
             return
         }
         // tes4
         formId = r.readLEUInt32()
         _ = r.readLEUInt32()
         if format == .TES4 {
-            position = r.baseStream.offsetInFile
+            position = r.baseStream.position
             return
         }
         // tes5
         _ = r.readLEUInt32()
-        position = r.baseStream.offsetInFile
+        position = r.baseStream.position
     }
 
     static let create:[String : (f: ()->Record, l: (Int)->Bool)] = [
@@ -206,67 +206,67 @@ public class Header: CustomStringConvertible {
 }
 
 public class RecordGroup: CustomStringConvertible {
-    public var description: String { return "\(headers.first ?? "none")" }
+    public var description: String { return "\(headers.first?.description ?? "none")" }
     //public string Label => Headers.First.Value.Label
     public var headers = [Header]()
     public var records = [Record]()
     public var groups: [RecordGroup]?
     let _r: BinaryReader
     let _filePath: String
-    let _formatId: GameFormatId
-    let _level: UInt8
+    let _format: GameFormatId
+    let _level: Int
     var _headerSkip = 0
 
-    init(_ r: BinaryReader, filePath: String, for format: GameFormatId, level: Int) {
+    init(_ r: BinaryReader, _ filePath: String, for format: GameFormatId, level: Int) {
         _r = r
         _filePath = filePath
-        _formatId = formatId
+        _format = format
         _level = level
     }
 
     func add(header: Header, mode: Int = 0) {
         headers.append(header)
-        var grup = _r.readASCIIString(4)
-        _r.baseStream.offsetInFile -= 4
+        let grup = _r.readASCIIString(4)
+        _r.baseStream.position -= 4
         guard grup != "GRUP" else {
             return
         }
-        let recordHeader = Header(_r, forFormat: _formatId)
+        let recordHeader = Header(_r, _format)
         readGrup(header, recordHeader)
     }
 
     func readGrup(_ header: Header, _ recordHeader: Header, mode: Int = 0) {
-        let nextPosition = _r.baseStream.offsetInFile + recordHeader.dataSize
+        let nextPosition = _r.baseStream.position + UInt64(recordHeader.dataSize)
         if groups == nil {
             groups = [RecordGroup]()
         }
-        let group = RecordGroup(_r, _filePath, forFormat: _formatId, level: _level)
+        let group = RecordGroup(_r, _filePath, for: _format, level: _level)
         group.add(header: recordHeader)
-        groups.append(group) ; debugPrint("Grup: \(header.Label)/\(group)")
-        _r.baseStream.offsetInFile = nextPosition
+        groups!.append(group); debugPrint("Grup: \(header.label)/\(group)")
+        _r.baseStream.position = nextPosition
     }
 
     public func load() {
         guard _headerSkip != headers.count else {
             return
         }
-        for header in _headerSkip..<headers.endIndex {
-            readGroup(header)
+        for i in _headerSkip..<headers.endIndex {
+            readGroup(headers[i])
         }
         _headerSkip = headers.count
     }
 
     func readGroup(_ header: Header) {
-        _r.baseStream.offsetInFile = header.position
-        let endPosition = header.position + header.dataSize
-        while _r.baseStream.offsetInFile < endPosition {
-            let recordHeader = Header(_r, for: _formatId)
+        _r.baseStream.position = header.position
+        let endPosition = header.position + UInt64(header.dataSize)
+        while _r.baseStream.position < endPosition {
+            let recordHeader = Header(_r, for: _format)
             guard recordHeader.type != "GRUP" else {
                 readGrup(header, recordHeader)
                 //group.load()
                 continue
             }
-            guard record = recordHeader.createRecord(at: _r.baseStream.offsetInFile) else {
+            guard record = recordHeader.createRecord(at: _r.baseStream.position) else {
                 _r.baseStream.offsetInFile += recordHeader.dataSize
                 continue
             }
@@ -304,7 +304,7 @@ public class Record: IRecord, CustomStringConvertible {
         let endPosition = startPosition + header.dataSize
         while r.baseStream.offsetInFile < endPosition {
             let fieldHeader = FieldHeader(r, for: formatId)
-            guard fieldHeader.type != "XXXX") else {
+            guard fieldHeader.type != "XXXX" else {
                 if fieldHeader.dataSize != 4 {
                     fatalError("")
                 }
@@ -317,7 +317,7 @@ public class Record: IRecord, CustomStringConvertible {
                 //header.DataSize = UInt(endPosition - r.baseStream.offsetInFile)
             }
             let position = r.baseStream.offsetInFile
-            guard createField(r, for: formatId, type: fieldHeader.type, dataSize: fieldHeader.dataSize)) else {
+            guard createField(r, for: formatId, type: fieldHeader.type, dataSize: fieldHeader.dataSize) else {
                 fatalError("Unsupported ESM record type: \(header.type):\(fieldHeader.type)")
                 r.baseStream.offsetInFile += fieldHeader.dataSize
                 continue
@@ -334,7 +334,7 @@ public class Record: IRecord, CustomStringConvertible {
     }
 }
 
-public class FieldHeader, CustomStringConvertible {
+public class FieldHeader: CustomStringConvertible {
     public var description: String { return type }
     public let type: String // 4 bytes
     public let dataSize: Int

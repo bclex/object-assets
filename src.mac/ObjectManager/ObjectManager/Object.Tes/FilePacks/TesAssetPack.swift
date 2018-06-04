@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SceneKit
 
 public class TesAssetPack: BsaMultiFile, IAssetPack {
     let _textureManager: TextureManager
@@ -28,7 +29,7 @@ public class TesAssetPack: BsaMultiFile, IAssetPack {
         _textureManager.preloadTextureFileAsync(texturePath)
     }
 
-    public func createObject(filePath: String) -> GameObject {
+    public func createObject(filePath: String) -> SCNNode {
         return _nifManager.InstantiateNif(filePath)
     }
 
@@ -36,8 +37,8 @@ public class TesAssetPack: BsaMultiFile, IAssetPack {
         _nifManager.PreloadNifFileAsync(filePath)
     }
 
-    public override func containsFile(string filePath: String) -> Bool {
-        if _directory == nil && _webPath == nil {
+    public override func containsFile(_ filePath: String) -> Bool {
+        if _directory == nil {
             return super.containsFile(filePath)
         }
         if _directory != nil {
@@ -48,15 +49,14 @@ public class TesAssetPack: BsaMultiFile, IAssetPack {
         return false
     }
 
-    public override byte[] LoadFileData(string filePath)
-    {
-        if (_directory == null && _webPath == null)
-            return base.LoadFileData(filePath);
-        if (_directory != null)
-        {
-            var path = Path.Combine(_directory, filePath);
-            return File.ReadAllBytes(path);
+    public override func loadFileData(_ filePath: String) -> Data {
+        if _directory == nil {
+            return super.loadFileData(filePath)
         }
-        return null;
+        //if _directory != nil {
+        //    var path = Path.Combine(_directory, filePath);
+        //    return File.ReadAllBytes(path);
+        //}
+        return nil
     }
 }

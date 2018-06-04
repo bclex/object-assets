@@ -7,7 +7,10 @@
 //
 
 import Foundation
+import CoreImage
+import UIKit
 
+typealias Texture2D = UIImage
 public class Texture2DInfo {
     public let width: Int
     public let height: Int

@@ -24,6 +24,8 @@
 		5415F76C20BC8BCA008A8E78 /* EsmFile+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76B20BC8BCA008A8E78 /* EsmFile+Extensions.swift */; };
 		5415F76E20BC8BDA008A8E78 /* BsaMultiFile+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76D20BC8BDA008A8E78 /* BsaMultiFile+Extensions.swift */; };
 		5415F77020BC8BE5008A8E78 /* BsaFile+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76F20BC8BE5008A8E78 /* BsaFile+Extensions.swift */; };
+		54A08FEB20C4FACD00C68B25 /* Vector2Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FE920C4FACD00C68B25 /* Vector2Int.swift */; };
+		54A08FEC20C4FACD00C68B25 /* Texture2DInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FEA20C4FACD00C68B25 /* Texture2DInfo.swift */; };
 		54AEEF0C20BE292100560590 /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF0B20BE292100560590 /* FileManager+Extensions.swift */; };
 		54AEEF0E20BE37E900560590 /* 300-TES3.Plugin info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF0D20BE37E900560590 /* 300-TES3.Plugin info.swift */; };
 		54AEEF1120BE381900560590 /* 345-STAT.Static.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF0F20BE381900560590 /* 345-STAT.Static.swift */; };
@@ -52,6 +54,8 @@
 		5415F76B20BC8BCA008A8E78 /* EsmFile+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EsmFile+Extensions.swift"; sourceTree = "<group>"; };
 		5415F76D20BC8BDA008A8E78 /* BsaMultiFile+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BsaMultiFile+Extensions.swift"; sourceTree = "<group>"; };
 		5415F76F20BC8BE5008A8E78 /* BsaFile+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BsaFile+Extensions.swift"; sourceTree = "<group>"; };
+		54A08FE920C4FACD00C68B25 /* Vector2Int.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vector2Int.swift; sourceTree = "<group>"; };
+		54A08FEA20C4FACD00C68B25 /* Texture2DInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Texture2DInfo.swift; sourceTree = "<group>"; };
 		54AEEF0B20BE292100560590 /* FileManager+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+Extensions.swift"; sourceTree = "<group>"; };
 		54AEEF0D20BE37E900560590 /* 300-TES3.Plugin info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "300-TES3.Plugin info.swift"; sourceTree = "<group>"; };
 		54AEEF0F20BE381900560590 /* 345-STAT.Static.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "345-STAT.Static.swift"; sourceTree = "<group>"; };
@@ -120,9 +124,11 @@
 		5415F74320BC8872008A8E78 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				540B163220BC8CCF0058D516 /* TemporalLoadBalancer.swift */,
-				54AEEF1320BE51B700560590 /* DataExtensions.swift */,
 				5415F74820BC8906008A8E78 /* BinaryReader.swift */,
+				54AEEF1320BE51B700560590 /* DataExtensions.swift */,
+				540B163220BC8CCF0058D516 /* TemporalLoadBalancer.swift */,
+				54A08FEA20C4FACD00C68B25 /* Texture2DInfo.swift */,
+				54A08FE920C4FACD00C68B25 /* Vector2Int.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -264,6 +270,7 @@
 				5415F75E20BC8B4C008A8E78 /* EsmFile.swift in Sources */,
 				5415F76020BC8B5B008A8E78 /* EsmRecords.swift in Sources */,
 				5415F75720BC8AE0008A8E78 /* TesEngine.swift in Sources */,
+				54A08FEB20C4FACD00C68B25 /* Vector2Int.swift in Sources */,
 				54AEEF0E20BE37E900560590 /* 300-TES3.Plugin info.swift in Sources */,
 				5415F75320BC8ABC008A8E78 /* TesCellManager.swift in Sources */,
 				5415F76A20BC8BB7008A8E78 /* EsmFile+Fields.swift in Sources */,
@@ -271,6 +278,7 @@
 				5415F75C20BC8B37008A8E78 /* BsaMultiFile.swift in Sources */,
 				5415F76620BC8B93008A8E78 /* TesAssetPack.swift in Sources */,
 				540B163620BC8E5E0058D516 /* TesPackTest.swift in Sources */,
+				54A08FEC20C4FACD00C68B25 /* Texture2DInfo.swift in Sources */,
 				5415F74920BC8906008A8E78 /* BinaryReader.swift in Sources */,
 				54AEEF1220BE381900560590 /* 345-WEAP.Weapon.swift in Sources */,
 				5415F75A20BC8B26008A8E78 /* BsaFile.swift in Sources */,

@@ -13,37 +13,37 @@ public class EsmFile {
     // public override string ToString() => $"{Path.GetFileName(FilePath)}";
     var _r: BinaryReader!
     public let filePath: String
-    public let _format: GameFormatId
-    public var groups: [String, RecordGroup]
+    public let format: GameFormatId
+    public var groups: [String : RecordGroup]
     // public var recordsByType: [Type : [IRecord]]
     // public var objectsByIDString: [String : IRecord]
     // public var exteriorCELLRecordsByIndices: [Vector2Int : CELLRecord]
     // public var LANDRecordsByIndices: [Vector2Int : LANDRecord]
 
-    init(filePath: String, for game: GameId) {
+    init(filePath: String?, for game: GameId) {
+        func getFormatId() -> GameFormatId {
+            switch game {
+            // tes
+            case .morrowind: return .TES3
+            case .oblivion: return .TES4
+            case .skyrim, .skyrimSE, .skyrimVR: return .TES5
+            // fallout
+            case .fallout3, .falloutNV: return .TES4
+            case .fallout4, .fallout4VR: return .TES5
+            default: fatalError("Error")
+            }
+        }
         guard let filePath = filePath else {
             return
         }
         self.filePath = filePath
         self.format = getFormatId()
         _r = BinaryReader(FileBaseStream(forReadingAtPath: filePath)!)
-        let start = NSDate()
+        let start = Date()
         read(0)
-        let endRead = NSDate()
-        debugPrint("Loading: \(endRead.timeIntervalSinceDate(start))")
+        let endRead = Date()
+        debugPrint("Loading: \(endRead.timeIntervalSince(start))")
         postProcessRecords()
-        func getFormatId() -> GameFormatId {
-            switch gameId {
-            // tes
-            case .Morrowind: return .TES3
-            case .Oblivion: return .TES4
-            case .Skyrim, .SkyrimSE, .SkyrimVR: return .TES5
-            // fallout
-            case .Fallout3, .FalloutNV: return .TES4
-            case .Fallout4, .Fallout4VR: return .TES5
-            default: fatalError("Error")
-            }
-        }
     }
 
     deinit {
@@ -82,17 +82,17 @@ public class EsmFile {
             return
         }
         // read groups
-        groups = Dictionary[String : RecordGroup]()
+        groups = [String : RecordGroup]()
         let endPosition = _r.baseStream.length
-        while _r.baseStream.position < endPosition) {
+        while _r.baseStream.position < endPosition {
             let header = Header(_r, format)
             guard header.type == "GRUP" else {
                 fatalError("\(header.type) not GRUP")
             }
             let nextPosition = _r.baseStream.position + header.dataSize
-            guard let group = groups[header.label] else {
+            if let group = groups[header.label] {
                 group = RecordGroup(_r, filePath, format, level)
-                groups[header.label] =  group
+                groups[header.label] = group
             }
             group.addHeader(header); debugPrint("Read: \(group)")
             _r.baseStream.position = nextPosition

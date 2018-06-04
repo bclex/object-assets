@@ -8,20 +8,31 @@
 
 import Foundation
 
-public enum GameId: (key: Int, name: String, path: String)
-{
+public enum GameId: Int, CustomStringConvertible {
     // tes
-    case morrowind = (1, "Morrowind", "Morrowind")
-    case oblivion = (2, "Oblivion", "Oblivion")
-    case skyrim = (3, "Skyrim", "Skyrim")
-    case skyrimSE = (4, "SkyrimSE", "SkyrimSE")
-    case skyrimVR = (5, "SkyrimVR", "SkyrimVR")
+    case morrowind = 0
+    case oblivion
+    case skyrim, skyrimSE, skyrimVR
     // fallout
-    case fallout3 = (6, "Fallout3", "Fallout3")
-    case falloutNV = (7, "FalloutNV", "FalloutNV")
-    case fallout4 = (8, "Fallout4", "Fallout4")
-    case fallout4VR = (9, "Fallout4VR", "Fallout4VR")
+    case fallout3
+    case falloutNV
+    case fallout4, fallout4VR
 
+    public var description: String {
+        switch self {
+        case .morrowind: return "morrowind"
+        case .oblivion: return "oblivion"
+        case .skyrim: return "skyrim"
+        case .skyrimSE: return "skyrimSE"
+        case .skyrimVR: return "skyrimVR"
+        case .fallout3: return "fallout3"
+        case .falloutNV: return "falloutNV"
+        case .fallout4: return "fallout4"
+        case .fallout4VR: return "fallout4VR"
+        default: return "?"
+        }
+    }
+    
     init?(_ value: String) {
         switch value.lowercased() {
         case "morrowind": self = .morrowind
@@ -37,13 +48,13 @@ public enum GameId: (key: Int, name: String, path: String)
         }
     }
 
-    func list() -> Range<GameId> {
-        return [GameId.morrowind...]
-    }
+    //func list() -> Range<GameId> {
+    //    return [GameId.morrowind...]
+    //}
 }
 
 public class TesAssetManager: IAssetManager {    
-    func getAssetPack(_ url: URL?) -> IAssetPack? {
+    public func getAssetPack(_ url: URL?) -> IAssetPack? {
         guard let url = url else {
             fatalError("should not happen")
         }
@@ -60,7 +71,7 @@ public class TesAssetManager: IAssetManager {
         }
     }
     
-    func getDataPack(_ url: URL?) -> IDataPack? {
+    public func getDataPack(_ url: URL?) -> IDataPack? {
         guard let url = url else {
             fatalError("should not happen")
         }
@@ -77,7 +88,7 @@ public class TesAssetManager: IAssetManager {
         }
     }
     
-    func getCellManager(asset: IAssetPack, data: IDataPack, loadBalancer: TemporalLoadBalancer) -> ICellManager? {
+    public func getCellManager(asset: IAssetPack, data: IDataPack, loadBalancer: TemporalLoadBalancer) -> ICellManager? {
         return TesCellManager(asset as! TesAssetPack, data as! TesDataPack, loadBalancer)
     }
 
