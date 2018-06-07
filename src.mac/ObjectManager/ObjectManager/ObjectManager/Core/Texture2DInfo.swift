@@ -8,9 +8,9 @@
 
 import Foundation
 import CoreImage
-import UIKit
+import AppKit
 
-typealias Texture2D = UIImage
+public typealias Texture2D = NSImage
 public class Texture2DInfo {
     public let width: Int
     public let height: Int
@@ -26,13 +26,30 @@ public class Texture2DInfo {
         self.rawData = rawData
     }
 
-    public func toTexture2D() -> UIImage {
-        let image = CIImage(
+    public func toTexture2D() -> Texture2D {
+        let ciImage = CIImage(
             bitmapData: rawData,
             bytesPerRow: width * bpp,
             size: CGSize(width: width, height: height), 
             format: format, 
             colorSpace: nil)
-        return UIImage(ciImage: image)
+        let rep = NSCIImageRep(ciImage: ciImage)
+        let nsImage = NSImage(size: rep.size)
+        nsImage.addRepresentation(rep)
+        return nsImage
+        /*
+        let size = CGSize(width: width, height: height)
+        let cgImage = CGImage(
+            width: width, height: height,
+            bitsPerComponent: 8, bitsPerPixel: bpp,
+            bytesPerRow: width * bpp,
+            space: CGColorSpace(name: CGColorSpace.sRGB)!,
+            bitmapInfo: CGBitmapInfo(rawValue: rawData),
+            provider: CGDataProvider.init(data: rawData),
+            decode: nil,
+            shouldInterpolate: false,
+            intent: nil)
+        return NSImage(cgImage: cgImage, size: size)
+        */
     }
 }

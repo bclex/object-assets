@@ -1,4 +1,4 @@
-﻿//
+//
 //  SOUNRecord.swift
 //  ObjectManager
 //
@@ -38,9 +38,9 @@ public class SOUNRecord: Record, IHaveEDID {
                 return
             }
             frequencyAdjustment = r.readSByte()
-            r.readByte() // Unused
+            _ = r.readByte() // Unused
             flags = r.readLEUInt16()
-            r.readLEUInt16() // Unused
+            r.skipBytes(2) // Unused
             guard dataSize != 8 else {
                 return
             }
@@ -50,15 +50,15 @@ public class SOUNRecord: Record, IHaveEDID {
         }
     }
 
-    public var description: String { return "SOUN: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
+    public override var description: String { return "SOUN: \(EDID)" }
+    public var EDID: STRVField?  // Editor ID
     public var FNAM: FILEField // Sound Filename (relative to Sounds\)
     public var DATA: DATAField // Sound Data
 
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)

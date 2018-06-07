@@ -1,4 +1,4 @@
-﻿//
+//
 //  CLASRecord.swift
 //  ObjectManager
 //
@@ -32,7 +32,7 @@ public class CLASRecord: Record {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
     {
         if format == .TES3 {
             switch type {

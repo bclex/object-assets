@@ -1,4 +1,4 @@
-﻿//
+//
 //  LANDRecord.swift
 //  ObjectManager
 //
@@ -12,7 +12,7 @@ public class LANDRecord: Record {
         public let vertexs: [Vector3Int] // XYZ 8 bit floats
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            vertexs = [Vector3Int](); vertexs.allocateCapacity(dataSize / 3)
+            vertexs = [Vector3Int](); vertexs.reserveCapacity(dataSize / 3)
             for i in 0..<vertexs.capacity {
                 Vertexs[i] = Vector3Int(r.readByte(), r.readByte(), r.readByte())
             }
@@ -25,7 +25,7 @@ public class LANDRecord: Record {
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             referenceHeight = r.readLESingle()
-            heightData = [Int8](); heightData.allocateCapacity(dataSize - 4 - 3)
+            heightData = [Int8](); heightData.reserveCapacity(dataSize - 4 - 3)
             for i in 0..<heightData.capacity {
                 heightData[i] = r.readSByte()
             }
@@ -37,7 +37,7 @@ public class LANDRecord: Record {
         public let colors: [ColorRef] // 24-bit RGB
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            colors = [ColorRef](); colors.allocateCapacity(dataSize / 24)
+            colors = [ColorRef](); colors.reserveCapacity(dataSize / 24)
             for i in 0..<colors.capacity {
                 colors[i] = ColorRef(r.readByte(), r.readByte(), r.readByte())
             }
@@ -49,13 +49,13 @@ public class LANDRecord: Record {
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             guard format != .TES3 else {
-                textureIndices = [UInt32](); textureIndices.allocateCapacity(dataSize >> 1)
+                textureIndices = [UInt32](); textureIndices.reserveCapacity(dataSize >> 1)
                 for i in 0..<textureIndices.capacity {
                     textureIndices[i] = r.readLEUInt16()
                 }
                 return;
             }
-            textureIndices = [UInt32](); textureIndices.allocateCapacity(dataSize >> 2)
+            textureIndices = [UInt32](); textureIndices.reserveCapacity(dataSize >> 2)
             for i in 0..<textureIndices.capacity {
                 textureIndices[i] = r.readLEUInt32()
             }
@@ -134,10 +134,10 @@ public class LANDRecord: Record {
     public var GridCoords: Vector2Int { return Vector2Int(INTV.cellX, INTV.cellY) }
 
     init() {
-        BTXTs.allocateCapacity(4);
+        BTXTs.reserveCapacity(4);
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "DATA": DATA = IN32Field(r, dataSize)
         case "VNML": VNML = VNMLField(r, dataSize)

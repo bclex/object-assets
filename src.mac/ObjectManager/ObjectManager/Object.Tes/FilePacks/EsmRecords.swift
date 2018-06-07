@@ -53,18 +53,26 @@ public class Header: CustomStringConvertible {
         case cellVisibleDistantChildren // Label: Parent (CELL)
     }
 
-    public var description: String { return "\(type):\(groupType)" }
+    public var description: String { return "\(type):\(groupType ?? .top)" }
     public let type: String // 4 bytes
-    public let dataSize: UInt32
+    public var dataSize: UInt32
     public let flags: Flags
     public var compressed: Bool { return (flags.rawValue & Flags.compressed.rawValue) != 0 }
     public let formId: UInt32
-    public let position: UInt64
+    public var position: UInt64
     // group
-    public let label: String
-    public let groupType: GroupType
+    public let label: String?
+    public let groupType: GroupType?
 
-    init() { }
+    init(label: String, dataSize: UInt32, position: UInt64) {
+        type = ""
+        self.dataSize = dataSize
+        flags = Flags(rawValue: 0)!
+        formId = 0
+        self.position = position
+        self.label = label
+        groupType = nil
+    }
     init(_ r: BinaryReader, for format: GameFormatId) {
         type = r.readASCIIString(4)
         if type == "GRUP" {
@@ -76,8 +84,12 @@ public class Header: CustomStringConvertible {
                 _ = r.readLEUInt32() // version + uknown
             }
             position = r.baseStream.position
-            return;
+            flags = Flags(rawValue: 0)!
+            formId = 0
+            return
         }
+        label = nil
+        groupType = nil
         dataSize = r.readLEUInt32()
         if format == .TES3 {
             _ = r.readLEUInt32() // Unknown
@@ -85,6 +97,7 @@ public class Header: CustomStringConvertible {
         flags = Flags(rawValue: r.readLEUInt32())!
         if format == .TES3 {
             position = r.baseStream.position
+            formId = 0
             return
         }
         // tes4
@@ -99,33 +112,33 @@ public class Header: CustomStringConvertible {
         position = r.baseStream.position
     }
 
-    static let create:[String : (f: ()->Record, l: (Int)->Bool)] = [
-        "TES3" : ({return TES3Record()}, {x in return true})
+    static let create:[String : (f: (Header)->Record, l: (Int)->Bool)] = [
+        "TES3" : ({x in return TES3Record(x)}, {x in return true})
          /*
-        "TES4" : ({return TES4Record()}, {x in return true}),
+        "TES4" : ({x in return TES4Record(x)}, {x in return true}),
         // 0
-        "LTEX" : ({return LTEXRecord()}, {x in return x > 0}),
-        "STAT" : ({return STATRecord()}, {x in return x > 0}),
-        "CELL" : ({return CELLRecord()}, {x in return x > 0}),
-        "LAND" : ({return LANDRecord()}, {x in return x > 0}),
+        "LTEX" : ({x in return LTEXRecord(x)}, {x in return x > 0}),
+        "STAT" : ({x in return STATRecord(x)}, {x in return x > 0}),
+        "CELL" : ({x in return CELLRecord(x)}, {x in return x > 0}),
+        "LAND" : ({x in return LANDRecord(x)}, {x in return x > 0}),
         // 1
-        "DOOR" : ({return DOORRecord()}, {x in return x > 1}),
-        "MISC" : ({return MISCRecord()}, {x in return x > 1}),
-        "WEAP" : ({return WEAPRecord()}, {x in return x > 1}),
-        "CONT" : ({return CONTRecord()}, {x in return x > 1}),
-        "LIGH" : ({return LIGHRecord()}, {x in return x > 1}),
-        "ARMO" : ({return ARMORecord()}, {x in return x > 1}),
-        "CLOT" : ({return CLOTRecord()}, {x in return x > 1}),
-        "REPA" : ({return REPARecord()}, {x in return x > 1}),
-        "ACTI" : ({return ACTIRecord()}, {x in return x > 1}),
-        "APPA" : ({return APPARecord()}, {x in return x > 1}),
-        "LOCK" : ({return LOCKRecord()}, {x in return x > 1}),
-        "PROB" : ({return PROBRecord()}, {x in return x > 1}),
-        "INGR" : ({return INGRRecord()}, {x in return x > 1}),
-        "BOOK" : ({return BOOKRecord()}, {x in return x > 1}),
-        "ALCH" : ({return ALCHRecord()}, {x in return x > 1}),
-        "CREA" : ({return CREARecord()}, {x in return x > 1}), // && BaseSettings.Game.CreaturesEnabled}),
-        "NPC_" : ({return NPC_Record()}, {x in return x > 1}), // && BaseSettings.Game.NpcsEnabled}),
+        "DOOR" : ({x in return DOORRecord(x)}, {x in return x > 1}),
+        "MISC" : ({x in return MISCRecord(x)}, {x in return x > 1}),
+        "WEAP" : ({x in return WEAPRecord(x)}, {x in return x > 1}),
+        "CONT" : ({x in return CONTRecord(x)}, {x in return x > 1}),
+        "LIGH" : ({x in return LIGHRecord(x)}, {x in return x > 1}),
+        "ARMO" : ({x in return ARMORecord(x)}, {x in return x > 1}),
+        "CLOT" : ({x in return CLOTRecord(x)}, {x in return x > 1}),
+        "REPA" : ({x in return REPARecord(x)}, {x in return x > 1}),
+        "ACTI" : ({x in return ACTIRecord(x)}, {x in return x > 1}),
+        "APPA" : ({x in return APPARecord(x)}, {x in return x > 1}),
+        "LOCK" : ({x in return LOCKRecord(x)}, {x in return x > 1}),
+        "PROB" : ({x in return PROBRecord(x)}, {x in return x > 1}),
+        "INGR" : ({x in return INGRRecord(x)}, {x in return x > 1}),
+        "BOOK" : ({x in return BOOKRecord(x)}, {x in return x > 1}),
+        "ALCH" : ({x in return ALCHRecord(x)}, {x in return x > 1}),
+        "CREA" : ({x in return CREARecord(x)}, {x in return x > 1}), // && BaseSettings.Game.CreaturesEnabled}),
+        "NPC_" : ({x in return NPC_Record(x)}, {x in return x > 1}), // && BaseSettings.Game.NpcsEnabled}),
         // 2
         "GMST" : ({return GMSTRecord()}, {x in return x > 2}),
         "GLOB" : ({return GLOBRecord()}, {x in return x > 2}),
@@ -195,11 +208,12 @@ public class Header: CustomStringConvertible {
 
     // public static bool LoadRecord(string type, byte level) => Create.TryGetValue(type, out RecordType recordType) ? recordType.Load(level) : false;
 
-    func createRecord(at position: UInt64) -> Record {
+    func createRecord(at position: UInt64) -> Record? {
         guard let recordType = Header.create[type] else {
-            fatalError("Unsupported ESM record type: \(type)")
+            debugPrint("Unsupported ESM record type: \(type)")
+            return nil
         }
-        let record = recordType.f()
+        let record = recordType.f(self)
         record.header = self;
         return record;
     }
@@ -224,14 +238,14 @@ public class RecordGroup: CustomStringConvertible {
         _level = level
     }
 
-    func add(header: Header, mode: Int = 0) {
+    func addHeader(_ header: Header, mode: Int = 0) {
         headers.append(header)
         let grup = _r.readASCIIString(4)
         _r.baseStream.position -= 4
         guard grup != "GRUP" else {
             return
         }
-        let recordHeader = Header(_r, _format)
+        let recordHeader = Header(_r, for: _format)
         readGrup(header, recordHeader)
     }
 
@@ -241,8 +255,8 @@ public class RecordGroup: CustomStringConvertible {
             groups = [RecordGroup]()
         }
         let group = RecordGroup(_r, _filePath, for: _format, level: _level)
-        group.add(header: recordHeader)
-        groups!.append(group); debugPrint("Grup: \(header.label)/\(group)")
+        group.addHeader(recordHeader)
+        groups!.append(group); debugPrint("Grup: \(header.label ?? "unk")/\(group)")
         _r.baseStream.position = nextPosition
     }
 
@@ -266,8 +280,8 @@ public class RecordGroup: CustomStringConvertible {
                 //group.load()
                 continue
             }
-            guard record = recordHeader.createRecord(at: _r.baseStream.position) else {
-                _r.baseStream.offsetInFile += recordHeader.dataSize
+            guard let record = recordHeader.createRecord(at: _r.baseStream.position) else {
+                _r.baseStream.position += UInt64(recordHeader.dataSize)
                 continue
             }
             readRecord(record, compressed: recordHeader.compressed)
@@ -277,33 +291,38 @@ public class RecordGroup: CustomStringConvertible {
 
     func readRecord(_ record: Record, compressed: Bool) {
         guard compressed else {
-            record.read(_r, _filePath, _formatId)
+            record.read(_r, _filePath, for: _format)
             return
         }
         let newDataSize = _r.readLEUInt32()
         let data = _r.readBytes(Int(record.header.dataSize - 4))
-        let newData = data.inflate()
+        let newData = data.inflate()!
         // read record
-        record.header.Position = 0
+        record.header.position = 0
         record.header.dataSize = newDataSize
-        let r = BinaryReader(s)
+        let r = BinaryReader(DataBaseStream(data: newData))
         defer { r.close() }
-        record.read(r, _filePath, _formatId)
+        record.read(r, _filePath, for: _format)
     }
 }
 
 public class Record: IRecord, CustomStringConvertible {
     public var description: String { return "BASE" }
-    internal var header: Header
-
-    func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) {
+    var header: Header
+    
+    init(_ header: Header) {
+        self.header = header
+    }
+    
+    func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+        return false
     }
 
-    func read(_ r: BinaryReader, filePath: String, for format: GameFormatId) {
-        let startPosition = r.baseStream.Position
-        let endPosition = startPosition + header.dataSize
-        while r.baseStream.offsetInFile < endPosition {
-            let fieldHeader = FieldHeader(r, for: formatId)
+    func read(_ r: BinaryReader, _ filePath: String, for format: GameFormatId) {
+        let startPosition = r.baseStream.position
+        let endPosition = startPosition + UInt64(header.dataSize)
+        while r.baseStream.position < endPosition {
+            let fieldHeader = FieldHeader(r, for: format)
             guard fieldHeader.type != "XXXX" else {
                 if fieldHeader.dataSize != 4 {
                     fatalError("")
@@ -312,23 +331,24 @@ public class Record: IRecord, CustomStringConvertible {
                 continue
             }
             guard fieldHeader.type != "OFST" || header.type != "WRLD" else {
-                r.baseStream.offsetInFile = endPosition
+                r.baseStream.position = endPosition
                 continue
-                //header.DataSize = UInt(endPosition - r.baseStream.offsetInFile)
+                //header.DataSize = UInt(endPosition - r.baseStream.position)
             }
-            let position = r.baseStream.offsetInFile
-            guard createField(r, for: formatId, type: fieldHeader.type, dataSize: fieldHeader.dataSize) else {
-                fatalError("Unsupported ESM record type: \(header.type):\(fieldHeader.type)")
-                r.baseStream.offsetInFile += fieldHeader.dataSize
+            let position = r.baseStream.position
+            guard createField(r, for: format, type: fieldHeader.type, dataSize: fieldHeader.dataSize) else {
+                debugPrint("Unsupported ESM record type: \(header.type):\(fieldHeader.type)")
+                r.baseStream.position += UInt64(fieldHeader.dataSize)
                 continue
             }
             // check full read
-            guard r.baseStream.offsetInFile == position + fieldHeader.dataSize else {
-                fatalError("Failed reading \(header.type):\(fieldHeader.type) field data at offset \(position) in \(filePath) of \(r.baseStream.offsetInFile - position - fieldHeader.dataSize)")
+            guard r.baseStream.position == position + UInt64(fieldHeader.dataSize) else {
+                let remains = r.baseStream.position - position - UInt64(fieldHeader.dataSize)
+                fatalError("Failed reading \(header.type):\(fieldHeader.type) field data at offset \(position) in \(filePath) of \(remains)")
             }
         }
         // check full read
-        guard r.baseStream.offsetInFile == endPosition else {
+        guard r.baseStream.position == endPosition else {
             fatalError("Failed reading \(header.type) record data at offset \(startPosition) in \(filePath)")
         }
     }
@@ -337,10 +357,10 @@ public class Record: IRecord, CustomStringConvertible {
 public class FieldHeader: CustomStringConvertible {
     public var description: String { return type }
     public let type: String // 4 bytes
-    public let dataSize: Int
+    public var dataSize: Int
 
     init(_ r: BinaryReader, for format: GameFormatId) {
         type = r.readASCIIString(4)
-        dataSize = Int(format == .TES3 ? r.readLEUInt32() : r.readLEUInt16())
+        dataSize = format == .TES3 ? Int(r.readLEUInt32()) : Int(r.readLEUInt16())
     }
 }

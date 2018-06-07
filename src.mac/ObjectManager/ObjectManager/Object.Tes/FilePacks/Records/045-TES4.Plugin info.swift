@@ -1,4 +1,4 @@
-﻿//
+//
 //  TES4Record.swift
 //  ObjectManager
 //
@@ -31,7 +31,7 @@ public class TES4Record: Record {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "HEDR": HEDR = HEDRField(r, dataSize)
         case "OFST": r.skipBytes(dataSize)

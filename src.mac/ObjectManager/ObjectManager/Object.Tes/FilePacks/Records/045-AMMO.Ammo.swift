@@ -1,4 +1,4 @@
-﻿//
+//
 //  AMMORecord.swift
 //  ObjectManager
 //
@@ -23,7 +23,7 @@ public class AMMORecord: Record {
         }
     }
 
-    public var description: String { return "AMMO: \(EDID)" }
+    public override var description: String { return "AMMO: \(EDID)" }
     public var EDID: STRVField // Editor ID
     public var MODL: MODLGroup // Model
     public var FULL: STRVField // Item Name
@@ -35,7 +35,7 @@ public class AMMORecord: Record {
     init() {
     }
     
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)

@@ -1,4 +1,4 @@
-﻿//
+//
 //  RACERecord.swift
 //  ObjectManager
 //
@@ -79,7 +79,7 @@ public class RACERecord: Record {
         public let flags: UInt32 // 1 = Playable 2 = Beast Race
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
-            skillBoosts.allocateCapacity(7)
+            skillBoosts.reserveCapacity(7)
             guard format != .TES3 {
                 for i in 0..<skillBoosts.capacity {
                     skillBoosts[i] = SkillBoost(r, 8, format)
@@ -185,7 +185,7 @@ public class RACERecord: Record {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
             switch type {
             case "NAME": EDID = STRVField(r, dataSize)

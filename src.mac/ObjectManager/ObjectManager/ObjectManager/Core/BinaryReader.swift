@@ -16,6 +16,7 @@ public protocol BaseStream {
     func close()
     func readData(ofLength: Int) -> Data
     var position: UInt64 {get set}
+    var length: UInt64 {get}
 }
 
 public class FileBaseStream: FileHandle, BaseStream {
@@ -24,24 +25,34 @@ public class FileBaseStream: FileHandle, BaseStream {
         set { self.seek(toFileOffset: newValue) }
     }
     
+    public var length: UInt64 { return 0 }
+    
     public func close() { super.closeFile() }
     //public func readData(ofLength: Int) -> Data { return super.readData(ofLength: ofLength) }
-    public required init?(coder: NSCoder) { }
-    public convenience init?(forReadingAtPath path: String) { self.init(forReadingAtPath: path) }
+    //public required init?(coder: NSCoder) { }
+    //public convenience init?(forReadingAtPath path: String) { self.init(forReadingAtPath: path) }
 }
 
-/*
 public class DataBaseStream: BaseStream {
+    let data: Data
+    public var position: UInt64
+    
+    init(data: Data) {
+        self.data = data
+        position = 0
+    }
+    
     public func close() {
     }
     
-    public func readData(ofLength: Int) -> Data {
-        return Data()
-    }
+    public var length: UInt64 { return UInt64(data.count) }
     
-    public var position: UInt64
+    public func readData(ofLength: Int) -> Data {
+        let startIndex = Int(position)
+        //let endIndex = startIndex + ofLength
+        return data[startIndex..<(startIndex + ofLength)]
+    }
 }
-*/
 
 public class BinaryReader {
     

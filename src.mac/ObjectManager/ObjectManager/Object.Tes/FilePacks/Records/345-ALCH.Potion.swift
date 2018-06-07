@@ -1,4 +1,4 @@
-﻿//
+//
 //  ALCHRecord.swift
 //  ObjectManager
 //
@@ -66,7 +66,7 @@ public class ALCHRecord: Record, IHaveEDID, IHaveMODL {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)

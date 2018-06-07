@@ -1,4 +1,4 @@
-﻿//
+//
 //  REGNRecord.swift
 //  ObjectManager
 //
@@ -154,7 +154,7 @@ public class REGNRecord: Record, IHaveEDID {
         }
 
         func RPLDField(_ r: BinaryReader, _ dataSize: Int) {
-            points = [CGVector](); points.allocateCapacity(dataSize >> 3)
+            points = [CGVector](); points.reserveCapacity(dataSize >> 3)
             for i in 0..<points.capacity {
                 points[i] = CGVector(r.readLESingle(), r.readLESingle())
             }
@@ -175,7 +175,7 @@ public class REGNRecord: Record, IHaveEDID {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)

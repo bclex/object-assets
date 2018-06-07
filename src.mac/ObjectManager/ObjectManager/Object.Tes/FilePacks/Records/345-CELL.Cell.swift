@@ -1,4 +1,4 @@
-﻿//
+//
 //  CELLRecord.swift
 //  ObjectManager
 //
@@ -141,7 +141,7 @@ public class CELLRecord: Record, ICellRecord {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if !InFRMR && type == "FRMR" {
             InFRMR = true
         }

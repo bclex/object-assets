@@ -1,4 +1,4 @@
-﻿//
+//
 //  WEAPRecord.swift
 //  ObjectManager
 //
@@ -10,7 +10,7 @@ import Foundation
 
 public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
     public struct DATAField {
-        public enum WEAPType {
+        public enum WEAPType: UInt16 {
             case shortBladeOneHand = 0, longBladeOneHand, longBladeTwoClose, bluntOneHand, bluntTwoClose, bluntTwoWide, spearTwoWide, axeOneHand, axeTwoHand, marksmanBow, marksmanCrossbow, marksmanThrown, arrow, bolt
         }
 
@@ -55,25 +55,22 @@ public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
             health = Int16(r.readLEInt32())
             weight = r.readLESingle()
             damage = r.readLEInt16()
-            chopMin = chopMax = slashMin = slashMax = thrustMin = thrustMax = 0
+            chopMin = 0; chopMax = 0; slashMin = 0; slashMax = 0; thrustMin =  0; thrustMax = 0
         }
     }
 
-    public var description: String { return "WEAP: \(EDID)" }
-    public let EDID: STRVField // Editor ID
-    public let MODL: MODLGroup // Model
-    public let FULL: STRVField // Item Name
-    public let DATA: DATAField // Weapon Data
-    public let ICON: FILEField // Male Icon (optional)
-    public let ENAM: FMIDField<ENCHRecord> // Enchantment ID
-    public let SCRI: FMIDField<SCPTRecord> // Script (optional)
+    public override var description: String { return "WEAP: \(EDID)" }
+    public var EDID: STRVField? // Editor ID
+    public var MODL: MODLGroup? // Model
+    public var FULL: STRVField // Item Name
+    public var DATA: DATAField // Weapon Data
+    public var ICON: FILEField // Male Icon (optional)
+    public var ENAM: FMIDField<ENCHRecord> // Enchantment ID
+    public var SCRI: FMIDField<SCPTRecord> // Script (optional)
     // TES4
-    public let ANAM: IN16Field? // Enchantment points (optional)
+    public var ANAM: IN16Field? // Enchantment points (optional)
 
-    init() {
-    }
-
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
@@ -83,7 +80,7 @@ public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
         case "FULL",
              "FNAM": FULL = STRVField(r, dataSize)
         case "DATA",
-             "WPDT": DATA = DATAField(r, dataSize, formatId)
+             "WPDT": DATA = DATAField(r, dataSize, format)
         case "ICON",
              "ITEX": ICON = FILEField(r, dataSize)
         case "ENAM": ENAM = FMIDField<ENCHRecord>(r, dataSize)

@@ -1,4 +1,4 @@
-﻿//
+//
 //  ACHRRecord.swift
 //  ObjectManager
 //
@@ -7,7 +7,7 @@
 //
 
 public class ACHRRecord: Record {
-    public var description: String { return "ACHR: \(EDID)" }
+    public override var description: String { return "ACHR: \(EDID)" }
     public var EDID: STRVField // Editor ID
     public var NAME: FMIDField<Record> // Base
     public var DATA: REFRRecord.DATAField  // Position/Rotation
@@ -22,7 +22,7 @@ public class ACHRRecord: Record {
     init() {
     }
     
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "NAME": NAME = FMIDField<Record>(r, dataSize)

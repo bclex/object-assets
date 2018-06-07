@@ -11,12 +11,12 @@ import Foundation
 public class BsaMultiFile {
     public var packs = [BsaFile]()
 
-    init(filePaths: [URL]?) {
+    init(_ filePaths: [URL]?) {
         guard let filePaths = filePaths else {
             fatalError("name me")
         }
-        filePaths.filter { [".bsa", ".ba2"].contains { $0.pathExtension.lowercased() } }
-            .map { BsaFile($0) }
+        filePaths.filter { [".bsa", ".ba2"].index(of: $0.pathExtension.lowercased()) != nil }
+            .map { BsaFile($0.path) }
             .forEach { packs.append($0) }
     }
 
@@ -38,6 +38,6 @@ public class BsaMultiFile {
         guard let pack = packs.first(where: { $0.containsFile(filePath) }) else {
             fatalError("Could not find file '\(filePath)' in a BSA file.")
         }
-        return pack.loadFileData(filePath)
+        return pack.loadFileData(filePath: filePath)
     }
 }

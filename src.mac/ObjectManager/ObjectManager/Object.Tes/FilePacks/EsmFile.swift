@@ -8,19 +8,19 @@
 
 import Foundation
 
-public class EsmFile {
+public class EsmFile: CustomStringConvertible {
     static let recordHeaderSizeInBytes = 16
-    // public override string ToString() => $"{Path.GetFileName(FilePath)}";
+    public var description: String { return "\(filePath)" }
     var _r: BinaryReader!
     public let filePath: String
     public let format: GameFormatId
-    public var groups: [String : RecordGroup]
+    public var groups: [String : RecordGroup]? = nil
     // public var recordsByType: [Type : [IRecord]]
     // public var objectsByIDString: [String : IRecord]
     // public var exteriorCELLRecordsByIndices: [Vector2Int : CELLRecord]
     // public var LANDRecordsByIndices: [Vector2Int : LANDRecord]
 
-    init(filePath: String?, for game: GameId) {
+    init(_ filePath: String?, for game: GameId) {
         func getFormatId() -> GameFormatId {
             switch game {
             // tes
@@ -30,20 +30,20 @@ public class EsmFile {
             // fallout
             case .fallout3, .falloutNV: return .TES4
             case .fallout4, .fallout4VR: return .TES5
-            default: fatalError("Error")
             }
         }
+        self.format = getFormatId()
         guard let filePath = filePath else {
+            self.filePath = "missing"
             return
         }
         self.filePath = filePath
-        self.format = getFormatId()
         _r = BinaryReader(FileBaseStream(forReadingAtPath: filePath)!)
         let start = Date()
-        read(0)
+        read(level: 0)
         let endRead = Date()
         debugPrint("Loading: \(endRead.timeIntervalSince(start))")
-        postProcessRecords()
+        //postProcessRecords()
     }
 
     deinit {
@@ -57,21 +57,21 @@ public class EsmFile {
 
     // public List<IRecord> GetRecordsOfType<T>() where T : Record { return recordsByType.TryGetValue(typeof(T), out List<IRecord> records) ? records : null; }
 
-    func read(_ level: UInt8) {
-        let rootHeader = Header(_r, format)
-        guard (format != .TES3 || rootHeader.Type == "TES3") && (format == .TES3 || rootHeader.type == "TES4") else {
+    func read(level: Int) {
+        let rootHeader = Header(_r, for: format)
+        guard (format != .TES3 || rootHeader.type == "TES3") && (format == .TES3 || rootHeader.type == "TES4") else {
             fatalError("\(filePath) record header \(rootHeader.type) is not valid for this \(format)")
         }
-        let rootRecord = rootHeader.createRecord(rootHeader.position)
-        rootRecord.read(_r, filePath, format)
+        let rootRecord = rootHeader.createRecord(at: rootHeader.position)!
+        rootRecord.read(_r, filePath, for: format)
         // morrowind hack
         guard format != .TES3 else {
-            let group = RecordGroup(_r, filePath, format, level)
+            let group = RecordGroup(_r, filePath, for: format, level: level)
             group.addHeader(Header(
                 label: "",
-                dataSize: (_r.baseStream.length - _r.baseStream.position),
+                dataSize: UInt32(_r.baseStream.length - _r.baseStream.position),
                 position: _r.baseStream.position
-            ), 99);
+            ), mode: 99);
             group.load()
             // groups = Dictionary(grouping: group.records, by: { $0.header.type! })
             //     .mapValues {
@@ -85,16 +85,17 @@ public class EsmFile {
         groups = [String : RecordGroup]()
         let endPosition = _r.baseStream.length
         while _r.baseStream.position < endPosition {
-            let header = Header(_r, format)
+            let header = Header(_r, for: format)
             guard header.type == "GRUP" else {
                 fatalError("\(header.type) not GRUP")
             }
-            let nextPosition = _r.baseStream.position + header.dataSize
-            if let group = groups[header.label] {
-                group = RecordGroup(_r, filePath, format, level)
-                groups[header.label] = group
+            let nextPosition = _r.baseStream.position + UInt64(header.dataSize)
+            var group = groups![header.label!]
+            if group == nil {
+                group = RecordGroup(_r, filePath, for: format, level: level)
+                groups![header.label!] = group
             }
-            group.addHeader(header); debugPrint("Read: \(group)")
+            group!.addHeader(header); debugPrint("Read: \(group!)")
             _r.baseStream.position = nextPosition
         }
     }

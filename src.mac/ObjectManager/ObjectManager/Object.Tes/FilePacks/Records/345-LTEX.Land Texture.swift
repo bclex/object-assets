@@ -1,4 +1,4 @@
-﻿//
+//
 //  LTEXRecord.swift
 //  ObjectManager
 //
@@ -20,26 +20,26 @@ public class LTEXRecord: Record, IHaveEDID {
         }
     }
 
-    public var description: String { return "LTEX: \(EDID)" }
-    public EDID: STRVField // Editor ID
-    public ICON: FILEField // Texture
+    public override var description: String { return "LTEX: \(EDID)" }
+    public var EDID: STRVField // Editor ID
+    public var ICON: FILEField // Texture
     // TES3
-    public INTV: INTVField
+    public var INTV: INTVField
     // TES4
-    public HNAM: HNAMField // Havok data
-    public SNAM: BYTEField // Texture specular exponent
-    public GNAMs = [FMIDField<GRASRecord>]() // Potential grass
+    public var HNAM: HNAMField // Havok data
+    public var SNAM: BYTEField // Texture specular exponent
+    public var GNAMs = [FMIDField<GRASRecord>]() // Potential grass
 
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
         case "INTV": INTV = INTVField(r, dataSize)
-        case "ICON":
-        case "DATA": ICON = FILEField(r, dataSize)
+        case "ICON",
+             "DATA": ICON = FILEField(r, dataSize)
         // TES4
         case "HNAM": HNAM = HNAMField(r, dataSize)
         case "SNAM": SNAM = BYTEField(r, dataSize)

@@ -1,4 +1,4 @@
-﻿//
+//
 //  LOCKRecord.swift
 //  ObjectManager
 //
@@ -32,7 +32,7 @@ public class LOCKRecord: Record, IHaveEDID, IHaveMODL {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard formatId == GameFormatId.TES3 else {
             return false
         }

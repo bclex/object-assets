@@ -1,4 +1,4 @@
-﻿//
+//
 //  LVLIRecord.swift
 //  ObjectManager
 //
@@ -10,7 +10,7 @@ public class LVLIRecord: Record {
     public struct LVLOField {
         public let level: Int16
         public let itemFormId: FormId<Record>
-        public let count: Int32
+        public let count: Int16
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             level = r.readLEInt16()
@@ -20,11 +20,11 @@ public class LVLIRecord: Record {
                 count = r.readLEInt16()
                 r.skipBytes(2) // Unused
             }
-            else count = 0;
+            else { count = 0 }
         }
     }
 
-    public var description: String { return "LVLI: \(EDID)" }
+    public override var description: String { return "LVLI: \(EDID)" }
     public var EDID: STRVField // Editor ID
     public var LVLD: BYTEField // Chance
     public var LVLF: BYTEField // Flags - 0x01 = Calculate from all levels <= player's level, 0x02 = Calculate for each item in count
@@ -34,7 +34,7 @@ public class LVLIRecord: Record {
     init() {
     }
     
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "LVLD": LVLD = BYTEField(r, dataSize)

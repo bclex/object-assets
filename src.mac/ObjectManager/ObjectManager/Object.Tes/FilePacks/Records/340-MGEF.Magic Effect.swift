@@ -1,4 +1,4 @@
-﻿//
+//
 //  MGEFRecord.swift
 //  ObjectManager
 //
@@ -137,7 +137,7 @@ public class MGEFRecord: Record {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
             switch type {
             case "INDX": INDX = INTVField(r, dataSize)
@@ -165,7 +165,7 @@ public class MGEFRecord: Record {
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL.MODBField(r, dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
-        case "ESCE": ESCEs = [STRVField](); ESCEs.allocateCapacity(dataSize >> 2) for i in 0..<ESCEs.capacity { ESCEs.append(STRVField(r, 4)) }
+        case "ESCE": ESCEs = [STRVField](); ESCEs.reserveCapacity(dataSize >> 2) for i in 0..<ESCEs.capacity { ESCEs.append(STRVField(r, 4)) }
         default: return false
         }
         return true

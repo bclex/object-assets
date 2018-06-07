@@ -24,13 +24,10 @@ public class TES3Record: Record {
         }
     }
 
-    public var HEDR: HEDRField
-    public var MASTs: [STRVField]?
-    public var DATAs: [INTVField]?
+    public var HEDR: HEDRField? = nil
+    public var MASTs: [STRVField]? = nil
+    public var DATAs: [INTVField]? = nil
 
-    init() {
-    }
-    
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard format == .TES3 else {
             return false

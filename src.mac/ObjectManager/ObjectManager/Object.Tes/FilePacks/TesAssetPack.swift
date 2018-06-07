@@ -14,11 +14,11 @@ public class TesAssetPack: BsaMultiFile, IAssetPack {
     let _materialManager: MaterialManager
     let _nifManager: NifManager
 
-    init(filePaths: [URL], webPath: URL) {
-        super.init(filePaths: filePaths)
-        _textureManager = TextureManager(self)
-        _materialManager = MaterialManager(texture: _textureManager)
-        _nifManager = NifManager(self, material: _materialManager, marker: 0)
+    init(_ filePaths: [URL], webPath: URL) {
+        _textureManager = TextureManager(asset: self)
+        _materialManager = MaterialManager(textureManager: _textureManager)
+        _nifManager = NifManager(asset: self, materialManager: _materialManager, markerLayer: 0)
+        super.init(filePaths)
     }
 
     public func loadTexture(texturePath: String, method: Int = 0) -> Texture2D {
@@ -29,34 +29,19 @@ public class TesAssetPack: BsaMultiFile, IAssetPack {
         _textureManager.preloadTextureFileAsync(texturePath)
     }
 
-    public func createObject(filePath: String) -> SCNNode {
-        return _nifManager.InstantiateNif(filePath)
+    public func createObject(filePath: String) -> GameObject {
+        return _nifManager.instantiateNif(filePath: filePath)
     }
 
     public func preloadObjectAsync(filePath: String) {
-        _nifManager.PreloadNifFileAsync(filePath)
+        _nifManager.preloadNifFileAsync(filePath: filePath)
     }
 
     public override func containsFile(_ filePath: String) -> Bool {
-        if _directory == nil {
-            return super.containsFile(filePath)
-        }
-        if _directory != nil {
-            // var path = Path.Combine(_directory, filePath.Replace("/", @"\"));
-            // var r = File.Exists(path);
-            // return r;
-        }
-        return false
+        return super.containsFile(filePath)
     }
 
     public override func loadFileData(_ filePath: String) -> Data {
-        if _directory == nil {
-            return super.loadFileData(filePath)
-        }
-        //if _directory != nil {
-        //    var path = Path.Combine(_directory, filePath);
-        //    return File.ReadAllBytes(path);
-        //}
-        return nil
+        return super.loadFileData(filePath)
     }
 }

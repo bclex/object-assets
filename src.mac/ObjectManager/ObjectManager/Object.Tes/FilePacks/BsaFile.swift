@@ -58,8 +58,8 @@ public class BsaFile {
         public var offset: UInt64 // The offset of the file in the BSA
         public var tex: F4Tex
         //
-        public let path: String
-        public let pathHash: UInt64
+        public var path: String
+        public var pathHash: UInt64
         // The size of the file inside the BSA
         public var size: UInt32 { return sizeFlags > 0 ?
             // Skyrim and earlier
@@ -140,7 +140,7 @@ public class BsaFile {
 
     //public var isAtEof: Bool { return _r.baseStream.offsetInFile >= _r.baseStream.count }
 
-    init(filePath: String?) {
+    init(_ filePath: String?) {
         guard let filePath = filePath else {
             return
         }
@@ -169,13 +169,13 @@ public class BsaFile {
             fatalError("should not happen")
         }
         if files.count == 1 {
-            return loadFileData(files[0])
+            return loadFileData(file: files[0])
         }
         let newPath = filePath.replacingOccurrences(of: "/", with: "\\")
         guard let file = files.first(where: { $0.path.caseInsensitiveCompare(newPath) == .orderedSame }) else {
             fatalError("Could not find file '\(filePath)' in a BSA file.")
         }
-        return loadFileData(file)
+        return loadFileData(file: file)
     }
 
     public func loadFileData(file: FileMetadata) -> Data {
@@ -385,7 +385,7 @@ public class BsaFile {
             if (header_archiveFlags & BsaFile.OB_BSAARCHIVE_PATHNAMES) == 0 || (header_archiveFlags & BsaFile.OB_BSAARCHIVE_FILENAMES) == 0 {
                 fatalError("HEADER FLAGS")
             }
-            _compressToggle = (header_archiveFlags & BsaFile.OB_BSAARCHIVE_COMPRESSFILES) != 0
+            _compressToggle = (header_archiveFlags & BsaFile.OB_BSAARCHIVE_COMPRESSFILES)
             if version == BsaFile.F3_BSAHEADER_VERSION || version == BsaFile.SSE_BSAHEADER_VERSION {
                 _hasNamePrefix = (header_archiveFlags & BsaFile.F3_BSAARCHIVE_PREFIXFULLFILENAMES) != 0
             }
@@ -411,7 +411,7 @@ public class BsaFile {
             }
 
             // read-all folders
-            _r.baseStream.position = header_folderRecordOffset
+            _r.baseStream.position = UInt64(header_folderRecordOffset)
             var foldersFiles = [UInt32](); foldersFiles.reserveCapacity(header_folderCount)
             for i in 0..<header_folderCount {
                 var folder_hash = _r.readLEUInt64() // Hash of the folder name

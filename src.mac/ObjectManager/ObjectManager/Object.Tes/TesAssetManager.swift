@@ -33,7 +33,7 @@ public enum GameId: Int, CustomStringConvertible {
         }
     }
     
-    init?(_ value: String) {
+    init(_ value: String) {
         switch value.lowercased() {
         case "morrowind": self = .morrowind
         case "oblivion": self = .oblivion
@@ -44,7 +44,7 @@ public enum GameId: Int, CustomStringConvertible {
         case "falloutnv": self = .falloutNV
         case "fallout4": self = .fallout4
         case "fallout4vr": self = .fallout4VR
-        default: return nil
+        default: return .morrowind
         }
     }
 
@@ -55,47 +55,49 @@ public enum GameId: Int, CustomStringConvertible {
 
 public class TesAssetManager: IAssetManager {    
     public func getAssetPack(_ url: URL?) -> IAssetPack? {
-        guard let url = url else {
+        guard let url = url, let scheme = url.scheme else {
             fatalError("should not happen")
         }
-        debugPrint("\(url!)")
-        switch url.scheme {
+        debugPrint("\(url)")
+        switch scheme {
         case "game":
-            let localPath = url.localPath.remove(at: key.startIndex)
-            let gameId = stringToGameId(url.host)
-            let filePath = FileManager.getFilePath(localPath, forGame: gameId)
-            let pack = TesDataPack(filePath: filePath, gameId: gameId) as! IDataPack
+            let localPath = String(url.path[url.path.index(after: url.path.startIndex)..<url.path.endIndex])
+            let game = TesAssetManager.stringToGameId(url.host)
+            let filePath = FileManager.default.getFilePath(localPath, for: gameId)
+            let pack = TesDataPack(filePath: filePath, for: game) as! IDataPack
             return pack
-        default:
-            return nil
+        default: return nil
         }
     }
     
     public func getDataPack(_ url: URL?) -> IDataPack? {
-        guard let url = url else {
+        guard let url = url, let scheme = url.scheme else {
             fatalError("should not happen")
         }
-        debugPrint("\(url!)")
-        switch url.scheme {
+        debugPrint("\(url)")
+        switch scheme {
         case "game":
-            let localPath = url.localPath.remove(at: key.startIndex)
-            let gameId = stringToGameId(url.host)
-            let filePath = FileManager.getFilePath(localPath, forGame: gameId)
-            let pack = TesDataPack(filePath: filePath, gameId: gameId) as! IDataPack
+            let localPath = String(url.path[url.path.index(after: url.path.startIndex)..<url.path.endIndex])
+            let game = TesAssetManager.stringToGameId(url.host)
+            let filePath = FileManager.default.getFilePath(localPath, for: game)
+            let pack = TesDataPack(filePath: filePath, for: game) as! IDataPack
             return pack
-        default:
-            return nil
+        default: return nil
         }
     }
     
     public func getCellManager(asset: IAssetPack, data: IDataPack, loadBalancer: TemporalLoadBalancer) -> ICellManager? {
-        return TesCellManager(asset as! TesAssetPack, data as! TesDataPack, loadBalancer)
+        return TesCellManager(asset: asset as! TesAssetPack, data: data as! TesDataPack, loadBalancer: loadBalancer)
     }
 
-    static func stringToGameId(key: String) -> GameId? {
-        if key.starts(with: "#") {
-            key.remove(at: key.startIndex)
+    static func stringToGameId(_ key: String?) -> GameId {
+        guard let key = key else {
+            return GameId.morrowind
         }
-        return GameId(key)
+        var newKey = key
+        if newKey.starts(with: "#") {
+            newKey.remove(at: newKey.startIndex)
+        }
+        return GameId(newKey)
     }
 }

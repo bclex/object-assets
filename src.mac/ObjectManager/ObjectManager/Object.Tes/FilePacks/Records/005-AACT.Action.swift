@@ -1,4 +1,4 @@
-﻿//
+//
 //  AACTRecord.swift
 //  ObjectManager
 //
@@ -7,14 +7,14 @@
 //
 
 public class AACTRecord: Record {
-    public var description: String { return "AACT: \(EDID)" }
+    public override var description: String { return "AACT: \(EDID)" }
     public var EDID: STRVField // Editor ID
     public var CNAME: CREFField // RGB color
 
     init() {
     }
-
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "CNAME": CNAME = CREFField(r, dataSize)

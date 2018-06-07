@@ -1,4 +1,4 @@
-﻿//
+//
 //  APPARecord.swift
 //  ObjectManager
 //
@@ -16,7 +16,7 @@ public class APPARecord: Record, IHaveEDID, IHaveMODL {
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             guard format != .TES3 else {
-                type = (byte)r.readLEInt32()
+                type = UInt8(r.readLEInt32())
                 quality = r.readLESingle()
                 weight = r.readLESingle()
                 value = r.readLEInt32()
@@ -29,18 +29,18 @@ public class APPARecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public var description: String { return "APPA: \(EDID)" }
+    public override var description: String { return "APPA: \(EDID)" }
     public var EDID: STRVField  // Editor ID
     public var MODL: MODLGroup  // Model Name
     public var FULL: STRVField // Item Name
     public var DATA: DATAField // Alchemy Data
     public var ICON: FILEField // Inventory Icon
-    public var FMIDField<SCPTRecord> SCRI // Script Name
+    public var SCRI: FMIDField<SCPTRecord> // Script Name
 
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
@@ -49,8 +49,8 @@ public class APPARecord: Record, IHaveEDID, IHaveMODL {
         case "MODT": MODL.MODTField(r, dataSize)
         case "FULL",
              "FNAM": FULL = STRVField(r, dataSize)
-        case "DATA":
-        case "AADT": DATA = DATAField(r, dataSize, format)
+        case "DATA",
+             "AADT": DATA = DATAField(r, dataSize, format)
         case "ICON",
              "ITEX": ICON = FILEField(r, dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)

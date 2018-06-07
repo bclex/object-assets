@@ -9,10 +9,11 @@
 import Foundation
 
 public class TesDataPack: EsmFile, IDataPack {
-    let _webPath: String
+    let _webPath: String?
 
-    init(filePath: String, string webPath: String, for game: gameId) {
-        super.init(filePath != nil && File.Exists(filePath) ? filePath : nil, gameId)
+    init(_ filePath: String?, string webPath: String?, for game: GameId) {
+        let fileManager = FileManager.default
         _webPath = webPath
+        super.init(filePath: filePath != nil && fileManager.fileExists(atPath: filePath!) ? filePath : nil, for: game)
     }
 }

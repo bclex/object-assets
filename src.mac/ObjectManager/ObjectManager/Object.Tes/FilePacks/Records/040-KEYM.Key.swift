@@ -1,4 +1,4 @@
-﻿//
+//
 //  KEYMRecord.swift
 //  ObjectManager
 //
@@ -17,7 +17,7 @@ public class KEYMRecord: Record {
         }
     }
 
-    public var description: String { return "KEYM: \(EDID)" }
+    public override var description: String { return "KEYM: \(EDID)" }
     public var EDID: STRVField // Editor ID
     public var MODL: MODLGroup // Model
     public var FULL: STRVField // Item Name
@@ -28,13 +28,13 @@ public class KEYMRecord: Record {
     init() {
     }
     
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL.MODBField(r, dataSize)
         case "MODT": MODL.MODTField(r, dataSize)
-        case "FULL": FULL = Field(r, dataSize)
+        case "FULL": FULL = STRVField(r, dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
         case "ICON": ICON = FILEField(r, dataSize)

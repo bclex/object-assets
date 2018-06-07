@@ -1,4 +1,4 @@
-﻿//
+//
 //  LVSPRecord.swift
 //  ObjectManager
 //
@@ -7,7 +7,7 @@
 //
 
 public class LVSPRecord: Record {
-    public var description: String { return "LVSP: \(EDID)" }
+    public override var description: String { return "LVSP: \(EDID)" }
     public var EDID: STRVField // Editor ID
     public var LVLD: BYTEField // Chance
     public var LVLF: BYTEField // Flags
@@ -16,7 +16,7 @@ public class LVSPRecord: Record {
     init() {
     }
     
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "LVLD": LVLD = BYTEField(r, dataSize)

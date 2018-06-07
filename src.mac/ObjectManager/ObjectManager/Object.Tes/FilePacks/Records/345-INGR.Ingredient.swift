@@ -1,4 +1,4 @@
-﻿//
+//
 //  INGRRecord.swift
 //  ObjectManager
 //
@@ -18,15 +18,15 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
         init(_ r: BinaryReader, _ dataSize: Int) {
             weight = r.readLESingle();
             value = r.readLEInt32();
-            effectId = [Int32](); effectId.allocateCapacity(4)
+            effectId = [Int32](); effectId.reserveCapacity(4)
             for i in 0..<effectId.capacity {
                 effectId[i] = r.readLEInt32()
             }
-            skillId = [Int32](); skillId.allocateCapacity(4)
+            skillId = [Int32](); skillId.reserveCapacity(4)
             for i in 0..<skillId.capacity {
                 skillId[i] = r.readLEInt32()
             }
-            attributeId = [Int32](); attributeId.allocateCapacity(4)
+            attributeId = [Int32](); attributeId.reserveCapacity(4)
             for i in 0..< attributeId.capacity {
                 attributeId[i] = r.readLEInt32()
             }
@@ -64,7 +64,7 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)

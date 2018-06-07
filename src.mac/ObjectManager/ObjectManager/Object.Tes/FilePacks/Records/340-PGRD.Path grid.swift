@@ -1,10 +1,11 @@
-﻿//
+//
 //  PGRDRecord.swift
 //  ObjectManager
 //
 //  Created by Sky Morey on 5/28/18.
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
+import SceneKit
 
 public class PGRDRecord: Record {
     public struct DATAField {
@@ -14,8 +15,8 @@ public class PGRDRecord: Record {
         public let pointCount: Int16
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
-            guard formatId != .TES3 else {
-                x = y = granularity = 0
+            guard format != .TES3 else {
+                x = 0; y = 0; granularity = 0
                 pointCount = r.readLEInt16()
             }
             x = r.readLEInt32()
@@ -37,8 +38,8 @@ public class PGRDRecord: Record {
     }
 
     public struct PGRRField {
-        public let StartPointId: Int16
-        public let EndPointId: Int16
+        public let startPointId: Int16
+        public let endPointId: Int16
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             startPointId = r.readLEInt16()
@@ -63,7 +64,7 @@ public class PGRDRecord: Record {
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             reference = FormId<REFRRecord>(r.readLEUInt32())
-            pointIds = [short](); pointIds.allocateCapacity((dataSize - 4) >> 2)
+            pointIds = [Int16](); pointIds.reserveCapacity((dataSize - 4) >> 2)
             for i in 0..<pointIds.capactiy {
                 pointIds[i] = r.readLEInt16()
                 r.skipBytes(2) // Unused (can merge back)
@@ -71,7 +72,7 @@ public class PGRDRecord: Record {
         }
     }
 
-    public var description: String { return "PGRD: \(EDID)" }
+    public override var description: String { return "PGRD: \(EDID)" }
     public var EDID: STRVField // Editor ID
     public var DATA: DATAField // Number of nodes
     public var PGRPs: [PGRPField]
@@ -84,7 +85,7 @@ public class PGRDRecord: Record {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
@@ -92,8 +93,8 @@ public class PGRDRecord: Record {
         case "PGRP": PGRPs = [PGRPField](); PGRPs.reserveCapacity(dataSize >> 4); for i in 0..<PGRPs.capacity { PGRPs[i] = PGRPField(r, 16) }
         case "PGRC": PGRC = UNKNField(r, dataSize)
         case "PGAG": PGAG = UNKNField(r, dataSize)
-        case "PGRR": PGRRs = [PGRRField](); PGRRs.reserveCapacity(dataSize >> 2); for i in 0..<PGRRs.capacity { PGRRs[i] = PGRRField(r, 4); } r.skipBytes(dataSize % 4)
-        case "PGRL": if PGRLs == nil { PGRLs = [PGRLField]() }; PGRLs.append(PGRLField(r, dataSize))
+        case "PGRR": PGRRs = [PGRRField](); PGRRs.reserveCapacity(dataSize >> 2); for i in 0..<PGRRs.capacity { PGRRs[i] = PGRRField(r, 4); }; r.skipBytes(dataSize % 4)
+        case "PGRL": if PGRLs == nil { PGRLs = [PGRLField]() }; PGRLs!.append(PGRLField(r, dataSize))
         case "PGRI": PGRIs = [PGRIField](); PGRIs.reserveCapacity(dataSize >> 4); for i in 0..<PGRIs.capacity { PGRIs[i] = PGRIField(r, 16) }
         default: return false
         }

@@ -1,4 +1,4 @@
-﻿//
+//
 //  TREERecord.swift
 //  ObjectManager
 //
@@ -11,7 +11,7 @@ public class TREERecord: Record {
         public let values: [Int32]
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            values = [Int32](); values.allocateCapacity(dataSize >> 2)
+            values = [Int32](); values.reserveCapacity(dataSize >> 2)
             for i in 0..<values.capactiy {
                 values[i] = r.readLEInt32()
             }
@@ -61,7 +61,7 @@ public class TREERecord: Record {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)

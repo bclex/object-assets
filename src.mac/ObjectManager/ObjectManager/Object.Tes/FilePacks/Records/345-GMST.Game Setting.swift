@@ -1,4 +1,4 @@
-﻿//
+//
 //  GMSTRecord.swift
 //  ObjectManager
 //
@@ -14,7 +14,7 @@ public class GMSTRecord: Record, IHaveEDID {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
             switch type {
             case "NAME": EDID = STRVField(r, dataSize)

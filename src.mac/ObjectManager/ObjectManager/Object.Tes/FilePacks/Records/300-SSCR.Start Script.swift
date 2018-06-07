@@ -1,4 +1,4 @@
-﻿//
+//
 //  SSCRRecord.swift
 //  ObjectManager
 //
@@ -14,7 +14,7 @@ public class SSCRRecord: Record {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard format == .TES3 else {
             return false
         }

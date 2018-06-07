@@ -1,4 +1,4 @@
-﻿//
+//
 //  EFSHRecord.swift
 //  ObjectManager
 //
@@ -19,8 +19,8 @@ public class EFSHRecord: Record {
         public let fillTextureEffect_presistentAlphaRatio: Float
         public let fillTextureEffect_alphaPulseAmplitude: Float
         public let fillTextureEffect_alphaPulseFrequency: Float
-        public let fillTextureEffect_textureAnimationSpeed_U: Float
-        public let fillTextureEffect_textureAnimationSpeed_V: Float
+        public let fillTextureEffect_textureAnimationSpeed_u: Float
+        public let fillTextureEffect_textureAnimationSpeed_v: Float
         public let edgeEffect_fallOff: Float
         public let edgeEffect_color: ColorRef
         public let edgeEffect_alphaFadeInTime: Float
@@ -94,29 +94,29 @@ public class EFSHRecord: Record {
             guard dataSize != 96 else {
                 return
             }
-            particleShader_SourceBlendMode = r.readLEUInt32()
-            particleShader_BlendOperation = r.readLEUInt32()
-            particleShader_ZTestFunction = r.readLEUInt32()
-            particleShader_DestBlendMode = r.readLEUInt32()
-            particleShader_ParticleBirthRampUpTime = r.readLESingle()
-            particleShader_FullParticleBirthTime = r.readLESingle()
-            particleShader_ParticleBirthRampDownTime = r.readLESingle()
-            particleShader_FullParticleBirthRatio = r.readLESingle()
-            particleShader_PersistantParticleBirthRatio = r.readLESingle()
-            particleShader_ParticleLifetime = r.readLESingle()
-            particleShader_ParticleLifetime_Delta = r.readLESingle()
-            particleShader_InitialSpeedAlongNormal = r.readLESingle()
-            particleShader_AccelerationAlongNormal = r.readLESingle()
-            particleShader_InitialVelocity1 = r.readLESingle()
-            particleShader_InitialVelocity2 = r.readLESingle()
-            particleShader_InitialVelocity3 = r.readLESingle()
-            particleShader_Acceleration1 = r.readLESingle()
-            particleShader_Acceleration2 = r.readLESingle()
-            particleShader_Acceleration3 = r.readLESingle()
-            particleShader_ScaleKey1 = r.readLESingle()
-            particleShader_ScaleKey2 = r.readLESingle()
-            particleShader_ScaleKey1Time = r.readLESingle()
-            particleShader_ScaleKey2Time = r.readLESingle()
+            particleShader_sourceBlendMode = r.readLEUInt32()
+            particleShader_blendOperation = r.readLEUInt32()
+            particleShader_ztestFunction = r.readLEUInt32()
+            particleShader_destBlendMode = r.readLEUInt32()
+            particleShader_particleBirthRampUpTime = r.readLESingle()
+            particleShader_fullParticleBirthTime = r.readLESingle()
+            particleShader_particleBirthRampDownTime = r.readLESingle()
+            particleShader_fullParticleBirthRatio = r.readLESingle()
+            particleShader_persistantParticleBirthRatio = r.readLESingle()
+            particleShader_particleLifetime = r.readLESingle()
+            particleShader_particleLifetime_Delta = r.readLESingle()
+            particleShader_initialSpeedAlongNormal = r.readLESingle()
+            particleShader_accelerationAlongNormal = r.readLESingle()
+            particleShader_initialVelocity1 = r.readLESingle()
+            particleShader_initialVelocity2 = r.readLESingle()
+            particleShader_initialVelocity3 = r.readLESingle()
+            particleShader_acceleration1 = r.readLESingle()
+            particleShader_acceleration2 = r.readLESingle()
+            particleShader_acceleration3 = r.readLESingle()
+            particleShader_scaleKey1 = r.readLESingle()
+            particleShader_scaleKey2 = r.readLESingle()
+            particleShader_scaleKey1Time = r.readLESingle()
+            particleShader_scaleKey2Time = r.readLESingle()
             colorKey1_color = ColorRef(r)
             colorKey2_color = ColorRef(r)
             colorKey3_color = ColorRef(r)
@@ -129,7 +129,7 @@ public class EFSHRecord: Record {
         }
     }
 
-    public var description: String { return "EFSH: \(EDID)" }
+    public override var description: String { return "EFSH: \(EDID)" }
     public var EDID: STRVField // Editor ID
     public var ICON: FILEField // Fill Texture
     public var ICO2: FILEField // Particle Shader Texture
@@ -138,12 +138,12 @@ public class EFSHRecord: Record {
     init() {
     }
     
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
-        case "ICON": ICON = FILEField(r, dataSize
-        case "ICO2": ICO2 = FILEField(r, dataSize
-        case "DATA": DATA = DATAField(r, dataSize
+        case "ICON": ICON = FILEField(r, dataSize)
+        case "ICO2": ICO2 = FILEField(r, dataSize)
+        case "DATA": DATA = DATAField(r, dataSize)
         default: return false
         }
         return true

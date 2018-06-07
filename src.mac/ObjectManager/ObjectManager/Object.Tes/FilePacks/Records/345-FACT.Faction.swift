@@ -1,4 +1,4 @@
-﻿//
+//
 //  FACTRecord.swift
 //  ObjectManager
 //
@@ -14,6 +14,9 @@ public class FACTRecord: Record {
         public var MNAM: STRVField // male
         public var FNAM: STRVField // female
         public var INAM: STRVField // insignia
+        
+        init(MNAM: STRField) { self.MNAM = MNAM}
+        init(RNAM: IN32Field) { self.RNAM = RNAM}
     }
 
     // TES3
@@ -33,15 +36,15 @@ public class FACTRecord: Record {
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             formId = r.readLEInt32()
             mod = r.readLEInt32()
-            combat = format > .TES4 ? r.readLEInt32() : 0 // 0 - Neutral, 1 - Enemy, 2 - Ally, 3 - Friend
+            combat = format == .TES5 ? r.readLEInt32() : 0 // 0 - Neutral, 1 - Enemy, 2 - Ally, 3 - Friend
         }
     }
 
-    public var description: String { return "FACT: \(EDID)" }
+    public override var description: String { return "FACT: \(EDID)" }
     public var EDID: STRVField  // Editor ID
     public var FNAM: STRVField // Faction name
     public var RNAMs = [RNAMGroup]() // Rank Name
-    public var FADTField FADT // Faction data
+    public var FADT: FADTField // Faction data
     public var ANAMs = [STRVField]() // Faction name
     public var INTVs = [INTVField]() // Faction reaction
     // TES4
@@ -52,7 +55,7 @@ public class FACTRecord: Record {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
             switch type {
             case "NAME": EDID = STRVField(r, dataSize)

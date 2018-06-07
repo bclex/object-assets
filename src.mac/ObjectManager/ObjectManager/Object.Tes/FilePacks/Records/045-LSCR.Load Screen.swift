@@ -1,4 +1,4 @@
-﻿//
+//
 //  LSCRRecord.swift
 //  ObjectManager
 //
@@ -30,7 +30,7 @@ public class LSCRRecord: Record {
     init() {
     }
     
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "ICON": ICON = FILEField(r, dataSize)

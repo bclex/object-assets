@@ -21,7 +21,7 @@ public class TextureManager {
         }
         // Load & cache the texture.
         let textureInfo = loadTextureInfo(texturePath)
-        let texture = textureInfo != nil ? textureInfo.toTexture2D() : Texture2D(1, 1)
+        let texture = textureInfo != nil ? textureInfo!.toTexture2D() : Texture2D()
         _cachedTextures[texturePath] = texture
         return texture
     }
@@ -32,17 +32,18 @@ public class TextureManager {
             return
         }
         // Start loading the texture file asynchronously if we haven't already started.
-        if let textureFileLoadingTask = _textureFilePreloadTasks[texturePath] {
+        var textureFileLoadingTask = _textureFilePreloadTasks[texturePath]
+        if textureFileLoadingTask == nil {
             textureFileLoadingTask = _asset.loadTextureInfoAsync(texturePath)
             _textureFilePreloadTasks[texturePath] = textureFileLoadingTask
         }
     }
 
-    func loadTextureInfo(_ texturePath: String) -> Texture2DInfo {
+    func loadTextureInfo(_ texturePath: String) -> Texture2DInfo? {
         assert(_cachedTextures[texturePath] != nil, "Invalid parameter")
         preloadTextureFileAsync(texturePath)
         let textureInfo = _textureFilePreloadTasks[texturePath]
-        _textureFilePreloadTasks.remove(texturePath)
+        _textureFilePreloadTasks.removeValue(forKey: texturePath)
         return textureInfo
     }
 }

@@ -34,20 +34,19 @@ extension FileManager {
         var r = [GameId : URL]()
         let fileManager = FileManager.default
         let documentsURL = try! fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-        for key in _knownkeys {
-            let url = documentsURL.appendingPathComponent(key.value)
-            let isDirectory: ObjCBool
+        for x in _knownkeys {
+            let url = documentsURL.appendingPathComponent(x.value)
+            var isDirectory: ObjCBool = false
             guard fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue else {
                 continue
             }
-            r[gameId] = dataPath
-            debugPrint("GameId: \(gameId)")
+            r[x.key] = url
+            debugPrint("GameId: \(x.key)")
         }
         return r
-    }
+    }()
 
-    public func getFilePath(_ path: String, for game: GameId) -> URL?
-    {
+    public func getFilePath(_ path: String, for game: GameId) -> URL? {
         guard let fileDirectory = FileManager._fileDirectories[game] else {
             return nil
         }

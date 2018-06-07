@@ -9,18 +9,18 @@
 import Foundation
 
 public protocol IHaveEDID {
-    var EDID: STRVField {get}
+    var EDID: STRVField? {get}
 }
 
 public protocol IHaveMODL {
-    var MODL: MODLGroup {get}
+    var MODL: MODLGroup? {get}
 }
 
 public class MODLGroup: CustomStringConvertible {
     public var description: String { return "\(value)" }
     public let value: String
-    public var bound: Float
-    public var textures: Data // Texture Files Hashes
+    public var bound: Float? = nil
+    public var textures: Data? = nil // Texture Files Hashes
 
     init(_ r: BinaryReader, _ dataSize: Int) {
         value = r.readASCIIString(dataSize, format: .possibleNullTerminated)
@@ -72,10 +72,10 @@ public struct INTVField: CustomStringConvertible {
 
 public struct DATVField: CustomStringConvertible {
     public var description: String { return "DATV" }
-    public let valueB : Bool? = nil
-    public let valueI : Int32? = nil
-    public let valueF : Float? = nil
-    public let valueS : String? = nil
+    public var valueB : Bool? = nil
+    public var valueI : Int32? = nil
+    public var valueF : Float? = nil
+    public var valueS : String? = nil
 
     init(_ r: BinaryReader, _ dataSize: Int, type: Character) {
         switch type {
@@ -195,14 +195,14 @@ public struct ColorRef: CustomStringConvertible {
         nullByte = 255
     }
 
-    init(_ r: BinaryReader, _ dataSize: Int) {
+    init(_ r: BinaryReader) {
         red = r.readByte()
         green = r.readByte()
         blue = r.readByte()
         nullByte = r.readByte()
     }
 
-    public func toColor32() -> CGColor { return CGColor(red: red, green: green, blue: blue, alpha: 255) }
+    public func toColor32() -> CGColor { return CGColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: 255) }
 }
 
 public struct CREFField: CustomStringConvertible {
@@ -210,7 +210,7 @@ public struct CREFField: CustomStringConvertible {
     public let color: ColorRef
 
     init(_ r: BinaryReader, _ dataSize: Int) {
-        color = ColorRef(r, dataSize)
+        color = ColorRef(r)
     }
 }
 

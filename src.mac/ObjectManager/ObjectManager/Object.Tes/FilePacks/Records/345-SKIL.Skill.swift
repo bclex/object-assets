@@ -1,4 +1,4 @@
-﻿//
+//
 //  SKILRecord.swift
 //  ObjectManager
 //
@@ -18,14 +18,14 @@ public class SKILRecord: Record {
             action = format == .TES3 ? 0 : r.readLEInt32()
             attribute = r.readLEInt32()
             specialization = r.readLEUInt32()
-            useValue = [Float](); useValue.allocateCapacity(format == .TES3 ? 4 : 2)
+            useValue = [Float](); useValue.reserveCapacity(format == .TES3 ? 4 : 2)
             for i in 0..<useValue.capacity {
                 useValue[i] = r.readLESingle()
             }
         }
     }
 
-    public var description: String { return "SKIL: \(INDX):\(EDID)" }
+    public override var description: String { return "SKIL: \(INDX):\(EDID)" }
     public var EDID: STRVField  // Editor ID
     public var INDX: IN32Field // Skill ID
     public var DATA: DATAField // Skill Data
@@ -40,7 +40,7 @@ public class SKILRecord: Record {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "INDX": INDX = IN32Field(r, dataSize)

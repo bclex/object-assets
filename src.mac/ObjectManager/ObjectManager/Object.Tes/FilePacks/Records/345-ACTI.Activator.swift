@@ -1,4 +1,4 @@
-﻿//
+//
 //  ACTIRecord.swift
 //  ObjectManager
 //
@@ -20,7 +20,7 @@ public class ACTIRecord: Record, IHaveEDID, IHaveMODL {
     init() {
     }
 
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID":
         case "NAME": EDID = STRVField(r, dataSize)

@@ -1,4 +1,4 @@
-﻿//
+//
 //  SBSPRecord.swift
 //  ObjectManager
 //
@@ -19,14 +19,14 @@ public class SBSPRecord: Record {
         }
     }
 
-    public var description: String { return "SBSP: \(EDID)" }
+    public override var description: String { return "SBSP: \(EDID)" }
     public var EDID: STRVField // Editor ID
     public var DNAM: DNAMField
 
     init() {
     }
     
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "DNAM": DNAM = DNAMField(r, dataSize)

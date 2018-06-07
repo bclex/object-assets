@@ -1,4 +1,4 @@
-﻿//
+//
 //  HAIRRecord.swift
 //  ObjectManager
 //
@@ -7,7 +7,7 @@
 //
 
 public class HAIRRecord: Record {
-    public var description: String { return "HAIR: \(EDID)" }
+    public override var description: String { return "HAIR: \(EDID)" }
     public var EDID: STRVField // Editor ID
     public var FULL: STRVField
     public var MODL: MODLGroup
@@ -17,7 +17,7 @@ public class HAIRRecord: Record {
     init() {
     }
     
-    override func createField(r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
+    override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "FULL": FULL = STRVField(r, dataSize)

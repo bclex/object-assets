@@ -9,9 +9,9 @@
 import Foundation
 
 public class BaseEngine {
-    static let desiredWorkTimePerFrame = 1.0f / 200
+    static let desiredWorkTimePerFrame = 1.0 / 200
     static let cellRadiusOnLoad = 2
-    public static instance: BaseEngine
+    public static var instance: BaseEngine? = nil
 
     public let assetManager: IAssetManager
     public let asset: IAssetPack
@@ -19,22 +19,20 @@ public class BaseEngine {
     public let cellManager: ICellManager
     public let loadBalancer: TemporalLoadBalancer
 
-    init(assetManager: IAssetManager, asset: URL, data: URL) {
-        init(assetManager: assetManager, assetManager.getAssetPack(asset), assetManager.getDataPack(data))
+    convenience init(assetManager: IAssetManager, asset: URL, data: URL) {
+        self.init(assetManager: assetManager, asset: assetManager.getAssetPack(asset)!, data: assetManager.getDataPack(data)!)
     }
-
     init(assetManager: IAssetManager, asset: IAssetPack, data: IDataPack) {
         self.assetManager = assetManager
         self.asset = asset
         self.data = data
-
         loadBalancer = TemporalLoadBalancer()
-        cellManager = assetManager.getCellManager(asset, data, LoadBalancer)
+        cellManager = assetManager.getCellManager(asset: asset, data: data, loadBalancer: loadBalancer)!
     }
 
     // MARK: Player Spawn
 
-    var _currentCell: ICellRecord
+    var _currentCell: ICellRecord? = nil
     // var _playerTransform: Transform 
     // var _playerComponent: PlayerComponent
     // var _playerCameraObj: GameObject
