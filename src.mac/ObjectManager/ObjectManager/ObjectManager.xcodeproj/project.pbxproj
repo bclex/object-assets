@@ -34,90 +34,8 @@
 		54A08FFB20C780FA00C68B25 /* NifManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FFA20C780FA00C68B25 /* NifManager.swift */; };
 		54A08FFD20C7824C00C68B25 /* GameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FFC20C7824C00C68B25 /* GameObject.swift */; };
 		54A08FFF20C79E0F00C68B25 /* NifReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FFE20C79E0F00C68B25 /* NifReader.swift */; };
-		54A0905020C8CCFC00C68B25 /* 345-CLOT.Clothing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900020C8CCF500C68B25 /* 345-CLOT.Clothing.swift */; };
-		54A0905120C8CCFC00C68B25 /* 300-SNDG.Sound Generator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900120C8CCF500C68B25 /* 300-SNDG.Sound Generator.swift */; };
-		54A0905220C8CCFC00C68B25 /* 045-FURN.Furniture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900220C8CCF500C68B25 /* 045-FURN.Furniture.swift */; };
-		54A0905320C8CCFC00C68B25 /* 345-LTEX.Land Texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900320C8CCF500C68B25 /* 345-LTEX.Land Texture.swift */; };
-		54A0905420C8CCFC00C68B25 /* 005-ASTP.Association Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900420C8CCF500C68B25 /* 005-ASTP.Association Type.swift */; };
-		54A0905520C8CCFC00C68B25 /* 005-SNDR.Sound Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900520C8CCF500C68B25 /* 005-SNDR.Sound Reference.swift */; };
-		54A0905620C8CCFC00C68B25 /* 345-DIAL.Dialog Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900620C8CCF500C68B25 /* 345-DIAL.Dialog Topic.swift */; };
-		54A0905720C8CCFC00C68B25 /* 300-PROB.Probe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900720C8CCF500C68B25 /* 300-PROB.Probe.swift */; };
-		54A0905820C8CCFC00C68B25 /* 345-ARMO.Armor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900820C8CCF500C68B25 /* 345-ARMO.Armor.swift */; };
-		54A0905920C8CCFC00C68B25 /* 040-SGST.Sigil Stone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900920C8CCF500C68B25 /* 040-SGST.Sigil Stone.swift */; };
-		54A0905A20C8CCFC00C68B25 /* 045-WATR.Water Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900A20C8CCF600C68B25 /* 045-WATR.Water Type.swift */; };
-		54A0905B20C8CCFC00C68B25 /* 040-LVLI.Leveled Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900B20C8CCF600C68B25 /* 040-LVLI.Leveled Item.swift */; };
-		54A0905C20C8CCFC00C68B25 /* 045-TES4.Plugin info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900C20C8CCF600C68B25 /* 045-TES4.Plugin info.swift */; };
-		54A0905D20C8CCFC00C68B25 /* 040-ACRE.Placed creature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900D20C8CCF600C68B25 /* 040-ACRE.Placed creature.swift */; };
-		54A0905E20C8CCFC00C68B25 /* 045-TREE.Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900E20C8CCF600C68B25 /* 045-TREE.Tree.swift */; };
-		54A0905F20C8CCFC00C68B25 /* 345-RACE.Race_Creature type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0900F20C8CCF600C68B25 /* 345-RACE.Race_Creature type.swift */; };
-		54A0906020C8CCFC00C68B25 /* 340-BSGN.Birthsign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901020C8CCF600C68B25 /* 340-BSGN.Birthsign.swift */; };
-		54A0906120C8CCFC00C68B25 /* 005-ADDN-Addon Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901120C8CCF600C68B25 /* 005-ADDN-Addon Node.swift */; };
-		54A0906220C8CCFC00C68B25 /* 345-ENCH.Enchantment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901220C8CCF600C68B25 /* 345-ENCH.Enchantment.swift */; };
-		54A0906320C8CCFC00C68B25 /* 005-DLBR.Dialog Branch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901320C8CCF600C68B25 /* 005-DLBR.Dialog Branch.swift */; };
-		54A0906420C8CCFC00C68B25 /* 345-NPC_.Non-Player Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901420C8CCF600C68B25 /* 345-NPC_.Non-Player Character.swift */; };
-		54A0906520C8CCFC00C68B25 /* 045-REFR.Placed Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901520C8CCF600C68B25 /* 045-REFR.Placed Object.swift */; };
-		54A0906620C8CCFC00C68B25 /* 045-SLGM.Soul Gem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901620C8CCF600C68B25 /* 045-SLGM.Soul Gem.swift */; };
-		54A0906720C8CCFC00C68B25 /* 300-BODY.Body.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901720C8CCF700C68B25 /* 300-BODY.Body.swift */; };
-		54A0906820C8CCFC00C68B25 /* 045-WTHR.Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901820C8CCF700C68B25 /* 045-WTHR.Weather.swift */; };
-		54A0906920C8CCFC00C68B25 /* 340-SCPT.Script.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901920C8CCF700C68B25 /* 340-SCPT.Script.swift */; };
-		54A0906A20C8CCFC00C68B25 /* 340-MGEF.Magic Effect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901A20C8CCF700C68B25 /* 340-MGEF.Magic Effect.swift */; };
-		54A0906B20C8CCFC00C68B25 /* 045-ACHR.Actor Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901B20C8CCF700C68B25 /* 045-ACHR.Actor Reference.swift */; };
-		54A0906C20C8CCFC00C68B25 /* 345-APPA.Alchem Apparatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901C20C8CCF700C68B25 /* 345-APPA.Alchem Apparatus.swift */; };
-		54A0906D20C8CCFC00C68B25 /* 005-AACT.Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901D20C8CCF700C68B25 /* 005-AACT.Action.swift */; };
-		54A0906E20C8CCFC00C68B25 /* 045-EYES.Eyes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901E20C8CCF700C68B25 /* 045-EYES.Eyes.swift */; };
-		54A0906F20C8CCFC00C68B25 /* 040-HAIR.Hair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0901F20C8CCF700C68B25 /* 040-HAIR.Hair.swift */; };
-		54A0907020C8CCFC00C68B25 /* 045-GRAS.Grass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902020C8CCF700C68B25 /* 045-GRAS.Grass.swift */; };
-		54A0907120C8CCFC00C68B25 /* 045-PACK.AI Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902120C8CCF700C68B25 /* 045-PACK.AI Package.swift */; };
-		54A0907220C8CCFC00C68B25 /* 345-CONT.Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902220C8CCF800C68B25 /* 345-CONT.Container.swift */; };
-		54A0907320C8CCFC00C68B25 /* 345-DOOR.Door.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902320C8CCF800C68B25 /* 345-DOOR.Door.swift */; };
-		54A0907420C8CCFC00C68B25 /* 345-GMST.Game Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902420C8CCF800C68B25 /* 345-GMST.Game Setting.swift */; };
-		54A0907520C8CCFC00C68B25 /* 045-QUST.Quest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902520C8CCF800C68B25 /* 045-QUST.Quest.swift */; };
-		54A0907620C8CCFC00C68B25 /* 300-REPA.Repair item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902620C8CCF800C68B25 /* 300-REPA.Repair item.swift */; };
-		54A0907720C8CCFC00C68B25 /* 340-PGRD.Path grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902720C8CCF800C68B25 /* 340-PGRD.Path grid.swift */; };
-		54A0907820C8CCFC00C68B25 /* 040-LVSP.Leveled Spell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902820C8CCF800C68B25 /* 040-LVSP.Leveled Spell.swift */; };
-		54A0907920C8CCFC00C68B25 /* 045-LSCR.Load Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902920C8CCF800C68B25 /* 045-LSCR.Load Screen.swift */; };
-		54A0907A20C8CCFC00C68B25 /* 345-BOOK.Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902A20C8CCF800C68B25 /* 345-BOOK.Book.swift */; };
-		54A0907B20C8CCFC00C68B25 /* 345-LOCK.Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902B20C8CCF900C68B25 /* 345-LOCK.Lock.swift */; };
-		54A0907C20C8CCFC00C68B25 /* 345-REGN.Region.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902C20C8CCF900C68B25 /* 345-REGN.Region.swift */; };
-		54A0907D20C8CCFC00C68B25 /* 045-AMMO.Ammo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902D20C8CCF900C68B25 /* 045-AMMO.Ammo.swift */; };
-		54A0907E20C8CCFC00C68B25 /* 300-LEVI.Leveled item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902E20C8CCF900C68B25 /* 300-LEVI.Leveled item.swift */; };
-		54A0907F20C8CCFC00C68B25 /* 345-LIGH.Light.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0902F20C8CCF900C68B25 /* 345-LIGH.Light.swift */; };
-		54A0908020C8CCFC00C68B25 /* 345-SOUN.Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903020C8CCF900C68B25 /* 345-SOUN.Sound.swift */; };
-		54A0908120C8CCFC00C68B25 /* 345-LAND.Land.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903120C8CCF900C68B25 /* 345-LAND.Land.swift */; };
-		54A0908220C8CCFC00C68B25 /* 040-SBSP.Subspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903220C8CCF900C68B25 /* 040-SBSP.Subspace.swift */; };
-		54A0908320C8CCFC00C68B25 /* 045-CSTY.Combat Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903320C8CCF900C68B25 /* 045-CSTY.Combat Style.swift */; };
-		54A0908420C8CCFC00C68B25 /* 040-ROAD.Road.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903420C8CCF900C68B25 /* 040-ROAD.Road.swift */; };
-		54A0908520C8CCFC00C68B25 /* 045-IDLE.Idle Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903520C8CCFA00C68B25 /* 045-IDLE.Idle Animations.swift */; };
-		54A0908620C8CCFC00C68B25 /* 345-ACTI.Activator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903620C8CCFA00C68B25 /* 345-ACTI.Activator.swift */; };
-		54A0908720C8CCFC00C68B25 /* 345-CLAS.Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903720C8CCFA00C68B25 /* 345-CLAS.Class.swift */; };
-		54A0908820C8CCFC00C68B25 /* 005-ARMA.Armature (Model).swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903820C8CCFA00C68B25 /* 005-ARMA.Armature (Model).swift */; };
-		54A0908920C8CCFC00C68B25 /* 045-EFSH.Effect Shader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903920C8CCFA00C68B25 /* 045-EFSH.Effect Shader.swift */; };
-		54A0908A20C8CCFC00C68B25 /* 345-INGR.Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903A20C8CCFA00C68B25 /* 345-INGR.Ingredient.swift */; };
-		54A0908B20C8CCFC00C68B25 /* 005-AVIF.Actor Values_Perk Tree Graphics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903B20C8CCFA00C68B25 /* 005-AVIF.Actor Values_Perk Tree Graphics.swift */; };
-		54A0908C20C8CCFC00C68B25 /* 005-DLVW.Dialog View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903C20C8CCFA00C68B25 /* 005-DLVW.Dialog View.swift */; };
-		54A0908D20C8CCFC00C68B25 /* 345-SPEL.Spell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903D20C8CCFA00C68B25 /* 345-SPEL.Spell.swift */; };
-		54A0908E20C8CCFC00C68B25 /* 040-KEYM.Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903E20C8CCFA00C68B25 /* 040-KEYM.Key.swift */; };
-		54A0908F20C8CCFC00C68B25 /* 300-SSCR.Start Script.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0903F20C8CCFB00C68B25 /* 300-SSCR.Start Script.swift */; };
-		54A0909020C8CCFC00C68B25 /* 005-ASPC.Acoustic Space.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904020C8CCFB00C68B25 /* 005-ASPC.Acoustic Space.swift */; };
-		54A0909120C8CCFC00C68B25 /* 345-FACT.Faction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904120C8CCFB00C68B25 /* 345-FACT.Faction.swift */; };
-		54A0909220C8CCFC00C68B25 /* 045-WRLD.Worldspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904220C8CCFB00C68B25 /* 045-WRLD.Worldspace.swift */; };
-		54A0909320C8CCFC00C68B25 /* 345-GLOB.Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904320C8CCFB00C68B25 /* 345-GLOB.Global.swift */; };
-		54A0909420C8CCFC00C68B25 /* 345-CREA.Creature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904420C8CCFB00C68B25 /* 345-CREA.Creature.swift */; };
-		54A0909520C8CCFC00C68B25 /* 045-CLMT.Climate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904520C8CCFB00C68B25 /* 045-CLMT.Climate.swift */; };
-		54A0909620C8CCFC00C68B25 /* 045-FLOR.Flora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904620C8CCFB00C68B25 /* 045-FLOR.Flora.swift */; };
-		54A0909720C8CCFC00C68B25 /* 040-LVLC.Leveled Creature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904720C8CCFB00C68B25 /* 040-LVLC.Leveled Creature.swift */; };
-		54A0909820C8CCFC00C68B25 /* 300-LEVC.Leveled Creature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904820C8CCFB00C68B25 /* 300-LEVC.Leveled Creature.swift */; };
-		54A0909920C8CCFC00C68B25 /* 005-ARTO.Art Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904920C8CCFC00C68B25 /* 005-ARTO.Art Object.swift */; };
-		54A0909A20C8CCFC00C68B25 /* 045-ANIO.Animated Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904A20C8CCFC00C68B25 /* 045-ANIO.Animated Object.swift */; };
-		54A0909B20C8CCFC00C68B25 /* 345-ALCH.Potion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904B20C8CCFC00C68B25 /* 345-ALCH.Potion.swift */; };
-		54A0909C20C8CCFC00C68B25 /* 345-INFO.Dialog Topic Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904C20C8CCFC00C68B25 /* 345-INFO.Dialog Topic Info.swift */; };
-		54A0909D20C8CCFC00C68B25 /* 345-CELL.Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904D20C8CCFC00C68B25 /* 345-CELL.Cell.swift */; };
-		54A0909E20C8CCFC00C68B25 /* 345-MISC.Misc Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904E20C8CCFC00C68B25 /* 345-MISC.Misc Item.swift */; };
-		54A0909F20C8CCFC00C68B25 /* 345-SKIL.Skill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0904F20C8CCFC00C68B25 /* 345-SKIL.Skill.swift */; };
+		54A090A020CDC32E00C68B25 /* 300-TES3.Plugin info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF0D20BE37E900560590 /* 300-TES3.Plugin info.swift */; };
 		54AEEF0C20BE292100560590 /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF0B20BE292100560590 /* FileManager+Extensions.swift */; };
-		54AEEF0E20BE37E900560590 /* 300-TES3.Plugin info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF0D20BE37E900560590 /* 300-TES3.Plugin info.swift */; };
-		54AEEF1120BE381900560590 /* 345-STAT.Static.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF0F20BE381900560590 /* 345-STAT.Static.swift */; };
-		54AEEF1220BE381900560590 /* 345-WEAP.Weapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF1020BE381900560590 /* 345-WEAP.Weapon.swift */; };
 		54AEEF1420BE51B700560590 /* DataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF1320BE51B700560590 /* DataExtensions.swift */; };
 		54FD13AA20BE206A003D3138 /* CellManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD13A920BE206A003D3138 /* CellManager.swift */; };
 /* End PBXBuildFile section */
@@ -531,118 +449,36 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				54A0909720C8CCFC00C68B25 /* 040-LVLC.Leveled Creature.swift in Sources */,
-				54A0907020C8CCFC00C68B25 /* 045-GRAS.Grass.swift in Sources */,
-				54A0909A20C8CCFC00C68B25 /* 045-ANIO.Animated Object.swift in Sources */,
 				54A08FEE20C61E1D00C68B25 /* MaterialManager.swift in Sources */,
-				54A0905420C8CCFC00C68B25 /* 005-ASTP.Association Type.swift in Sources */,
-				54A0908420C8CCFC00C68B25 /* 040-ROAD.Road.swift in Sources */,
 				54A08FFB20C780FA00C68B25 /* NifManager.swift in Sources */,
-				54A0907E20C8CCFC00C68B25 /* 300-LEVI.Leveled item.swift in Sources */,
 				5415F76C20BC8BCA008A8E78 /* EsmFile+Extensions.swift in Sources */,
-				54A0905320C8CCFC00C68B25 /* 345-LTEX.Land Texture.swift in Sources */,
-				54A0909920C8CCFC00C68B25 /* 005-ARTO.Art Object.swift in Sources */,
-				54A0907720C8CCFC00C68B25 /* 340-PGRD.Path grid.swift in Sources */,
-				54A0907320C8CCFC00C68B25 /* 345-DOOR.Door.swift in Sources */,
-				54A0906020C8CCFC00C68B25 /* 340-BSGN.Birthsign.swift in Sources */,
-				54A0906820C8CCFC00C68B25 /* 045-WTHR.Weather.swift in Sources */,
-				54A0908F20C8CCFC00C68B25 /* 300-SSCR.Start Script.swift in Sources */,
-				54A0908220C8CCFC00C68B25 /* 040-SBSP.Subspace.swift in Sources */,
-				54A0909120C8CCFC00C68B25 /* 345-FACT.Faction.swift in Sources */,
-				54A0909020C8CCFC00C68B25 /* 005-ASPC.Acoustic Space.swift in Sources */,
-				54A0905120C8CCFC00C68B25 /* 300-SNDG.Sound Generator.swift in Sources */,
-				54A0906C20C8CCFC00C68B25 /* 345-APPA.Alchem Apparatus.swift in Sources */,
-				54A0907820C8CCFC00C68B25 /* 040-LVSP.Leveled Spell.swift in Sources */,
-				54A0908620C8CCFC00C68B25 /* 345-ACTI.Activator.swift in Sources */,
-				54A0905B20C8CCFC00C68B25 /* 040-LVLI.Leveled Item.swift in Sources */,
-				54A0908520C8CCFC00C68B25 /* 045-IDLE.Idle Animations.swift in Sources */,
 				540B163320BC8CCF0058D516 /* TemporalLoadBalancer.swift in Sources */,
-				54A0905D20C8CCFC00C68B25 /* 040-ACRE.Placed creature.swift in Sources */,
 				5415F77020BC8BE5008A8E78 /* BsaFile+Extensions.swift in Sources */,
-				54A0905920C8CCFC00C68B25 /* 040-SGST.Sigil Stone.swift in Sources */,
-				54A0909B20C8CCFC00C68B25 /* 345-ALCH.Potion.swift in Sources */,
 				54A08FF220C61E3900C68B25 /* BaseEngine.swift in Sources */,
 				5415F74B20BC8931008A8E78 /* AssetManager.swift in Sources */,
-				54A0905C20C8CCFC00C68B25 /* 045-TES4.Plugin info.swift in Sources */,
-				54A0905720C8CCFC00C68B25 /* 300-PROB.Probe.swift in Sources */,
-				54A0908E20C8CCFC00C68B25 /* 040-KEYM.Key.swift in Sources */,
-				54A0906720C8CCFC00C68B25 /* 300-BODY.Body.swift in Sources */,
 				54AEEF0C20BE292100560590 /* FileManager+Extensions.swift in Sources */,
-				54A0907220C8CCFC00C68B25 /* 345-CONT.Container.swift in Sources */,
-				54AEEF1120BE381900560590 /* 345-STAT.Static.swift in Sources */,
-				54A0907920C8CCFC00C68B25 /* 045-LSCR.Load Screen.swift in Sources */,
-				54A0907A20C8CCFC00C68B25 /* 345-BOOK.Book.swift in Sources */,
-				54A0909520C8CCFC00C68B25 /* 045-CLMT.Climate.swift in Sources */,
-				54A0907D20C8CCFC00C68B25 /* 045-AMMO.Ammo.swift in Sources */,
 				54AEEF1420BE51B700560590 /* DataExtensions.swift in Sources */,
 				54FD13AA20BE206A003D3138 /* CellManager.swift in Sources */,
-				54A0908820C8CCFC00C68B25 /* 005-ARMA.Armature (Model).swift in Sources */,
-				54A0906F20C8CCFC00C68B25 /* 040-HAIR.Hair.swift in Sources */,
-				54A0908920C8CCFC00C68B25 /* 045-EFSH.Effect Shader.swift in Sources */,
 				5415F75E20BC8B4C008A8E78 /* EsmFile.swift in Sources */,
-				54A0906920C8CCFC00C68B25 /* 340-SCPT.Script.swift in Sources */,
+				54A090A020CDC32E00C68B25 /* 300-TES3.Plugin info.swift in Sources */,
 				5415F76020BC8B5B008A8E78 /* EsmRecords.swift in Sources */,
 				5415F75720BC8AE0008A8E78 /* TesEngine.swift in Sources */,
 				54A08FEB20C4FACD00C68B25 /* Vector2Int.swift in Sources */,
-				54A0905520C8CCFC00C68B25 /* 005-SNDR.Sound Reference.swift in Sources */,
-				54A0909C20C8CCFC00C68B25 /* 345-INFO.Dialog Topic Info.swift in Sources */,
-				54AEEF0E20BE37E900560590 /* 300-TES3.Plugin info.swift in Sources */,
-				54A0906520C8CCFC00C68B25 /* 045-REFR.Placed Object.swift in Sources */,
 				54A08FF720C76F3B00C68B25 /* BaseMaterial.swift in Sources */,
-				54A0906420C8CCFC00C68B25 /* 345-NPC_.Non-Player Character.swift in Sources */,
-				54A0907620C8CCFC00C68B25 /* 300-REPA.Repair item.swift in Sources */,
-				54A0906B20C8CCFC00C68B25 /* 045-ACHR.Actor Reference.swift in Sources */,
 				5415F75320BC8ABC008A8E78 /* TesCellManager.swift in Sources */,
 				5415F76A20BC8BB7008A8E78 /* EsmFile+Fields.swift in Sources */,
 				5415F76E20BC8BDA008A8E78 /* BsaMultiFile+Extensions.swift in Sources */,
-				54A0908B20C8CCFC00C68B25 /* 005-AVIF.Actor Values_Perk Tree Graphics.swift in Sources */,
-				54A0909F20C8CCFC00C68B25 /* 345-SKIL.Skill.swift in Sources */,
-				54A0906320C8CCFC00C68B25 /* 005-DLBR.Dialog Branch.swift in Sources */,
 				5415F75C20BC8B37008A8E78 /* BsaMultiFile.swift in Sources */,
-				54A0906220C8CCFC00C68B25 /* 345-ENCH.Enchantment.swift in Sources */,
-				54A0905A20C8CCFC00C68B25 /* 045-WATR.Water Type.swift in Sources */,
-				54A0905020C8CCFC00C68B25 /* 345-CLOT.Clothing.swift in Sources */,
 				5415F76620BC8B93008A8E78 /* TesAssetPack.swift in Sources */,
 				540B163620BC8E5E0058D516 /* TesPackTest.swift in Sources */,
-				54A0907C20C8CCFC00C68B25 /* 345-REGN.Region.swift in Sources */,
-				54A0905E20C8CCFC00C68B25 /* 045-TREE.Tree.swift in Sources */,
 				54A08FEC20C4FACD00C68B25 /* Texture2DInfo.swift in Sources */,
-				54A0908D20C8CCFC00C68B25 /* 345-SPEL.Spell.swift in Sources */,
-				54A0906E20C8CCFC00C68B25 /* 045-EYES.Eyes.swift in Sources */,
-				54A0909D20C8CCFC00C68B25 /* 345-CELL.Cell.swift in Sources */,
-				54A0909420C8CCFC00C68B25 /* 345-CREA.Creature.swift in Sources */,
-				54A0906D20C8CCFC00C68B25 /* 005-AACT.Action.swift in Sources */,
 				5415F74920BC8906008A8E78 /* BinaryReader.swift in Sources */,
-				54A0906A20C8CCFC00C68B25 /* 340-MGEF.Magic Effect.swift in Sources */,
-				54A0908720C8CCFC00C68B25 /* 345-CLAS.Class.swift in Sources */,
-				54AEEF1220BE381900560590 /* 345-WEAP.Weapon.swift in Sources */,
 				5415F75A20BC8B26008A8E78 /* BsaFile.swift in Sources */,
-				54A0907520C8CCFC00C68B25 /* 045-QUST.Quest.swift in Sources */,
-				54A0908120C8CCFC00C68B25 /* 345-LAND.Land.swift in Sources */,
-				54A0908320C8CCFC00C68B25 /* 045-CSTY.Combat Style.swift in Sources */,
-				54A0907420C8CCFC00C68B25 /* 345-GMST.Game Setting.swift in Sources */,
 				5415F75120BC8AB0008A8E78 /* TesAssetManager.swift in Sources */,
-				54A0906620C8CCFC00C68B25 /* 045-SLGM.Soul Gem.swift in Sources */,
-				54A0905820C8CCFC00C68B25 /* 345-ARMO.Armor.swift in Sources */,
-				54A0905220C8CCFC00C68B25 /* 045-FURN.Furniture.swift in Sources */,
-				54A0909220C8CCFC00C68B25 /* 045-WRLD.Worldspace.swift in Sources */,
 				54A08FFD20C7824C00C68B25 /* GameObject.swift in Sources */,
-				54A0908A20C8CCFC00C68B25 /* 345-INGR.Ingredient.swift in Sources */,
-				54A0909620C8CCFC00C68B25 /* 045-FLOR.Flora.swift in Sources */,
-				54A0909E20C8CCFC00C68B25 /* 345-MISC.Misc Item.swift in Sources */,
 				54A08FF020C61E2B00C68B25 /* TextureManager.swift in Sources */,
-				54A0905F20C8CCFC00C68B25 /* 345-RACE.Race_Creature type.swift in Sources */,
 				54A08FFF20C79E0F00C68B25 /* NifReader.swift in Sources */,
-				54A0908020C8CCFC00C68B25 /* 345-SOUN.Sound.swift in Sources */,
-				54A0907B20C8CCFC00C68B25 /* 345-LOCK.Lock.swift in Sources */,
-				54A0909320C8CCFC00C68B25 /* 345-GLOB.Global.swift in Sources */,
-				54A0906120C8CCFC00C68B25 /* 005-ADDN-Addon Node.swift in Sources */,
-				54A0907F20C8CCFC00C68B25 /* 345-LIGH.Light.swift in Sources */,
-				54A0909820C8CCFC00C68B25 /* 300-LEVC.Leveled Creature.swift in Sources */,
-				54A0907120C8CCFC00C68B25 /* 045-PACK.AI Package.swift in Sources */,
 				54A08FF620C76F3800C68B25 /* DefaultMaterial.swift in Sources */,
-				54A0908C20C8CCFC00C68B25 /* 005-DLVW.Dialog View.swift in Sources */,
-				54A0905620C8CCFC00C68B25 /* 345-DIAL.Dialog Topic.swift in Sources */,
 				5415F76820BC8B9C008A8E78 /* TesDataPack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
