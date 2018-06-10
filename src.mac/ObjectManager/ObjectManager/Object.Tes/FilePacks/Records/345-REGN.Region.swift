@@ -6,6 +6,8 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
+import CoreGraphics
+
 public class REGNRecord: Record, IHaveEDID {
     // TESX
     public class RDATField {
@@ -13,16 +15,16 @@ public class REGNRecord: Record, IHaveEDID {
             case objects = 2, weather, map, landscape, grass, sound
         }
 
-        public type: UInt32
-        public flags: REGNType
-        public priority: UInt8
+        public var type: UInt32
+        public var flags: REGNType
+        public var priority: UInt8
         // groups
-        public RDOTs: [RDOTField] // Objects
-        public RDMP: STRVField // MapName
-        public RDGSs: [RDGSField] // Grasses
-        public RDMD: UI32Field // Music Type
-        public RDSDs: [RDSDField] // Sounds
-        public RDWTs: [RDWTField] // Weather Types
+        public var RDOTs: [RDOTField] // Objects
+        public var RDMP: STRVField // MapName
+        public var RDGSs: [RDGSField] // Grasses
+        public var RDMD: UI32Field // Music Type
+        public var RDSDs: [RDSDField] // Sounds
+        public var RDWTs: [RDWTField] // Weather Types
 
         init() { }
         init(_ r: BinaryReader, _ dataSize: Int) {
@@ -92,7 +94,7 @@ public class REGNRecord: Record, IHaveEDID {
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             guard format != .TES3 else {
-                sound = FormId<SOUNRecord>(r.readASCIIString(32, .zeroPadded))
+                sound = FormId<SOUNRecord>(r.readASCIIString(32, format: .zeroPadded))
                 flags = 0
                 chance = r.readByte()
                 return
@@ -156,12 +158,12 @@ public class REGNRecord: Record, IHaveEDID {
         func RPLDField(_ r: BinaryReader, _ dataSize: Int) {
             points = [CGVector](); points.reserveCapacity(dataSize >> 3)
             for i in 0..<points.capacity {
-                points[i] = CGVector(r.readLESingle(), r.readLESingle())
+                points[i] = CGVector(dx: r.readLESingle(), dy: r.readLESingle())
             }
         }
     }
 
-    public var description: String { return "REGN: \(EDID)" }
+    public override var description: String { return "REGN: \(EDID)" }
     public var EDID: STRVField  // Editor ID
     public var ICON: STRVField // Icon / Sleep creature
     public var WNAM: FMIDField<WRLDRecord> // Worldspace - Region name
@@ -190,12 +192,20 @@ public class REGNRecord: Record, IHaveEDID {
         case "RPLI": RPLIs.append(RPLIField(r, dataSize))
         case "RPLD": RPLIs.last!.RPLDField(r, dataSize)
         case "RDAT": RDATs.append(RDATField(r, dataSize))
-        case "RDOT": var rdot = RDATs.last!.RDOTs = [RDOTField](); rdot.reserveCapactiy(dataSize / 52); for i in 0..<rdot.capacity { rdot[i] = RDOTField(r, dataSize) }
+        case "RDOT":
+            var rdot = [RDOTField](); RDATs.last!.RDOTs = rdot; rdot.reserveCapacity(dataSize / 52)
+            for i in 0..<rdot.capacity { rdot[i] = RDOTField(r, dataSize) }
         case "RDMP": RDATs.last!.RDMP = STRVField(r, dataSize)
-        case "RDGS": var rdgs = RDATs.last!.RDGSs = [RDGSField](); rdgs.reserveCapacity(dataSize / 8); for i in 0..<rdgs.capacity { rdgs[i] = RDGSField(r, dataSize) }
+        case "RDGS":
+            var rdgs = [RDGSField](); RDATs.last!.RDGSs = rdgs; rdgs.reserveCapacity(dataSize / 8)
+            for i in 0..<rdgs.capacity { rdgs[i] = RDGSField(r, dataSize) }
         case "RDMD": RDATs.last!.RDMD = UI32Field(r, dataSize)
-        case "RDSD": var rdsd = RDATs.last!.RDSDs = [RDSDField](); rdsd.reserveCapacity(dataSize / 12); for i in 0..<rdsd.capacity { rdsd[i] = RDSDField(r, dataSize, format) }
-        case "RDWT": var rdwt = RDATs.last!.RDWTs = [RDWTField](); rdwt.reserveCapactiy(dataSize / RDWTField.SizeOf(format)); for i in 0..<rdwt.capacity { rdwt[i] = RDWTField(r, dataSize, format) }
+        case "RDSD":
+            var rdsd = [RDSDField](); RDATs.last!.RDSDs = rdsd; rdsd.reserveCapacity(dataSize / 12)
+            for i in 0..<rdsd.capacity { rdsd[i] = RDSDField(r, dataSize, format) }
+        case "RDWT":
+            var rdwt = [RDWTField](); RDATs.last!.RDWTs = rdwt; rdwt.reserveCapacity(dataSize / RDWTField.SizeOf(format))
+            for i in 0..<rdwt.capacity { rdwt[i] = RDWTField(r, dataSize, format) }
         default: return false
         }
         return true

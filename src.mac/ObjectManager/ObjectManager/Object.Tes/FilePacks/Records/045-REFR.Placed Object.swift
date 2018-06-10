@@ -76,15 +76,18 @@ public class REFRRecord: Record {
         public var FNAM: BYTEField // Map Flags
         public var FULL: STRVField // Name
         public var TNAM: BYTEField // Type
+        
+        init() {
+        }
     }
 
-    public var description: String { return "REFR: \(EDID)" }
+    public override var description: String { return "REFR: \(EDID)" }
     public var EDID: STRVField // Editor ID
     public var NAME: FMIDField<Record> // Base
     public var XTEL: XTELField? // Teleport Destination (optional)
     public var DATA: DATAField // Position/Rotation
     public var XLOC: XLOCField? // Lock information (optional)
-    public var XOWNs: [CELLRecord.XOWNGroup] // Ownership (optional)
+    public var XOWNs: [CELLRecord.XOWNGroup]? // Ownership (optional)
     public var XESP: XESPField? // Enable Parent (optional)
     public var XTRG: FMIDField<Record>? // Target (optional)
     public var XSED: XSEDField? // SpeedTree (optional)
@@ -98,9 +101,9 @@ public class REFRRecord: Record {
     public var XCNT: IN32Field? // Count (optional)
     public var XMRKs: [XMRKGroup] // Ownership (optional)
     //public var ONAM: Bool? // Open by Default
-    public var BYTVField? XRGD // Ragdoll Data (optional)
-    public var FLTVField? XSCL // Scale (optional)
-    public var BYTEField? XSOL // Contained Soul (optional)
+    public var XRGD: BYTVField? // Ragdoll Data (optional)
+    public var XSCL: FLTVField? // Scale (optional)
+    public var XSOL: BYTEField? // Contained Soul (optional)
     var _nextFull: Int
 
     init() {
@@ -113,9 +116,9 @@ public class REFRRecord: Record {
         case "XTEL": XTEL = XTELField(r, dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
         case "XLOC": XLOC = XLOCField(r, dataSize)
-        case "XOWN": if XOWNs == nil { XOWNs = [CELLRecord.XOWNGroup]() }; XOWNs.append(CELLRecord.XOWNGroup(XOWN: FMIDField<Record>(r, dataSize)))
-        case "XRNK": XOWNs.last!.XRNK = IN32Field(r, dataSize)
-        case "XGLB": XOWNs.last!.XGLB = FMIDField<Record>(r, dataSize)
+        case "XOWN": if XOWNs == nil { XOWNs = [CELLRecord.XOWNGroup]() }; XOWNs!.append(CELLRecord.XOWNGroup(XOWN: FMIDField<Record>(r, dataSize)))
+        case "XRNK": XOWNs!.last!.XRNK = IN32Field(r, dataSize)
+        case "XGLB": XOWNs!.last!.XGLB = FMIDField<Record>(r, dataSize)
         case "XESP": XESP = XESPField(r, dataSize)
         case "XTRG": XTRG = FMIDField<Record>(r, dataSize)
         case "XSED": XSED = XSEDField(r, dataSize)
@@ -124,7 +127,7 @@ public class REFRRecord: Record {
         case "XHLT": XCHG = FLTVField(r, dataSize)
         case "XPCI": XPCI = FMIDField<CELLRecord>(r, dataSize); _nextFull = 1
         case "FULL":
-            if _nextFull == 1 { XPCI.addName(r.readASCIIString(dataSize)) }
+            if _nextFull == 1 { XPCI?.value.adding(name: r.readASCIIString(dataSize)) }
             else if _nextFull == 2 { XMRKs.last!.FULL = STRVField(r, dataSize) }
             _nextFull = 0
         case "XLCM": XLCM = IN32Field(r, dataSize)

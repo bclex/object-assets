@@ -10,7 +10,7 @@ public class CLOTRecord: Record, IHaveEDID, IHaveMODL {
     // TESX
     public struct DATAField {
         public enum CLOTType {
-            pants = 0, shoes, shirt, belt, robe, r_glove, l_glove, skirt, ring, amulet
+            case pants = 0, shoes, shirt, belt, robe, r_glove, l_glove, skirt, ring, amulet
         }
 
         public let value: Int32

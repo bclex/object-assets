@@ -19,8 +19,8 @@ public class BOOKRecord: Record, IHaveEDID, IHaveMODL {
             guard format != .TES3 else {
                 weight = r.readLESingle()
                 value = r.readLEInt32()
-                flags = (byte)r.readLEInt32()
-                teaches = (byte)r.readLEInt32()
+                flags = UInt8(r.readLEInt32())
+                teaches = UInt8(r.readLEInt32())
                 enchantPts = r.readLEInt32()
                 return
             }
@@ -32,7 +32,7 @@ public class BOOKRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public var description: String { return "BOOK: \(EDID)" }
+    public override var description: String { return "BOOK: \(EDID)" }
     public var EDID: STRVField  // Editor ID
     public var MODL: MODLGroup  // Model (optional)
     public var FULL: STRVField // Item Name
@@ -54,8 +54,8 @@ public class BOOKRecord: Record, IHaveEDID, IHaveMODL {
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL.MODBField(r, dataSize)
         case "MODT": MODL.MODTField(r, dataSize)
-        case "FULL":
-        case "FNAM": FULL = STRVField(r, dataSize)
+        case "FULL",
+             "FNAM": FULL = STRVField(r, dataSize)
         case "DATA",
              "BKDT": DATA = DATAField(r, dataSize, format)
         case "ICON",

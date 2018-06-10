@@ -51,12 +51,12 @@ public class TREERecord: Record {
     }
 
     public var description: String { return "TREE: \(EDID)" }
-    public EDID: STRVField // Editor ID
-    public MODL: MODLGroup // Model
-    public ICON: FILEField // Leaf Texture
-    public SNAM: SNAMField // SpeedTree Seeds, array of ints
-    public CNAM: CNAMField // Tree Parameters
-    public BNAM: BNAMField // Billboard Dimensions
+    public var EDID: STRVField // Editor ID
+    public var MODL: MODLGroup // Model
+    public var ICON: FILEField // Leaf Texture
+    public var SNAM: SNAMField // SpeedTree Seeds, array of ints
+    public var CNAM: CNAMField // Tree Parameters
+    public var BNAM: BNAMField // Billboard Dimensions
 
     init() {
     }

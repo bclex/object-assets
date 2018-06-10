@@ -7,7 +7,7 @@
 //
 
 public class ACTIRecord: Record, IHaveEDID, IHaveMODL {
-    public var description: String { return "ACTI: \(EDID)" }
+    public override var description: String { return "ACTI: \(EDID)" }
     public var EDID: STRVField  // Editor ID
     public var MODL: MODLGroup  // Model Name
     public var MODB: FLTVField  // Model Bounds
@@ -22,8 +22,8 @@ public class ACTIRecord: Record, IHaveEDID, IHaveMODL {
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID":
-        case "NAME": EDID = STRVField(r, dataSize)
+        case "EDID",
+             "NAME": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL.MODBField(r, dataSize)
         case "MODT": MODL.MODTField(r, dataSize)

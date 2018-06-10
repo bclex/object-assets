@@ -6,6 +6,9 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
+import SceneKit
+import CoreGraphics
+
 public class CELLRecord: Record, ICellRecord {
     
     public enum CELLFlags: UInt16 {
@@ -52,7 +55,7 @@ public class CELLRecord: Record, ICellRecord {
             fogColor = ColorRef(r);
             fogNear = r.readLESingle();
             guard format == .TES3 else {
-                fogFar = directionalFade = fogClipDist = directionalRotationXY = directionalRotationZ = 0
+                fogFar = 0; directionalFade = 0; fogClipDist = 0; directionalRotationXY = 0; directionalRotationZ = 0
                 fogPow = 0
                 return
             }
@@ -87,8 +90,8 @@ public class CELLRecord: Record, ICellRecord {
         }
 
         public var FRMR: UI32Field? // Object Index (starts at 1)
-                            // This is used to uniquely identify objects in the cell. For files the index starts at 1 and is incremented for each object added. For modified
-                            // objects the index is kept the same.
+        // This is used to uniquely identify objects in the cell. For files the index starts at 1 and is incremented for each object added. For modified
+        // objects the index is kept the same.
         public var description: String { return "CREF: \(EDID)" }
         public var EDID: STRVField // Object ID
         public var XSCL: FLTVField? // Scale (Static)
@@ -112,7 +115,7 @@ public class CELLRecord: Record, ICellRecord {
         public var INDX: IN32Field? // Unknown
     }
 
-    public var description: String { return "CELL: \(FULL)" }
+    public override var description: String { return "CELL: \(FULL)" }
     public var EDID: STRVField  // Editor ID. Can be an empty string for exterior cells in which case the region name is used instead.
     public var FULL: STRVField // Full Name / TES3:RGNN - Region name
     public var DATA: UI16Field // Flags
@@ -134,9 +137,9 @@ public class CELLRecord: Record, ICellRecord {
     public var InFRMR = false
     public var RefObjs = [RefObj]()
 
-    public var isInterior: Bool => Utils.containsBitFlags(DATA.value, 0x01)
-    public var gridCoords: Vector2Int => Vector2Int(XCLC.gridX, XCLC.gridY)
-    public var ambientLight: Color? => XCLL != nil ? XCLL.ambientColor.toColor32() : nil
+    public var isInterior: Bool { return Utils.containsBitFlags(DATA.value, 0x01) }
+    public var gridCoords: Vector2Int { return Vector2Int(Int(XCLC!.gridX), Int(XCLC!.gridY)) }
+    public var ambientLight: CGColor? { return XCLL != nil ? XCLL!.ambientColor.toColor32() : nil }
 
     init() {
     }
@@ -149,20 +152,21 @@ public class CELLRecord: Record, ICellRecord {
             switch type {
             case "EDID",
                  "NAME": EDID = STRVField(r, dataSize)
-            case "FULL":
-            case "RGNN": FULL = STRVField(r, dataSize)
+            case "FULL",
+                 "RGNN": FULL = STRVField(r, dataSize)
             case "DATA": DATA = INTVField(r, format == .TES3 ? 4 : dataSize).toUI16Field(); if format == .TES3 { fallthrough }
             case "XCLC": XCLC = XCLCField(r, dataSize, format)
-            case "XCLL":
-            case "AMBI": XCLL = XCLLField(r, dataSize, format)
-            case "XCLW":
-            case "WHGT": XCLW = FLTVField(r, dataSize)
+            case "XCLL",
+                 "AMBI": XCLL = XCLLField(r, dataSize, format)
+            case "XCLW",
+                 "WHGT": XCLW = FLTVField(r, dataSize)
             // TES3
             case "NAM0": NAM0 = UI32Field(r, dataSize)
             case "INTV": INTV = INTVField(r, dataSize)
             case "NAM5": NAM5 = CREFField(r, dataSize)
             // TES4
-            case "XCLR": XCLRs = (FMIDField<REGNRecord>](); XCLRs.reserveCapacity(dataSize >> 2); for i in 0..<XCLRs.capactiy { XCLRs[i] = FMIDField<REGNRecord>(r, 4) }
+            case "XCLR":
+                XCLRs = [FMIDField<REGNRecord>](); XCLRs.reserveCapacity(dataSize >> 2); for i in 0..<XCLRs.capactiy { XCLRs[i] = FMIDField<REGNRecord>(r, 4) }
             case "XCMT": XCMT = BYTEField(r, dataSize)
             case "XCCM": XCCM = FMIDField<CLMTRecord>(r, dataSize)
             case "XCWT": XCWT = FMIDField<WATRRecord>(r, dataSize)

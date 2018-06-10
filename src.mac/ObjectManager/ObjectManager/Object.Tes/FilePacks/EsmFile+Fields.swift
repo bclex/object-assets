@@ -165,7 +165,7 @@ public struct FMIDField<TRecord>: CustomStringConvertible {
             FormId<TRecord>(r.readASCIIString(dataSize, format: .zeroPadded))
     }
 
-    mutating func addName(name: String) {
+    mutating func add(name: String) {
         value = value.adding(name: name)
     }
 }

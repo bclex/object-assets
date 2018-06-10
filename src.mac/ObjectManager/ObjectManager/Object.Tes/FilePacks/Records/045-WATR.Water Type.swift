@@ -70,7 +70,7 @@ public class WATRRecord: Record {
             rainSimulator_dampner = r.readLESingle()
             rainSimulator_startingSize = r.readLESingle()
             displacementSimulator_force = r.readLESingle()
-            guard dataSize != 86 {
+            guard dataSize != 86 else {
                 //displacementSimulator_velocity = displacementSimulator_falloff = displacementSimulator_dampner = displacementSimulator_startingSize = 0
                 damage = r.readLEUInt16()
                 return

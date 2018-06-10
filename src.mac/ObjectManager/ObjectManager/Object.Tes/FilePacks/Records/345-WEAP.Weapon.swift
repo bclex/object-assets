@@ -75,8 +75,8 @@ public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
-        case "MODT": MODL.MODTField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
+        case "MODT": MODL!.MODTField(r, dataSize)
         case "FULL",
              "FNAM": FULL = STRVField(r, dataSize)
         case "DATA",

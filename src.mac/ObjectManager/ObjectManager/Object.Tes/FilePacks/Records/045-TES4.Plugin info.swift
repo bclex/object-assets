@@ -19,14 +19,14 @@ public class TES4Record: Record {
         }
     }
 
-    public HEDR: HEDRField
-    public CNAM: STRVField? // author (Optional)
-    public SNAM: STRVField? // description (Optional)
-    public MASTs: [STRVField] // master
-    public DATAs: [INTVField] // fileSize
-    public ONAM: UNKNField? // overrides (Optional)
-    public INTV: IN32Field // unknown
-    public INCC: IN32Field? // unknown (Optional)
+    public var HEDR: HEDRField
+    public var CNAM: STRVField? // author (Optional)
+    public var SNAM: STRVField? // description (Optional)
+    public var MASTs: [STRVField]? // master
+    public var DATAs: [INTVField]? // fileSize
+    public var ONAM: UNKNField? // overrides (Optional)
+    public var INTV: IN32Field // unknown
+    public var INCC: IN32Field? // unknown (Optional)
 
     init() {
     }
@@ -38,8 +38,8 @@ public class TES4Record: Record {
         case "DELE": r.skipBytes(dataSize)
         case "CNAM": CNAM = STRVField(r, dataSize)
         case "SNAM": SNAM = STRVField(r, dataSize)
-        case "MAST": if MASTs == nil { MASTs = [STRVField]() }; MASTs.append(STRVField(r, dataSize))
-        case "DATA": if DATAs == nil { DATAs = [INTVField]() }; DATAs.append(INTVField(r, dataSize))
+        case "MAST": if MASTs == nil { MASTs = [STRVField]() }; MASTs!.append(STRVField(r, dataSize))
+        case "DATA": if DATAs == nil { DATAs = [INTVField]() }; DATAs!.append(INTVField(r, dataSize))
         case "ONAM": ONAM = UNKNField(r, dataSize)
         case "INTV": INTV = IN32Field(r, dataSize)
         case "INCC": INCC = IN32Field(r, dataSize)

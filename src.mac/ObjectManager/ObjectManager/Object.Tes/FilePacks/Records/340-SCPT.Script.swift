@@ -10,7 +10,7 @@ public class SCPTRecord: Record {
     // TESX
     public struct CTDAField {
         public enum INFOType: UInt8 {
-            nothing = 0, function, global, local, journal, item, dead, notId, notFaction, notClass, notRace, notCell, notLocal
+            case nothing = 0, function, global, local, journal, item, dead, notId, notFaction, notClass, notRace, notCell, notLocal
         }
 
         // TES3: 0 = [=], 1 = [!=], 2 = [>], 3 = [>=], 4 = [<], 5 = [<=]
@@ -35,7 +35,7 @@ public class SCPTRecord: Record {
                 functionId = r.readASCIIString(2)
                 compareOp = r.readByte() << 1
                 name = r.readASCIIString(dataSize - 5)
-                comparisonValue = parameter1 = parameter2 = 0
+                comparisonValue = 0; parameter1 = 0; parameter2 = 0
                 return
             }
             compareOp = r.readByte();
@@ -47,8 +47,8 @@ public class SCPTRecord: Record {
             if dataSize == 24 {
                 r.skipBytes(4) // Unused
             }
-            index = type = 0
-            name = nil
+            index = 0; type = 0
+            name = ""
         }
     }
 
@@ -64,7 +64,7 @@ public class SCPTRecord: Record {
         public var variables: [String]? = nil
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            name = r.readASCIIString(32, .zeroPadded)
+            name = r.readASCIIString(32, format: .zeroPadded)
             numShorts = r.readLEInt32()
             numLongs = r.readLEInt32()
             numFloats = r.readLEInt32()
@@ -104,7 +104,7 @@ public class SCPTRecord: Record {
         public var description: String { return "\(idx):\(variableName)" }
         public let idx: UInt32
         public let type: UInt32
-        public let variableName: String
+        public var variableName: String
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             idx = r.readLEUInt32()
@@ -114,15 +114,15 @@ public class SCPTRecord: Record {
             type = r.readLEUInt32()
             _ = r.readLEUInt32() // Unknown
             // SCVRField
-            variableName = nil
+            variableName = ""
         }
 
         func SCVRField(_ r: BinaryReader, _ dataSize: Int) {
-            variableName = r.readASCIIString(dataSize, .possiblyNullTerminated)
+            variableName = r.readASCIIString(dataSize, format: .possibleNullTerminated)
         }
     }
 
-    public var description: String { return "SCPT: \(EDID ?? SCHD)" }
+    public override var description: String { return "SCPT: \(EDID ?? SCHD)" }
     public var EDID: STRVField  // Editor ID
     public var SCDA: BYTVField // Compiled Script
     public var SCTX: STRVField // Script Source
@@ -142,14 +142,14 @@ public class SCPTRecord: Record {
         case "EDID": EDID = STRVField(r, dataSize)
         case "SCHD": SCHD = SCHDField(r, dataSize)
         case "SCVR": if format != .TES3 { SLSDs.last!.SCVRField(r, dataSize) } else { SCHD.SCVRField(r, dataSize) }
-        case "SCDA":
-        case "SCDT": SCDA = BYTVField(r, dataSize)
+        case "SCDA",
+             "SCDT": SCDA = BYTVField(r, dataSize)
         case "SCTX": SCTX = STRVField(r, dataSize)
         // TES4
         case "SCHR": SCHR = SCHRField(r, dataSize)
         case "SLSD": SLSDs.append(SLSDField(r, dataSize))
         case "SCRO": SCROs.append(FMIDField<Record>(r, dataSize))
-        case "SCRV": let idx = r.readLEUInt32(); SCRVs.append(SLSDs.first(where: { $0.idx == idx }))
+        case "SCRV": let idx = r.readLEUInt32(); SCRVs.append(SLSDs.first(where: { $0.idx == idx })!)
         default: return false
         }
         return true
