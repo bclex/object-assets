@@ -25,15 +25,15 @@ public class WRLDRecord: Record {
     }
 
     public class NAM0Field {
-        public let min: CGVector 
-        public var max: CGVector
+        public let min: Vector2 
+        public var max: Vector2
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            min = CGVector(dx: r.readLESingle(), dy: r.readLESingle())
+            min = Vector2(dx: r.readLESingle(), dy: r.readLESingle())
         }
 
         func NAM9Field(_ r: BinaryReader, _ dataSize: Int) {
-            max = CGVector(dx: r.readLESingle(), dy: r.readLESingle())
+            max = Vector2(dx: r.readLESingle(), dy: r.readLESingle())
         }
     }
 

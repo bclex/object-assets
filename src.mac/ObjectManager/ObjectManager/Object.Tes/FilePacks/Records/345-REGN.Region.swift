@@ -149,16 +149,16 @@ public class REGNRecord: Record, IHaveEDID {
     // TES4
     public class RPLIField {
         public let edgeFalloff: UInt32 // (World Units)
-        public var points: [CGVector] // Region Point List Data
+        public var points: [Vector2] // Region Point List Data
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             edgeFalloff = r.readLEUInt32()
         }
 
         func RPLDField(_ r: BinaryReader, _ dataSize: Int) {
-            points = [CGVector](); points.reserveCapacity(dataSize >> 3)
+            points = [Vector2](); points.reserveCapacity(dataSize >> 3)
             for i in 0..<points.capacity {
-                points[i] = CGVector(dx: r.readLESingle(), dy: r.readLESingle())
+                points[i] = Vector2(dx: r.readLESingle(), dy: r.readLESingle())
             }
         }
     }

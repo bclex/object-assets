@@ -66,21 +66,21 @@ namespace OA.Core
         /// </summary>
         /// <param name="arr">A 2D array represented as a 1D row-major array.</param>
         /// <param name="startIndex">The 1D index of the top left element in the portion of the 2D array we want to flip.</param>
-        /// <param name="rowCount">The number of rows in the sub-array.</param>
-        /// <param name="columnCount">The number of columns in the sub-array.</param>
-        public static void Flip2DSubArrayVertically<T>(T[] arr, int startIndex, int rowCount, int columnCount)
+        /// <param name="rows">The number of rows in the sub-array.</param>
+        /// <param name="bytesPerRow">The number of columns in the sub-array.</param>
+        public static void Flip2DSubArrayVertically<T>(T[] arr, int startIndex, int rows, int bytesPerRow)
         {
-            Debug.Assert(startIndex >= 0 && rowCount >= 0 && columnCount >= 0 && (startIndex + (rowCount * columnCount)) <= arr.Length);
-            var tmpRow = new T[columnCount];
-            var lastRowIndex = rowCount - 1;
-            for (var rowIndex = 0; rowIndex < (rowCount / 2); rowIndex++)
+            Debug.Assert(startIndex >= 0 && rows >= 0 && bytesPerRow >= 0 && (startIndex + (rows * bytesPerRow)) <= arr.Length);
+            var tmpRow = new T[bytesPerRow];
+            var lastRowIndex = rows - 1;
+            for (var rowIndex = 0; rowIndex < (rows / 2); rowIndex++)
             {
                 var otherRowIndex = lastRowIndex - rowIndex;
-                var rowStartIndex = startIndex + (rowIndex * columnCount);
-                var otherRowStartIndex = startIndex + (otherRowIndex * columnCount);
-                Array.Copy(arr, otherRowStartIndex, tmpRow, 0, columnCount); // other -> tmp
-                Array.Copy(arr, rowStartIndex, arr, otherRowStartIndex, columnCount); // row -> other
-                Array.Copy(tmpRow, 0, arr, rowStartIndex, columnCount); // tmp -> row
+                var rowStartIndex = startIndex + (rowIndex * bytesPerRow);
+                var otherRowStartIndex = startIndex + (otherRowIndex * bytesPerRow);
+                Array.Copy(arr, otherRowStartIndex, tmpRow, 0, bytesPerRow); // other -> tmp
+                Array.Copy(arr, rowStartIndex, arr, otherRowStartIndex, bytesPerRow); // row -> other
+                Array.Copy(tmpRow, 0, arr, rowStartIndex, bytesPerRow); // tmp -> row
             }
         }
     }

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  BinaryReader.swift
 //  CocoApp
 //
 //  Created by Sky Morey on 5/28/18.
@@ -79,9 +79,11 @@ public class BinaryReader {
         return Int8(bitPattern: baseStream.readData(ofLength: 1).first!)
     }
     
-    // public func read(buffer: Data) {
-    //     // NOT IMPLEMENTED
-    // }
+    public func read(_ data: inout Data, offsetBy: Int, count: Int) {
+        let newData = baseStream.readData(ofLength: count)
+        let range = data.index(data.startIndex, offsetBy: offsetBy)..<data.index(data.startIndex, offsetBy: offsetBy + newData.count)
+        data.replaceSubrange(range, with: newData)
+    }
     
     public func skipBytes(_ count: Int) {
         _ = baseStream.readData(ofLength: count)
@@ -91,9 +93,20 @@ public class BinaryReader {
         return baseStream.readData(ofLength: count)
     }
     
-    // readRestOfBytes
-    // readRestOfBytes
+    public func readRestOfBytes() -> Data {
+        let remainingByteCount = baseStream.length - baseStream.position
+        assert(remainingByteCount <= Int.max)
+        return r.readBytes(Int(remainingByteCount))
+    }
+
+    public func readRestOfBytes(_ inout data: Data, offsetBy: Int) -> Data {
+        let remainingByteCount = baseStream.length - baseStream.position
+        assert(startIndex >= 0 && remainingByteCount <= Int.max && startIndex + remainingByteCount <= buffer.Length)
+        r.read(&data, offsetBy: offsetBy, count: Int(remainingByteCount))
+    }
     
+// MARK: A
+
     public func readASCIIString(_ length: Int, format: ASCIIFormat = .raw) -> String {
         var data = baseStream.readData(ofLength: length)
         switch format {
@@ -113,6 +126,8 @@ public class BinaryReader {
         return String(data: data, encoding: .utf8)!
     }
     
+    // MARK: A
+
     public func readLEBool32() -> Bool {
         return readLEUInt32() != 0
     }
@@ -163,5 +178,86 @@ public class BinaryReader {
         return baseStream.readData(ofLength: 8).withUnsafeBytes { (ptr: UnsafePointer<Double>) -> Double in
             return ptr.pointee
         }
+    }
+
+    // MARK: A
+
+    public func readLELength32PrefixedBytes()-> Data {
+        let length = readLEUInt32()
+        return r.readBytes(Int(length))
+    }
+
+    public func readLELength32PrefixedASCIIString() -> String {
+        let length = readLEUInt32()
+        let data = r.readBytes(Int(length))
+        return String(data: data, encoding: .utf8)!
+    }
+
+    public func readLEVector2() -> Vector2 {
+        return new Vector2(readLESingle(), readLESingle())
+    }
+
+    public func readLEVector3() -> Vector3 {
+        return new Vector3(readLESingle(), readLESingle(), readLESingle())
+    }
+
+    public func readLEColumnMajorMatrix3x3() -> Matrix4x4 {
+        var matrix = Matrix4x4()
+        for columnIndex in 0..< 4 {
+            for rowIndex in 0..< 4 {
+                // If we're in the 3x3 part of the matrix, read values. Otherwise, use the identity matrix.
+                if rowIndex <= 2 && columnIndex <= 2 { matrix[rowIndex, columnIndex] = readLESingle() }
+                else { matrix[rowIndex, columnIndex] = rowIndex == columnIndex ? 1 : 0 }
+            }
+        }
+        return matrix
+    }
+
+    public func readLERowMajorMatrix3x3() -> Matrix4x4 {
+        var matrix = Matrix4x4()
+        for rowIndex in 0..< 4 {
+            for columnIndex in 0..< 4 {
+                // If we're in the 3x3 part of the matrix, read values. Otherwise, use the identity matrix.
+                if rowIndex <= 2 && columnIndex <= 2 { matrix[rowIndex, columnIndex] = readLESingle() }
+                else { matrix[rowIndex, columnIndex] = rowIndex == columnIndex ? 1 : 0 }
+            }
+        }
+        return matrix
+    }
+
+    public func readLEColumnMajorMatrix4x4() -> Matrix4x4 {
+        var matrix = Matrix4x4()
+        for columnIndex in 0..<4 {
+            for rowIndex in 0..<4 {
+                matrix[rowIndex, columnIndex] = readLESingle()
+            }
+        }
+        return matrix
+    }
+
+    public func readLERowMajorMatrix4x4() -> Matrix4x4 {
+        var matrix = Matrix4x4()
+        for rowIndex in 0..4 {
+            for columnIndex in 0..< 4 {
+                matrix[rowIndex, columnIndex] = readLESingle()
+            }
+        }
+        return matrix
+    }
+
+    public func readLEQuaternionWFirst() -> Quaternion {
+        let w = readLESingle()
+        let x = readLESingle()
+        let y = readLESingle()
+        let z = readLESingle()
+        return Quaternion(x, y, z, w)
+    }
+
+    public func readLEQuaternionWLast() -> Quaternion {
+        let x = readLESingle()
+        let y = readLESingle()
+        let z = readLESingle()
+        let w = readLESingle()
+        return Quaternion(x, y, z, w)
     }
 }

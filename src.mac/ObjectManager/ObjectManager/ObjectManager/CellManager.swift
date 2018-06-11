@@ -42,10 +42,10 @@ public class RefCellObjInfo {
 }
 
 public protocol ICellManager {
-    //func getExteriorCellIndices(point: SCNVector3) -> CGVector
-    //func startCreatingExteriorCell(cellIndices: CGVector) -> InRangeCellInfo
+    //func getExteriorCellIndices(point: Vector3) -> Vector2
+    //func startCreatingExteriorCell(cellIndices: Vector2) -> InRangeCellInfo
     //func startCreatingInteriorCell(cellName: String) -> InRangeCellInfo
-    //func startCreatingInteriorCell(gridCoords: CGVector) -> InRangeCellInfo
-    //func updateExteriorCells(currentPosition: SCNVector3, immediate: Bool, cellRadiusOverride: Int)
+    //func startCreatingInteriorCell(gridCoords: Vector2) -> InRangeCellInfo
+    //func updateExteriorCells(currentPosition: Vector3, immediate: Bool, cellRadiusOverride: Int)
     //func destroyAllCells()
 }

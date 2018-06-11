@@ -315,7 +315,7 @@ public class Record: IRecord, CustomStringConvertible {
     }
     
     func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
-        return false
+        preconditionFailure("This method must be overridden")
     }
 
     func read(_ r: BinaryReader, _ filePath: String, for format: GameFormatId) {

@@ -80,8 +80,8 @@ public class CELLRecord: Record, ICellRecord {
 
     public class RefObj: CustomStringConvertible {
         public struct XYZAField {
-            public let position: SCNVector3
-            public let eulerAngles: SCNVector3
+            public let position: Vector3
+            public let eulerAngles: Vector3
 
             init(_ r: BinaryReader, _ dataSize: Int) {
                 position = r.readLEVector3()

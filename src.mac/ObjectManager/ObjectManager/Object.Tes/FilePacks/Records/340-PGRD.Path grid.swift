@@ -27,11 +27,11 @@ public class PGRDRecord: Record {
     }
 
     public struct PGRPField {
-        public let point: SCNVector3
+        public let point: Vector3
         public let connections: UInt8
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            point = SCNVector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
+            point = Vector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
             connections = r.readByte()
             r.skipBytes(3) // Unused
         }
@@ -49,12 +49,12 @@ public class PGRDRecord: Record {
 
     public struct PGRIField {
         public let pointId: Int16
-        public let foreignNode: SCNVector3
+        public let foreignNode: Vector3
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             pointId = r.readLEInt16()
             r.skipBytes(2) // Unused (can merge back)
-            foreignNode = SCNVector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
+            foreignNode = Vector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
         }
     }
 

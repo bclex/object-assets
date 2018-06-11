@@ -278,8 +278,8 @@ namespace OA.Formats
         {
             // Create the color table.
             var colorTable = new Color[4];
-            colorTable[0] = ColorUtils.R5G6B5ToColor(r.ReadLEUInt16());
-            colorTable[1] = ColorUtils.R5G6B5ToColor(r.ReadLEUInt16());
+            colorTable[0] = ColorUtils.B565ToColor(r.ReadLEUInt16());
+            colorTable[1] = ColorUtils.B565ToColor(r.ReadLEUInt16());
             if (!containsAlpha)
             {
                 colorTable[2] = Color.Lerp(colorTable[0], colorTable[1], 1.0f / 3);
@@ -318,8 +318,8 @@ namespace OA.Formats
             }
             // Create the color table.
             var colorTable = new Color[4];
-            colorTable[0] = ColorUtils.R5G6B5ToColor(r.ReadLEUInt16());
-            colorTable[1] = ColorUtils.R5G6B5ToColor(r.ReadLEUInt16());
+            colorTable[0] = ColorUtils.B565ToColor(r.ReadLEUInt16());
+            colorTable[1] = ColorUtils.B565ToColor(r.ReadLEUInt16());
             colorTable[2] = Color.Lerp(colorTable[0], colorTable[1], 1.0f / 3);
             colorTable[3] = Color.Lerp(colorTable[0], colorTable[1], 2.0f / 3);
             // Calculate pixel colors.
@@ -379,8 +379,8 @@ namespace OA.Formats
             alphaIndices[15] = (uint)Utils.GetBits(0, bitsPerAlphaIndex, alphaIndexBytesRow1);
             // Create the color table.
             var colorTable = new Color[4];
-            colorTable[0] = ColorUtils.R5G6B5ToColor(r.ReadLEUInt16());
-            colorTable[1] = ColorUtils.R5G6B5ToColor(r.ReadLEUInt16());
+            colorTable[0] = ColorUtils.B565ToColor(r.ReadLEUInt16());
+            colorTable[1] = ColorUtils.B565ToColor(r.ReadLEUInt16());
             colorTable[2] = Color.Lerp(colorTable[0], colorTable[1], 1.0f / 3);
             colorTable[3] = Color.Lerp(colorTable[0], colorTable[1], 2.0f / 3);
             // Calculate pixel colors.
@@ -428,32 +428,34 @@ namespace OA.Formats
         static byte[] DecodeDXTToARGB(int DXTVersion, byte[] compressedData, uint width, uint height, DDSPixelFormat pixelFormat, uint mipmapCount)
         {
             var alphaFlag = Utils.ContainsBitFlags((int)pixelFormat.dwFlags, (int)DDSPixelFormats.AlphaPixels);
-            var containsAlpha = alphaFlag || ((pixelFormat.dwRGBBitCount == 32) && (pixelFormat.dwABitMask != 0));
-            var reader = new UnityBinaryReader(new MemoryStream(compressedData));
-            var argb = new byte[TextureUtils.CalculateMipMappedTextureDataSize((int)width, (int)height, 4)];
-            var mipMapWidth = (int)width;
-            var mipMapHeight = (int)height;
-            var baseARGBIndex = 0;
-            for (var mipMapIndex = 0; mipMapIndex < mipmapCount; mipMapIndex++)
+            var containsAlpha = alphaFlag || (pixelFormat.dwRGBBitCount == 32 && pixelFormat.dwABitMask != 0);
+            using (var r = new UnityBinaryReader(new MemoryStream(compressedData)))
             {
-                for (var rowIndex = 0; rowIndex < mipMapHeight; rowIndex += 4)
-                    for (var columnIndex = 0; columnIndex < mipMapWidth; columnIndex += 4)
-                    {
-                        Color32[] colors = null;
-                        switch (DXTVersion) // Doing a switch instead of using a delegate for speed.
+                var argb = new byte[TextureUtils.CalculateMipMappedTextureDataSize((int)width, (int)height, 4)];
+                var mipMapWidth = (int)width;
+                var mipMapHeight = (int)height;
+                var baseARGBIndex = 0;
+                for (var mipMapIndex = 0; mipMapIndex < mipmapCount; mipMapIndex++)
+                {
+                    for (var rowIndex = 0; rowIndex < mipMapHeight; rowIndex += 4)
+                        for (var columnIndex = 0; columnIndex < mipMapWidth; columnIndex += 4)
                         {
-                            case 1: colors = DecodeDXT1TexelBlock(reader, containsAlpha); break;
-                            case 3: colors = DecodeDXT3TexelBlock(reader); break;
-                            case 5: colors = DecodeDXT5TexelBlock(reader); break;
-                            default: throw new NotImplementedException("Tried decoding a DDS file using an unsupported DXT format: DXT" + DXTVersion.ToString());
+                            Color32[] colors = null;
+                            switch (DXTVersion) // Doing a switch instead of using a delegate for speed.
+                            {
+                                case 1: colors = DecodeDXT1TexelBlock(r, containsAlpha); break;
+                                case 3: colors = DecodeDXT3TexelBlock(r); break;
+                                case 5: colors = DecodeDXT5TexelBlock(r); break;
+                                default: throw new NotImplementedException($"Tried decoding a DDS file using an unsupported DXT format: DXT {DXTVersion}");
+                            }
+                            CopyDecodedTexelBlock(colors, argb, baseARGBIndex, rowIndex, columnIndex, mipMapWidth, mipMapHeight);
                         }
-                        CopyDecodedTexelBlock(colors, argb, baseARGBIndex, rowIndex, columnIndex, mipMapWidth, mipMapHeight);
-                    }
-                baseARGBIndex += (mipMapWidth * mipMapHeight * 4);
-                mipMapWidth /= 2;
-                mipMapHeight /= 2;
+                    baseARGBIndex += mipMapWidth * mipMapHeight * 4;
+                    mipMapWidth /= 2;
+                    mipMapHeight /= 2;
+                }
+                return argb;
             }
-            return argb;
         }
 
         static byte[] DecodeDXT1ToARGB(byte[] compressedData, uint width, uint height, DDSPixelFormat pixelFormat, uint mipmapCount) { return DecodeDXTToARGB(1, compressedData, width, height, pixelFormat, mipmapCount); }
@@ -465,6 +467,7 @@ namespace OA.Formats
         /// </summary>
         static void ExtractDDSTextureFormatAndData(DDSHeader header, UnityBinaryReader r, out bool hasMipmaps, out uint DDSMipmapLevelCount, out TextureFormat textureFormat, out int bytesPerPixel, out byte[] textureData)
         {
+
             hasMipmaps = Utils.ContainsBitFlags((int)header.dwCaps, (int)DDSCaps.Mipmap);
             // Non-mipmapped textures still have one mipmap level: the texture itself.
             DDSMipmapLevelCount = hasMipmaps ? header.dwMipMapCount : 1;
@@ -545,9 +548,9 @@ namespace OA.Formats
             // While we haven't processed all of the mipmap levels we should process.
             while (mipMapLevelWidth > 1 || mipMapLevelHeight > 1)
             {
-                var mipMapDataSize = (mipMapLevelWidth * mipMapLevelHeight * bytesPerPixel);
+                var mipMapDataSize = mipMapLevelWidth * mipMapLevelHeight * bytesPerPixel;
                 // If the DDS file contains the current mipmap level, flip it vertically if necessary.
-                if (flipVertically && (mipMapLevelIndex < DDSMipmapLevelCount))
+                if (flipVertically && mipMapLevelIndex < DDSMipmapLevelCount)
                     ArrayUtils.Flip2DSubArrayVertically(data, mipMapLevelDataOffset, mipMapLevelHeight, mipMapLevelWidth * bytesPerPixel);
                 // Break after optionally flipping the first mipmap level if the DDS texture doesn't have mipmaps.
                 if (!hasMipmaps)

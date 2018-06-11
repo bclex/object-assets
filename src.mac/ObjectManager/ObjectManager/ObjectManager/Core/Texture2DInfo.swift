@@ -8,28 +8,29 @@
 
 import Foundation
 import CoreImage
-import AppKit
 
-public typealias Texture2D = NSImage
+public typealias TextureFormat = CIFormat
 public class Texture2DInfo {
     public let width: Int
     public let height: Int
     public let format: CIFormat
-    public let bpp: Int
+    public let hasMipmaps: Bool
+    public let bytesPerPixel: Int
     public let rawData: Data
 
-    init(width: Int, height: Int, format: CIFormat, bpp: Int, rawData: Data) {
+    init(width: Int, height: Int, format: CIFormat, hasMipmaps: hasMipmaps, bytesPerPixel: Int, rawData: Data) {
         self.width = width
         self.height = height
         self.format = format
-        self.bpp = bpp
+        self.hasMipmaps = hasMipmaps
+        self.bytesPerPixel = bytesPerPixel
         self.rawData = rawData
     }
 
     public func toTexture2D() -> Texture2D {
         let ciImage = CIImage(
             bitmapData: rawData,
-            bytesPerRow: width * bpp,
+            bytesPerRow: width * bytesPerPixel,
             size: CGSize(width: width, height: height), 
             format: format, 
             colorSpace: nil)

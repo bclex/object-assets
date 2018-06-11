@@ -42,7 +42,7 @@ namespace OA.Core
             var currentHeight = baseTextureHeight;
             while (true)
             {
-                dataSize += (currentWidth * currentHeight * bytesPerPixel);
+                dataSize += currentWidth * currentHeight * bytesPerPixel;
                 if (currentWidth == 1 && currentHeight == 1)
                     break;
                 currentWidth = currentWidth > 1 ? (currentWidth / 2) : currentWidth;

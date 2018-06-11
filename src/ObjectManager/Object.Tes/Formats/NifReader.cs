@@ -287,7 +287,7 @@ namespace OA.Tes.Formats
         }
     }
 
-    public class Color3
+    public struct Color3
     {
         public float r;
         public float g;
@@ -301,7 +301,7 @@ namespace OA.Tes.Formats
         }
     }
 
-    public class Color4
+    public struct Color4
     {
         public float r;
         public float g;

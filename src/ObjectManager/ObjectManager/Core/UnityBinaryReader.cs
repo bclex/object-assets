@@ -193,27 +193,18 @@ namespace OA.Core
 
         public Vector2 ReadLEVector2()
         {
-            var x = ReadLESingle();
-            var y = ReadLESingle();
-            return new Vector2(x, y);
+            return new Vector2(ReadLESingle(), ReadLESingle());
         }
 
         public Vector3 ReadLEVector3()
         {
-            var x = ReadLESingle();
-            var y = ReadLESingle();
-            var z = ReadLESingle();
-            return new Vector3(x, y, z);
+            return new Vector3(ReadLESingle(), ReadLESingle(), ReadLESingle());
         }
 
-        public Vector4 ReadLEVector4()
-        {
-            var x = ReadLESingle();
-            var y = ReadLESingle();
-            var z = ReadLESingle();
-            var w = ReadLESingle();
-            return new Vector4(x, y, z, w);
-        }
+        //public Vector4 ReadLEVector4()
+        //{
+        //    return new Vector4(ReadLESingle(), ReadLESingle(), ReadLESingle(), ReadLESingle());
+        //}
 
         /// <summary>
         /// Reads a column-major 3x3 matrix but returns a functionally equivalent 4x4 matrix.

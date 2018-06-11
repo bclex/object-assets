@@ -9,23 +9,23 @@
 public class REFRRecord: Record {
     public struct XTELField {
         public let door: FormId<REFRRecord>
-        public let position: SCNVector3
-        public let rotation: SCNVector3
+        public let position: Vector3
+        public let rotation: Vector3
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             door = FormId<REFRRecord>(r.readLEUInt32())
-            position = SCNVector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
-            rotation = SCNVector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
+            position = Vector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
+            rotation = Vector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
         }
     }
 
     public struct DATAField {
-        public let position: SCNVector3
-        public let rotation: SCNVector3
+        public let position: Vector3
+        public let rotation: Vector3
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            position = SCNVector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
-            rotation = SCNVector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
+            position = Vector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
+            rotation = Vector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
         }
     }
 

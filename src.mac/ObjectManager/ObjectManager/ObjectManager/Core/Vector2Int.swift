@@ -6,8 +6,6 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
-import Foundation
-
 public struct Vector2Int {
      public let x: Int
      public let y: Int
