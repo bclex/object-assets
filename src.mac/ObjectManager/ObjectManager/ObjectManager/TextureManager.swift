@@ -28,11 +28,9 @@ public class TextureManager {
 
     public func preloadTextureFileAsync(_ texturePath: String) {
         // If the texture has already been created we don't have to load the file again.
-        guard _cachedTextures[texturePath] == nil else {
-            return
-        }
+        guard _cachedTextures[texturePath] == nil else { return }
         // Start loading the texture file asynchronously if we haven't already started.
-        var textureFileLoadingTask = _textureFilePreloadTasks[texturePath]
+        let textureFileLoadingTask = _textureFilePreloadTasks[texturePath]
         if textureFileLoadingTask == nil {
             textureFileLoadingTask = _asset.loadTextureInfoAsync(texturePath)
             _textureFilePreloadTasks[texturePath] = textureFileLoadingTask

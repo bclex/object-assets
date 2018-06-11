@@ -174,7 +174,7 @@
     <Compile Include="FilePacks\EsmRecords.cs" />
     <Compile Include="Formats\NifManager.cs" />
     <Compile Include="Formats\NifObjectBuilder.cs" />
-    <Compile Include="Formats\NifParserGenerator.cs" />
+    <None Include="Formats\NifParserGenerator.cs" />
     <Compile Include="Formats\NifReader.cs" />
     <Compile Include="Formats\NifUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

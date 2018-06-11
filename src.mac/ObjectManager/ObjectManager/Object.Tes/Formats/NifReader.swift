@@ -286,7 +286,7 @@ public enum DecayType: UInt32 {
             numVertices = r.readLEUInt16()
             vertexIndices = [UInt16](); vertexIndices.reserveCapacity(numVertices)
             for i in 0..<vertexIndices.capacity {
-                vertexIndices[i] = r.ReadLEUInt16();
+                vertexIndices[i] = r.readLEUInt16();
             }
         }
     }
@@ -367,7 +367,7 @@ public enum DecayType: UInt32 {
             skinTransform = SkinTransform(r)
             boundingSphereOffset = r.readLEVector3()
             boundingSphereRadius = r.readLESingle()
-            numVertices = r.ReadLEUInt16()
+            numVertices = r.readLEUInt16()
             vertexWeights = [SkinWeight](); vertexWeights.reserveCapacity(numVertices)
             for i in 0..<vertexWeights.capacity {
                 vertexWeights[i] = SkinWeight(r)
@@ -947,450 +947,399 @@ public enum DecayType: UInt32 {
         }
     }
 
-    public class NiAutoNormalParticles: NiParticles { }
+    public struct NiAutoNormalParticles: NiParticles { }
 
-    public class NiAutoNormalParticlesData: NiParticlesData { }
+    public struct NiAutoNormalParticlesData: NiParticlesData { }
 
-    public class NiParticleSystemController: NiTimeController
-    {
-        public float Speed;
-        public float SpeedRandom;
-        public float VerticalDirection;
-        public float VerticalAngle;
-        public float HorizontalDirection;
-        public float HorizontalAngle;
-        public Vector3 UnknownNormal;
-        public Color4 UnknownColor;
-        public float Size;
-        public float EmitStartTime;
-        public float EmitStopTime;
-        public byte UnknownByte;
-        public float EmitRate;
-        public float Lifetime;
-        public float LifetimeRandom;
-        public ushort EmitFlags;
-        public Vector3 StartRandom;
-        public Ptr<NiObject> Emitter;
-        public ushort UnknownShort2;
-        public float UnknownFloat13;
-        public uint UnknownInt1;
-        public uint UnknownInt2;
-        public ushort UnknownShort3;
-        public ushort NumParticles;
-        public ushort NumValid;
-        public Particle[] Particles;
-        public Ref<NiObject> UnknownLink;
-        public Ref<NiParticleModifier> ParticleExtra;
-        public Ref<NiObject> UnknownLink2;
-        public byte Trailer;
+    public struct NiParticleSystemController: NiTimeController {
+        public let speed: Float
+        public let speedRandom: Float
+        public let verticalDirection: Float
+        public let verticalAngle: Float
+        public let horizontalDirection: Float
+        public let horizontalAngle: Float
+        public let unknownNormal: Vector3
+        public let unknownColor: Color4
+        public let size: Float
+        public let emitStartTime: Float
+        public let emitStopTime: Float
+        public let unknownByte: UInt8
+        public let emitRate: Float
+        public let lifetime: Float
+        public let lifetimeRandom: Float
+        public let emitFlags: UInt16
+        public let startRandom: Vector3
+        public let emitter: Ptr<NiObject>
+        public let unknownShort2: UInt16
+        public let unknownFloat13: Float
+        public let unknownInt1: UInt32
+        public let unknownInt2: UInt32
+        public let unknownShort3: UInt16
+        public let numParticles: UInt16
+        public let numValid: UInt16
+        public let particles: [Particle]
+        public let unknownLink: Ref<NiObject>
+        public let particleExtra: Ref<NiParticleModifier>
+        public let unknownLink2: Ref<NiObject>
+        public let trailer: UInt8
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            Speed = r.ReadLESingle();
-            SpeedRandom = r.ReadLESingle();
-            VerticalDirection = r.ReadLESingle();
-            VerticalAngle = r.ReadLESingle();
-            HorizontalDirection = r.ReadLESingle();
-            HorizontalAngle = r.ReadLESingle();
-            UnknownNormal = r.ReadLEVector3();
-            UnknownColor = new Color4();
-            UnknownColor.Deserialize(r);
-            Size = r.ReadLESingle();
-            EmitStartTime = r.ReadLESingle();
-            EmitStopTime = r.ReadLESingle();
-            UnknownByte = r.ReadByte();
-            EmitRate = r.ReadLESingle();
-            Lifetime = r.ReadLESingle();
-            LifetimeRandom = r.ReadLESingle();
-            EmitFlags = r.ReadLEUInt16();
-            StartRandom = r.ReadLEVector3();
-            Emitter = NiReaderUtils.ReadPtr<NiObject>(r);
-            UnknownShort2 = r.ReadLEUInt16();
-            UnknownFloat13 = r.ReadLESingle();
-            UnknownInt1 = r.ReadLEUInt32();
-            UnknownInt2 = r.ReadLEUInt32();
-            UnknownShort3 = r.ReadLEUInt16();
-            NumParticles = r.ReadLEUInt16();
-            NumValid = r.ReadLEUInt16();
-            Particles = new Particle[NumParticles];
-            for (var i = 0; i < Particles.Length; i++)
-            {
-                Particles[i] = new Particle();
-                Particles[i].Deserialize(r);
+        init(_ r: BinaryReader) {
+            super.init(r)
+            speed = r.readLESingle()
+            speedRandom = r.readLESingle()
+            verticalDirection = r.readLESingle()
+            verticalAngle = r.readLESingle()
+            horizontalDirection = r.readLESingle()
+            horizontalAngle = r.readLESingle()
+            unknownNormal = r.readLEVector3()
+            unknownColor = Color4(r)
+            size = r.readLESingle()
+            emitStartTime = r.readLESingle()
+            emitStopTime = r.readLESingle()
+            unknownByte = r.readByte()
+            emitRate = r.readLESingle()
+            lifetime = r.readLESingle()
+            lifetimeRandom = r.readLESingle()
+            emitFlags = r.readLEUInt16()
+            startRandom = r.readLEVector3()
+            emitter = NiReaderUtils.readPtr<NiObject>(r)
+            unknownShort2 = r.readLEUInt16()
+            unknownFloat13 = r.readLESingle()
+            unknownInt1 = r.readLEUInt32()
+            unknownInt2 = r.readLEUInt32()
+            unknownShort3 = r.readLEUInt16()
+            numParticles = r.readLEUInt16()
+            numValid = r.readLEUInt16()
+            particles = [Particle](); particles.reserveCapacity(numParticles)
+            for i in 0..i<particles.capacity {
+                particles[i] = Particle(r)
             }
-            UnknownLink = NiReaderUtils.ReadRef<NiObject>(r);
-            ParticleExtra = NiReaderUtils.ReadRef<NiParticleModifier>(r);
-            UnknownLink2 = NiReaderUtils.ReadRef<NiObject>(r);
-            Trailer = r.ReadByte();
+            UnknownLink = NiReaderUtils.readRef<NiObject>(r)
+            ParticleExtra = NiReaderUtils.readRef<NiParticleModifier>(r)
+            UnknownLink2 = NiReaderUtils.readRef<NiObject>(r)
+            Trailer = r.readByte()
         }
     }
 
-    public class NiBSPArrayController : NiParticleSystemController { }
+    public struct NiBSPArrayController: NiParticleSystemController { }
 
     // Particle Modifiers
-    public abstract class NiParticleModifier : NiObject
-    {
-        public Ref<NiParticleModifier> NextModifier;
-        public Ptr<NiParticleSystemController> Controller;
+    public struct NiParticleModifier: NiObject {
+        public let nextModifier: Ref<NiParticleModifier>
+        public let controller: Ptr<NiParticleSystemController>
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            NextModifier = NiReaderUtils.ReadRef<NiParticleModifier>(r);
-            Controller = NiReaderUtils.ReadPtr<NiParticleSystemController>(r);
+        init(_ r: BinaryReader) {
+            super.init(r)
+            nextModifier = NiReaderUtils.readRef<NiParticleModifier>(r)
+            controller = NiReaderUtils.readPtr<NiParticleSystemController>(r)
         }
     }
 
-    public class NiGravity : NiParticleModifier
-    {
-        public float UnknownFloat1;
-        public float Force;
-        public FieldType Type;
-        public Vector3 Position;
-        public Vector3 Direction;
+    public struct NiGravity: NiParticleModifier {
+        public let UnknownFloat1: Float
+        public let Force: Float
+        public let Type: FieldType
+        public let Position: Vector3
+        public let Direction: Vector3
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            UnknownFloat1 = r.ReadLESingle();
-            Force = r.ReadLESingle();
-            Type = (FieldType)r.ReadLEUInt32();
-            Position = r.ReadLEVector3();
-            Direction = r.ReadLEVector3();
+        init(_ r: BinaryReader) {
+            super.init(r)
+            unknownFloat1 = r.readLESingle()
+            force = r.readLESingle()
+            type = FieldType(rawValue: r.readLEUInt32())
+            position = r.readLEVector3()
+            direction = r.readLEVector3()
         }
     }
 
-    public class NiParticleBomb : NiParticleModifier
-    {
-        public float Decay;
-        public float Duration;
-        public float DeltaV;
-        public float Start;
-        public DecayType DecayType;
-        public Vector3 Position;
-        public Vector3 Direction;
+    public struct NiParticleBomb: NiParticleModifier {
+        public let decay: Float
+        public let duration: Float
+        public let deltaV: Float
+        public let start: Float
+        public let decayType: DecayType
+        public let position: Vector3
+        public let direction: Vector3
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            Decay = r.ReadLESingle();
-            Duration = r.ReadLESingle();
-            DeltaV = r.ReadLESingle();
-            Start = r.ReadLESingle();
-            DecayType = (DecayType)r.ReadLEUInt32();
-            Position = r.ReadLEVector3();
-            Direction = r.ReadLEVector3();
+        init(_ r: BinaryReader) {
+            super.init(r)
+            decay = r.readLESingle()
+            duration = r.readLESingle()
+            deltaV = r.readLESingle()
+            start = r.readLESingle()
+            decayType = DecayType(rawValue: r.readLEUInt32())
+            position = r.readLEVector3()
+            direction = r.readLEVector3()
         }
     }
 
-    public class NiParticleColorModifier : NiParticleModifier
-    {
-        public Ref<NiColorData> ColorData;
+    public struct NiParticleColorModifier: NiParticleModifier {
+        public let colorData: Ref<NiColorData>
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            ColorData = NiReaderUtils.ReadRef<NiColorData>(r);
+        init(_ r: BinaryReader) {
+            super.init(r)
+            ColorData = NiReaderUtils.readRef<NiColorData>(r)
         }
     }
 
-    public class NiParticleGrowFade : NiParticleModifier
-    {
-        public float Grow;
-        public float Fade;
+    public struct NiParticleGrowFade: NiParticleModifier {
+        public let grow: Float
+        public let fade: Float
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            Grow = r.ReadLESingle();
-            Fade = r.ReadLESingle();
+        init(_ r: BinaryReader) {
+            super.init(r)
+            grow = r.readLESingle()
+            fade = r.readLESingle()
         }
     }
 
-    public class NiParticleMeshModifier : NiParticleModifier
-    {
-        public uint NumParticleMeshes;
-        public Ref<NiAVObject>[] ParticleMeshes;
+    public struct NiParticleMeshModifier: NiParticleModifier {
+        public let numParticleMeshes: UInt32
+        public let particleMeshes: Ref<NiAVObject>[]
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            NumParticleMeshes = r.ReadLEUInt32();
-            ParticleMeshes = new Ref<NiAVObject>[NumParticleMeshes];
-            for (var i = 0; i < ParticleMeshes.Length; i++)
-                ParticleMeshes[i] = NiReaderUtils.ReadRef<NiAVObject>(r);
+        init(_ r: BinaryReader) {
+            super.init(r)
+            numParticleMeshes = r.readLEUInt32()
+            particleMeshes = [Ref<NiAVObject>](); particleMeshes.reserveCapacity(numParticleMeshes)
+            for i in 0..<particleMeshes.capacity {
+                particleMeshes[i] = NiReaderUtils.readRef<NiAVObject>(r)
+            }
         }
     }
 
-    public class NiParticleRotation : NiParticleModifier
-    {
-        public byte RandomInitialAxis;
-        public Vector3 InitialAxis;
-        public float RotationSpeed;
+    public struct NiParticleRotation: NiParticleModifier {
+        public let randomInitialAxis: UInt8
+        public let initialAxis: Vector3
+        public let rotationSpeed: Float
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            RandomInitialAxis = r.ReadByte();
-            InitialAxis = r.ReadLEVector3();
-            RotationSpeed = r.ReadLESingle();
+        init(_ r: BinaryReader) {
+            super.init(r)
+            randomInitialAxis = r.readByte()
+            initialAxis = r.readLEVector3()
+            rotationSpeed = r.readLESingle()
         }
     }
 
     // Controllers
-    public abstract class NiTimeController : NiObject
-    {
-        public Ref<NiTimeController> NextController;
-        public ushort Flags;
-        public float Frequency;
-        public float Phase;
-        public float StartTime;
-        public float StopTime;
-        public Ptr<NiObjectNET> Target;
+    public struct NiTimeController: NiObject {
+        public let nextController: Ref<NiTimeController>
+        public let flags: UInt16
+        public let frequency: Float
+        public let phase: Float
+        public let startTime: Float
+        public let stopTime: Float
+        public let target: Ptr<NiObjectNET>
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            NextController = NiReaderUtils.ReadRef<NiTimeController>(r);
-            Flags = r.ReadLEUInt16();
-            Frequency = r.ReadLESingle();
-            Phase = r.ReadLESingle();
-            StartTime = r.ReadLESingle();
-            StopTime = r.ReadLESingle();
-            Target = NiReaderUtils.ReadPtr<NiObjectNET>(r);
+        init(_ r: BinaryReader) {
+            super.init(r)
+            nextController = NiReaderUtils.readRef<NiTimeController>(r)
+            flags = r.readLEUInt16()
+            frequency = r.readLESingle()
+            phase = r.readLESingle()
+            startTime = r.readLESingle()
+            stopTime = r.readLESingle()
+            target = NiReaderUtils.readPtr<NiObjectNET>(r)
         }
     }
 
-    public class NiUVController : NiTimeController
-    {
-        public ushort UnknownShort;
-        public Ref<NiUVData> Data;
+    public struct NiUVController: NiTimeController {
+        public let unknownShort: UInt16
+        public let data: Ref<NiUVData>
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            UnknownShort = r.ReadLEUInt16();
-            Data = NiReaderUtils.ReadRef<NiUVData>(r);
+        init(_ r: BinaryReader) {
+            super.init(r)
+            unknownShort = r.readLEUInt16()
+            data = NiReaderUtils.readRef<NiUVData>(r)
         }
     }
 
-    public abstract class NiInterpController : NiTimeController { }
+    public struct NiInterpController: NiTimeController { }
 
-    public abstract class NiSingleInterpController : NiInterpController { }
+    public struct NiSingleInterpController: NiInterpController { }
 
-    public class NiKeyframeController : NiSingleInterpController
-    {
-        public Ref<NiKeyframeData> Data;
+    public struct NiKeyframeController: NiSingleInterpController {
+        public let data: Ref<NiKeyframeData>
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            Data = NiReaderUtils.ReadRef<NiKeyframeData>(r);
+        init(_ r: BinaryReader) {
+            super.init(r)
+            data = NiReaderUtils.readRef<NiKeyframeData>(r)
         }
     }
 
-    public class NiGeomMorpherController : NiInterpController
-    {
-        public Ref<NiMorphData> Data;
-        public byte AlwaysUpdate;
+    public struct NiGeomMorpherController: NiInterpController {
+        public let data: Ref<NiMorphData>
+        public let alwaysUpdate: UInt8 
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            Data = NiReaderUtils.ReadRef<NiMorphData>(r);
-            AlwaysUpdate = r.ReadByte();
+        init(_ r: BinaryReader) {
+            super.init(r)
+            data = NiReaderUtils.readRef<NiMorphData>(r)
+            alwaysUpdate = r.readByte()
         }
     }
 
-    public abstract class NiBoolInterpController : NiSingleInterpController { }
+    public struct NiBoolInterpController: NiSingleInterpController { }
 
-    public class NiVisController : NiBoolInterpController
-    {
-        public Ref<NiVisData> Data;
+    public struct NiVisController: NiBoolInterpController {
+        public let data: Ref<NiVisData> 
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            Data = NiReaderUtils.ReadRef<NiVisData>(r);
+        init(_ r: BinaryReader) {
+            super.init(r)
+            data = NiReaderUtils.readRef<NiVisData>(r)
         }
     }
 
-    public abstract class NiFloatInterpController : NiSingleInterpController { }
+    public struct NiFloatInterpController: NiSingleInterpController { }
 
-    public class NiAlphaController : NiFloatInterpController
-    {
-        public Ref<NiFloatData> Data;
+    public struct NiAlphaController: NiFloatInterpController {
+        public let data: Ref<NiFloatData> 
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            Data = NiReaderUtils.ReadRef<NiFloatData>(r);
+        init(_ r: BinaryReader) {
+            super.init(r)
+            data = NiReaderUtils.readRef<NiFloatData>(r)
         }
     }
 
     // Skin Stuff
-    public class NiSkinInstance : NiObject
-    {
-        public Ref<NiSkinData> Data;
-        public Ptr<NiNode> SkeletonRoot;
-        public uint NumBones;
-        public Ptr<NiNode>[] Bones;
+    public struct NiSkinInstance: NiObject {
+        public let data: Ref<NiSkinData> 
+        public let skeletonRoot: Ptr<NiNode>
+        public let numBones: UInt32
+        public let bones: [Ptr<NiNode>]
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            Data = NiReaderUtils.ReadRef<NiSkinData>(r);
-            SkeletonRoot = NiReaderUtils.ReadPtr<NiNode>(r);
-            NumBones = r.ReadLEUInt32();
-            Bones = new Ptr<NiNode>[NumBones];
-            for (var i = 0; i < Bones.Length; i++)
-                Bones[i] = NiReaderUtils.ReadPtr<NiNode>(r);
-        }
-    }
-
-    public class NiSkinData : NiObject
-    {
-        public SkinTransform SkinTransform;
-        public uint NumBones;
-        public Ref<NiSkinPartition> SkinPartition;
-        public SkinData[] BoneList;
-
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            SkinTransform = new SkinTransform();
-            SkinTransform.Deserialize(r);
-            NumBones = r.ReadLEUInt32();
-            SkinPartition = NiReaderUtils.ReadRef<NiSkinPartition>(r);
-            BoneList = new SkinData[NumBones];
-            for (var i = 0; i < BoneList.Length; i++)
-            {
-                BoneList[i] = new SkinData();
-                BoneList[i].Deserialize(r);
+        init(_ r: BinaryReader) {
+            super.init(r)
+            data = NiReaderUtils.readRef<NiSkinData>(r)
+            skeletonRoot = NiReaderUtils.readPtr<NiNode>(r)
+            numBones = r.readLEUInt32()
+            bones = [Ptr<NiNode>](); bones.reserveCapacity(numBones)
+            for i in 0..<bones.capacity {
+                bones[i] = NiReaderUtils.readPtr<NiNode>(r)
             }
         }
     }
 
-    public class NiSkinPartition : NiObject { }
+    public struct NiSkinData: NiObject {
+        public let skinTransform: SkinTransform
+        public let numBones: UInt32
+        public let skinPartition: Ref<NiSkinPartition>
+        public let boneList: [SkinData]
+
+        init(_ r: BinaryReader) {
+            super.init(r)
+            skinTransform = SkinTransform(r)
+            numBones = r.readLEUInt32()
+            skinPartition = NiReaderUtils.ReadRef<NiSkinPartition>(r)
+            boneList = [SkinData](); boneList.reserveCapacity(numBones)
+            for i in 0..<boneList.capacity {
+                boneList[i] = SkinData(r)
+            }
+        }
+    }
+
+    public struct NiSkinPartition: NiObject { }
 
     // Miscellaneous
-    public abstract class NiTexture : NiObjectNET
-    {
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
+    public struct NiTexture: NiObjectNET {
+        init(_ r: BinaryReader) {
+            super.init(r)
         }
     }
 
-    public class NiSourceTexture : NiTexture
-    {
-        public byte UseExternal;
-        public string FileName;
-        public PixelLayout PixelLayout;
-        public MipMapFormat UseMipMaps;
-        public AlphaFormat AlphaFormat;
-        public byte IsStatic;
+    public struct NiSourceTexture: NiTexture {
+        public let useExternal: UInt8
+        public let fileName: String
+        public let pixelLayout: PixelLayout
+        public let useMipMaps: MipMapFormat
+        public let alphaFormat: AlphaFormat
+        public let isStatic: UInt8
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            UseExternal = r.ReadByte();
-            FileName = r.ReadLELength32PrefixedASCIIString();
-            PixelLayout = (PixelLayout)r.ReadLEUInt32();
-            UseMipMaps = (MipMapFormat)r.ReadLEUInt32();
-            AlphaFormat = (AlphaFormat)r.ReadLEUInt32();
-            IsStatic = r.ReadByte();
+        init(_ r: BinaryReader) {
+            super.init(r)
+            useExternal = r.readByte()
+            fileName = r.readLELength32PrefixedASCIIString()
+            pixelLayout = PixelLayout(rawValue: r.readLEUInt32())
+            useMipMaps = MipMapFormat(rawValue: r.readLEUInt32())
+            alphaFormat = AlphaFormat(rawValue: r.readLEUInt32())
+            isStatic = r.readByte()
         }
     }
 
-    public abstract class NiPoint3InterpController : NiSingleInterpController
-    {
-        public Ref<NiPosData> Data;
+    public struct NiPoint3InterpController: NiSingleInterpController {
+        public let data: Ref<NiPosData> 
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            Data = NiReaderUtils.ReadRef<NiPosData>(r);
+        init(_ r: BinaryReader) {
+            super.init(r)
+            data = NiReaderUtils.readRef<NiPosData>(r)
         }
     }
 
-    public class NiMaterialProperty : NiProperty
-    {
-        public ushort Flags;
-        public Color3 AmbientColor;
-        public Color3 DiffuseColor;
-        public Color3 SpecularColor;
-        public Color3 EmissiveColor;
-        public float Glossiness;
-        public float Alpha;
+    public struct NiMaterialProperty: NiProperty {
+        public let flags: UInt16
+        public let ambientColor: Color3
+        public let diffuseColor: Color3
+        public let specularColor: Color3
+        public let emissiveColor: Color3
+        public let glossiness: Float
+        public let alpha: Float
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            Flags = NiReaderUtils.ReadFlags(r);
-            AmbientColor = new Color3();
-            AmbientColor.Deserialize(r);
-            DiffuseColor = new Color3();
-            DiffuseColor.Deserialize(r);
-            SpecularColor = new Color3();
-            SpecularColor.Deserialize(r);
-            EmissiveColor = new Color3();
-            EmissiveColor.Deserialize(r);
-            Glossiness = r.ReadLESingle();
-            Alpha = r.ReadLESingle();
+        init(_ r: BinaryReader) {
+            super.init(r)
+            flags = NiReaderUtils.readFlags(r)
+            ambientColor = Color3(r)
+            diffuseColor = Color3(r)
+            specularColor = Color3(r)
+            emissiveColor = Color3(r)
+            glossiness = r.readLESingle()
+            alpha = r.readLESingle()
         }
     }
 
-    public class NiMaterialColorController : NiPoint3InterpController { }
+    public struct NiMaterialColorController: NiPoint3InterpController { }
 
-    public abstract class NiDynamicEffect : NiAVObject
-    {
-        uint NumAffectedNodeListPointers;
-        uint[] AffectedNodeListPointers;
+    public struct NiDynamicEffect: NiAVObject {
+        let numAffectedNodeListPointers: UInt32
+        let affectedNodeListPointers: [UInt32]
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            NumAffectedNodeListPointers = r.ReadLEUInt32();
-            AffectedNodeListPointers = new uint[NumAffectedNodeListPointers];
-            for (var i = 0; i < AffectedNodeListPointers.Length; i++)
-                AffectedNodeListPointers[i] = r.ReadLEUInt32();
+        init(_ r: BinaryReader) {
+            super.init(r)
+            numAffectedNodeListPointers = r.readLEUInt32()
+            affectedNodeListPointers = [Uint32](); affectedNodeListPointers.reserveCapacity(numAffectedNodeListPointers)
+            for i in 0..<affectedNodeListPointers.capacity {
+                affectedNodeListPointers[i] = r.readLEUInt32()
+            }
         }
     }
 
-    public class NiTextureEffect : NiDynamicEffect
-    {
-        public Matrix4x4 ModelProjectionMatrix;
-        public Vector3 ModelProjectionTransform;
-        public TexFilterMode TextureFiltering;
-        public TexClampMode TextureClamping;
-        public EffectType TextureType;
-        public CoordGenType CoordinateGenerationType;
-        public Ref<NiSourceTexture> SourceTexture;
-        public byte ClippingPlane;
-        public Vector3 UnknownVector;
-        public float UnknownFloat;
-        public short PS2L;
-        public short PS2K;
-        public ushort UnknownShort;
+    public struct NiTextureEffect: NiDynamicEffect {
+        public let modelProjectionMatrix: Matrix4x4
+        public let modelProjectionTransform: Vector3
+        public let textureFiltering: TexFilterMode
+        public let textureClamping: TexClampMode
+        public let textureType: EffectType
+        public let coordinateGenerationType: CoordGenType
+        public let sourceTexture: Ref<NiSourceTexture>
+        public let clippingPlane: UInt8
+        public let unknownVector: Vector3
+        public let unknownFloat: Float
+        public let ps2L: Int16
+        public let ps2K: Int16
+        public let unknownShort: UInt16
 
-        public override void Deserialize(UnityBinaryReader r)
-        {
-            base.Deserialize(r);
-            ModelProjectionMatrix = NiReaderUtils.Read3x3RotationMatrix(r);
-            ModelProjectionTransform = r.ReadLEVector3();
-            TextureFiltering = (TexFilterMode)r.ReadLEUInt32();
-            TextureClamping = (TexClampMode)r.ReadLEUInt32();
-            TextureType = (EffectType)r.ReadLEUInt32();
-            CoordinateGenerationType = (CoordGenType)r.ReadLEUInt32();
-            SourceTexture = NiReaderUtils.ReadRef<NiSourceTexture>(r);
-            ClippingPlane = r.ReadByte();
-            UnknownVector = r.ReadLEVector3();
-            UnknownFloat = r.ReadLESingle();
-            PS2L = r.ReadLEInt16();
-            PS2K = r.ReadLEInt16();
-            UnknownShort = r.ReadLEUInt16();
+        init(_ r: BinaryReader) {
+            super.init(r)
+            modelProjectionMatrix = NiReaderUtils.read3x3RotationMatrix(r)
+            modelProjectionTransform = r.readLEVector3()
+            textureFiltering = TexFilterMode(rawValue: r.readLEUInt32())
+            textureClamping = TexClampMode(rawValue: r.readLEUInt32())
+            textureType = EffectType(rawValue: r.readLEUInt32())
+            coordinateGenerationType = CoordGenType(rawValue: r.readLEUInt32())
+            sourceTexture = NiReaderUtils.readRef<NiSourceTexture>(r)
+            clippingPlane = r.readByte()
+            unknownVector = r.readLEVector3()
+            unknownFloat = r.readLESingle()
+            ps2L = r.readLEInt16()
+            ps2K = r.readLEInt16()
+            unknownShort = r.readLEUInt16()
         }
     }
 }
