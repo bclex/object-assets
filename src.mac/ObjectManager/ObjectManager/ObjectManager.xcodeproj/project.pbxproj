@@ -35,6 +35,8 @@
 		54A08FFD20C7824C00C68B25 /* GameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FFC20C7824C00C68B25 /* GameObject.swift */; };
 		54A08FFF20C79E0F00C68B25 /* NifReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FFE20C79E0F00C68B25 /* NifReader.swift */; };
 		54A090A020CDC32E00C68B25 /* 300-TES3.Plugin info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF0D20BE37E900560590 /* 300-TES3.Plugin info.swift */; };
+		54A090A220CF862300C68B25 /* NifUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A090A120CF862300C68B25 /* NifUtils.swift */; };
+		54A090A820CF875A00C68B25 /* DdsReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A090A720CF875A00C68B25 /* DdsReader.swift */; };
 		54AEEF0C20BE292100560590 /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF0B20BE292100560590 /* FileManager+Extensions.swift */; };
 		54AEEF1420BE51B700560590 /* DataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF1320BE51B700560590 /* DataExtensions.swift */; };
 		54FD13AA20BE206A003D3138 /* CellManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD13A920BE206A003D3138 /* CellManager.swift */; };
@@ -150,6 +152,8 @@
 		54A0904D20C8CCFC00C68B25 /* 345-CELL.Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "345-CELL.Cell.swift"; sourceTree = "<group>"; };
 		54A0904E20C8CCFC00C68B25 /* 345-MISC.Misc Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "345-MISC.Misc Item.swift"; sourceTree = "<group>"; };
 		54A0904F20C8CCFC00C68B25 /* 345-SKIL.Skill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "345-SKIL.Skill.swift"; sourceTree = "<group>"; };
+		54A090A120CF862300C68B25 /* NifUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NifUtils.swift; sourceTree = "<group>"; };
+		54A090A720CF875A00C68B25 /* DdsReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DdsReader.swift; path = "/Users/smorey2/_GITHUB/object-assets/src.mac/ObjectManager/ObjectManager/ObjectManager/Formats/DdsReader.swift"; sourceTree = "<absolute>"; };
 		54AEEF0B20BE292100560590 /* FileManager+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+Extensions.swift"; sourceTree = "<group>"; };
 		54AEEF0D20BE37E900560590 /* 300-TES3.Plugin info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "300-TES3.Plugin info.swift"; sourceTree = "<group>"; };
 		54AEEF0F20BE381900560590 /* 345-STAT.Static.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "345-STAT.Static.swift"; sourceTree = "<group>"; };
@@ -287,6 +291,7 @@
 		5415F71620BC8835008A8E78 /* ObjectManager */ = {
 			isa = PBXGroup;
 			children = (
+				54A090A420CF86F500C68B25 /* Formats */,
 				54A08FF320C767B800C68B25 /* Materials */,
 				5415F74320BC8872008A8E78 /* Core */,
 				54A08FF120C61E3900C68B25 /* BaseEngine.swift */,
@@ -355,6 +360,7 @@
 		5415F75820BC8B0D008A8E78 /* Formats */ = {
 			isa = PBXGroup;
 			children = (
+				54A090A120CF862300C68B25 /* NifUtils.swift */,
 				54A08FFE20C79E0F00C68B25 /* NifReader.swift */,
 				54A08FFA20C780FA00C68B25 /* NifManager.swift */,
 			);
@@ -368,6 +374,14 @@
 				54A08FF420C767D700C68B25 /* BaseMaterial.swift */,
 			);
 			path = Materials;
+			sourceTree = "<group>";
+		};
+		54A090A420CF86F500C68B25 /* Formats */ = {
+			isa = PBXGroup;
+			children = (
+				54A090A720CF875A00C68B25 /* DdsReader.swift */,
+			);
+			path = Formats;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -455,6 +469,7 @@
 				540B163320BC8CCF0058D516 /* TemporalLoadBalancer.swift in Sources */,
 				5415F77020BC8BE5008A8E78 /* BsaFile+Extensions.swift in Sources */,
 				54A08FF220C61E3900C68B25 /* BaseEngine.swift in Sources */,
+				54A090A820CF875A00C68B25 /* DdsReader.swift in Sources */,
 				5415F74B20BC8931008A8E78 /* AssetManager.swift in Sources */,
 				54AEEF0C20BE292100560590 /* FileManager+Extensions.swift in Sources */,
 				54AEEF1420BE51B700560590 /* DataExtensions.swift in Sources */,
@@ -472,6 +487,7 @@
 				5415F76620BC8B93008A8E78 /* TesAssetPack.swift in Sources */,
 				540B163620BC8E5E0058D516 /* TesPackTest.swift in Sources */,
 				54A08FEC20C4FACD00C68B25 /* Texture2DInfo.swift in Sources */,
+				54A090A220CF862300C68B25 /* NifUtils.swift in Sources */,
 				5415F74920BC8906008A8E78 /* BinaryReader.swift in Sources */,
 				5415F75A20BC8B26008A8E78 /* BsaFile.swift in Sources */,
 				5415F75120BC8AB0008A8E78 /* TesAssetManager.swift in Sources */,

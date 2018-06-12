@@ -1,5 +1,5 @@
-﻿//
-//  NifReader.swift
+//
+//  DdsReader.swift
 //  ObjectManager
 //
 //  Created by Sky Morey on 6/5/18.
