@@ -5,48 +5,66 @@
 //  Created by Sky Morey on 6/5/18.
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
-public enum DDSFlags: UInt32 { //: DDSD
-    case caps = 0x1             // Required in every .dds file.
-    case height = 0x2           // Required in every .dds file.
-    case width = 0x4            // Required in every .dds file.
-    case pitch = 0x8            // Required when pitch is provided for an uncompressed texture.
-    case pixelFormat = 0x1000   // Required in every .dds file.
-    case mipmapCount = 0x20000  // Required in a mipmapped texture.
-    case linearSize = 0x80000   // Required when pitch is provided for a compressed texture.
-    case depth = 0x800000       // Required in a depth texture.
-    case HEADER_FLAGS_TEXTURE = Caps | Height | Width | PixelFormat
-    case HEADER_FLAGS_MIPMAP = MipmapCount
-    case HEADER_FLAGS_VOLUME = Depth
-    case HEADER_FLAGS_PITCH = Pitch
-    case HEADER_FLAGS_LINEARSIZE = LinearSize
+
+import Foundation
+
+public struct DDSFlags: OptionSet { //: DDSD
+    public static let caps = 0x1             // Required in every .dds file.
+    public static let height = 0x2           // Required in every .dds file.
+    public static let width = 0x4            // Required in every .dds file.
+    public static let pitch = 0x8            // Required when pitch is provided for an uncompressed texture.
+    public static let pixelFormat = 0x1000   // Required in every .dds file.
+    public static let mipmapCount = 0x20000  // Required in a mipmapped texture.
+    public static let linearSize = 0x80000   // Required when pitch is provided for a compressed texture.
+    public static let depth = 0x800000       // Required in a depth texture.
+    public static let HEADER_FLAGS_TEXTURE = caps | height | width | pixelFormat
+    public static let HEADER_FLAGS_MIPMAP = mipmapCount
+    public static let HEADER_FLAGS_VOLUME = depth
+    public static let HEADER_FLAGS_PITCH = pitch
+    public static let HEADER_FLAGS_LINEARSIZE = linearSize
+    public let rawValue: UInt32
+    
+    public init(rawValue: UInt32) {
+        self.rawValue = rawValue
+    }
 }
 
-public enum DDSCaps: UInt32 { //: DDSCAPS
-    case Complex = 0x8          // Optional; must be used on any file that contains more than one surface (a mipmap, a cubic environment map, or mipmapped volume texture).
-    case Mipmap = 0x400000      // Optional; should be used for a mipmap.
-    case Texture = 0x1000       // Required
-    case SURFACE_FLAGS_MIPMAP = Complex | Mipmap
-    case SURFACE_FLAGS_TEXTURE = Texture
-    case SURFACE_FLAGS_CUBEMAP = Complex
+public struct DDSCaps: OptionSet { //: DDSCAPS
+    public static let complex = 0x8          // Optional; must be used on any file that contains more than one surface (a mipmap, a cubic environment map, or mipmapped volume texture).
+    public static let mipmap = 0x400000      // Optional; should be used for a mipmap.
+    public static let texture = 0x1000       // Required
+    public static let SURFACE_FLAGS_MIPMAP = complex | mipmap
+    public static let SURFACE_FLAGS_TEXTURE = texture
+    public static let SURFACE_FLAGS_CUBEMAP = complex
+    public let rawValue: UInt32
+    
+    public init(rawValue: UInt32) {
+        self.rawValue = rawValue
+    }
 }
 
-public enum DDSCaps2: UInt32 { //: DDSCAPS2
-    case Cubemap = 0x200            // Required for a cube map.
-    case CubemapPositiveX = 0x400   // Required when these surfaces are stored in a cube map.	
-    case CubemapNegativeX = 0x800   // Required when these surfaces are stored in a cube map.
-    case CubemapPositiveY = 0x1000  // Required when these surfaces are stored in a cube map.
-    case CubemapNegativeY = 0x2000  // Required when these surfaces are stored in a cube map.
-    case CubemapPositiveZ = 0x4000  // Required when these surfaces are stored in a cube map.
-    case CubemapNegativeZ = 0x8000  // Required when these surfaces are stored in a cube map.
-    case Volume = 0x200000          // Required for a volume texture.
-    case CUBEMAP_POSITIVEX = Cubemap | CubemapPositiveX
-    case CUBEMAP_NEGATIVEX = Cubemap | CubemapNegativeX
-    case CUBEMAP_POSITIVEY = Cubemap | CubemapPositiveY
-    case CUBEMAP_NEGATIVEY = Cubemap | CubemapNegativeY
-    case CUBEMAP_POSITIVEZ = Cubemap | CubemapPositiveZ
-    case CUBEMAP_NEGATIVEZ = Cubemap | CubemapNegativeZ
-    case CUBEMAP_ALLFACES = CubemapPositiveX | CubemapNegativeX | CubemapPositiveY | CubemapNegativeY | CubemapPositiveZ | CubemapNegativeZ
-    case FLAGS_VOLUME = Volume
+public struct DDSCaps2: OptionSet { //: DDSCAPS2
+    public static let cubemap = 0x200            // Required for a cube map.
+    public static let cubemapPositiveX = 0x400   // Required when these surfaces are stored in a cube map.
+    public static let cubemapNegativeX = 0x800   // Required when these surfaces are stored in a cube map.
+    public static let cubemapPositiveY = 0x1000  // Required when these surfaces are stored in a cube map.
+    public static let cubemapNegativeY = 0x2000  // Required when these surfaces are stored in a cube map.
+    public static let cubemapPositiveZ = 0x4000  // Required when these surfaces are stored in a cube map.
+    public static let cubemapNegativeZ = 0x8000  // Required when these surfaces are stored in a cube map.
+    public static let volume = 0x200000          // Required for a volume texture.
+    public static let CUBEMAP_POSITIVEX = cubemap | cubemapPositiveX
+    public static let CUBEMAP_NEGATIVEX = cubemap | cubemapNegativeX
+    public static let CUBEMAP_POSITIVEY = cubemap | cubemapPositiveY
+    public static let CUBEMAP_NEGATIVEY = cubemap | cubemapNegativeY
+    public static let CUBEMAP_POSITIVEZ = cubemap | cubemapPositiveZ
+    public static let CUBEMAP_NEGATIVEZ = cubemap | cubemapNegativeZ
+    public static let CUBEMAP_ALLFACES = cubemapPositiveX | cubemapNegativeX | cubemapPositiveY | cubemapNegativeY | cubemapPositiveZ | cubemapNegativeZ
+    public static let FLAGS_VOLUME = volume
+    public let rawValue: UInt32
+    
+    public init(rawValue: UInt32) {
+        self.rawValue = rawValue
+    }
 }
 
 public struct DDSHeader { //: DDS_HEADER
@@ -66,12 +84,12 @@ public struct DDSHeader { //: DDS_HEADER
     public let dwReserved2: UInt32
 
     init(_ r: BinaryReader) {
-        var size = r.readLEUInt32()
+        let size = r.readLEUInt32()
         guard size == 124 else {
             fatalError("Invalid DDS file header size: \(size).")
         }
         dwFlags = DDSFlags(rawValue: r.readLEUInt32())
-        guard Utils.containsBitFlags(dwFlags.rawValue, DDSFlags.height, DDSFlags.width) else {
+        guard Utils.containsBitFlags(dwFlags, DDSFlags.height, DDSFlags.width) else {
             fatalError("Invalid DDS file flags: \(dwFlags).")
         }
         dwHeight = r.readLEUInt32()
@@ -84,9 +102,8 @@ public struct DDSHeader { //: DDS_HEADER
             dwReserved1[i] = r.readLEUInt32()
         }
         ddspf = DDSPixelFormat(r)
-        ddspf.read(r)
         dwCaps = DDSCaps(rawValue: r.readLEUInt32())
-        guard Utils.containsBitFlags(dwCaps, DDSCaps.Texture) else {
+        guard Utils.containsBitFlags(dwCaps, DDSCaps.texture) else {
             fatalError("Invalid DDS file caps: \(dwCaps).")
         }
         dwCaps2 = DDSCaps2(rawValue: r.readLEUInt32())
@@ -103,12 +120,12 @@ public struct DDSHeader { //: DDS_HEADER
         w.write(dwPitchOrLinearSize)
         w.write(dwDepth)
         w.write(dwMipMapCount)
-        for i in 0..< 11 {
+        for i in 0..<11 {
             w.write(dwReserved1[i])
         }
         ddspf.write(w)
-        w.write((uint)dwCaps)
-        w.write((uint)dwCaps2)
+        w.write(dwCaps.rawValue)
+        w.write(dwCaps2.rawValue)
         w.write(dwCaps3)
         w.write(dwCaps4)
         w.write(dwReserved2)
@@ -160,11 +177,11 @@ public struct DDSPixelFormat { //: DDS_PIXELFORMAT
     public let dwABitMask: UInt32
 
     init(_ r: BinaryReader) {
-        var size = r.readLEUInt32()
+        let size = r.readLEUInt32()
         guard size == 32 else {
             fatalError("Invalid DDS file pixel format size: \(size).")
         }
-        dwFlags = DDSPixelFormats(rawValue: r.readLEUInt32())
+        dwFlags = DDSPixelFormats(rawValue: r.readLEUInt32())!
         dwFourCC = r.readASCIIString(4)
         dwRGBBitCount = r.readLEUInt32()
         dwRBitMask = r.readLEUInt32()
@@ -185,7 +202,6 @@ public struct DDSPixelFormat { //: DDS_PIXELFORMAT
     }
 }
 
-// https://msdn.microsoft.com/en-us/library/windows/desktop/bb173059(v=vs.85).aspx
 public enum DXGIFormat: UInt8 { //: DXGI_FORMAT
     case DXGI_FORMAT_UNKNOWN = 0
     case DXGI_FORMAT_R8_UNORM = 61
@@ -197,14 +213,14 @@ public enum DXGIFormat: UInt8 { //: DXGI_FORMAT
     case BC7_UNORM = 98
 }
 
-public static class DdsReader {
+public class DdsReader {
     public static func loadDDSTexture(filePath: String, flipVertically: Bool = false) -> Texture2DInfo {
-        let r = BinaryReader(FileBaseStream(path: filePath))
+        let r = BinaryReader(FileBaseStream(forReadingAtPath: filePath)!)
         defer { r.close() }
-        return loadDDSTexture(r, flipVertically)
+        return loadDDSTexture(r, flipVertically: flipVertically)
     }
 
-    public static func loadDDSTexture(_ r: binaryReader, flipVertically: Bool = false) -> Texture2DInfo {
+    public static func loadDDSTexture(_ r: BinaryReader, flipVertically: Bool = false) -> Texture2DInfo {
         // Check the magic string.
         let magicString = r.readASCIIString(4)
         guard magicString == "DDS " else {
@@ -220,14 +236,14 @@ public static class DdsReader {
         var textureData = Data()
         extractDDSTextureFormatAndData(header, r, hasMipmaps: &hasMipmaps, ddsMipmapLevelCount: &ddsMipmapLevelCount, textureFormat: &textureFormat, bytesPerPixel: &bytesPerPixel, textureData: &textureData)
         // Post-process the texture to generate missing mipmaps and possibly flip it vertically.
-        postProcessDDSTexture(width: Int(header.dwWidth), height: int(header.dwHeight), bytesPerPixel: bytesPerPixel, hasMipmaps: hasMipmaps, ddsMipmapLevelCount: ddsMipmapLevelCount, textureData: textureData, flipVertically: flipVertically)
-        return Texture2DInfo(width: Int(header.dwWidth), height: Int(header.dwHeight), format: textureFormat, hasMipmaps: hasMipmaps, bytesPerPixel: bytesPerPixel, data: textureData)
+        postProcessDDSTexture(width: Int(header.dwWidth), height: Int(header.dwHeight), bytesPerPixel: bytesPerPixel, hasMipmaps: hasMipmaps, ddsMipmapLevelCount: ddsMipmapLevelCount, textureData: textureData, flipVertically: flipVertically)
+        return Texture2DInfo(width: Int(header.dwWidth), height: Int(header.dwHeight), format: textureFormat, hasMipmaps: hasMipmaps, bytesPerPixel: bytesPerPixel, rawData: textureData)
     }
 
     static func decodeDXT1TexelBlock(_ r: BinaryReader, colorTable: [Color]) -> [Color32] {
         assert(colorTable.count == 4)
         // Read pixel color indices.
-        var colorIndices = [UInt32](); colorIndices.reserveCapacity(16)
+        var colorIndices = [Int](); colorIndices.reserveCapacity(16)
         var colorIndexBytes = r.readBytes(4)
         let bitsPerColorIndex = 2
         for rowIndex in 0..<4 {
@@ -236,12 +252,12 @@ public static class DdsReader {
             for columnIndex in 0..<4 {
                 // Color indices are arranged from right to left.
                 let bitOffset = rowBaseBitOffset + (bitsPerColorIndex * (3 - columnIndex))
-                colorIndices[rowBaseColorIndexIndex + columnIndex] = Utils.getBits(bitOffset, bitsPerColorIndex, colorIndexBytes)
+                colorIndices[rowBaseColorIndexIndex + columnIndex] = Int(Utils.getBits(bitOffset, bitsPerColorIndex, colorIndexBytes))
             }
         }
         // Calculate pixel colors.
-        var colors = [Color32](); colors.allocateCapacity(16)
-        for i 0..<16 {
+        var colors = [Color32](); colors.reserveCapacity(16)
+        for i in 0..<16 {
             colors[i] = colorTable[colorIndices[i]]
         }
         return colors
@@ -249,7 +265,7 @@ public static class DdsReader {
 
     static func decodeDXT1TexelBlock(_ r: BinaryReader, containsAlpha: Bool) -> [Color32] {
         // Create the color table.
-        var colorTable = [Color](); colorTable.allocateCapacity(4)
+        var colorTable = [Color](); colorTable.reserveCapacity(4)
         colorTable[0] = Color(b565: r.readLEUInt16())
         colorTable[1] = Color(b565: r.readLEUInt16())
         if !containsAlpha {
@@ -258,7 +274,7 @@ public static class DdsReader {
         }
         else {
             colorTable[2] = Color.lerp(colorTable[0], colorTable[1], 1.0 / 2)
-            colorTable[3] = Color(0, 0, 0, 0)
+            colorTable[3] = Color(red: 0, green: 0, blue: 0, alpha: 0)
         }
         // Calculate pixel colors.
         return decodeDXT1TexelBlock(r, colorTable: colorTable)
@@ -269,19 +285,19 @@ public static class DdsReader {
         var compressedAlphas = [UInt8](); compressedAlphas.reserveCapacity(16)
         for rowIndex in 0..<4 {
             var compressedAlphaRow = r.readLEUInt16()
-            for columnIndex = 0..<4 {
+            for columnIndex in 0..<4 {
                 // Each compressed alpha is 4 bits.
                 compressedAlphas[(4 * rowIndex) + columnIndex] = UInt8((compressedAlphaRow >> (columnIndex * 4)) & 0xF)
             }
         }
         // Calculate pixel alphas.
-        var alphas = [UInt8](); alphas.allocateCapacity(16)
+        var alphas = [UInt8](); alphas.reserveCapacity(16)
         for i in 0..<16 {
             let alphaPercent = Float(compressedAlphas[i] / 15)
             alphas[i] = UInt8((alphaPercent * 255).roundToInt())
         }
         // Create the color table.
-        var colorTable = [Color](); colorTable.allocateCapacity(4)
+        var colorTable = [Color](); colorTable.reserveCapacity(4)
         colorTable[0] = Color(b565: r.readLEUInt16())
         colorTable[1] = Color(b565: r.readLEUInt16())
         colorTable[2] = Color.lerp(colorTable[0], colorTable[1], 1.0 / 3)
@@ -297,44 +313,44 @@ public static class DdsReader {
     static func decodeDXT5TexelBlock(_ r: BinaryReader) -> [Color32] {
         // Create the alpha table.
         var alphaTable = [Float](); alphaTable.reserveCapacity(8)
-        alphaTable[0] = r.readByte()
-        alphaTable[1] = r.readByte()
+        alphaTable[0] = Float(r.readByte())
+        alphaTable[1] = Float(r.readByte())
         if alphaTable[0] > alphaTable[1] {
             for i in 0..<6 {
-                alphaTable[2 + i] = Float.lerp(alphaTable[0], alphaTable[1], Float(1 + i) / 7)
+                alphaTable[2 + i] = Float.lerp(alphaTable[0], alphaTable[1], t: Float(1 + i) / 7)
             }
         }
         else {
             for i in 0..<4 {
-                alphaTable[2 + i] = Float.lerp(alphaTable[0], alphaTable[1], Float(1 + i) / 5)
+                alphaTable[2 + i] = Float.lerp(alphaTable[0], alphaTable[1], t: Float(1 + i) / 5)
             }
             alphaTable[6] = 0
             alphaTable[7] = 255
         }
 
         // Read pixel alpha indices.
-        var alphaIndices = [UInt32](); alphaIndices.reserveCapacity(16)
+        var alphaIndices = [Int](); alphaIndices.reserveCapacity(16)
         var alphaIndexBytesRow0 = r.readBytes(3)
         alphaIndexBytesRow0.reverse() // Take care of little-endianness.
         var alphaIndexBytesRow1 = r.readBytes(3) // Take care of little-endianness.
         alphaIndexBytesRow1.reverse() // Take care of little-endianness.
         let bitsPerAlphaIndex = 3
-        alphaIndices[0] = UInt32(Utils.getBits(21, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[1] = UInt32(Utils.getBits(18, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[2] = UInt32(Utils.getBits(15, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[3] = UInt32(Utils.getBits(12, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[4] = UInt32(Utils.getBits(9, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[5] = UInt32(Utils.getBits(6, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[6] = UInt32(Utils.getBits(3, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[7] = UInt32(Utils.getBits(0, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[8] = UInt32(Utils.getBits(21, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[9] = UInt32(Utils.getBits(18, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[10] = UInt32(Utils.getBits(15, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[11] = UInt32(Utils.getBits(12, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[12] = UInt32(Utils.getBits(9, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[13] = UInt32(Utils.getBits(6, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[14] = UInt32(Utils.getBits(3, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[15] = UInt32(Utils.getBits(0, bitsPerAlphaIndex, alphaIndexBytesRow1))
+        alphaIndices[0] = Int(Utils.getBits(21, bitsPerAlphaIndex, alphaIndexBytesRow0))
+        alphaIndices[1] = Int(Utils.getBits(18, bitsPerAlphaIndex, alphaIndexBytesRow0))
+        alphaIndices[2] = Int(Utils.getBits(15, bitsPerAlphaIndex, alphaIndexBytesRow0))
+        alphaIndices[3] = Int(Utils.getBits(12, bitsPerAlphaIndex, alphaIndexBytesRow0))
+        alphaIndices[4] = Int(Utils.getBits(9, bitsPerAlphaIndex, alphaIndexBytesRow0))
+        alphaIndices[5] = Int(Utils.getBits(6, bitsPerAlphaIndex, alphaIndexBytesRow0))
+        alphaIndices[6] = Int(Utils.getBits(3, bitsPerAlphaIndex, alphaIndexBytesRow0))
+        alphaIndices[7] = Int(Utils.getBits(0, bitsPerAlphaIndex, alphaIndexBytesRow0))
+        alphaIndices[8] = Int(Utils.getBits(21, bitsPerAlphaIndex, alphaIndexBytesRow1))
+        alphaIndices[9] = Int(Utils.getBits(18, bitsPerAlphaIndex, alphaIndexBytesRow1))
+        alphaIndices[10] = Int(Utils.getBits(15, bitsPerAlphaIndex, alphaIndexBytesRow1))
+        alphaIndices[11] = Int(Utils.getBits(12, bitsPerAlphaIndex, alphaIndexBytesRow1))
+        alphaIndices[12] = Int(Utils.getBits(9, bitsPerAlphaIndex, alphaIndexBytesRow1))
+        alphaIndices[13] = Int(Utils.getBits(6, bitsPerAlphaIndex, alphaIndexBytesRow1))
+        alphaIndices[14] = Int(Utils.getBits(3, bitsPerAlphaIndex, alphaIndexBytesRow1))
+        alphaIndices[15] = Int(Utils.getBits(0, bitsPerAlphaIndex, alphaIndexBytesRow1))
         // Create the color table.
         var colorTable = [Color](); colorTable.reserveCapacity(4)
         colorTable[0] = Color(b565: r.readLEUInt16())
@@ -350,7 +366,7 @@ public static class DdsReader {
     }
 
     static func copyDecodedTexelBlock(decodedTexels: [Color32], argb: [byte], baseARGBIndex: Int, baseRowIndex: Int, baseColumnIndex: Int, textureWidth: Int, textureHeight: Int) {
-        for i = 0..<4 { // row
+        for i in 0..<4 { // row
             for j in 0..<4 { // column
                 let rowIndex = baseRowIndex + i
                 let columnIndex = baseColumnIndex + j
@@ -386,7 +402,7 @@ public static class DdsReader {
                         case 1: colors = decodeDXT1TexelBlock(r, containsAlpha: containsAlpha)
                         case 3: colors = decodeDXT3TexelBlock(r)
                         case 5: colors = decodeDXT5TexelBlock(r)
-                        default: fatalError("Tried decoding a DDS file using an unsupported DXT format: DXT \(dxtVersion))"
+                        default: fatalError("Tried decoding a DDS file using an unsupported DXT format: DXT \(dxtVersion))")
                     }
                     copyDecodedTexelBlock(colors: colors, argb: argb, baseARGBIndex: baseARGBIndex, rowIndex: rowIndex, columnIndex: columnIndex, mipMapWidth: mipMapWidth, mipMapHeight: mipMapHeight)
                 }

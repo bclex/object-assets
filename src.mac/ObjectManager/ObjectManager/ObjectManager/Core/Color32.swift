@@ -1,4 +1,4 @@
-﻿//
+//
 //  Color32.swift
 //  ObjectManager
 //
@@ -7,15 +7,15 @@
 //
     
 public struct Color32 {
-    public let r: UInt8
-    public let g: UInt8
-    public let b: UInt8
-    public let a: UInt8
+    public var red: UInt8
+    public var green: UInt8
+    public var blue: UInt8
+    public var alpha: UInt8
 
     init(red: UInt8, green: UInt8, blue: UInt8, alpha: UInt8) {
         self.red = red
         self.green = green
-        self.blue = bblue
+        self.blue = blue
         self.alpha = alpha
     }
 }

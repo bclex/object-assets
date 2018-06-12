@@ -40,6 +40,12 @@
 		54AEEF0C20BE292100560590 /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF0B20BE292100560590 /* FileManager+Extensions.swift */; };
 		54AEEF1420BE51B700560590 /* DataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF1320BE51B700560590 /* DataExtensions.swift */; };
 		54FD13AA20BE206A003D3138 /* CellManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD13A920BE206A003D3138 /* CellManager.swift */; };
+		54FD3E5C20CF892A0010D58E /* SequenceExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD3E5620CF892A0010D58E /* SequenceExtensions.swift */; };
+		54FD3E5D20CF892A0010D58E /* Color32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD3E5720CF892A0010D58E /* Color32.swift */; };
+		54FD3E5E20CF892A0010D58E /* TextureUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD3E5820CF892A0010D58E /* TextureUtils.swift */; };
+		54FD3E5F20CF892A0010D58E /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD3E5920CF892A0010D58E /* Utils.swift */; };
+		54FD3E6020CF892A0010D58E /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD3E5A20CF892A0010D58E /* ColorExtensions.swift */; };
+		54FD3E6120CF892A0010D58E /* BinaryWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD3E5B20CF892A0010D58E /* BinaryWriter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -160,6 +166,12 @@
 		54AEEF1020BE381900560590 /* 345-WEAP.Weapon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "345-WEAP.Weapon.swift"; sourceTree = "<group>"; };
 		54AEEF1320BE51B700560590 /* DataExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataExtensions.swift; sourceTree = "<group>"; };
 		54FD13A920BE206A003D3138 /* CellManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellManager.swift; sourceTree = "<group>"; };
+		54FD3E5620CF892A0010D58E /* SequenceExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SequenceExtensions.swift; sourceTree = "<group>"; };
+		54FD3E5720CF892A0010D58E /* Color32.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color32.swift; sourceTree = "<group>"; };
+		54FD3E5820CF892A0010D58E /* TextureUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextureUtils.swift; sourceTree = "<group>"; };
+		54FD3E5920CF892A0010D58E /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		54FD3E5A20CF892A0010D58E /* ColorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
+		54FD3E5B20CF892A0010D58E /* BinaryWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinaryWriter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -307,6 +319,12 @@
 		5415F74320BC8872008A8E78 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				54FD3E5B20CF892A0010D58E /* BinaryWriter.swift */,
+				54FD3E5720CF892A0010D58E /* Color32.swift */,
+				54FD3E5A20CF892A0010D58E /* ColorExtensions.swift */,
+				54FD3E5620CF892A0010D58E /* SequenceExtensions.swift */,
+				54FD3E5820CF892A0010D58E /* TextureUtils.swift */,
+				54FD3E5920CF892A0010D58E /* Utils.swift */,
 				54A08FFC20C7824C00C68B25 /* GameObject.swift */,
 				5415F74820BC8906008A8E78 /* BinaryReader.swift */,
 				54AEEF1320BE51B700560590 /* DataExtensions.swift */,
@@ -476,26 +494,32 @@
 				54FD13AA20BE206A003D3138 /* CellManager.swift in Sources */,
 				5415F75E20BC8B4C008A8E78 /* EsmFile.swift in Sources */,
 				54A090A020CDC32E00C68B25 /* 300-TES3.Plugin info.swift in Sources */,
+				54FD3E5F20CF892A0010D58E /* Utils.swift in Sources */,
 				5415F76020BC8B5B008A8E78 /* EsmRecords.swift in Sources */,
 				5415F75720BC8AE0008A8E78 /* TesEngine.swift in Sources */,
 				54A08FEB20C4FACD00C68B25 /* Vector2Int.swift in Sources */,
 				54A08FF720C76F3B00C68B25 /* BaseMaterial.swift in Sources */,
 				5415F75320BC8ABC008A8E78 /* TesCellManager.swift in Sources */,
+				54FD3E6020CF892A0010D58E /* ColorExtensions.swift in Sources */,
 				5415F76A20BC8BB7008A8E78 /* EsmFile+Fields.swift in Sources */,
 				5415F76E20BC8BDA008A8E78 /* BsaMultiFile+Extensions.swift in Sources */,
 				5415F75C20BC8B37008A8E78 /* BsaMultiFile.swift in Sources */,
 				5415F76620BC8B93008A8E78 /* TesAssetPack.swift in Sources */,
 				540B163620BC8E5E0058D516 /* TesPackTest.swift in Sources */,
 				54A08FEC20C4FACD00C68B25 /* Texture2DInfo.swift in Sources */,
+				54FD3E5C20CF892A0010D58E /* SequenceExtensions.swift in Sources */,
 				54A090A220CF862300C68B25 /* NifUtils.swift in Sources */,
 				5415F74920BC8906008A8E78 /* BinaryReader.swift in Sources */,
 				5415F75A20BC8B26008A8E78 /* BsaFile.swift in Sources */,
 				5415F75120BC8AB0008A8E78 /* TesAssetManager.swift in Sources */,
+				54FD3E6120CF892A0010D58E /* BinaryWriter.swift in Sources */,
 				54A08FFD20C7824C00C68B25 /* GameObject.swift in Sources */,
+				54FD3E5D20CF892A0010D58E /* Color32.swift in Sources */,
 				54A08FF020C61E2B00C68B25 /* TextureManager.swift in Sources */,
 				54A08FFF20C79E0F00C68B25 /* NifReader.swift in Sources */,
 				54A08FF620C76F3800C68B25 /* DefaultMaterial.swift in Sources */,
 				5415F76820BC8B9C008A8E78 /* TesDataPack.swift in Sources */,
+				54FD3E5E20CF892A0010D58E /* TextureUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,8 +6,7 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
-public class BinaryReader {
-    
+public class BinaryWriter {
     public var baseStream: BaseStream!
     
     init(_ stream: BaseStream) {

@@ -1,4 +1,4 @@
-﻿//
+//
 //  ColorExtensions.swift
 //  ObjectManager
 //
@@ -34,20 +34,20 @@ public extension Float {
 }
 
 public class Utils {
-    public static func containsBitFlags(bits: Int, args: Int...) -> Bool {
+    public static func containsBitFlags<T>(_ bits: T, _ args: Int...) -> Bool where T: OptionSet {
         var flagBits: UInt64 = 0
         for arg in args {
             flagBits |= UInt64(arg)
         }
-        return (UInt64(bits) & flagBits) == flagBits
+        return (UInt64(bits.rawValue) & flagBits) == flagBits
     }
 
-    public static func getBits(bitOffset: Int, bitCount: Int, bytes: Data) -> UInt64 {
+    public static func getBits(_ bitOffset: Int, _ bitCount: Int, _ bytes: Data) -> UInt64 {
         assert(bitCount <= 64 && (bitOffset + bitCount) <= (8 * bytes.count))
         var bits: UInt64 = 0
-        let remainingBitCount = bitCount
-        let byteIndex = bitOffset / 8
-        let bitIndex = bitOffset - (8 * byteIndex)
+        var remainingBitCount = bitCount
+        var byteIndex = bitOffset / 8
+        var bitIndex = bitOffset - (8 * byteIndex)
         while remainingBitCount > 0 {
             // Read bits from the byte array.
             let numBitsLeftInByte = 8 - bitIndex

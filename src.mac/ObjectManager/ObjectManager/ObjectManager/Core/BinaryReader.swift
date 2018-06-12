@@ -55,7 +55,6 @@ public class DataBaseStream: BaseStream {
 }
 
 public class BinaryReader {
-    
     public var baseStream: BaseStream!
     
     init(_ stream: BaseStream) {

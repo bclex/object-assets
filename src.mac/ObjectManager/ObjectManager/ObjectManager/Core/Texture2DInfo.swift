@@ -6,19 +6,18 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
-import Foundation
-import CoreImage
+import AppKit
 
 public typealias TextureFormat = CIFormat
 public class Texture2DInfo {
     public let width: Int
     public let height: Int
-    public let format: CIFormat
+    public let format: TextureFormat
     public let hasMipmaps: Bool
     public let bytesPerPixel: Int
     public let rawData: Data
 
-    init(width: Int, height: Int, format: CIFormat, hasMipmaps: hasMipmaps, bytesPerPixel: Int, rawData: Data) {
+    init(width: Int, height: Int, format: TextureFormat, hasMipmaps: Bool, bytesPerPixel: Int, rawData: Data) {
         self.width = width
         self.height = height
         self.format = format
