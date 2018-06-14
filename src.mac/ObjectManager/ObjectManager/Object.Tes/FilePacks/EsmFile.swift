@@ -20,7 +20,7 @@ public class EsmFile: CustomStringConvertible {
     // public var exteriorCELLRecordsByIndices: [Vector2Int : CELLRecord]
     // public var LANDRecordsByIndices: [Vector2Int : LANDRecord]
 
-    init(_ filePath: String?, for game: GameId) {
+    init(_ filePath: URL?, for game: GameId) {
         func getFormatId() -> GameFormatId {
             switch game {
             // tes

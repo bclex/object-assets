@@ -1,30 +1,53 @@
-﻿//
+//
 //  SequenceExtensions.swift
 //  ObjectManager
 //
 //  Created by Sky Morey on 6/5/18.
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
-    
-public extension Sequence where Element: FloatingPoint 
+
+import Foundation
+
+public extension Sequence where Element: FloatingPoint {
     public func getExtrema() -> (min: Element, max: Element) {
-        var extrema = (min: Element.infinty, max: -Element.infinty)
+        var extrema = (min: Element.infinity, max: -Element.infinity)
         for element in self {
-            extrema.min = Swift.min(min, element)
-            extrema.max = Swift.max(max, element)
+            extrema.min = Swift.min(extrema.min, element)
+            extrema.max = Swift.max(extrema.max, element)
         }
         return extrema
     }
-}
-
-public extension Sequence where Element: Numeric 
-    public static func flip2DSubArrayVertically(offsetBy: Int, rows: Int, bytesPerRow: Int) {
-        assert(offsetBy >= 0 && rows >= 0 && bytesPerRow >= 0 && (offsetBy + (rows * bytesPerRow)) <= self.count)
-        var tmpRow = [Element](); tmpRow.reserveCapacity(bytesPerRow)
+    
+    public static func flip2DSubArrayVertically(data: inout [UInt8], offsetBy: Int, rows: Int, bytesPerRow: Int) {
+        assert(offsetBy >= 0 && rows >= 0 && bytesPerRow >= 0 && (offsetBy + (rows * bytesPerRow)) <= data.count)
+        var tmpRow = [UInt8](); tmpRow.reserveCapacity(bytesPerRow)
         let lastRowIndex = rows - 1
         for rowIndex in 0..<(rows / 2) {
             let otherRowIndex = lastRowIndex - rowIndex
-            let rowStartIndex = self.index(self.startIndex, offsetBy: offsetBy + (rowIndex * bytesPerRow))
+            let rowStartIndex = data.index(data.startIndex, offsetBy: offsetBy + (rowIndex * bytesPerRow))
+            let rowRange = rowStartIndex..<data.index(rowStartIndex, offsetBy: bytesPerRow)
+            let otherRowStartIndex = data.index(data.startIndex, offsetBy: offsetBy + (otherRowIndex * bytesPerRow))
+            let otherRowRange = otherRowStartIndex..<data.index(otherRowStartIndex, offsetBy: bytesPerRow)
+            //
+            tmpRow.replaceSubrange(tmpRow.startIndex..<tmpRow.endIndex, with: data[otherRowRange]) // other -> tmp
+            data.replaceSubrange(otherRowRange, with: data[rowRange]) // row -> other
+            data.replaceSubrange(rowRange, with: tmpRow) // tmp -> row
+        }
+    }
+}
+
+/*
+public extension RandomAccessCollection where Element: Numeric {
+    public func flip2DSubArrayVertically(offsetBy: Int, rows: Int, bytesPerRow: Int) {
+        assert(offsetBy >= 0 && rows >= 0 && bytesPerRow >= 0 && (offsetBy + (rows * bytesPerRow)) <= self.count)
+        var tmpRow = [Self.Element](); tmpRow.reserveCapacity(bytesPerRow)
+        let lastRowIndex = rows - 1
+        for rowIndex in 0..<(rows / 2) {
+            let otherRowIndex = lastRowIndex - rowIndex
+            let abc = self.index(self.startIndex, offsetBy: 10)
+            let bpr = Self.IndexDistance(bytesPerRow)
+            let rowStartIndex = self.index(self.startIndex, offsetBy: bpr)
+            //let rowStartIndex = self.index(self.startIndex, offsetBy: offsetBy + (rowIndex * bytesPerRow))
             let rowRange = rowStartIndex..<self.index(rowStartIndex, offsetBy: bytesPerRow)
             let otherRowStartIndex = self.index(self.startIndex, offsetBy: offsetBy + (otherRowIndex * bytesPerRow))
             let otherRowRange = otherRowStartIndex..<self.index(otherRowStartIndex, offsetBy: bytesPerRow)
@@ -35,3 +58,4 @@ public extension Sequence where Element: Numeric
         }
     }
 }
+ */

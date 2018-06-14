@@ -95,13 +95,13 @@ public class BinaryReader {
     public func readRestOfBytes() -> Data {
         let remainingByteCount = baseStream.length - baseStream.position
         assert(remainingByteCount <= Int.max)
-        return r.readBytes(Int(remainingByteCount))
+        return readBytes(Int(remainingByteCount))
     }
 
-    public func readRestOfBytes(_ inout data: Data, offsetBy: Int) -> Data {
+    public func readRestOfBytes(_ data: inout Data, offsetBy: Int) -> Data {
         let remainingByteCount = baseStream.length - baseStream.position
-        assert(startIndex >= 0 && remainingByteCount <= Int.max && startIndex + remainingByteCount <= buffer.Length)
-        r.read(&data, offsetBy: offsetBy, count: Int(remainingByteCount))
+        assert(offsetBy >= 0 && remainingByteCount <= Int.max && offsetBy + Int(remainingByteCount) <= data.count)
+        read(&data, offsetBy: offsetBy, count: Int(remainingByteCount))
     }
     
 // MARK: A
@@ -183,27 +183,28 @@ public class BinaryReader {
 
     public func readLELength32PrefixedBytes()-> Data {
         let length = readLEUInt32()
-        return r.readBytes(Int(length))
+        return readBytes(Int(length))
     }
 
     public func readLELength32PrefixedASCIIString() -> String {
         let length = readLEUInt32()
-        let data = r.readBytes(Int(length))
+        let data = readBytes(Int(length))
         return String(data: data, encoding: .utf8)!
     }
 
     public func readLEVector2() -> Vector2 {
-        return new Vector2(readLESingle(), readLESingle())
+        return Vector2(dx: readLESingle(), dy: readLESingle())
     }
 
     public func readLEVector3() -> Vector3 {
-        return new Vector3(readLESingle(), readLESingle(), readLESingle())
+        return Vector3(readLESingle(), readLESingle(), readLESingle())
     }
 
     public func readLEColumnMajorMatrix3x3() -> Matrix4x4 {
         var matrix = Matrix4x4()
-        for columnIndex in 0..< 4 {
-            for rowIndex in 0..< 4 {
+        matrix
+        for columnIndex in 0..<4 {
+            for rowIndex in 0..<4 {
                 // If we're in the 3x3 part of the matrix, read values. Otherwise, use the identity matrix.
                 if rowIndex <= 2 && columnIndex <= 2 { matrix[rowIndex, columnIndex] = readLESingle() }
                 else { matrix[rowIndex, columnIndex] = rowIndex == columnIndex ? 1 : 0 }
@@ -214,8 +215,8 @@ public class BinaryReader {
 
     public func readLERowMajorMatrix3x3() -> Matrix4x4 {
         var matrix = Matrix4x4()
-        for rowIndex in 0..< 4 {
-            for columnIndex in 0..< 4 {
+        for rowIndex in 0..<4 {
+            for columnIndex in 0..<4 {
                 // If we're in the 3x3 part of the matrix, read values. Otherwise, use the identity matrix.
                 if rowIndex <= 2 && columnIndex <= 2 { matrix[rowIndex, columnIndex] = readLESingle() }
                 else { matrix[rowIndex, columnIndex] = rowIndex == columnIndex ? 1 : 0 }
@@ -236,8 +237,8 @@ public class BinaryReader {
 
     public func readLERowMajorMatrix4x4() -> Matrix4x4 {
         var matrix = Matrix4x4()
-        for rowIndex in 0..4 {
-            for columnIndex in 0..< 4 {
+        for rowIndex in 0..<4 {
+            for columnIndex in 0..<4 {
                 matrix[rowIndex, columnIndex] = readLESingle()
             }
         }

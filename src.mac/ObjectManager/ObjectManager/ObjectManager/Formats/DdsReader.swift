@@ -388,9 +388,9 @@ public class DdsReader {
     static func decodeDXTToARGB(dxtVersion: Int, compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: UInt32) -> [UInt8] {
         let alphaFlag = Utils.containsBitFlags(pixelFormat.dwFlags.rawValue, DDSPixelFormats.alphaPixels)
         let containsAlpha = alphaFlag || (pixelFormat.dwRGBBitCount == 32 && pixelFormat.dwABitMask != 0)
-        let r = BinaryReader(DataBaseStream(compressedData))
+        let r = BinaryReader(DataBaseStream(data: compressedData))
         defer { r.close() }
-        var argb = [UInt8](count: TextureUtils.calculateMipMappedTextureDataSize(width, height, 4))
+        var argb = [UInt8](count: TextureUtils.calculateMipMappedTextureDataSize(width: width, height: height, bytesPerPixel: 4))
         var mipMapWidth = width
         var mipMapHeight = height
         var baseARGBIndex = 0
@@ -417,14 +417,14 @@ public class DdsReader {
     static func decodeDXT3ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: UInt32) -> [UInt8] { return decodeDXTToARGB(dxtVersion: 3, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
     static func decodeDXT5ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: UInt32) -> [UInt8] { return decodeDXTToARGB(dxtVersion: 5, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
 
-    static func extractDDSTextureFormatAndData(_ header: DDSHeader, _ r: BinaryReader r, hasMipmaps: inout Bool, ddsMipmapLevelCount: inout UInt, textureFormat: inout TextureFormat, bytesPerPixel: inout Int, textureData: inout [byte]) {
-        hasMipmaps = Utils.containsBitFlags(Int(header.dwCaps), DDSCaps.mipmap)
+    static func extractDDSTextureFormatAndData(_ header: DDSHeader, _ r: BinaryReader, hasMipmaps: inout Bool, ddsMipmapLevelCount: inout UInt, textureFormat: inout TextureFormat, bytesPerPixel: inout Int, textureData: inout [byte]) {
+        hasMipmaps = Utils.containsBitFlags(header.dwCaps, DDSCaps.mipmap)
         // Non-mipmapped textures still have one mipmap level: the texture itself.
         ddsMipmapLevelCount = hasMipmaps ? header.dwMipMapCount : 1
         // If the DDS file contains uncompressed data.
-        if Utils.containsBitFlags(Int(header.ddspf.dwFlags), DDSPixelFormats.rgb) {
+        if Utils.containsBitFlags(header.ddspf.dwFlags, DDSPixelFormats.rgb) {
             // some permutation of RGB
-            guard Utils.containsBitFlags(Int(header.ddspf.dwFlags), DDSPixelFormats.alphaPixels) else {
+            guard Utils.containsBitFlags(header.ddspf.dwFlags, DDSPixelFormats.alphaPixels) else {
                 fatalError("Unsupported DDS file pixel format.")
             }
             // There should be 32 bits per pixel.
@@ -449,19 +449,19 @@ public class DdsReader {
             r.readRestOfBytes(textureData, 0)
         }
         else if header.ddspf.dwFourCC == "DXT1" {
-            textureFormat = TextureFormat.ARGB8
+            textureFormat = TextureFormat.kCIFormatARGB8
             bytesPerPixel = 4
             let compressedTextureData = r.readRestOfBytes()
             textureData = decodeDXT1ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
         }
         else if header.ddspf.dwFourCC == "DXT3" {
-            textureFormat = TextureFormat.ARGB8
+            textureFormat = TextureFormat.kCIFormatARGB8
             bytesPerPixel = 4
             let compressedTextureData = r.readRestOfBytes()
             textureData = decodeDXT3ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
         }
         else if header.ddspf.dwFourCC == "DXT5" {
-            textureFormat = TextureFormat.ARGB8
+            textureFormat = TextureFormat.kCIFormatARGB8
             bytesPerPixel = 4
             let compressedTextureData = r.readRestOfBytes()
             textureData = decodeDXT5ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
@@ -469,7 +469,7 @@ public class DdsReader {
         else { fatalError("Unsupported DDS file pixel format.") }
     }
 
-    static func postProcessDDSTexture(width: Int, height: Int, bytesPerPixel: Int, hasMipmaps: Bool, ddsMipmapLevelCount: Int, data: [UInt8], bool flipVertically) {
+    static func postProcessDDSTexture(width: Int, height: Int, bytesPerPixel: Int, hasMipmaps: Bool, ddsMipmapLevelCount: Int, data: [UInt8], flipVertically: Bool) {
         assert(width > 0 && height > 0 && bytesPerPixel > 0 && DDSMipmapLevelCount > 0 && data != nil)
         // Flip mip-maps if necessary and generate missing mip-map levels.
         var mipMapLevelWidth = width

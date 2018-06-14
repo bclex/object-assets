@@ -1,4 +1,4 @@
-﻿//
+//
 //  ConvertUtils.swift
 //  ObjectManager
 //
@@ -7,13 +7,13 @@
 //
 
 public class ConvertUtils {
-    let yardInUnits = 64
-    let meterInYards = 1.09361
-    public let meterInUnits = meterInYards * yardInUnits
-    let exteriorCellSideLengthInUnits = 128 * yardInUnits
-    public let exteriorCellSideLengthInMeters = Float(exteriorCellSideLengthInUnits) / MeterInUnits
+    static let yardInUnits = 64
+    static let meterInYards: Float = 1.09361
+    public static let meterInUnits: Float = meterInYards * Float(yardInUnits)
+    static let exteriorCellSideLengthInUnits = 128 * yardInUnits
+    public static let exteriorCellSideLengthInMeters = Float(exteriorCellSideLengthInUnits) / meterInUnits
 
-    public static func rotationMatrixToQuaternion(_ matrix: Matrix4x4) -> Quaternion{
-        return Quaternion.lookRotation(matrix.getColumn(2), matrix.getColumn(1))
+    public static func rotationMatrixToQuaternion(_ matrix: Matrix4x4) -> Quaternion {
+        return Quaternion() // TODO .lookRotation(matrix.getColumn(2), matrix.getColumn(1))
     }
 }

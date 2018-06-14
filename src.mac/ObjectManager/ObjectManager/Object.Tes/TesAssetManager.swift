@@ -63,8 +63,11 @@ public class TesAssetManager: IAssetManager {
         case "game":
             let localPath = String(url.path[url.path.index(after: url.path.startIndex)..<url.path.endIndex])
             let game = TesAssetManager.stringToGameId(url.host)
-            let filePath = FileManager.default.getFilePath(localPath, for: gameId)
-            let pack = TesDataPack(filePath: filePath, for: game) as! IDataPack
+            let filePath = FileManager.default.getFilePath(localPath, for: game)
+            guard filePath != nil else {
+                fatalError("\(game) not available")
+            }
+            let pack = TesAssetPack(filePath!) as IAssetPack
             return pack
         default: return nil
         }
@@ -80,7 +83,7 @@ public class TesAssetManager: IAssetManager {
             let localPath = String(url.path[url.path.index(after: url.path.startIndex)..<url.path.endIndex])
             let game = TesAssetManager.stringToGameId(url.host)
             let filePath = FileManager.default.getFilePath(localPath, for: game)
-            let pack = TesDataPack(filePath: filePath, for: game) as! IDataPack
+            let pack = TesDataPack(filePath, for: game) as IDataPack
             return pack
         default: return nil
         }

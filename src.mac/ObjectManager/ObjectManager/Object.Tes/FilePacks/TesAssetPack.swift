@@ -14,7 +14,10 @@ public class TesAssetPack: BsaMultiFile, IAssetPack {
     let _materialManager: MaterialManager
     let _nifManager: NifManager
 
-    init(_ filePaths: [URL], webPath: URL) {
+    convenience init(_ filePath: URL) {
+        self.init([filePath])
+    }
+    init(_ filePaths: [URL]) {
         _textureManager = TextureManager(asset: self)
         _materialManager = MaterialManager(textureManager: _textureManager)
         _nifManager = NifManager(asset: self, materialManager: _materialManager, markerLayer: 0)
