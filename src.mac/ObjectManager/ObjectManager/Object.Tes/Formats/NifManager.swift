@@ -10,8 +10,8 @@ public class NifManager {
     let _asset: BsaMultiFile
     let _materialManager: MaterialManager 
     var _prefabContainerObj: GameObject? = nil
-    let _nifFilePreloadTasks = [String : Any]()
-    let _nifPrefabs = [String : GameObject]()
+    var _nifFilePreloadTasks = [String : Any]()
+    var _nifPrefabs = [String : GameObject]()
     let _markerLayer: Int
 
     init(asset: BsaMultiFile, materialManager: MaterialManager, markerLayer: Int = 0) {
@@ -26,7 +26,7 @@ public class NifManager {
         }
         ensurePrefabContainerObjectExists()
         // Load & cache the NIF prefab.
-        let prefab = loadNifPrefabDontAddToPrefabCache(filePath: filePath)
+        var prefab = loadNifPrefabDontAddToPrefabCache(filePath: filePath)
         _nifPrefabs[filePath] = prefab
         // Instantiate the prefab.
         return GameObject.instantiate(prefab)
@@ -36,7 +36,7 @@ public class NifManager {
         // If the NIF prefab has already been created we don't have to load the file again.
         guard _nifPrefabs[texturePath] == nil else { return }
         // Start loading the NIF asynchronously if we haven't already started.
-        let nifFileLoadingTask = _nifFilePreloadTasks[filePath]
+        var nifFileLoadingTask = _nifFilePreloadTasks[filePath]
         if nifFileLoadingTask == nil {
             nifFileLoadingTask = _asset.loadObjectInfoAsync(filePath)
             _nifFilePreloadTasks[filePath] = nifFileLoadingTask
