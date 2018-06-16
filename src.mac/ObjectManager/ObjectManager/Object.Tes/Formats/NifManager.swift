@@ -26,7 +26,7 @@ public class NifManager {
         }
         ensurePrefabContainerObjectExists()
         // Load & cache the NIF prefab.
-        let prefab = loadNifPrefabDontAddToPrefabCache(filfilePath: ePath)
+        let prefab = loadNifPrefabDontAddToPrefabCache(filePath: filePath)
         _nifPrefabs[filePath] = prefab
         // Instantiate the prefab.
         return GameObject.instantiate(prefab)

@@ -371,7 +371,7 @@ public class DdsReader {
         // Calculate pixel colors.
         var colors = decodeDXT1TexelBlock(r, colorTable: colorTable)
         for i in 0..<16 {
-            colors[i].alpha = UInt8(alphaTable[alphaIndices[i]].round())
+            colors[i].alpha = UInt8(alphaTable[alphaIndices[i]].rounded())
         }
         return colors
     }
