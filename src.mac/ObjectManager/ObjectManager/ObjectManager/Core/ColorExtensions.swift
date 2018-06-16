@@ -1,4 +1,4 @@
-﻿//
+//
 //  ColorExtensions.swift
 //  ObjectManager
 //
@@ -16,7 +16,7 @@ public extension CGColor {
         super.init(Float(r5) / 31, Float(g6) / 63, Float(b5) / 31, 1)
     }
 
-    public static func lerp(_ a: CGColor, _ b: UIColor, fraction: Float) -> CGColor {
+    public static func lerp(_ a: CGColor, _ b: CGColor, fraction: Float) -> CGColor {
         let f = Float.clamp01(fraction)
         return CGColor(red: a.red + (b.red - a.red) * f, green: a.green + (b.green - a.green) * f, blue: a.blue + (b.blue - a.blue) * f, alpha: a.alpha + (b.alpha - a.alpha) * f)
         // let f = min(max(0, fraction), 1)
@@ -28,12 +28,13 @@ public extension CGColor {
         // return CGColor(red: r, green: g, blue: b, alpha: a)
     }
 }
+//
+//public extension Color32 {
+//    public convenience init(b565: UInt16) {
+//        let r5 = (b565 >> 11) & 31
+//        let g6 = (b565 >> 5) & 63
+//        let b5 = b565 & 31
+//        super.init(Float(r5) / 31, Float(g6) / 63, Float(b5) / 31, 1)
+//    }
+//}
 
-public extension Color32 {
-    public convenience init(b565: UInt16) {
-        let r5 = (b565 >> 11) & 31
-        let g6 = (b565 >> 5) & 63
-        let b5 = b565 & 31
-        super.init(Float(r5) / 31, Float(g6) / 63, Float(b5) / 31, 1)
-    }    
-}

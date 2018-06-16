@@ -1,4 +1,4 @@
-//
+v//
 //  CREARecord.swift
 //  ObjectManager
 //
@@ -7,18 +7,19 @@
 //
 
 public class CREARecord: Record, IHaveEDID, IHaveMODL {
-    public enum CREAFlags: UInt32 {
-        case Biped = 0x0001
-        case Respawn = 0x0002
-        case WeaponAndShield = 0x0004
-        case None = 0x0008
-        case Swims = 0x0010
-        case Flies = 0x0020
-        case Walks = 0x0040
-        case DefaultFlags = 0x0048
-        case Essential = 0x0080
-        case SkeletonBlood = 0x0400
-        case MetalBlood = 0x0800
+    public struct CREAFlags: OptionSet {
+        let rawValue: UInt32
+        public static let biped = CREAFlags(rawValue: 0x0001)
+        public static let respawn = CREAFlags(rawValue: 0x0002)
+        public static let weaponAndShield = CREAFlags(rawValue: 0x0004)
+        public static let none = CREAFlags(rawValue: 0x0008)
+        public static let swims = CREAFlags(rawValue: 0x0010)
+        public static let flies = CREAFlags(rawValue: 0x0020)
+        public static let walks = CREAFlags(rawValue: 0x0040)
+        public static let defaultFlags = CREAFlags(rawValue: 0x0048)
+        public static let essential = CREAFlags(rawValue: 0x0080)
+        public static let skeletonBlood = CREAFlags(rawValue: 0x0400)
+        public static let metalBlood = CREAFlags(rawValue: 0x0800)
     }
 
     public struct NPDTField {
@@ -76,25 +77,26 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
     }
 
     public struct AIDTField {
-        public enum AIFlags: UInt32 {
-            case Weapon = 0x00001
-            case Armor = 0x00002
-            case Clothing = 0x00004
-            case Books = 0x00008
-            case Ingrediant = 0x00010
-            case Picks = 0x00020
-            case Probes = 0x00040
-            case Lights = 0x00080
-            case Apparatus = 0x00100
-            case Repair = 0x00200
-            case Misc = 0x00400
-            case Spells = 0x00800
-            case MagicItems = 0x01000
-            case Potions = 0x02000
-            case Training = 0x04000
-            case Spellmaking = 0x08000
-            case Enchanting = 0x10000
-            case RepairItem = 0x20000
+        public struct AIFlags: OptionSet {
+            let rawValue: UInt32
+            public static let weapon = AIFlags(rawValue: 0x00001)
+            public static let armor = AIFlags(rawValue: 0x00002)
+            public static let clothing = AIFlags(rawValue: 0x00004)
+            public static let books = AIFlags(rawValue: 0x00008)
+            public static let ingrediant = AIFlags(rawValue: 0x00010)
+            public static let picks = AIFlags(rawValue: 0x00020)
+            public static let probes = AIFlags(rawValue: 0x00040)
+            public static let lights = AIFlags(rawValue: 0x00080)
+            public static let apparatus = AIFlags(rawValue: 0x00100)
+            public static let repair = AIFlags(rawValue: 0x00200)
+            public static let misc = AIFlags(rawValue: 0x00400)
+            public static let spells = AIFlags(rawValue: 0x00800)
+            public static let magicItems = AIFlags(rawValue: 0x01000)
+            public static let potions = AIFlags(rawValue: 0x02000)
+            public static let training = AIFlags(rawValue: 0x04000)
+            public static let spellmaking = AIFlags(rawValue: 0x08000)
+            public static let enchanting = AIFlags(rawValue: 0x10000)
+            public static let repairItem = AIFlags(rawValue: 0x20000)
         }
 
         public let hello: UInt8

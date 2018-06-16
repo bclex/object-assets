@@ -9,16 +9,17 @@
 public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
     // TESX
     public struct DATAField {
-        public enum ColorFlags {
-            case dynamic = 0x0001
-            case canCarry = 0x0002
-            case negative = 0x0004
-            case flicker = 0x0008
-            case fire = 0x0010
-            case offDefault = 0x0020
-            case flickerSlow = 0x0040
-            case pulse = 0x0080
-            case pulseSlow = 0x0100
+        public struct ColorFlags: OptionSet {
+            let rawValue: Int32
+            public static let dynamic = ColorFlags(rawValue: 0x0001)
+            public static let canCarry = ColorFlags(rawValue: 0x0002)
+            public static let negative = ColorFlags(rawValue: 0x0004)
+            public static let flicker = ColorFlags(rawValue: 0x0008)
+            public static let fire = ColorFlags(rawValue: 0x0010)
+            public static let offDefault = ColorFlags(rawValue: 0x0020)
+            public static let flickerSlow = ColorFlags(rawValue: 0x0040)
+            public static let pulse = ColorFlags(rawValue: 0x0080)
+            public static let pulseSlow = ColorFlags(rawValue: 0x0100)
         }
 
         public let weight: Float
@@ -80,8 +81,8 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
              "NAME": EDID = STRVField(r, dataSize)
         case "FULL": FULL = STRVField(r, dataSize)
         case "FNAM": if format != .TES3 { FNAM = FLTVField(r, dataSize) } else { FULL = STRVField(r, dataSize) }
-        case "DATA":
-        case "LHDT": DATA = DATAField(r, dataSize, format)
+        case "DATA",
+             "LHDT": DATA = DATAField(r, dataSize, format)
         case "SCPT": SCPT = STRVField(r, dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         case "ICON",

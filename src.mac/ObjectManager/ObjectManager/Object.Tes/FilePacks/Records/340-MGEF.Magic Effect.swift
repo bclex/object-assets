@@ -29,39 +29,40 @@ public class MGEFRecord: Record {
     }
 
     // TES4
-    public enum MFEGFlag: UInt8 {
-        case hostile = 0x00000001
-        case recover = 0x00000002
-        case detrimental = 0x00000004
-        case magnitudePercent = 0x00000008
-        case self = 0x00000010
-        case touch = 0x00000020
-        case target = 0x00000040
-        case noDuration = 0x00000080
-        case noMagnitude = 0x00000100
-        case noArea = 0x00000200
-        case fxPersist = 0x00000400
-        case spellmaking = 0x00000800
-        case enchanting = 0x00001000
-        case noIngredient = 0x00002000
-        case unknown14 = 0x00004000
-        case unknown15 = 0x00008000
-        case useWeapon = 0x00010000
-        case useArmor = 0x00020000
-        case useCreature = 0x00040000
-        case useSkill = 0x00080000
-        case useAttribute = 0x00100000
-        case unknown21 = 0x00200000
-        case unknown22 = 0x00400000
-        case unknown23 = 0x00800000
-        case useActorValue = 0x01000000
-        case sprayProjectileType = 0x02000000 // (Ball if Spray, Bolt or Fog is not specified)
-        case boltProjectileType = 0x04000000
-        case noHitEffect = 0x08000000
-        case unknown28 = 0x10000000
-        case unknown29 = 0x20000000
-        case unknown30 = 0x40000000
-        case unknown31 = 0x80000000
+    public struct MFEGFlag: OptionSet {
+        let rawValue: UInt8
+        public static let hostile = MFEGFlag(rawValue: 0x00000001)
+        public static let recover = MFEGFlag(rawValue: 0x00000002)
+        public static let detrimental = MFEGFlag(rawValue: 0x00000004)
+        public static let magnitudePercent = MFEGFlag(rawValue: 0x00000008)
+        public static let self_ = MFEGFlag(rawValue: 0x00000010)
+        public static let touch = MFEGFlag(rawValue: 0x00000020)
+        public static let target = MFEGFlag(rawValue: 0x00000040)
+        public static let noDuration = MFEGFlag(rawValue: 0x00000080)
+        public static let noMagnitude = MFEGFlag(rawValue: 0x00000100)
+        public static let noArea = MFEGFlag(rawValue: 0x00000200)
+        public static let fxPersist = MFEGFlag(rawValue: 0x00000400)
+        public static let spellmaking = MFEGFlag(rawValue: 0x00000800)
+        public static let enchanting = MFEGFlag(rawValue: 0x00001000)
+        public static let noIngredient = MFEGFlag(rawValue: 0x00002000)
+        public static let unknown14 = MFEGFlag(rawValue: 0x00004000)
+        public static let unknown15 = MFEGFlag(rawValue: 0x00008000)
+        public static let useWeapon = MFEGFlag(rawValue: 0x00010000)
+        public static let useArmor = MFEGFlag(rawValue: 0x00020000)
+        public static let useCreature = MFEGFlag(rawValue: 0x00040000)
+        public static let useSkill = MFEGFlag(rawValue: 0x00080000)
+        public static let useAttribute = MFEGFlag(rawValue: 0x00100000)
+        public static let unknown21 = MFEGFlag(rawValue: 0x00200000)
+        public static let unknown22 = MFEGFlag(rawValue: 0x00400000)
+        public static let unknown23 = MFEGFlag(rawValue: 0x00800000)
+        public static let useActorValue = MFEGFlag(rawValue: 0x01000000)
+        public static let sprayProjectileType = MFEGFlag(rawValue: 0x02000000) // (Ball if Spray, Bolt or Fog is not specified)
+        public static let boltProjectileType = MFEGFlag(rawValue: 0x04000000)
+        public static let noHitEffect = MFEGFlag(rawValue: 0x08000000)
+        public static let unknown28 = MFEGFlag(rawValue: 0x10000000)
+        public static let unknown29 = MFEGFlag(rawValue: 0x20000000)
+        public static let unknown30 = MFEGFlag(rawValue: 0x40000000)
+        public static let unknown31 = MFEGFlag(rawValue: 0x80000000)
     }
 
     public class DATAField {

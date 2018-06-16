@@ -37,8 +37,8 @@ public class EsmFile: CustomStringConvertible {
             self.filePath = "missing"
             return
         }
-        self.filePath = filePath
-        _r = BinaryReader(FileBaseStream(forReadingAtPath: filePath)!)
+        self.filePath = filePath.path
+        _r = BinaryReader(FileBaseStream(forReadingAtPath: self.filePath)!)
         let start = Date()
         read(level: 0)
         let endRead = Date()

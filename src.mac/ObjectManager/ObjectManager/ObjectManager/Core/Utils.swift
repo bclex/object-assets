@@ -28,19 +28,20 @@ public extension Float {
         return a + ((b - a) * clamp01(t))
     }
 
-    public func roundToInt() -> Int {
-        return Int(self.round())
+    public static func roundToInt(_ a: Float) -> Int {
+        var v = a; v.round()
+        return Int(v)
     }
 }
 
 public class Utils {
-    public static func containsBitFlags<T>(_ bits: T, _ args: Int...) -> Bool where T: OptionSet {
-        var flagBits: UInt64 = 0
-        for arg in args {
-            flagBits |= UInt64(arg)
-        }
-        return (UInt64(bits.rawValue) & flagBits) == flagBits
-    }
+//    public static func containsBitFlags<T>(_ bits: T, _ args: Int...) -> Bool where T: OptionSet {
+//        var flagBits: UInt64 = 0
+//        for arg in args {
+//            flagBits |= UInt64(arg)
+//        }
+//        return (UInt64(Self.RawValue(bits.rawValue)) & flagBits) == flagBits
+//    }
 
     public static func getBits(_ bitOffset: Int, _ bitCount: Int, _ bytes: Data) -> UInt64 {
         assert(bitCount <= 64 && (bitOffset + bitCount) <= (8 * bytes.count))
@@ -77,6 +78,6 @@ public class Utils {
         let range0 = max0 - min0
         let range1 = max1 - min1
         let xpct = (x - min0) / range0
-        return min1 + (xPct * range1)
+        return min1 + (xpct * range1)
     }
 }

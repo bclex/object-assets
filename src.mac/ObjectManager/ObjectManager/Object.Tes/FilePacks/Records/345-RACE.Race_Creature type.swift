@@ -9,39 +9,40 @@
 public class RACERecord: Record {
     // TESX
     public class DATAField {
-        public enum RaceFlag: UInt32 {
-            playable = 0x00000001
-            faceGenHead = 0x00000002
-            child = 0x00000004
-            tiltFrontBack = 0x00000008
-            tiltLeftRight = 0x00000010
-            noShadow = 0x00000020
-            swims = 0x00000040
-            flies = 0x00000080
-            walks = 0x00000100
-            immobile = 0x00000200
-            notPushable = 0x00000400
-            noCombatInWater = 0x00000800
-            noRotatingToHeadTrack = 0x00001000
-            dontShowBloodSpray = 0x00002000
-            dontShowBloodDecal = 0x00004000
-            usesHeadTrackAnims = 0x00008000
-            spellsAlignWMagicNode = 0x00010000
-            useWorldRaycastsForFootIK = 0x00020000
-            allowRagdollCollision = 0x00040000
-            regenHPInCombat = 0x00080000
-            cantOpenDoors = 0x00100000
-            allowPCDialogue = 0x00200000
-            noKnockdowns = 0x00400000
-            allowPickpocket = 0x00800000
-            alwaysUseProxyController = 0x01000000
-            dontShowWeaponBlood = 0x02000000
-            overlayHeadPartList = 0x04000000 //{> Only one can be active <}
-            overrideHeadPartList = 0x08000000 //{> Only one can be active <}
-            canPickupItems = 0x10000000
-            allowMultipleMembraneShaders = 0x20000000
-            canDualWield = 0x40000000
-            avoidsRoads = 0x80000000
+        public struct RaceFlag: OptionSet {
+            let rawValue: UInt32
+            public static let playable = 0x00000001
+            public static let faceGenHead = 0x00000002
+            public static let child = 0x00000004
+            public static let tiltFrontBack = 0x00000008
+            public static let tiltLeftRight = 0x00000010
+            public static let noShadow = 0x00000020
+            public static let swims = 0x00000040
+            public static let flies = 0x00000080
+            public static let walks = 0x00000100
+            public static let immobile = 0x00000200
+            public static let notPushable = 0x00000400
+            public static let noCombatInWater = 0x00000800
+            public static let noRotatingToHeadTrack = 0x00001000
+            public static let dontShowBloodSpray = 0x00002000
+            public static let dontShowBloodDecal = 0x00004000
+            public static let usesHeadTrackAnims = 0x00008000
+            public static let spellsAlignWMagicNode = 0x00010000
+            public static let useWorldRaycastsForFootIK = 0x00020000
+            public static let allowRagdollCollision = 0x00040000
+            public static let regenHPInCombat = 0x00080000
+            public static let cantOpenDoors = 0x00100000
+            public static let allowPCDialogue = 0x00200000
+            public static let noKnockdowns = 0x00400000
+            public static let allowPickpocket = 0x00800000
+            public static let alwaysUseProxyController = 0x01000000
+            public static let dontShowWeaponBlood = 0x02000000
+            public static let overlayHeadPartList = 0x04000000 //{> Only one can be active <}
+            public static let overrideHeadPartList = 0x08000000 //{> Only one can be active <}
+            public static let canPickupItems = 0x10000000
+            public static let allowMultipleMembraneShaders = 0x20000000
+            public static let canDualWield = 0x40000000
+            public static let avoidsRoads = 0x80000000
         }
 
         public struct SkillBoost {
@@ -80,7 +81,7 @@ public class RACERecord: Record {
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             skillBoosts.reserveCapacity(7)
-            guard format != .TES3 {
+            guard format != .TES3 else {
                 for i in 0..<skillBoosts.capacity {
                     skillBoosts[i] = SkillBoost(r, 8, format)
                 }
@@ -127,8 +128,7 @@ public class RACERecord: Record {
     }
 
     // TES4
-    public class FacePartGroup
-    {
+    public class FacePartGroup {
         public enum Indx: UInt32 {
             case head, ear_male, ear_female, mouth, teeth_lower, teeth_upper, tongue, eye_left, eye_right
         }
@@ -138,10 +138,9 @@ public class RACERecord: Record {
         public var ICON: FILEField
     }
 
-    public class BodyPartGroup
-    {
+    public class BodyPartGroup {
         public enum Indx: UInt32 {
-            upperBody, lowerBody, hand, foot, tail
+            case upperBody, lowerBody, hand, foot, tail
         }
 
         public var INDX: UI32Field
@@ -151,7 +150,7 @@ public class RACERecord: Record {
     public class BodyGroup {
         public var MODL: FILEField
         public var MODB: FLTVField 
-        public var BodyParts: [BodyPartGroup]()
+        public var BodyParts = [BodyPartGroup]()
     }
 
     public var description: String { return "RACE: \(EDID)" }

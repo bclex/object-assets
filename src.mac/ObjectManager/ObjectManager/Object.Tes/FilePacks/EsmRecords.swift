@@ -13,30 +13,35 @@ public enum GameFormatId {
 }
 
 public class Header: CustomStringConvertible {
-    public enum Flags: UInt32 {
-        case esmFile = 0x00000001               // ESM file. (TES4.HEDR record only.)
-        case deleted = 0x00000020               // Deleted
-        case r00 = 0x00000040                   // Constant / (REFR) Hidden From Local Map (Needs Confirmation: Related to shields)
-        case r01 = 0x00000100                   // Must Update Anims / (REFR) Inaccessible
-        case r02 = 0x00000200                   // (REFR) Hidden from local map / (ACHR) Starts dead / (REFR) MotionBlurCastsShadows
-        case r03 = 0x00000400                   // Quest item / Persistent reference / (LSCR) Displays in Main Menu
-        case initiallyDisabled = 0x00000800     // Initially disabled
-        case ignored = 0x00001000               // Ignored
-        case visibleWhenDistant = 0x00008000    // Visible when distant
-        case r04 = 0x00010000                   // (ACTI) Random Animation Start
-        case r05 = 0x00020000                   // (ACTI) Dangerous / Off limits (Interior cell) Dangerous Can't be set withough Ignore Object Interaction
-        case compressed = 0x00040000            // Data is compressed
-        case cantWait = 0x00080000              // Can't wait
+    public struct Flags: OptionSet {
+        let rawValue: UInt32
+        public static let esmFile = Flags(rawValue: 0x00000001)               // ESM file. (TES4.HEDR record only.)
+        public static let deleted = Flags(rawValue: 0x00000020)               // Deleted
+        public static let r00 = Flags(rawValue: 0x00000040)                   // Constant / (REFR) Hidden From Local Map (Needs Confirmation: Related to shields)
+        public static let r01 = Flags(rawValue: 0x00000100)                   // Must Update Anims / (REFR) Inaccessible
+        public static let r02 = Flags(rawValue: 0x00000200)                   // (REFR) Hidden from local map / (ACHR) Starts dead / (REFR) MotionBlurCastsShadows
+        public static let r03 = Flags(rawValue: 0x00000400)                   // Quest item / Persistent reference / (LSCR) Displays in Main Menu
+        public static let initiallyDisabled = Flags(rawValue: 0x00000800)     // Initially disabled
+        public static let ignored = Flags(rawValue: 0x00001000)               // Ignored
+        public static let visibleWhenDistant = Flags(rawValue: 0x00008000)    // Visible when distant
+        public static let r04 = Flags(rawValue: 0x00010000)                   // (ACTI) Random Animation Start
+        public static let r05 = Flags(rawValue: 0x00020000)                   // (ACTI) Dangerous / Off limits (Interior cell) Dangerous Can't be set withough Ignore Object Interaction
+        public static let compressed = Flags(rawValue: 0x00040000)            // Data is compressed
+        public static let cantWait = Flags(rawValue: 0x00080000)              // Can't wait
                                                 // tes5
-        case r06 = 0x00100000                   // (ACTI) Ignore Object Interaction Ignore Object Interaction Sets Dangerous Automatically
-        case isMarker = 0x00800000              // Is Marker
-        case r07 = 0x02000000                   // (ACTI) Obstacle / (REFR) No AI Acquire
-        case navMesh01 = 0x04000000             // NavMesh Gen - Filter
-        case navMesh02 = 0x08000000             // NavMesh Gen - Bounding Box
-        case r08 = 0x10000000                   // (FURN) Must Exit to Talk / (REFR) Reflected By Auto Water
-        case r09 = 0x20000000                   // (FURN/IDLM) Child Can Use / (REFR) Don't Havok Settle
-        case r10 = 0x40000000                   // NavMesh Gen - Ground / (REFR) NoRespawn
-        case r11 = 0x80000000                   // (REFR) MultiBound
+        public static let r06 = 0x00100000                   // (ACTI) Ignore Object Interaction Ignore Object Interaction Sets Dangerous Automatically
+        public static let isMarker = 0x00800000              // Is Marker
+        public static let r07 = 0x02000000                   // (ACTI) Obstacle / (REFR) No AI Acquire
+        public static let navMesh01 = 0x04000000             // NavMesh Gen - Filter
+        public static let navMesh02 = 0x08000000             // NavMesh Gen - Bounding Box
+        public static let r08 = 0x10000000                   // (FURN) Must Exit to Talk / (REFR) Reflected By Auto Water
+        public static let r09 = 0x20000000                   // (FURN/IDLM) Child Can Use / (REFR) Don't Havok Settle
+        public static let r10 = 0x40000000                   // NavMesh Gen - Ground / (REFR) NoRespawn
+        public static let r11 = 0x80000000                   // (REFR) MultiBound
+    
+        public init(rawValue: UInt32) {
+            self.rawValue = rawValue
+        }
     }
 
     public enum GroupType: Int32 {
@@ -57,7 +62,7 @@ public class Header: CustomStringConvertible {
     public let type: String // 4 bytes
     public var dataSize: UInt32
     public let flags: Flags
-    public var compressed: Bool { return (flags.rawValue & Flags.compressed.rawValue) != 0 }
+    public var compressed: Bool { return flags.contains(.compressed) }
     public let formId: UInt32
     public var position: UInt64
     // group
@@ -67,7 +72,7 @@ public class Header: CustomStringConvertible {
     init(label: String, dataSize: UInt32, position: UInt64) {
         type = ""
         self.dataSize = dataSize
-        flags = Flags(rawValue: 0)!
+        flags = Flags(rawValue: 0)
         formId = 0
         self.position = position
         self.label = label

@@ -11,16 +11,17 @@ import CoreGraphics
 
 public class CELLRecord: Record, ICellRecord {
     
-    public enum CELLFlags: UInt16 {
-        case interior = 0x0001
-        case hasWater = 0x0002
-        case invertFastTravel = 0x0004 //: IllegalToSleepHere
-        case behaveLikeExterior = 0x0008 //: BehaveLikeExterior (Tribunal), Force hide land (exterior cell) / Oblivion interior (interior cell)
-        case unknown1 = 0x0010
-        case publicArea = 0x0020 // Public place
-        case handChanged = 0x0040
-        case showSky = 0x0080 // Behave like exterior
-        case useSkyLighting = 0x0100
+    public struct CELLFlags: OptionSet {
+        let rawValue: UInt16
+        public static let interior = CELLFlags(rawValue: 0x0001)
+        public static let hasWater = CELLFlags(rawValue: 0x0002)
+        public static let invertFastTravel = CELLFlags(rawValue: 0x0004) //: IllegalToSleepHere
+        public static let behaveLikeExterior = CELLFlags(rawValue: 0x0008) //: BehaveLikeExterior (Tribunal), Force hide land (exterior cell) / Oblivion interior (interior cell)
+        public static let unknown1 = CELLFlags(rawValue: 0x0010)
+        public static let publicArea = CELLFlags(rawValue: 0x0020) // Public place
+        public static let handChanged = CELLFlags(rawValue: 0x0040)
+        public static let showSky = CELLFlags(rawValue: 0x0080) // Behave like exterior
+        public static let useSkyLighting = CELLFlags(rawValue: 0x0100)
     }
 
     public struct XCLCField {

@@ -10,7 +10,7 @@ public class ARMORecord: Record, IHaveEDID, IHaveMODL {
     // TESX
     public struct DATAField {
         public enum ARMOType {
-            case Helmet = 0, Cuirass, L_Pauldron, R_Pauldron, Greaves, Boots, L_Gauntlet, R_Gauntlet, Shield, L_Bracer, R_Bracer,
+            case helmet = 0, cuirass, l_pauldron, r_pauldron, greaves, boots, l_gauntlet, r_gauntlet, shield, l_bracer, r_bracer
         }
 
         public let armour: Int16

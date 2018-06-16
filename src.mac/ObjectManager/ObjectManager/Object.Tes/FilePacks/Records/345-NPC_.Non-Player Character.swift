@@ -7,14 +7,15 @@
 //
 
 public class NPC_Record: Record, IHaveEDID, IHaveMODL {
-    public enum NPC_Flags: UInt32 {
-        case female = 0x0001
-        case essential = 0x0002
-        case respawn = 0x0004
-        case none = 0x0008
-        case autocalc = 0x0010
-        case bloodSkel = 0x0400
-        case bloodMetal = 0x0800
+    public struct NPC_Flags: OptionSet {
+        let rawValue: UInt32
+        public static let female = NPC_Flags(rawValue: 0x0001)
+        public static let essential = NPC_Flags(rawValue: 0x0002)
+        public static let respawn = NPC_Flags(rawValue: 0x0004)
+        public static let none = NPC_Flags(rawValue: 0x0008)
+        public static let autocalc = NPC_Flags(rawValue: 0x0010)
+        public static let bloodSkel = NPC_Flags(rawValue: 0x0400)
+        public static let bloodMetal = NPC_Flags(rawValue: 0x0800)
     }
 
     public class NPDTField {

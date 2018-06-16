@@ -483,8 +483,9 @@ public class NiObjectNET: NiObject {
 }
 
 public class NiAVObject: NiObjectNET {
-    public enum NiFlags: UInt16 {
-        case hidden = 0x1
+    public struct NiFlags: OptionSet {
+        let rawValue: UInt16
+        public static let hidden = NiFlags(rawValue: 0x1)
     }
 
     public let flags: UInt16

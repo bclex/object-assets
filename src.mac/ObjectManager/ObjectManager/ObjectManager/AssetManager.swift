@@ -9,8 +9,7 @@
 import Foundation
 
 public enum EngineId: Int {
-    case tes = 0
-    case unk = 1
+    case tes = 0, unk
 }
 
 public protocol IRecord {
@@ -37,7 +36,7 @@ public protocol IAssetManager {
 public class AssetManager {
     static let statics: [IAssetManager] = [TesAssetManager()]
     
-    static func getAssetManager(_ forEngine: EngineId) -> IAssetManager {
-        return statics[forEngine.rawValue]
+    static func getAssetManager(_ engine: EngineId) -> IAssetManager {
+        return statics[engine.rawValue]
     }
 }

@@ -7,15 +7,16 @@
 //
 
 public class SOUNRecord: Record, IHaveEDID {
-    public enum SOUNFlags: UInt16 {
-        case randomFrequencyShift = 0x0001
-        case playAtRandom = 0x0002
-        case environmentIgnored = 0x0004
-        case randomLocation = 0x0008
-        case loop = 0x0010
-        case menuSound = 0x0020
-        case _2D = 0x0040
-        case _360LFE = 0x0080
+    public struct SOUNFlags: OptionSet {
+        let rawValue: UInt16
+        public static let randomFrequencyShift = SOUNFlags(rawValue: 0x0001)
+        public static let playAtRandom = SOUNFlags(rawValue: 0x0002)
+        public static let environmentIgnored = SOUNFlags(rawValue: 0x0004)
+        public static let randomLocation = SOUNFlags(rawValue: 0x0008)
+        public static let loop = SOUNFlags(rawValue: 0x0010)
+        public static let menuSound = SOUNFlags(rawValue: 0x0020)
+        public static let _2D = SOUNFlags(rawValue: 0x0040)
+        public static let _360LFE = SOUNFlags(rawValue: 0x0080)
     }
 
     // TESX
