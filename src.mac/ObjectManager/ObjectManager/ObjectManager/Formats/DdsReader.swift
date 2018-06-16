@@ -295,7 +295,7 @@ public class DdsReader {
         // Read compressed pixel alphas.
         var compressedAlphas = [UInt8](); compressedAlphas.reserveCapacity(16)
         for rowIndex in 0..<4 {
-            var compressedAlphaRow = r.readLEUInt16()
+            let compressedAlphaRow = Int(r.readLEUInt16())
             for columnIndex in 0..<4 {
                 // Each compressed alpha is 4 bits.
                 compressedAlphas[(4 * rowIndex) + columnIndex] = UInt8((compressedAlphaRow >> (columnIndex * 4)) & 0xF)
@@ -424,9 +424,12 @@ public class DdsReader {
         }
         return argb
     }
-    static func decodeDXT1ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> [UInt8] { return decodeDXTToARGB(dxtVersion: 1, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
-    static func decodeDXT3ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> [UInt8] { return decodeDXTToARGB(dxtVersion: 3, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
-    static func decodeDXT5ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> [UInt8] { return decodeDXTToARGB(dxtVersion: 5, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
+    static func decodeDXT1ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> [UInt8] {
+        return decodeDXTToARGB(dxtVersion: 1, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
+    static func decodeDXT3ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> [UInt8] {
+        return decodeDXTToARGB(dxtVersion: 3, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
+    static func decodeDXT5ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> [UInt8] {
+        return decodeDXTToARGB(dxtVersion: 5, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
 
     static func extractDDSTextureFormatAndData(_ header: DDSHeader, _ r: BinaryReader, hasMipmaps: inout Bool, ddsMipmapLevelCount: inout Int,
                                                textureFormat: inout TextureFormat, bytesPerPixel: inout Int, textureData: inout [UInt8]) {

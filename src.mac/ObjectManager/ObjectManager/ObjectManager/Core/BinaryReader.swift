@@ -193,7 +193,7 @@ public class BinaryReader {
     }
 
     public func readLEVector2() -> Vector2 {
-        return Vector2(dx: readLESingle(), dy: readLESingle())
+        return Vector2(dx: CGFloat(readLESingle()), dy: CGFloat(readLESingle()))
     }
 
     public func readLEVector3() -> Vector3 {
@@ -202,7 +202,6 @@ public class BinaryReader {
 
     public func readLEColumnMajorMatrix3x3() -> Matrix4x4 {
         var matrix = Matrix4x4()
-        matrix
         for columnIndex in 0..<4 {
             for rowIndex in 0..<4 {
                 // If we're in the 3x3 part of the matrix, read values. Otherwise, use the identity matrix.

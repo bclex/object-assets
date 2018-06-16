@@ -62,7 +62,7 @@ public class TextureUtils {
                         averageComponent += Float(srcBytes[srcPixelStartIndices[srcPixelIndex] + componentIndex])
                     }
                     averageComponent /= Float(srcPixelStartIndices.count)
-                    dstBytes[dstPixelStartIndex + componentIndex] = UInt8(averageComponent.roundToInt())
+                    dstBytes[dstPixelStartIndex + componentIndex] = UInt8(averageComponent.roundedAsInt())
                 }
             }
         }
