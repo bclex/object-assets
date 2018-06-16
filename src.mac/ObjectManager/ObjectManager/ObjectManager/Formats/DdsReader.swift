@@ -9,7 +9,7 @@
 import Foundation
 
 public struct DDSFlags: OptionSet { //: DDSD
-    let rawValue: UInt32
+    public let rawValue: UInt32
     public static let caps = DDSFlags(rawValue: 0x1)             // Required in every .dds file.
     public static let height = DDSFlags(rawValue: 0x2)           // Required in every .dds file.
     public static let width = DDSFlags(rawValue: 0x4)            // Required in every .dds file.
@@ -18,21 +18,25 @@ public struct DDSFlags: OptionSet { //: DDSD
     public static let mipmapCount = DDSFlags(rawValue: 0x20000)  // Required in a mipmapped texture.
     public static let linearSize = DDSFlags(rawValue: 0x80000)   // Required when pitch is provided for a compressed texture.
     public static let depth = DDSFlags(rawValue: 0x800000)       // Required in a depth texture.
-    public static let HEADER_FLAGS_TEXTURE = [DDSFlags.caps, DDSFlags.height, DDSFlags.width, DDSFlags.pixelFormat]
-    public static let HEADER_FLAGS_MIPMAP = DDSFlags.mipmapCount
-    public static let HEADER_FLAGS_VOLUME = DDSFlags.depth
-    public static let HEADER_FLAGS_PITCH = DDSFlags.pitch
-    public static let HEADER_FLAGS_LINEARSIZE = DDSFlags.linearSize
+    public static let HEADER_FLAGS_TEXTURE: DDSFlags = [.caps, .height, .width, .pixelFormat]
+    public static let HEADER_FLAGS_MIPMAP: DDSFlags = .mipmapCount
+    public static let HEADER_FLAGS_VOLUME: DDSFlags = .depth
+    public static let HEADER_FLAGS_PITCH: DDSFlags = .pitch
+    public static let HEADER_FLAGS_LINEARSIZE: DDSFlags = .linearSize
+
+    public init(rawValue: UInt32) {
+        self.rawValue = rawValue
+    }
 }
 
 public struct DDSCaps: OptionSet { //: DDSCAPS
     public let rawValue: UInt32
-    public static let complex = 0x8          // Optional; must be used on any file that contains more than one surface (a mipmap, a cubic environment map, or mipmapped volume texture).
-    public static let mipmap = 0x400000      // Optional; should be used for a mipmap.
-    public static let texture = 0x1000       // Required
-    public static let SURFACE_FLAGS_MIPMAP = complex | mipmap
-    public static let SURFACE_FLAGS_TEXTURE = texture
-    public static let SURFACE_FLAGS_CUBEMAP = complex
+    public static let complex = DDSCaps(rawValue: 0x8)          // Optional; must be used on any file that contains more than one surface (a mipmap, a cubic environment map, or mipmapped volume texture).
+    public static let mipmap = DDSCaps(rawValue: 0x400000)      // Optional; should be used for a mipmap.
+    public static let texture = DDSCaps(rawValue: 0x1000)       // Required
+    public static let SURFACE_FLAGS_MIPMAP: DDSCaps = [.complex, .mipmap]
+    public static let SURFACE_FLAGS_TEXTURE: DDSCaps = .texture
+    public static let SURFACE_FLAGS_CUBEMAP: DDSCaps = .complex
     
     public init(rawValue: UInt32) {
         self.rawValue = rawValue
@@ -64,7 +68,7 @@ public struct DDSCaps2: OptionSet { //: DDSCAPS2
 }
 
 public struct DDSHeader { //: DDS_HEADER
-    public var dwSize: UInt32 {return 124}
+    public var dwSize: UInt32 { return 124 }
     public let dwFlags: DDSFlags
     public let dwHeight: UInt32
     public let dwWidth: UInt32
@@ -155,12 +159,16 @@ public struct DDSHeader_DXT10 { //: DDS_HEADER_DXT10
 
 public struct DDSPixelFormats: OptionSet { //: DDS_PIXELFORMAT
     public let rawValue: UInt32
-    public static let alphaPixels = 0x1      // Texture contains alpha data; dwRGBAlphaBitMask contains valid data.
-    public static let alpha = 0x2            // Used in some older DDS files for alpha channel only uncompressed data (dwRGBBitCount contains the alpha channel bitcount; dwABitMask contains valid data)
-    public static let fourCC = 0x4           // Texture contains compressed RGB data; dwFourCC contains valid data.
-    public static let rgb = 0x40             // Texture contains uncompressed RGB data; dwRGBBitCount and the RGB masks (dwRBitMask, dwGBitMask, dwBBitMask) contain valid data.
-    public static let yuv = 0x200            // Used in some older DDS files for YUV uncompressed data (dwRGBBitCount contains the YUV bit count; dwRBitMask contains the Y mask, dwGBitMask contains the U mask, dwBBitMask contains the V mask)
-    public static let luminance = 0x20000    // Used in some older DDS files for single channel color uncompressed data (dwRGBBitCount contains the luminance channel bit count; dwRBitMask contains the channel mask). Can be combined with DDPF_ALPHAPIXELS for a two channel DDS file.
+    public static let alphaPixels = DDSPixelFormats(rawValue: 0x1)      // Texture contains alpha data; dwRGBAlphaBitMask contains valid data.
+    public static let alpha = DDSPixelFormats(rawValue: 0x2)            // Used in some older DDS files for alpha channel only uncompressed data (dwRGBBitCount contains the alpha channel bitcount; dwABitMask contains valid data)
+    public static let fourCC = DDSPixelFormats(rawValue: 0x4)           // Texture contains compressed RGB data; dwFourCC contains valid data.
+    public static let rgb = DDSPixelFormats(rawValue: 0x40)             // Texture contains uncompressed RGB data; dwRGBBitCount and the RGB masks (dwRBitMask, dwGBitMask, dwBBitMask) contain valid data.
+    public static let yuv = DDSPixelFormats(rawValue: 0x200)            // Used in some older DDS files for YUV uncompressed data (dwRGBBitCount contains the YUV bit count; dwRBitMask contains the Y mask, dwGBitMask contains the U mask, dwBBitMask contains the V mask)
+    public static let luminance = DDSPixelFormats(rawValue: 0x20000)    // Used in some older DDS files for single channel color uncompressed data (dwRGBBitCount contains the luminance channel bit count; dwRBitMask contains the channel mask). Can be combined with DDPF_ALPHAPIXELS for a two channel DDS file.
+
+    public init(rawValue: UInt32) {
+        self.rawValue = rawValue
+    }
 }
 
 public struct DDSPixelFormat { //: DDS_PIXELFORMAT
@@ -230,18 +238,24 @@ public class DdsReader {
         var ddsMipmapLevelCount = 0
         var textureFormat = TextureFormat()
         var bytesPerPixel = 0
-        var textureData = Data()
-        extractDDSTextureFormatAndData(header, r, hasMipmaps: &hasMipmaps, ddsMipmapLevelCount: &ddsMipmapLevelCount, textureFormat: &textureFormat, bytesPerPixel: &bytesPerPixel, textureData: &textureData)
+        var textureData: [UInt8]
+        extractDDSTextureFormatAndData(header, r,
+                                       hasMipmaps: &hasMipmaps, ddsMipmapLevelCount: &ddsMipmapLevelCount,
+                                       textureFormat: &textureFormat, bytesPerPixel: &bytesPerPixel, textureData: &textureData)
         // Post-process the texture to generate missing mipmaps and possibly flip it vertically.
-        postProcessDDSTexture(width: Int(header.dwWidth), height: Int(header.dwHeight), bytesPerPixel: bytesPerPixel, hasMipmaps: hasMipmaps, ddsMipmapLevelCount: ddsMipmapLevelCount, data: textureData, flipVertically: flipVertically)
-        return Texture2DInfo(width: Int(header.dwWidth), height: Int(header.dwHeight), format: textureFormat, hasMipmaps: hasMipmaps, bytesPerPixel: bytesPerPixel, rawData: textureData)
+        postProcessDDSTexture(width: Int(header.dwWidth), height: Int(header.dwHeight), bytesPerPixel: bytesPerPixel,
+                              hasMipmaps: hasMipmaps, ddsMipmapLevelCount: ddsMipmapLevelCount,
+                              data: &textureData, flipVertically: flipVertically)
+        return Texture2DInfo(width: Int(header.dwWidth), height: Int(header.dwHeight),
+                             format: textureFormat, hasMipmaps: hasMipmaps,
+                             bytesPerPixel: bytesPerPixel, rawData: textureData)
     }
 
     static func decodeDXT1TexelBlock(_ r: BinaryReader, colorTable: [Color]) -> [Color32] {
         assert(colorTable.count == 4)
         // Read pixel color indices.
         var colorIndices = [Int](); colorIndices.reserveCapacity(16)
-        var colorIndexBytes = r.readBytes(4)
+        let colorIndexBytes = r.readBytes(4)
         let bitsPerColorIndex = 2
         for rowIndex in 0..<4 {
             let rowBaseColorIndexIndex = 4 * rowIndex
@@ -255,7 +269,7 @@ public class DdsReader {
         // Calculate pixel colors.
         var colors = [Color32](); colors.reserveCapacity(16)
         for i in 0..<16 {
-            colors[i] = colorTable[colorIndices[i]]
+            colors[i] = Color32(color: colorTable[colorIndices[i]])
         }
         return colors
     }
@@ -263,14 +277,14 @@ public class DdsReader {
     static func decodeDXT1TexelBlock(_ r: BinaryReader, containsAlpha: Bool) -> [Color32] {
         // Create the color table.
         var colorTable = [Color](); colorTable.reserveCapacity(4)
-        colorTable[0] = Color(b565: r.readLEUInt16())
-        colorTable[1] = Color(b565: r.readLEUInt16())
+        colorTable[0] = Color.color(b565: r.readLEUInt16())
+        colorTable[1] = Color.color(b565: r.readLEUInt16())
         if !containsAlpha {
-            colorTable[2] = Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)
-            colorTable[3] = Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)
+            colorTable[2] = Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)!
+            colorTable[3] = Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)!
         }
         else {
-            colorTable[2] = Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 2)
+            colorTable[2] = Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 2)!
             colorTable[3] = Color(red: 0, green: 0, blue: 0, alpha: 0)
         }
         // Calculate pixel colors.
@@ -295,10 +309,10 @@ public class DdsReader {
         }
         // Create the color table.
         var colorTable = [Color](); colorTable.reserveCapacity(4)
-        colorTable[0] = Color(b565: r.readLEUInt16())
-        colorTable[1] = Color(b565: r.readLEUInt16())
-        colorTable[2] = Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)
-        colorTable[3] = Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)
+        colorTable[0] = Color.color(b565: r.readLEUInt16())
+        colorTable[1] = Color.color(b565: r.readLEUInt16())
+        colorTable[2] = Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)!
+        colorTable[3] = Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)!
         // Calculate pixel colors.
         var colors = decodeDXT1TexelBlock(r, colorTable: colorTable)
         for i in 0..<16 {
@@ -350,10 +364,10 @@ public class DdsReader {
         alphaIndices[15] = Int(Utils.getBits(0, bitsPerAlphaIndex, alphaIndexBytesRow1))
         // Create the color table.
         var colorTable = [Color](); colorTable.reserveCapacity(4)
-        colorTable[0] = Color(b565: r.readLEUInt16())
-        colorTable[1] = Color(b565: r.readLEUInt16())
-        colorTable[2] = Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)
-        colorTable[3] = Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)
+        colorTable[0] = Color.color(b565: r.readLEUInt16())
+        colorTable[1] = Color.color(b565: r.readLEUInt16())
+        colorTable[2] = Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)!
+        colorTable[3] = Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)!
         // Calculate pixel colors.
         var colors = decodeDXT1TexelBlock(r, colorTable: colorTable)
         for i in 0..<16 {
@@ -382,7 +396,7 @@ public class DdsReader {
         }
     }
 
-    static func decodeDXTToARGB(dxtVersion: Int, compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: UInt32) -> [UInt8] {
+    static func decodeDXTToARGB(dxtVersion: Int, compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> [UInt8] {
         let alphaFlag = pixelFormat.dwFlags.contains(.alphaPixels)
         let containsAlpha = alphaFlag || (pixelFormat.dwRGBBitCount == 32 && pixelFormat.dwABitMask != 0)
         let r = BinaryReader(DataBaseStream(data: compressedData))
@@ -410,19 +424,19 @@ public class DdsReader {
         }
         return argb
     }
-    static func decodeDXT1ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: UInt32) -> [UInt8] { return decodeDXTToARGB(dxtVersion: 1, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
-    static func decodeDXT3ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: UInt32) -> [UInt8] { return decodeDXTToARGB(dxtVersion: 3, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
-    static func decodeDXT5ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: UInt32) -> [UInt8] { return decodeDXTToARGB(dxtVersion: 5, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
+    static func decodeDXT1ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> [UInt8] { return decodeDXTToARGB(dxtVersion: 1, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
+    static func decodeDXT3ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> [UInt8] { return decodeDXTToARGB(dxtVersion: 3, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
+    static func decodeDXT5ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> [UInt8] { return decodeDXTToARGB(dxtVersion: 5, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
 
-    static func extractDDSTextureFormatAndData(_ header: DDSHeader, _ r: BinaryReader, hasMipmaps: inout Bool, ddsMipmapLevelCount: inout UInt,
+    static func extractDDSTextureFormatAndData(_ header: DDSHeader, _ r: BinaryReader, hasMipmaps: inout Bool, ddsMipmapLevelCount: inout Int,
                                                textureFormat: inout TextureFormat, bytesPerPixel: inout Int, textureData: inout [UInt8]) {
-        hasMipmaps = Utils.containsBitFlags(header.dwCaps, DDSCaps.mipmap)
+        hasMipmaps = header.dwCaps.contains(.mipmap)
         // Non-mipmapped textures still have one mipmap level: the texture itself.
-        ddsMipmapLevelCount = hasMipmaps ? UInt(header.dwMipMapCount) : 1
+        ddsMipmapLevelCount = hasMipmaps ? Int(header.dwMipMapCount) : 1
         // If the DDS file contains uncompressed data.
-        if Utils.containsBitFlags(header.ddspf.dwFlags, DDSPixelFormats.rgb) {
+        if header.ddspf.dwFlags.contains(.rgb) {
             // some permutation of RGB
-            guard Utils.containsBitFlags(header.ddspf.dwFlags, DDSPixelFormats.alphaPixels) else {
+            guard header.ddspf.dwFlags.contains(.alphaPixels) else {
                 fatalError("Unsupported DDS file pixel format.")
             }
             // There should be 32 bits per pixel.
@@ -432,7 +446,7 @@ public class DdsReader {
             // BGRA32
             if header.ddspf.dwBBitMask == 0x000000FF && header.ddspf.dwGBitMask == 0x0000FF00 &&
                 header.ddspf.dwRBitMask == 0x00FF0000 && header.ddspf.dwABitMask == 0xFF000000 {
-                textureFormat = TextureFormat.kCIFormatBGRA8
+                textureFormat = CIFormat.kCIFormatBGRA8
                 bytesPerPixel = 4
             }
             // ARGB32

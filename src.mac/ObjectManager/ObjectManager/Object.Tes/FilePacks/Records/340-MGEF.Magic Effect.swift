@@ -30,7 +30,7 @@ public class MGEFRecord: Record {
 
     // TES4
     public struct MFEGFlag: OptionSet {
-        let rawValue: UInt8
+        public let rawValue: UInt32
         public static let hostile = MFEGFlag(rawValue: 0x00000001)
         public static let recover = MFEGFlag(rawValue: 0x00000002)
         public static let detrimental = MFEGFlag(rawValue: 0x00000004)
@@ -63,6 +63,10 @@ public class MGEFRecord: Record {
         public static let unknown29 = MFEGFlag(rawValue: 0x20000000)
         public static let unknown30 = MFEGFlag(rawValue: 0x40000000)
         public static let unknown31 = MFEGFlag(rawValue: 0x80000000)
+        
+        public init(rawValue: UInt32) {
+            self.rawValue = rawValue
+        }
     }
 
     public class DATAField {

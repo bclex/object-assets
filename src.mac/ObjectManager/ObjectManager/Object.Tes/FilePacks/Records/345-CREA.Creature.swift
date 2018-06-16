@@ -8,7 +8,7 @@ v//
 
 public class CREARecord: Record, IHaveEDID, IHaveMODL {
     public struct CREAFlags: OptionSet {
-        let rawValue: UInt32
+        public let rawValue: UInt32
         public static let biped = CREAFlags(rawValue: 0x0001)
         public static let respawn = CREAFlags(rawValue: 0x0002)
         public static let weaponAndShield = CREAFlags(rawValue: 0x0004)
@@ -20,6 +20,10 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
         public static let essential = CREAFlags(rawValue: 0x0080)
         public static let skeletonBlood = CREAFlags(rawValue: 0x0400)
         public static let metalBlood = CREAFlags(rawValue: 0x0800)
+        
+        public init(rawValue: UInt32) {
+            self.rawValue = rawValue
+        }
     }
 
     public struct NPDTField {
@@ -78,7 +82,7 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
 
     public struct AIDTField {
         public struct AIFlags: OptionSet {
-            let rawValue: UInt32
+            public let rawValue: UInt32
             public static let weapon = AIFlags(rawValue: 0x00001)
             public static let armor = AIFlags(rawValue: 0x00002)
             public static let clothing = AIFlags(rawValue: 0x00004)
@@ -97,6 +101,10 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
             public static let spellmaking = AIFlags(rawValue: 0x08000)
             public static let enchanting = AIFlags(rawValue: 0x10000)
             public static let repairItem = AIFlags(rawValue: 0x20000)
+            
+            public init(rawValue: UInt32) {
+                self.rawValue = rawValue
+            }
         }
 
         public let hello: UInt8

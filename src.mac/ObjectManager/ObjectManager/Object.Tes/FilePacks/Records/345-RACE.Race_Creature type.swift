@@ -10,7 +10,7 @@ public class RACERecord: Record {
     // TESX
     public class DATAField {
         public struct RaceFlag: OptionSet {
-            let rawValue: UInt32
+            public let rawValue: UInt32
             public static let playable = 0x00000001
             public static let faceGenHead = 0x00000002
             public static let child = 0x00000004
@@ -43,6 +43,10 @@ public class RACERecord: Record {
             public static let allowMultipleMembraneShaders = 0x20000000
             public static let canDualWield = 0x40000000
             public static let avoidsRoads = 0x80000000
+            
+            public init(rawValue: UInt32) {
+                self.rawValue = rawValue
+            }
         }
 
         public struct SkillBoost {

@@ -1,5 +1,5 @@
 //
-//  ColorExtensions.swift
+//  Utils.swift
 //  ObjectManager
 //
 //  Created by Sky Morey on 6/5/18.
@@ -12,27 +12,11 @@ import AppKit
 
 public typealias Color = CGColor
 public typealias Texture2D = NSImage
+public typealias TextureFormat = CIFormat
 public typealias Vector2 = CGVector
 public typealias Vector3 = SCNVector3
 public typealias Matrix4x4 = SCNMatrix4
 public typealias Quaternion = SCNQuaternion
-
-public extension Float {
-    public static let rad2Deg = 0.01745329
-
-    public static func clamp01(_ value: Float) -> Float {
-        return value < 0 ? 0 : value > 1 ? 1 : value
-    }
-
-    public static func lerp(_ a: Float, _ b: Float, t: Float) -> Float {
-        return a + ((b - a) * clamp01(t))
-    }
-
-    public static func roundToInt(_ a: Float) -> Int {
-        var v = a; v.round()
-        return Int(v)
-    }
-}
 
 public class Utils {
 //    public static func containsBitFlags<T>(_ bits: T, _ args: Int...) -> Bool where T: OptionSet {

@@ -484,8 +484,12 @@ public class NiObjectNET: NiObject {
 
 public class NiAVObject: NiObjectNET {
     public struct NiFlags: OptionSet {
-        let rawValue: UInt16
+        public let rawValue: UInt16
         public static let hidden = NiFlags(rawValue: 0x1)
+        
+        public init(rawValue: UInt16) {
+            self.rawValue = rawValue
+        }
     }
 
     public let flags: UInt16

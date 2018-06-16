@@ -24,6 +24,7 @@
 		5415F76C20BC8BCA008A8E78 /* EsmFile+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76B20BC8BCA008A8E78 /* EsmFile+Extensions.swift */; };
 		5415F76E20BC8BDA008A8E78 /* BsaMultiFile+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76D20BC8BDA008A8E78 /* BsaMultiFile+Extensions.swift */; };
 		5415F77020BC8BE5008A8E78 /* BsaFile+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76F20BC8BE5008A8E78 /* BsaFile+Extensions.swift */; };
+		54664B0720D556B600947E34 /* NumericExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54664B0620D556B600947E34 /* NumericExtensions.swift */; };
 		54996A5720D1EF640053C358 /* ConvertUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54996A5620D1EF640053C358 /* ConvertUtils.swift */; };
 		54A08FEB20C4FACD00C68B25 /* Vector2Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FE920C4FACD00C68B25 /* Vector2Int.swift */; };
 		54A08FEC20C4FACD00C68B25 /* Texture2DInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FEA20C4FACD00C68B25 /* Texture2DInfo.swift */; };
@@ -42,7 +43,6 @@
 		54AEEF1420BE51B700560590 /* DataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF1320BE51B700560590 /* DataExtensions.swift */; };
 		54FD13AA20BE206A003D3138 /* CellManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD13A920BE206A003D3138 /* CellManager.swift */; };
 		54FD3E5C20CF892A0010D58E /* SequenceExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD3E5620CF892A0010D58E /* SequenceExtensions.swift */; };
-		54FD3E5D20CF892A0010D58E /* Color32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD3E5720CF892A0010D58E /* Color32.swift */; };
 		54FD3E5E20CF892A0010D58E /* TextureUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD3E5820CF892A0010D58E /* TextureUtils.swift */; };
 		54FD3E5F20CF892A0010D58E /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD3E5920CF892A0010D58E /* Utils.swift */; };
 		54FD3E6020CF892A0010D58E /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD3E5A20CF892A0010D58E /* ColorExtensions.swift */; };
@@ -69,6 +69,7 @@
 		5415F76B20BC8BCA008A8E78 /* EsmFile+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EsmFile+Extensions.swift"; sourceTree = "<group>"; };
 		5415F76D20BC8BDA008A8E78 /* BsaMultiFile+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BsaMultiFile+Extensions.swift"; sourceTree = "<group>"; };
 		5415F76F20BC8BE5008A8E78 /* BsaFile+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BsaFile+Extensions.swift"; sourceTree = "<group>"; };
+		54664B0620D556B600947E34 /* NumericExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericExtensions.swift; sourceTree = "<group>"; };
 		54996A5620D1EF640053C358 /* ConvertUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConvertUtils.swift; sourceTree = "<group>"; };
 		54A08FE920C4FACD00C68B25 /* Vector2Int.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vector2Int.swift; sourceTree = "<group>"; };
 		54A08FEA20C4FACD00C68B25 /* Texture2DInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Texture2DInfo.swift; sourceTree = "<group>"; };
@@ -169,7 +170,6 @@
 		54AEEF1320BE51B700560590 /* DataExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataExtensions.swift; sourceTree = "<group>"; };
 		54FD13A920BE206A003D3138 /* CellManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellManager.swift; sourceTree = "<group>"; };
 		54FD3E5620CF892A0010D58E /* SequenceExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SequenceExtensions.swift; sourceTree = "<group>"; };
-		54FD3E5720CF892A0010D58E /* Color32.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color32.swift; sourceTree = "<group>"; };
 		54FD3E5820CF892A0010D58E /* TextureUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextureUtils.swift; sourceTree = "<group>"; };
 		54FD3E5920CF892A0010D58E /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		54FD3E5A20CF892A0010D58E /* ColorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
@@ -322,9 +322,9 @@
 			isa = PBXGroup;
 			children = (
 				54FD3E5B20CF892A0010D58E /* BinaryWriter.swift */,
-				54FD3E5720CF892A0010D58E /* Color32.swift */,
 				54FD3E5A20CF892A0010D58E /* ColorExtensions.swift */,
 				54FD3E5620CF892A0010D58E /* SequenceExtensions.swift */,
+				54664B0620D556B600947E34 /* NumericExtensions.swift */,
 				54FD3E5820CF892A0010D58E /* TextureUtils.swift */,
 				54FD3E5920CF892A0010D58E /* Utils.swift */,
 				54A08FFC20C7824C00C68B25 /* GameObject.swift */,
@@ -518,12 +518,12 @@
 				5415F75120BC8AB0008A8E78 /* TesAssetManager.swift in Sources */,
 				54FD3E6120CF892A0010D58E /* BinaryWriter.swift in Sources */,
 				54A08FFD20C7824C00C68B25 /* GameObject.swift in Sources */,
-				54FD3E5D20CF892A0010D58E /* Color32.swift in Sources */,
 				54A08FF020C61E2B00C68B25 /* TextureManager.swift in Sources */,
 				54A08FFF20C79E0F00C68B25 /* NifReader.swift in Sources */,
 				54A08FF620C76F3800C68B25 /* DefaultMaterial.swift in Sources */,
 				5415F76820BC8B9C008A8E78 /* TesDataPack.swift in Sources */,
 				54FD3E5E20CF892A0010D58E /* TextureUtils.swift in Sources */,
+				54664B0720D556B600947E34 /* NumericExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

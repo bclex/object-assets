@@ -14,7 +14,7 @@ public enum GameFormatId {
 
 public class Header: CustomStringConvertible {
     public struct Flags: OptionSet {
-        let rawValue: UInt32
+        public let rawValue: UInt32
         public static let esmFile = Flags(rawValue: 0x00000001)               // ESM file. (TES4.HEDR record only.)
         public static let deleted = Flags(rawValue: 0x00000020)               // Deleted
         public static let r00 = Flags(rawValue: 0x00000040)                   // Constant / (REFR) Hidden From Local Map (Needs Confirmation: Related to shields)

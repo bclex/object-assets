@@ -8,7 +8,7 @@
 
 public class SOUNRecord: Record, IHaveEDID {
     public struct SOUNFlags: OptionSet {
-        let rawValue: UInt16
+        public let rawValue: UInt16
         public static let randomFrequencyShift = SOUNFlags(rawValue: 0x0001)
         public static let playAtRandom = SOUNFlags(rawValue: 0x0002)
         public static let environmentIgnored = SOUNFlags(rawValue: 0x0004)
@@ -17,6 +17,10 @@ public class SOUNRecord: Record, IHaveEDID {
         public static let menuSound = SOUNFlags(rawValue: 0x0020)
         public static let _2D = SOUNFlags(rawValue: 0x0040)
         public static let _360LFE = SOUNFlags(rawValue: 0x0080)
+        
+        public init(rawValue: UInt16) {
+            self.rawValue = rawValue
+        }
     }
 
     // TESX

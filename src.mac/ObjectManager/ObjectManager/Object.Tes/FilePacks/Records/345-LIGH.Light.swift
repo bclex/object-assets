@@ -10,7 +10,7 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
     // TESX
     public struct DATAField {
         public struct ColorFlags: OptionSet {
-            let rawValue: Int32
+            public let rawValue: Int32
             public static let dynamic = ColorFlags(rawValue: 0x0001)
             public static let canCarry = ColorFlags(rawValue: 0x0002)
             public static let negative = ColorFlags(rawValue: 0x0004)
@@ -20,6 +20,10 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
             public static let flickerSlow = ColorFlags(rawValue: 0x0040)
             public static let pulse = ColorFlags(rawValue: 0x0080)
             public static let pulseSlow = ColorFlags(rawValue: 0x0100)
+            
+            public init(rawValue: UInt32) {
+                self.rawValue = rawValue
+            }
         }
 
         public let weight: Float

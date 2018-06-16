@@ -12,7 +12,7 @@ import CoreGraphics
 public class CELLRecord: Record, ICellRecord {
     
     public struct CELLFlags: OptionSet {
-        let rawValue: UInt16
+        public let rawValue: UInt16
         public static let interior = CELLFlags(rawValue: 0x0001)
         public static let hasWater = CELLFlags(rawValue: 0x0002)
         public static let invertFastTravel = CELLFlags(rawValue: 0x0004) //: IllegalToSleepHere
@@ -22,6 +22,10 @@ public class CELLRecord: Record, ICellRecord {
         public static let handChanged = CELLFlags(rawValue: 0x0040)
         public static let showSky = CELLFlags(rawValue: 0x0080) // Behave like exterior
         public static let useSkyLighting = CELLFlags(rawValue: 0x0100)
+        
+        public init(rawValue: UInt16) {
+            self.rawValue = rawValue
+        }
     }
 
     public struct XCLCField {
