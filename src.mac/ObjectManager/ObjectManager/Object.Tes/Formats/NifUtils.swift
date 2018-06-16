@@ -8,8 +8,9 @@
 
 public class NifUtils {
     public static func nifVectorToUnityVector(_ vector: Vector3) -> Vector3 {
-        Utils.swap(&vector.y, &vector.z)
-        return vector
+        var unity = vector
+        Utils.swap(&unity.y, &unity.z)
+        return unity
     }
 
     public static func nifPointToUnityPoint(_ point: Vector3) -> Vector3 {
