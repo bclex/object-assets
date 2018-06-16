@@ -10,8 +10,8 @@ public class NifManager {
     let _asset: BsaMultiFile
     let _materialManager: MaterialManager 
     var _prefabContainerObj: GameObject? = nil
-    let _nifFilePreloadTasks = [String : Any]()
-    let _nifPrefabs = [String : GameObject]()
+    var _nifFilePreloadTasks = [String : Any]()
+    var _nifPrefabs = [String : GameObject]()
     let _markerLayer: Int
 
     init(asset: BsaMultiFile, materialManager: MaterialManager, markerLayer: Int = 0) {

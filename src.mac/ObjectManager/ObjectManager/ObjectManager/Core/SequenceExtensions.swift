@@ -20,7 +20,7 @@ public extension Sequence where Element: FloatingPoint {
 }
 
 public class SequenceUtils {
-    public static func flip2DSubArrayVertically(_ data: inout [UInt8], offsetBy: Int, rows: Int, bytesPerRow: Int) {
+    public static func flip2DSubArrayVertically(_ data: inout Data, offsetBy: Int, rows: Int, bytesPerRow: Int) {
         assert(offsetBy >= 0 && rows >= 0 && bytesPerRow >= 0 && (offsetBy + (rows * bytesPerRow)) <= data.count)
         var tmpRow = [UInt8](); tmpRow.reserveCapacity(bytesPerRow)
         let lastRowIndex = rows - 1

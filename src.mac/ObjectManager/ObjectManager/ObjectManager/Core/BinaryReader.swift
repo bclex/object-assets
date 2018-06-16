@@ -98,7 +98,7 @@ public class BinaryReader {
         return readBytes(Int(remainingByteCount))
     }
 
-    public func readRestOfBytes(_ data: inout Data, offsetBy: Int) -> Data {
+    public func readRestOfBytes(_ data: inout Data, offsetBy: Int) {
         let remainingByteCount = baseStream.length - baseStream.position
         assert(offsetBy >= 0 && remainingByteCount <= Int.max && offsetBy + Int(remainingByteCount) <= data.count)
         read(&data, offsetBy: offsetBy, count: Int(remainingByteCount))
