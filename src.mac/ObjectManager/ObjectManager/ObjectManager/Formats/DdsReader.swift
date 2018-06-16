@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreImage
 
 public struct DDSFlags: OptionSet { //: DDSD
     public let rawValue: UInt32
@@ -449,13 +450,14 @@ public class DdsReader {
             // BGRA32
             if header.ddspf.dwBBitMask == 0x000000FF && header.ddspf.dwGBitMask == 0x0000FF00 &&
                 header.ddspf.dwRBitMask == 0x00FF0000 && header.ddspf.dwABitMask == 0xFF000000 {
-                textureFormat = CIFormat.kCIFormatBGRA8
+                textureFormat = kCIFormatBGRA8
                 bytesPerPixel = 4
             }
             // ARGB32
             else if header.ddspf.dwABitMask == 0x000000FF && header.ddspf.dwRBitMask == 0x0000FF00 &&
                 header.ddspf.dwGBitMask == 0x00FF0000 && header.ddspf.dwBBitMask == 0xFF000000 {
-                textureFormat = TextureFormat.kCIFormatARGB8
+                textureFormat = kCIFormatARGB8
+                
                 bytesPerPixel = 4
             }
             else { fatalError("Unsupported DDS file pixel format.") }
@@ -466,22 +468,22 @@ public class DdsReader {
             r.readRestOfBytes(textureData, offsetBy: 0)
         }
         else if header.ddspf.dwFourCC == "DXT1" {
-            textureFormat = TextureFormat.kCIFormatARGB8
+            textureFormat = kCIFormatARGB8
             bytesPerPixel = 4
             let compressedTextureData = r.readRestOfBytes()
-            textureData = decodeDXT1ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: UInt32(ddsMipmapLevelCount))
+            textureData = decodeDXT1ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
         }
         else if header.ddspf.dwFourCC == "DXT3" {
-            textureFormat = TextureFormat.kCIFormatARGB8
+            textureFormat = kCIFormatARGB8
             bytesPerPixel = 4
             let compressedTextureData = r.readRestOfBytes()
-            textureData = decodeDXT3ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: UInt32(ddsMipmapLevelCount))
+            textureData = decodeDXT3ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
         }
         else if header.ddspf.dwFourCC == "DXT5" {
-            textureFormat = TextureFormat.kCIFormatARGB8
+            textureFormat = kCIFormatARGB8
             bytesPerPixel = 4
             let compressedTextureData = r.readRestOfBytes()
-            textureData = decodeDXT5ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: UInt32(ddsMipmapLevelCount))
+            textureData = decodeDXT5ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
         }
         else { fatalError("Unsupported DDS file pixel format.") }
     }

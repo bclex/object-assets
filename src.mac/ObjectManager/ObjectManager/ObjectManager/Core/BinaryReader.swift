@@ -216,6 +216,7 @@ public class BinaryReader {
         var matrix = Matrix4x4()
         for rowIndex in 0..<4 {
             for columnIndex in 0..<4 {
+                
                 // If we're in the 3x3 part of the matrix, read values. Otherwise, use the identity matrix.
                 if rowIndex <= 2 && columnIndex <= 2 { matrix[rowIndex, columnIndex] = readLESingle() }
                 else { matrix[rowIndex, columnIndex] = rowIndex == columnIndex ? 1 : 0 }
