@@ -26,6 +26,12 @@ public class Utils {
 //        }
 //        return (UInt64(Self.RawValue(bits.rawValue)) & flagBits) == flagBits
 //    }
+    
+    public static func swap(_ a: inout CGFloat, _ b: inout CGFloat) {
+        let temp = a
+        a = b
+        b = temp
+    }
 
     public static func getBits(_ bitOffset: Int, _ bitCount: Int, _ bytes: Data) -> UInt64 {
         assert(bitCount <= 64 && (bitOffset + bitCount) <= (8 * bytes.count))

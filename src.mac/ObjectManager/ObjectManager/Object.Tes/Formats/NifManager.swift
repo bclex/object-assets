@@ -1,4 +1,4 @@
-﻿//
+//
 //  NifManager.swift
 //  ObjectManager
 //
@@ -44,7 +44,7 @@ public class NifManager {
     }
 
     func ensurePrefabContainerObjectExists() {
-        if _prefabContainerObj = nil {
+        if _prefabContainerObj == nil {
             _prefabContainerObj = GameObject("NIF Prefabs")
             _prefabContainerObj.setActive(false)
         }
