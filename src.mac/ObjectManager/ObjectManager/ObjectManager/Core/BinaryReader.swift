@@ -201,47 +201,87 @@ public class BinaryReader {
     }
 
     public func readLEColumnMajorMatrix3x3() -> Matrix4x4 {
-        var matrix = Matrix4x4()
-        for columnIndex in 0..<4 {
-            for rowIndex in 0..<4 {
-                // If we're in the 3x3 part of the matrix, read values. Otherwise, use the identity matrix.
-                if rowIndex <= 2 && columnIndex <= 2 { matrix[rowIndex, columnIndex] = readLESingle() }
-                else { matrix[rowIndex, columnIndex] = rowIndex == columnIndex ? 1 : 0 }
-            }
-        }
-        return matrix
+        return Matrix4x4(
+            m11: CGFloat(readLESingle()),
+            m21: CGFloat(readLESingle()),
+            m31: CGFloat(readLESingle()),
+            m41: 0,
+            m12: CGFloat(readLESingle()),
+            m22: CGFloat(readLESingle()),
+            m32: CGFloat(readLESingle()),
+            m42: 0,
+            m13: CGFloat(readLESingle()),
+            m23: CGFloat(readLESingle()),
+            m33: CGFloat(readLESingle()),
+            m43: 0,
+            m14: 0,
+            m24: 0,
+            m34: 0,
+            m44: 1
+        )
     }
 
     public func readLERowMajorMatrix3x3() -> Matrix4x4 {
-        var matrix = Matrix4x4()
-        for rowIndex in 0..<4 {
-            for columnIndex in 0..<4 {
-                // If we're in the 3x3 part of the matrix, read values. Otherwise, use the identity matrix.
-                if rowIndex <= 2 && columnIndex <= 2 { matrix[rowIndex, columnIndex] = readLESingle() }
-                else { matrix[rowIndex, columnIndex] = rowIndex == columnIndex ? 1 : 0 }
-            }
-        }
-        return matrix
+        return Matrix4x4(
+            m11: CGFloat(readLESingle()),
+            m12: CGFloat(readLESingle()),
+            m13: CGFloat(readLESingle()),
+            m14: 0,
+            m21: CGFloat(readLESingle()),
+            m22: CGFloat(readLESingle()),
+            m23: CGFloat(readLESingle()),
+            m24: 0,
+            m31: CGFloat(readLESingle()),
+            m32: CGFloat(readLESingle()),
+            m33: CGFloat(readLESingle()),
+            m34: 0,
+            m41: 0,
+            m42: 0,
+            m43: 0,
+            m44: 1
+        )
     }
 
     public func readLEColumnMajorMatrix4x4() -> Matrix4x4 {
-        var matrix = Matrix4x4()
-        for columnIndex in 0..<4 {
-            for rowIndex in 0..<4 {
-                matrix[rowIndex, columnIndex] = readLESingle()
-            }
-        }
-        return matrix
+        return Matrix4x4(
+            m11: CGFloat(readLESingle()),
+            m21: CGFloat(readLESingle()),
+            m31: CGFloat(readLESingle()),
+            m41: CGFloat(readLESingle()),
+            m12: CGFloat(readLESingle()),
+            m22: CGFloat(readLESingle()),
+            m32: CGFloat(readLESingle()),
+            m42: CGFloat(readLESingle()),
+            m13: CGFloat(readLESingle()),
+            m23: CGFloat(readLESingle()),
+            m33: CGFloat(readLESingle()),
+            m43: CGFloat(readLESingle()),
+            m14: CGFloat(readLESingle()),
+            m24: CGFloat(readLESingle()),
+            m34: CGFloat(readLESingle()),
+            m44: CGFloat(readLESingle())
+        )
     }
 
     public func readLERowMajorMatrix4x4() -> Matrix4x4 {
-        var matrix = Matrix4x4()
-        for rowIndex in 0..<4 {
-            for columnIndex in 0..<4 {
-                matrix[rowIndex, columnIndex] = readLESingle()
-            }
-        }
-        return matrix
+        return Matrix4x4(
+            m11: CGFloat(readLESingle()),
+            m12: CGFloat(readLESingle()),
+            m13: CGFloat(readLESingle()),
+            m14: CGFloat(readLESingle()),
+            m21: CGFloat(readLESingle()),
+            m22: CGFloat(readLESingle()),
+            m23: CGFloat(readLESingle()),
+            m24: CGFloat(readLESingle()),
+            m31: CGFloat(readLESingle()),
+            m32: CGFloat(readLESingle()),
+            m33: CGFloat(readLESingle()),
+            m34: CGFloat(readLESingle()),
+            m41: CGFloat(readLESingle()),
+            m42: CGFloat(readLESingle()),
+            m43: CGFloat(readLESingle()),
+            m44: CGFloat(readLESingle())
+        )
     }
 
     public func readLEQuaternionWFirst() -> Quaternion {
