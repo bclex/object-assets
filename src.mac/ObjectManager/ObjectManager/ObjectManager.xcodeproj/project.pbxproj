@@ -162,7 +162,7 @@
 		54A0904E20C8CCFC00C68B25 /* 345-MISC.Misc Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "345-MISC.Misc Item.swift"; sourceTree = "<group>"; };
 		54A0904F20C8CCFC00C68B25 /* 345-SKIL.Skill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "345-SKIL.Skill.swift"; sourceTree = "<group>"; };
 		54A090A120CF862300C68B25 /* NifUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NifUtils.swift; sourceTree = "<group>"; };
-		54A090A720CF875A00C68B25 /* DdsReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DdsReader.swift; path = DdsReader.swift"; sourceTree = "<group>"; };
+		54A090A720CF875A00C68B25 /* DdsReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DdsReader.swift; path = DdsReader.swift; sourceTree = "<group>"; };
 		54AEEF0B20BE292100560590 /* FileManager+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+Extensions.swift"; sourceTree = "<group>"; };
 		54AEEF0D20BE37E900560590 /* 300-TES3.Plugin info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "300-TES3.Plugin info.swift"; sourceTree = "<group>"; };
 		54AEEF0F20BE381900560590 /* 345-STAT.Static.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "345-STAT.Static.swift"; sourceTree = "<group>"; };
