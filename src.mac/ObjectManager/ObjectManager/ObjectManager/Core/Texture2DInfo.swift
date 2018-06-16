@@ -6,6 +6,8 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
+import AppKit
+
 public class Texture2DInfo {
     public let width: Int
     public let height: Int

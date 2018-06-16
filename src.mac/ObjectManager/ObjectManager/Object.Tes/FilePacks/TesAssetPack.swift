@@ -10,34 +10,34 @@ import Foundation
 import SceneKit
 
 public class TesAssetPack: BsaMultiFile, IAssetPack {
-    let _textureManager: TextureManager
-    let _materialManager: MaterialManager
-    let _nifManager: NifManager
+    var _textureManager: TextureManager? = nil
+    var _materialManager: MaterialManager? = nil
+    var _nifManager: NifManager? = nil
 
     convenience init(_ filePath: URL) {
         self.init([filePath])
     }
     init(_ filePaths: [URL]) {
-        _textureManager = TextureManager(asset: self)
-        _materialManager = MaterialManager(textureManager: _textureManager)
-        _nifManager = NifManager(asset: self, materialManager: _materialManager, markerLayer: 0)
         super.init(filePaths)
+        _textureManager = TextureManager(asset: self)
+        _materialManager = MaterialManager(textureManager: _textureManager!)
+        _nifManager = NifManager(asset: self, materialManager: _materialManager!, markerLayer: 0)
     }
 
     public func loadTexture(texturePath: String, method: Int = 0) -> Texture2D {
-        return _textureManager.loadTexture(texturePath, method: method)
+        return _textureManager!.loadTexture(texturePath, method: method)
     }
 
     public func preloadTextureAsync(texturePath: String) {
-        _textureManager.preloadTextureFileAsync(texturePath)
+        _textureManager!.preloadTextureFileAsync(texturePath)
     }
 
     public func createObject(filePath: String) -> GameObject {
-        return _nifManager.instantiateNif(filePath: filePath)
+        return _nifManager!.instantiateNif(filePath)
     }
 
     public func preloadObjectAsync(filePath: String) {
-        _nifManager.preloadNifFileAsync(filePath: filePath)
+        _nifManager!.preloadNifFileAsync(filePath)
     }
 
     public override func containsFile(_ filePath: String) -> Bool {

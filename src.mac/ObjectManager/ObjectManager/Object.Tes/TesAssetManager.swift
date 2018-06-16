@@ -44,7 +44,7 @@ public enum GameId: Int, CustomStringConvertible {
         case "falloutnv": self = .falloutNV
         case "fallout4": self = .fallout4
         case "fallout4vr": self = .fallout4VR
-        default: return .morrowind
+        default: self = .morrowind
         }
     }
 

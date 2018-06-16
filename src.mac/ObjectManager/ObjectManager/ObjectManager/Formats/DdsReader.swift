@@ -305,7 +305,7 @@ public class DdsReader {
         var alphas = [UInt8](); alphas.reserveCapacity(16)
         for i in 0..<16 {
             let alphaPercent = Float(compressedAlphas[i] / 15)
-            alphas[i] = UInt8((alphaPercent * 255).roundToInt())
+            alphas[i] = UInt8((alphaPercent * 255).roundedAsInt())
         }
         // Create the color table.
         var colorTable = [Color](); colorTable.reserveCapacity(4)
