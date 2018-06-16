@@ -9,34 +9,35 @@
 import Foundation
 
 extension BsaMultiFile {
-    public func loadTextureInfoAsync(texturePath: String, cb: @escaping (Texture2DInfo?) -> Void)  {
+    public func loadTextureInfoAsync(texturePath: String) -> Task<Texture2DInfo?> {
         guard let filePath = findTexture(texturePath) else {
             debugPrint("Could not find file '\(texturePath)' in a BSA file.")
-            cb(nil)
-            return
+            return Task(value: nil)
         }
+        var task = Task<Texture2DInfo?>()
         let fileData = loadFileData(filePath)
         DispatchQueue.global().async {
             let fileExtension = URL(string: filePath)!.pathExtension
             guard fileExtension.lowercased() == ".dds" else {
                 fatalError("Unsupported texture type: \(fileExtension)")
             }
-            let texture = DdsReader.loadDDSTexture(DataBaseStream(data: fileData))
-            DispatchQueue.main.async {
-                cb(texture)
-            }
+            let r = BinaryReader(DataBaseStream(data: fileData))
+            defer { r.close() }
+            let texture = DdsReader.loadDDSTexture(r)
+            task.callback(texture)
         }
     }
 
-    public func loadObjectInfoAsync(filePath: String, cb: @escaping (Any) -> Void) {
+    public func loadObjectInfoAsync(filePath: String) -> Task<Any> {
         let fileUrl = URL(string: filePath)!
         let fileData = loadFileData(filePath)
+        var task = Task<Any?>()
         DispatchQueue.global().async {
             var file = NiFile(name: fileUrl.deletingPathExtension().lastPathComponent)
-            //file.Deserialize(BinaryReader(DataBaseStream(data: fileData)))
-            DispatchQueue.main.async {
-                cb(file)
-            }
+            let r = BinaryReader(DataBaseStream(data: fileData))
+            defer { r.close() }
+            file.read(r)
+            task.callback(file)
         }
     }
     

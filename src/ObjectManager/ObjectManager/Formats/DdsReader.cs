@@ -87,10 +87,9 @@ namespace OA.Formats
             dwDepth = r.ReadLEUInt32();
             dwMipMapCount = r.ReadLEUInt32();
             dwReserved1 = new uint[11];
-            for (var i = 0; i < dwReserved1.Length; i++)
+            for (var i = 0; i < 11; i++)
                 dwReserved1[i] = r.ReadLEUInt32();
-            ddspf = new DDSPixelFormat();
-            ddspf.Read(r);
+            ddspf = new DDSPixelFormat(r);
             dwCaps = (DDSCaps)r.ReadLEUInt32();
             if (!Utils.ContainsBitFlags((int)dwCaps, (int)DDSCaps.Texture))
                 throw new FileFormatException($"Invalid DDS file caps: {dwCaps}.");
@@ -168,7 +167,7 @@ namespace OA.Formats
         public uint dwBBitMask;
         public uint dwABitMask;
 
-        public void Read(UnityBinaryReader r)
+        public DDSPixelFormat(UnityBinaryReader r)
         {
             var size = r.ReadLEUInt32();
             if (size != 32)

@@ -33,7 +33,7 @@ public enum GameId: Int, CustomStringConvertible {
         }
     }
     
-    init(_ value: String) {
+    init?(_ value: String) {
         switch value.lowercased() {
         case "morrowind": self = .morrowind
         case "oblivion": self = .oblivion
@@ -44,13 +44,9 @@ public enum GameId: Int, CustomStringConvertible {
         case "falloutnv": self = .falloutNV
         case "fallout4": self = .fallout4
         case "fallout4vr": self = .fallout4VR
-        default: self = .morrowind
+        default: return nil
         }
     }
-
-    //func list() -> Range<GameId> {
-    //    return [GameId.morrowind...]
-    //}
 }
 
 public class TesAssetManager: IAssetManager {    

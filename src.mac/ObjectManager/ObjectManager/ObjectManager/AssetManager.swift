@@ -16,10 +16,10 @@ public protocol IRecord {
 }
 
 public protocol IAssetPack {
-    func loadTextureInfoAsync(texturePath: String, cb: @escaping (Texture2DInfo?) -> Void)
+    func loadTextureInfoAsync(texturePath: String) -> Task<Texture2DInfo?>
     func loadTexture(texturePath: String, method: Int) -> Texture2D
     func preloadTextureAsync(texturePath: String)
-    func loadObjectInfoAsync(filePath: String, cb: @escaping (Any) -> Void)
+    func loadObjectInfoAsync(filePath: String) -> Task<Any>
     func createObject(filePath: String) -> GameObject
     func preloadObjectAsync(filePath: String)
 }
