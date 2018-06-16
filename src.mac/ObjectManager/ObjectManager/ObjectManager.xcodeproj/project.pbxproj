@@ -19,7 +19,6 @@
 		54A08FF620C76F3800C68B25 /* DefaultMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FF520C7681500C68B25 /* DefaultMaterial.swift */; };
 		54A08FF720C76F3B00C68B25 /* BaseMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FF420C767D700C68B25 /* BaseMaterial.swift */; };
 		54A08FFD20C7824C00C68B25 /* GameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FFC20C7824C00C68B25 /* GameObject.swift */; };
-		54A090A020CDC32E00C68B25 /* 300-TES3.Plugin info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF0D20BE37E900560590 /* 300-TES3.Plugin info.swift */; };
 		54A090A820CF875A00C68B25 /* DdsReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A090A720CF875A00C68B25 /* DdsReader.swift */; };
 		54AEEF1420BE51B700560590 /* DataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AEEF1320BE51B700560590 /* DataExtensions.swift */; };
 		54FD13AA20BE206A003D3138 /* CellManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD13A920BE206A003D3138 /* CellManager.swift */; };
@@ -476,7 +475,6 @@
 				F38DF06F20D570D200873AA4 /* VectorExtensions.swift in Sources */,
 				54AEEF1420BE51B700560590 /* DataExtensions.swift in Sources */,
 				54FD13AA20BE206A003D3138 /* CellManager.swift in Sources */,
-				54A090A020CDC32E00C68B25 /* 300-TES3.Plugin info.swift in Sources */,
 				54FD3E5F20CF892A0010D58E /* Utils.swift in Sources */,
 				54A08FEB20C4FACD00C68B25 /* Vector2Int.swift in Sources */,
 				54A08FF720C76F3B00C68B25 /* BaseMaterial.swift in Sources */,

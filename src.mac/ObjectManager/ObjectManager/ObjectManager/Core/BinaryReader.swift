@@ -201,28 +201,36 @@ public class BinaryReader {
     }
 
     public func readLEColumnMajorMatrix3x3() -> Matrix4x4 {
+        let m11 = readLESingle()
+        let m21 = readLESingle()
+        let m31 = readLESingle()
+        let m12 = readLESingle()
+        let m22 = readLESingle()
+        let m32 = readLESingle()
+        let m13 = readLESingle()
+        let m23 = readLESingle()
+        let m33 = readLESingle()
         return Matrix4x4(
-            m11: CGFloat(readLESingle()),
-            m21: CGFloat(readLESingle()),
-            m31: CGFloat(readLESingle()),
-            m41: 0,
-            m12: CGFloat(readLESingle()),
-            m22: CGFloat(readLESingle()),
-            m32: CGFloat(readLESingle()),
-            m42: 0,
-            m13: CGFloat(readLESingle()),
-            m23: CGFloat(readLESingle()),
-            m33: CGFloat(readLESingle()),
-            m43: 0,
+            m11: CGFloat(m11),
+            m12: CGFloat(m12),
+            m13: CGFloat(m13),
             m14: 0,
+            m21: CGFloat(m21),
+            m22: CGFloat(m22),
+            m23: CGFloat(m23),
             m24: 0,
+            m31: CGFloat(m31),
+            m32: CGFloat(m32),
+            m33: CGFloat(m33),
             m34: 0,
+            m41: 0,
+            m42: 0,
+            m43: 0,
             m44: 1
         )
     }
 
     public func readLERowMajorMatrix3x3() -> Matrix4x4 {
-<<<<<<< HEAD
         return Matrix4x4(
             m11: CGFloat(readLESingle()),
             m12: CGFloat(readLESingle()),
@@ -241,38 +249,42 @@ public class BinaryReader {
             m43: 0,
             m44: 1
         )
-=======
-        var matrix = Matrix4x4()
-        for rowIndex in 0..<4 {
-            for columnIndex in 0..<4 {
-                
-                // If we're in the 3x3 part of the matrix, read values. Otherwise, use the identity matrix.
-                if rowIndex <= 2 && columnIndex <= 2 { matrix[rowIndex, columnIndex] = readLESingle() }
-                else { matrix[rowIndex, columnIndex] = rowIndex == columnIndex ? 1 : 0 }
-            }
-        }
-        return matrix
->>>>>>> 2b4d9933ac65e76dfa5988210414e3afa5dd5aad
     }
 
     public func readLEColumnMajorMatrix4x4() -> Matrix4x4 {
+        let m11 = readLESingle()
+        let m21 = readLESingle()
+        let m31 = readLESingle()
+        let m41 = readLESingle()
+        let m12 = readLESingle()
+        let m22 = readLESingle()
+        let m32 = readLESingle()
+        let m42 = readLESingle()
+        let m13 = readLESingle()
+        let m23 = readLESingle()
+        let m33 = readLESingle()
+        let m43 = readLESingle()
+        let m14 = readLESingle()
+        let m24 = readLESingle()
+        let m34 = readLESingle()
+        let m44 = readLESingle()
         return Matrix4x4(
-            m11: CGFloat(readLESingle()),
-            m21: CGFloat(readLESingle()),
-            m31: CGFloat(readLESingle()),
-            m41: CGFloat(readLESingle()),
-            m12: CGFloat(readLESingle()),
-            m22: CGFloat(readLESingle()),
-            m32: CGFloat(readLESingle()),
-            m42: CGFloat(readLESingle()),
-            m13: CGFloat(readLESingle()),
-            m23: CGFloat(readLESingle()),
-            m33: CGFloat(readLESingle()),
-            m43: CGFloat(readLESingle()),
-            m14: CGFloat(readLESingle()),
-            m24: CGFloat(readLESingle()),
-            m34: CGFloat(readLESingle()),
-            m44: CGFloat(readLESingle())
+            m11: CGFloat(m11),
+            m12: CGFloat(m12),
+            m13: CGFloat(m13),
+            m14: CGFloat(m14),
+            m21: CGFloat(m21),
+            m22: CGFloat(m22),
+            m23: CGFloat(m23),
+            m24: CGFloat(m24),
+            m31: CGFloat(m31),
+            m32: CGFloat(m32),
+            m33: CGFloat(m33),
+            m34: CGFloat(m34),
+            m41: CGFloat(m41),
+            m42: CGFloat(m42),
+            m43: CGFloat(m43),
+            m44: CGFloat(m44)
         )
     }
 

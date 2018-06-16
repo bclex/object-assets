@@ -76,7 +76,7 @@ public struct DDSHeader { //: DDS_HEADER
     public let dwPitchOrLinearSize: UInt32
     public let dwDepth: UInt32 // only if DDS_HEADER_FLAGS_VOLUME is set in flags
     public let dwMipMapCount: UInt32
-    public let dwReserved1: [UInt32]
+    public var dwReserved1: [UInt32]
     public let ddspf: DDSPixelFormat
     public let dwCaps: DDSCaps // dwSurfaceFlags
     public let dwCaps2: DDSCaps2 // dwCubemapFlags
@@ -91,7 +91,7 @@ public struct DDSHeader { //: DDS_HEADER
         }
         dwFlags = DDSFlags(rawValue: r.readLEUInt32())
         guard dwFlags.contains([.height, .width]) else {
-            fatalError("Invalid DDS file flags: \(dwFlags).")
+            fatalError("Invalid DDS file flags")
         }
         dwHeight = r.readLEUInt32()
         dwWidth = r.readLEUInt32()
@@ -105,7 +105,7 @@ public struct DDSHeader { //: DDS_HEADER
         ddspf = DDSPixelFormat(r)
         dwCaps = DDSCaps(rawValue: r.readLEUInt32())
         guard dwCaps.contains(.texture) else {
-            fatalError("Invalid DDS file caps: \(dwCaps).")
+            fatalError("Invalid DDS file caps")
         }
         dwCaps2 = DDSCaps2(rawValue: r.readLEUInt32())
         dwCaps3 = r.readLEUInt32()
@@ -377,7 +377,7 @@ public class DdsReader {
         return colors
     }
 
-    static func copyDecodedTexelBlock(decodedTexels: [Color32], argb: inout [UInt8], baseARGBIndex: Int, baseRowIndex: Int, baseColumnIndex: Int, textureWidth: Int, textureHeight: Int) {
+    static func copyDecodedTexelBlock(decodedTexels: [Color32], argb: inout Data, baseARGBIndex: Int, baseRowIndex: Int, baseColumnIndex: Int, textureWidth: Int, textureHeight: Int) {
         for i in 0..<4 { // row
             for j in 0..<4 { // column
                 let rowIndex = baseRowIndex + i
@@ -402,11 +402,11 @@ public class DdsReader {
         let containsAlpha = alphaFlag || (pixelFormat.dwRGBBitCount == 32 && pixelFormat.dwABitMask != 0)
         let r = BinaryReader(DataBaseStream(data: compressedData))
         defer { r.close() }
-        var argb = [UInt8](repeating: 0, count: TextureUtils.calculateMipMappedTextureDataSize(width: width, height: height, bytesPerPixel: 4))
+        var argb = Data(count: TextureUtils.calculateMipMappedTextureDataSize(width: width, height: height, bytesPerPixel: 4))
         var mipMapWidth = width
         var mipMapHeight = height
         var baseARGBIndex = 0
-        for mipMapIndex in 0..<mipmapCount {
+        for _ in 0..<mipmapCount {
             for rowIndex in stride(from: 0, to: mipMapHeight, by: 4) {
                 for columnIndex in stride(from: 0, to: mipMapWidth, by: 4) {
                     let colors: [Color32]
@@ -416,14 +416,14 @@ public class DdsReader {
                         case 5: colors = decodeDXT5TexelBlock(r)
                         default: fatalError("Tried decoding a DDS file using an unsupported DXT format: DXT \(dxtVersion))")
                     }
-                    copyDecodedTexelBlock(colors: colors, argb: argb, baseARGBIndex: baseARGBIndex, rowIndex: rowIndex, columnIndex: columnIndex, mipMapWidth: mipMapWidth, mipMapHeight: mipMapHeight)
+                    copyDecodedTexelBlock(decodedTexels: colors, argb: &argb, baseARGBIndex: baseARGBIndex, baseRowIndex: rowIndex, baseColumnIndex: columnIndex, textureWidth: mipMapWidth, textureHeight: mipMapHeight)
                 }
             }
             baseARGBIndex += mipMapWidth * mipMapHeight * 4
             mipMapWidth /= 2
             mipMapHeight /= 2
         }
-        return Data(bytes: argb)
+        return argb
     }
     static func decodeDXT1ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> Data {
         return decodeDXTToARGB(dxtVersion: 1, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
@@ -509,7 +509,7 @@ public class DdsReader {
             }
             // Generate the next mipmap level's data if the DDS file doesn't contain it.
             if mipMapLevelIndex + 1 >= ddsMipmapLevelCount {
-                TextureUtils.downscale4Component32BitPixelsX2(srcBytes: data, srcStartIndex: mipMapLevelDataOffset, srcRowCount: mipMapLevelHeight, srcColumnCount: mipMapLevelWidth, dstBytes: &data, dstStartIndex: mipMapLevelDataOffset + mipMapDataSize)
+                TextureUtils.downscale4Component32BitPixelsX2(srcData: data, srcStartIndex: mipMapLevelDataOffset, srcRowCount: mipMapLevelHeight, srcColumnCount: mipMapLevelWidth, dstData: &data, dstStartIndex: mipMapLevelDataOffset + mipMapDataSize)
             }
             // Switch to the next mipmap level.
             mipMapLevelIndex += 1

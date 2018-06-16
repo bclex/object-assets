@@ -5,6 +5,9 @@
 //  Created by Sky Morey on 5/28/18.
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
+
+import Foundation
+
 public class TextureUtils {
     public static func calculateMipMapCount(width: Int, height: Int) -> Int {
         assert(width > 0 && height > 0)
@@ -35,13 +38,13 @@ public class TextureUtils {
     }
 
     // TODO: Improve algorithm for images with odd dimensions.
-    public static func downscale4Component32BitPixelsX2(srcBytes: [UInt8], srcStartIndex: Int, srcRowCount: Int, srcColumnCount: Int, dstBytes: inout [UInt8], dstStartIndex: Int) {
+    public static func downscale4Component32BitPixelsX2(srcData: Data, srcStartIndex: Int, srcRowCount: Int, srcColumnCount: Int, dstData: inout Data, dstStartIndex: Int) {
         let bytesPerPixel = 4
         let componentCount = 4
-        assert(srcStartIndex >= 0 && srcRowCount >= 0 && srcColumnCount >= 0 && (srcStartIndex + (bytesPerPixel * srcRowCount * srcColumnCount)) <= srcBytes.count)
+        assert(srcStartIndex >= 0 && srcRowCount >= 0 && srcColumnCount >= 0 && (srcStartIndex + (bytesPerPixel * srcRowCount * srcColumnCount)) <= srcData.count)
         let dstRowCount = srcRowCount / 2
         let dstColumnCount = srcColumnCount / 2
-        assert(dstStartIndex >= 0 && (dstStartIndex + (bytesPerPixel * dstRowCount * dstColumnCount)) <= dstBytes.count)
+        assert(dstStartIndex >= 0 && (dstStartIndex + (bytesPerPixel * dstRowCount * dstColumnCount)) <= dstData.count)
         for dstRowIndex in 0..<dstRowCount {
             for dstColumnIndex in 0..<dstColumnCount {
                 let srcRowIndex0 = 2 * dstRowIndex
@@ -59,10 +62,10 @@ public class TextureUtils {
                 for componentIndex in 0..<componentCount {
                     var averageComponent: Float = 0
                     for srcPixelIndex in 0..<srcPixelStartIndices.capacity {
-                        averageComponent += Float(srcBytes[srcPixelStartIndices[srcPixelIndex] + componentIndex])
+                        averageComponent += Float(srcData[srcPixelStartIndices[srcPixelIndex] + componentIndex])
                     }
                     averageComponent /= Float(srcPixelStartIndices.count)
-                    dstBytes[dstPixelStartIndex + componentIndex] = UInt8(averageComponent.roundedAsInt())
+                    dstData[dstPixelStartIndex + componentIndex] = UInt8(averageComponent.roundedAsInt())
                 }
             }
         }
