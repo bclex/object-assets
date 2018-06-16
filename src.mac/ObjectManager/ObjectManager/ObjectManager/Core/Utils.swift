@@ -37,16 +37,16 @@ public class Utils {
             // Read bits from the byte array.
             let numBitsLeftInByte = 8 - bitIndex
             let numBitsReadNow = min(remainingBitCount, numBitsLeftInByte)
-            let unmaskedBits = bytes[byteIndex] >> (8 - (bitIndex + numBitsReadNow))
-            let bitMask = 0xFF >> (8 - numBitsReadNow)
+            let unmaskedBits = UInt64(bytes[byteIndex] >> (8 - (bitIndex + numBitsReadNow)))
+            let bitMask = UInt64(0xFF >> (8 - numBitsReadNow))
             let bitsReadNow = unmaskedBits & bitMask
 
             // Store the bits we read.
-            bits <<= numBitsReadNow;
-            bits |= bitsReadNow;
+            bits <<= numBitsReadNow
+            bits |= bitsReadNow
 
             // Prepare for the next iteration.
-            bitIndex += numBitsReadNow;
+            bitIndex += numBitsReadNow
 
             if bitIndex == 8 {
                 byteIndex += 1
