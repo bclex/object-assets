@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/smorey2/_GITHUB/object-assets/src.mac/ObjectManager/ObjectManager/ObjectManager/Formats/DdsReader.swift">
-   </FileRef>
-   <FileRef
       location = "self:">
    </FileRef>
 </Workspace>
