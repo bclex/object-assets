@@ -30,11 +30,11 @@ public class TextureManager {
         // If the texture has already been created we don't have to load the file again.
         guard _cachedTextures[texturePath] == nil else { return }
         // Start loading the texture file asynchronously if we haven't already started.
-        var textureFileLoadingTask = _textureFilePreloadTasks[texturePath]
-        if textureFileLoadingTask == nil {
-            textureFileLoadingTask = _asset.loadTextureInfoAsync(texturePath)
-            _textureFilePreloadTasks[texturePath] = textureFileLoadingTask
-        }
+        //var textureFileLoadingTask = _textureFilePreloadTasks[texturePath]
+//        if textureFileLoadingTask == nil {
+//            textureFileLoadingTask = _asset.loadTextureInfoAsync(texturePath)
+//            _textureFilePreloadTasks[texturePath] = textureFileLoadingTask
+//        }
     }
 
     func loadTextureInfo(_ texturePath: String) -> Texture2DInfo? {

@@ -146,7 +146,16 @@ public struct DDSHeader_DXT10 { //: DDS_HEADER_DXT10
     public let arraySize: UInt32
     public let miscFlags2: UInt32 // see DDS_MISC_FLAGS2
 
-    init() {
+    init(dxgiFormat: Int32,
+         resourceDimension: DDSDimension,
+         miscFlag: UInt32,
+         arraySize: UInt32,
+         miscFlags2: UInt32) {
+        self.dxgiFormat = dxgiFormat
+        self.resourceDimension = resourceDimension
+        self.miscFlag = miscFlag
+        self.arraySize = arraySize
+        self.miscFlags2 = miscFlags2
     }
 
     func write(_ w: BinaryWriter) {
@@ -239,7 +248,7 @@ public class DdsReader {
         var ddsMipmapLevelCount = 0
         var textureFormat = TextureFormat()
         var bytesPerPixel = 0
-        var textureData: Data
+        var textureData = Data()
         extractDDSTextureFormatAndData(header, r,
                                        hasMipmaps: &hasMipmaps, ddsMipmapLevelCount: &ddsMipmapLevelCount,
                                        textureFormat: &textureFormat, bytesPerPixel: &bytesPerPixel, textureData: &textureData)
