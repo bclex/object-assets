@@ -52,11 +52,11 @@ public class BsaFile {
         // Skyrim and earlier
         public var sizeFlags: UInt32 // The size of the file in the BSA
         // Fallout 4
-        public var packedSize: UInt32
-        public var unpackedSize: UInt32
+        public var packedSize: UInt32 = 0
+        public var unpackedSize: UInt32 = 0
         //
         public var offset: UInt64 // The offset of the file in the BSA
-        public var tex: F4Tex
+        public var tex: F4Tex? = nil
         //
         public var path: String
         public var pathHash: UInt64
@@ -195,9 +195,7 @@ public class BsaFile {
         if file.sizeFlags > 0 && (file.compressed ^ _compressToggle) != 0 {
              var newFileData: Data
              if version != BsaFile.SSE_BSAHEADER_VERSION {
-                if fileData.count > 4 {
-                    newFileData = fileData.inflate(withOffset: 4)!
-                }
+                newFileData = fileData.count > 4 ? fileData.inflate(withOffset: 4)! : Data()
             }
             else {
                 newFileData = fileData.lzmaDecompress()!
@@ -205,30 +203,30 @@ public class BsaFile {
             fileData = newFileData
         }
         // General BA2
-        else if file.packedSize > 0 && file.tex.chunks == nil {
+        else if file.packedSize > 0 && file.tex!.chunks == nil {
             fileData = fileData.inflate()!
         }
         // Fill DDS Header
-        else if file.tex.chunks != nil {
+        else if file.tex!.chunks != nil {
             // map tex format
             let ddspf: DDSPixelFormat
             let dwPitchOrLinearSize: UInt32
-            switch file.tex.format {
+            switch file.tex!.format {
             case .BC1_UNORM:
                 ddspf = DDSPixelFormat(dwFlags: .fourCC, dwFourCC: "DXT1")
-                dwPitchOrLinearSize = UInt32(file.tex.width * file.tex.height / 2) // 4bpp
+                dwPitchOrLinearSize = UInt32(file.tex!.width * file.tex!.height / 2) // 4bpp
             case .BC2_UNORM:
                 ddspf = DDSPixelFormat(dwFlags: .fourCC, dwFourCC: "DXT3")
-                dwPitchOrLinearSize = UInt32(file.tex.width * file.tex.height) // 8bpp
+                dwPitchOrLinearSize = UInt32(file.tex!.width * file.tex!.height) // 8bpp
             case .BC3_UNORM:
                 ddspf = DDSPixelFormat(dwFlags: .fourCC, dwFourCC: "DXT5")
-                dwPitchOrLinearSize = UInt32(file.tex.width * file.tex.height) // 8bpp
+                dwPitchOrLinearSize = UInt32(file.tex!.width * file.tex!.height) // 8bpp
             case DXGIFormat.BC5_UNORM:
                 ddspf = DDSPixelFormat(dwFlags: .fourCC, dwFourCC: "ATI2")
-                dwPitchOrLinearSize = UInt32(file.tex.width * file.tex.height) // 8bpp
+                dwPitchOrLinearSize = UInt32(file.tex!.width * file.tex!.height) // 8bpp
             case .BC7_UNORM:
                 ddspf = DDSPixelFormat(dwFlags: .fourCC, dwFourCC: "DX10")
-                dwPitchOrLinearSize = UInt32(file.tex.width * file.tex.height) // 8bpp
+                dwPitchOrLinearSize = UInt32(file.tex!.width * file.tex!.height) // 8bpp
                 _ = DDSHeader_DXT10(dxgiFormat: Int32(DXGIFormat.BC7_UNORM.rawValue), resourceDimension: .texture2D)
                 //dx10Header.write(nil)
             case .DXGI_FORMAT_B8G8R8A8_UNORM:
@@ -238,24 +236,24 @@ public class BsaFile {
                     dwGBitMask: UInt32(0x0000FF00),
                     dwBBitMask: UInt32(0x000000FF),
                     dwABitMask: UInt32(0xFF000000))
-                dwPitchOrLinearSize = UInt32(file.tex.width * file.tex.height * 4) // 32bpp
+                dwPitchOrLinearSize = UInt32(file.tex!.width * file.tex!.height * 4) // 32bpp
             case .DXGI_FORMAT_R8_UNORM:
                 ddspf = DDSPixelFormat(
                     dwFlags: DDSPixelFormats.rgb, dwRGBBitCount: UInt32(8),
                     dwRBitMask: UInt32(0xFF))
-                dwPitchOrLinearSize = UInt32(file.tex.width * file.tex.height) // 8bpp
+                dwPitchOrLinearSize = UInt32(file.tex!.width * file.tex!.height) // 8bpp
             default: fatalError("DDS FAILED")
             }
             
             // Fill DDS Header
             _ = DDSHeader(
                 dwFlags: [.HEADER_FLAGS_TEXTURE, .HEADER_FLAGS_LINEARSIZE, .HEADER_FLAGS_MIPMAP],
-                dwHeight: UInt32(file.tex.height), dwWidth: UInt32(file.tex.width),
+                dwHeight: UInt32(file.tex!.height), dwWidth: UInt32(file.tex!.width),
                 dwPitchOrLinearSize: dwPitchOrLinearSize,
-                dwMipMapCount: UInt32(file.tex.numMips),
+                dwMipMapCount: UInt32(file.tex!.numMips),
                 ddspf: ddspf,
                 dwCaps: [.SURFACE_FLAGS_TEXTURE, .SURFACE_FLAGS_MIPMAP],
-                dwCaps2: file.tex.unk16 == 2049 ? DDSCaps2.CUBEMAP_ALLFACES : DDSCaps2.none)
+                dwCaps2: file.tex!.unk16 == 2049 ? DDSCaps2.CUBEMAP_ALLFACES : DDSCaps2.none)
         }
         return fileData
     }
@@ -287,14 +285,14 @@ public class BsaFile {
             if header_type == "GNRL" { // General BA2 Format
                 _r.baseStream.position = 16 + 8 // sizeof(header) + 8
                 for i in 0..<header_numFiles {
-                    let info_nameHash = _r.readLEUInt32()      // 00
-                    let info_ext = _r.readASCIIString(4)       // 04 - extension
-                    let info_dirHash = _r.readLEUInt32()       // 08
-                    let info_unk0C = _r.readLEUInt32()         // 0C - flags? 00100100
+                    _ = _r.readLEUInt32()      // 00
+                    _ = _r.readASCIIString(4)       // 04 - extension
+                    _ = _r.readLEUInt32()       // 08
+                    _ = _r.readLEUInt32()         // 0C - flags? 00100100
                     let info_offset = _r.readLEUInt64()        // 10 - relative to start of file
                     let info_packedSize = _r.readLEUInt32()    // 18 - packed length (zlib)
                     let info_unpackedSize = _r.readLEUInt32()  // 1C - unpacked length
-                    let info_unk20 = _r.readLEUInt32()         // 20 - BAADF00D
+                    _ = _r.readLEUInt32()         // 20 - BAADF00D
                     _files[i].packedSize = info_packedSize
                     _files[i].unpackedSize = info_unpackedSize
                     _files[i].offset = info_offset
@@ -304,12 +302,12 @@ public class BsaFile {
                 _r.baseStream.position = 16 + 8 // sizeof(header) + 8
                 for i in 0..<header_numFiles {
                     let fileMetadata = _files[i]
-                    let info_nameHash = _r.readLEUInt32()      // 00
-                    let info_ext = _r.readASCIIString(4)       // 04
-                    let info_dirHash = _r.readLEUInt32()       // 08
-                    let info_unk0C = _r.readByte()             // 0C
+                    _ = _r.readLEUInt32()      // 00
+                    _ = _r.readASCIIString(4)       // 04
+                    _ = _r.readLEUInt32()       // 08
+                    _ = _r.readByte()             // 0C
                     let info_numChunks = Int(_r.readByte())    // 0D
-                    let info_chunkHeaderSize = _r.readLEUInt16()// 0E - size of one chunk header
+                    _ = _r.readLEUInt16()// 0E - size of one chunk header
                     let info_height = _r.readLEUInt16()        // 10
                     let info_width = _r.readLEUInt16()         // 12
                     let info_numMips = _r.readByte()           // 14
@@ -354,7 +352,7 @@ public class BsaFile {
             let header_fileCount = Int(_r.readLEUInt32()) // Total number of file records (OBBSAFileInfo)
             let header_folderNameLength = Int(_r.readLEUInt32()) // Total length of folder names
             let header_fileNameLength = _r.readLEUInt32() // Total length of file names
-            let header_fileFlags = _r.readLEUInt32() // File flags
+            _ = _r.readLEUInt32() // File flags
 
             // Calculate some useful values
             if (header_archiveFlags & BsaFile.OB_BSAARCHIVE_PATHNAMES) == 0 || (header_archiveFlags & BsaFile.OB_BSAARCHIVE_FILENAMES) == 0 {
@@ -368,7 +366,7 @@ public class BsaFile {
 
             // Create file metadatas
             _files = [FileMetadata](); _files.reserveCapacity(header_fileCount)
-            var filenamesSectionStartPos = UInt64(header_folderRecordOffset) +
+            let filenamesSectionStartPos = UInt64(header_folderRecordOffset) +
                 UInt64(header_folderNameLength + header_folderCount * (folderSize + 1) + header_fileCount * 16)
             _r.baseStream.position = filenamesSectionStartPos
             var buf = Data(); buf.reserveCapacity(64)
@@ -392,8 +390,8 @@ public class BsaFile {
             _r.baseStream.position = UInt64(header_folderRecordOffset)
             var foldersFiles = [Int](); foldersFiles.reserveCapacity(header_folderCount)
             for i in 0..<header_folderCount {
-                var folder_hash = _r.readLEUInt64() // Hash of the folder name
-                var folder_fileCount = Int(_r.readLEUInt32()) // Number of files in folder
+                _ = _r.readLEUInt64() // Hash of the folder name
+                let folder_fileCount = Int(_r.readLEUInt32()) // Number of files in folder
                 var folder_unk: UInt32 = 0; var folder_offset: UInt64 = 0
                 if version == BsaFile.SSE_BSAHEADER_VERSION { folder_unk = _r.readLEUInt32(); folder_offset = _r.readLEUInt64() }
                 else { folder_offset = UInt64(_r.readLEUInt32()) }
@@ -405,8 +403,8 @@ public class BsaFile {
             for i in 0..<header_folderCount {
                 let folder_name = _r.readASCIIString(Int(_r.readByte()), format: .possibleNullTerminated) // BSAReadSizedString
                 let folderFiles = foldersFiles[i]
-                for j in 0..<folderFiles {
-                    let file_hash = _r.readLEUInt64() // Hash of the filename
+                for _ in 0..<folderFiles {
+                    _ = _r.readLEUInt64() // Hash of the filename
                     let file_sizeFlags = _r.readLEUInt32() // Size of the data, possibly with OB_BSAFILE_FLAG_COMPRESS set
                     let file_offset = _r.readLEUInt32() // Offset to raw file data
                     let fileMetadata = _files[fileNameIndex]; fileNameIndex += 1
@@ -508,28 +506,30 @@ public class BsaFile {
     static func tes4HashFilePath(_ filePath: String) -> UInt64 {
         func genHash2(_ s: String) -> UInt32 {
             var hash: UInt32 = 0
-            for i in s {
+            for i in [UInt8](s.utf8) {
                 hash *= 0x1003f
-                hash += UInt8(i.unicodeScalars.first!.value)
+                hash += UInt32(i)
             }
             return hash
         }
         
         func genHash(_ file: String, ext: String) -> UInt64 {
+            let fileData = [UInt8](file.utf8)
+            let fileLen = fileData.count
             var hash: UInt64 = 0
-            if file.count > 0 {
-                let val = (file[file.count - 1] * 0x1) +
-                    ((file.count > 2 ? file[file.count - 2] : 0) * 0x100) +
-                    (file.count * 0x10000) +
-                    (file[0] * 0x1000000)
-                hash = UInt64(val)
+            if fileLen > 0 {
+                let val0 = (UInt64(fileData[fileLen - 1]) * 0x1) +
+                    (UInt64(fileLen > 2 ? fileData[fileLen - 2] : 0) * 0x100)
+                let val1 = (UInt64(fileLen) * 0x10000) +
+                    (UInt64(fileData[0]) * 0x1000000)
+                hash = UInt64(val0 + val1)
             }
-            if file.count > 3 {
+            if fileLen > 3 {
                 let str = String(file[file.index(file.startIndex, offsetBy: 1)..<file.index(file.endIndex, offsetBy: -3)])
-                hash += UInt64(genHash2(str) * 0x100000000)
+                hash += UInt64(UInt64(genHash2(str)) * 0x100000000)
             }
             if ext.count > 0 {
-                hash += UInt64(genHash2(ext) * 0x100000000)
+                hash += UInt64(UInt64(genHash2(ext)) * 0x100000000)
                 var i: UInt8
                 switch ext {
                 case ".nif": i = 1
