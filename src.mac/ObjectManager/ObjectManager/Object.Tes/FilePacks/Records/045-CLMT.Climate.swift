@@ -35,16 +35,13 @@ public class CLMTRecord: Record {
         }
     }
 
-    public override var description: String { return "CLMT: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var MODL: MODLGroup // Model
-    public var FNAM: FILEField // Sun Texture
-    public var GNAM: FILEField // Sun Glare Texture
+    public override var description: String { return "CLMT: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var MODL: MODLGroup! // Model
+    public var FNAM: FILEField! // Sun Texture
+    public var GNAM: FILEField! // Sun Glare Texture
     public var WLSTs = [WLSTField]() // Climate
-    public var TNAM: TNAMField // Timing
-
-    init() {
-    }
+    public var TNAM: TNAMField! // Timing
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

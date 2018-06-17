@@ -21,19 +21,16 @@ public class LOCKRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public var description: String { return "LOCK: \(EDID)" }
-    public STRVField EDID // Editor ID
-    public MODLGroup MODL // Model Name
-    public STRVField FNAM // Item Name
-    public LKDTField LKDT // Lock Data
-    public FILEField ICON // Inventory Icon
-    public FMIDField<SCPTRecord> SCRI // Script Name
-
-    init() {
-    }
+    public override var description: String { return "LOCK: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var MODL: MODLGroup! // Model Name
+    public var FNAM: STRVField! // Item Name
+    public var LKDT: LKDTField! // Lock Data
+    public var ICON: FILEField! // Inventory Icon
+    public var SCRI: FMIDField<SCPTRecord>! // Script Name
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
-        guard formatId == GameFormatId.TES3 else {
+        guard format == GameFormatId.TES3 else {
             return false
         }
         switch type {

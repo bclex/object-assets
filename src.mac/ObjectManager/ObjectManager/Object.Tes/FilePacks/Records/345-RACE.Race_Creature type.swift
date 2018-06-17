@@ -65,17 +65,20 @@ public class RACERecord: Record {
         }
 
         public class RaceStats {
-            public let height: Float
-            public let weight: Float
+            public var height: Float
+            public var weight: Float
             // Attributes
-            public let strength: UInt8
-            public let intelligence: UInt8
-            public let willpower: UInt8
-            public let agility: UInt8
-            public let speed: UInt8
-            public let endurance: UInt8
-            public let personality: UInt8
-            public let luck: UInt8
+            public var strength: UInt8
+            public var intelligence: UInt8
+            public var willpower: UInt8
+            public var agility: UInt8
+            public var speed: UInt8
+            public var endurance: UInt8
+            public var personality: UInt8
+            public var luck: UInt8
+            
+            init() {
+            }
         }
 
         public let skillBoosts = [SkillBoost]() // Skill Boosts
@@ -86,7 +89,7 @@ public class RACERecord: Record {
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             skillBoosts.reserveCapacity(7)
             guard format != .TES3 else {
-                for i in 0..<skillBoosts.capacity {
+                for i in skillBoosts.startIndex..<skillBoosts.capacity {
                     skillBoosts[i] = SkillBoost(r, 8, format)
                 }
                 male.strength = UInt8(r.readLEInt32()); female.strength = UInt8(r.readLEInt32())
@@ -103,9 +106,9 @@ public class RACERecord: Record {
                 return
             }
             for i in 0..<skillBoosts.capacity {
-                skillBoosts[i] = skillBoost(r, 2, format)
+                skillBoosts[i] = SkillBoost(r, 2, format)
             }
-            r.readLEInt16() // padding
+            r.skipBytes(2) // padding
             male.height = r.readLESingle(); female.height = r.readLESingle()
             male.weight = r.readLESingle(); female.weight = r.readLESingle()
             flags = r.readLEUInt32()
@@ -140,6 +143,9 @@ public class RACERecord: Record {
         public var INDX: UI32Field
         public var MODL: MODLGroup
         public var ICON: FILEField
+        
+        init() {
+        }
     }
 
     public class BodyPartGroup {
@@ -149,44 +155,47 @@ public class RACERecord: Record {
 
         public var INDX: UI32Field
         public var ICON: FILEField
+        
+        init() {
+        }
     }
 
     public class BodyGroup {
         public var MODL: FILEField
         public var MODB: FLTVField 
         public var BodyParts = [BodyPartGroup]()
+        
+        init() {
+        }
     }
 
-    public var description: String { return "RACE: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var FULL: STRVField // Race name
-    public var DESC: STRVField // Race description
+    public override var description: String { return "RACE: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var FULL: STRVField! // Race name
+    public var DESC: STRVField! // Race description
     public var SPLOs = [STRVField]() // NPCs: Special power/ability name
     // TESX
-    public var DATA: DATAField // RADT:DATA/ATTR: Race data/Base Attributes
+    public var DATA: DATAField! // RADT:DATA/ATTR: Race data/Base Attributes
     // TES4
-    public var VNAM: FMID2Field<RACERecord> // Voice
-    public var DNAM: FMID2Field<HAIRRecord> // Default Hair
-    public var CNAM: BYTEField // Default Hair Color
-    public var PNAM: FLTVField // FaceGen - Main clamp
-    public var UNAM: FLTVField // FaceGen - Face clamp
-    public var XNAM: UNKNField // Unknown
+    public var VNAM: FMID2Field<RACERecord>! // Voice
+    public var DNAM: FMID2Field<HAIRRecord>! // Default Hair
+    public var CNAM: BYTEField! // Default Hair Color
+    public var PNAM: FLTVField! // FaceGen - Main clamp
+    public var UNAM: FLTVField! // FaceGen - Face clamp
+    public var XNAM: UNKNField! // Unknown
     //
     public var HNAMs = [FMIDField<HAIRRecord>]()
     public var ENAMs = [FMIDField<EYESRecord>]()
-    public var FGGS: BYTVField // FaceGen Geometry-Symmetric
-    public var FGGA: BYTVField // FaceGen Geometry-Asymmetric
-    public var FGTS: BYTVField // FaceGen Texture-Symmetric
-    public var SNAM: UNKNField // Unknown
+    public var FGGS: BYTVField! // FaceGen Geometry-Symmetric
+    public var FGGA: BYTVField! // FaceGen Geometry-Asymmetric
+    public var FGTS: BYTVField! // FaceGen Texture-Symmetric
+    public var SNAM: UNKNField! // Unknown
 
     // Parts
     public var faceParts = [FacePartGroup]()
     public var bodys = [BodyGroup(), BodyGroup()]
     var _nameState: Int8
     var _genderState: Int8
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
@@ -222,10 +231,10 @@ public class RACERecord: Record {
                 return true
             case 1: // Face Data
                 switch type {
-                case "INDX": FaceParts.append(FacePartGroup(INDX: UI32Field(r, dataSize)))
-                case "MODL": FaceParts.last!.MODL = MODLGroup(r, dataSize)
-                case "ICON": FaceParts.last!.ICON = FILEField(r, dataSize)
-                case "MODB": FaceParts.last!.MODL.MODBField(r, dataSize)
+                case "INDX": faceParts.append(FacePartGroup(INDX: UI32Field(r, dataSize)))
+                case "MODL": faceParts.last!.MODL = MODLGroup(r, dataSize)
+                case "ICON": faceParts.last!.ICON = FILEField(r, dataSize)
+                case "MODB": faceParts.last!.MODL.MODBField(r, dataSize)
                 case "NAM1": _nameState += 1
                 default: return false
                 }
@@ -234,10 +243,10 @@ public class RACERecord: Record {
                 switch type {
                 case "MNAM": _genderState = 0
                 case "FNAM": _genderState = 1
-                case "MODL": Bodys[_genderState].MODL = FILEField(r, dataSize)
-                case "MODB": Bodys[_genderState].MODB = FLTVField(r, dataSize)
-                case "INDX": Bodys[_genderState].BodyParts.append(BodyPartGroup(INDX: UI32Field(r, dataSize)))
-                case "ICON": Bodys[_genderState].BodyParts.last!.ICON = FILEField(r, dataSize)
+                case "MODL": bodys[_genderState].MODL = FILEField(r, dataSize)
+                case "MODB": bodys[_genderState].MODB = FLTVField(r, dataSize)
+                case "INDX": bodys[_genderState].bodyParts.append(BodyPartGroup(INDX: UI32Field(r, dataSize)))
+                case "ICON": bodys[_genderState].bodyParts.last!.ICON = FILEField(r, dataSize)
                 case "HNAM": _nameState += 1
                 default: return false
                 }

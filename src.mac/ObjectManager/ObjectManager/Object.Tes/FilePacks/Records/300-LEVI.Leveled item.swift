@@ -7,17 +7,14 @@
 //
 
 public class LEVIRecord: Record {
-    public var description: String { return "LEVI: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var DATA: IN32Field // List data - 1 = Calc from all levels <= PC level, 2 = Calc for each item
-    public var NNAM: BYTEField // Chance None?
-    public var INDX: IN32Field // Number of items in list
+    public override var description: String { return "LEVI: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var DATA: IN32Field! // List data - 1 = Calc from all levels <= PC level, 2 = Calc for each item
+    public var NNAM: BYTEField! // Chance None?
+    public var INDX: IN32Field! // Number of items in list
     public var INAMs = [STRVField]() // ID string of list item
     public var INTVs = [IN16Field]() // PC level for previous INAM
     // The CNAM/INTV can occur many times in pairs
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard format == .TES3 else {

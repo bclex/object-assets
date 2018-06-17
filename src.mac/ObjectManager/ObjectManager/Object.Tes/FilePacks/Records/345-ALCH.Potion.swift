@@ -51,20 +51,17 @@ public class ALCHRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override var description: String { return "ALCH: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var MODL: MODLGroup  // Model
-    public var FULL: STRVField // Item Name
-    public var DATA: DATAField // Alchemy Data
-    public var ENAM: ENAMField? // Enchantment
-    public var ICON: FILEField // Icon
-    public var SCRI: FMIDField<SCPTRecord>? // Script (optional)
+    public override var description: String { return "ALCH: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var MODL: MODLGroup!  // Model
+    public var FULL: STRVField! // Item Name
+    public var DATA: DATAField! // Alchemy Data
+    public var ENAM: ENAMField? = nil // Enchantment
+    public var ICON: FILEField! // Icon
+    public var SCRI: FMIDField<SCPTRecord>? = nil // Script (optional)
     // TES4
     public var EFITs = [ENCHRecord.EFITField]() // Effect Data
     public var SCITs = [ENCHRecord.SCITField]() // Script Effect Data
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

@@ -40,27 +40,24 @@ public class FACTRecord: Record {
         }
     }
 
-    public override var description: String { return "FACT: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var FNAM: STRVField // Faction name
+    public override var description: String { return "FACT: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var FNAM: STRVField! // Faction name
     public var RNAMs = [RNAMGroup]() // Rank Name
-    public var FADT: FADTField // Faction data
+    public var FADT: FADTField! // Faction data
     public var ANAMs = [STRVField]() // Faction name
     public var INTVs = [INTVField]() // Faction reaction
     // TES4
-    public var XNAM: XNAMField // Interfaction Relations
-    public var DATA: INTVField // Flags (byte, uint32)
-    public var CNAM: UI32Field
-
-    init() {
-    }
+    public var XNAM: XNAMField! // Interfaction Relations
+    public var DATA: INTVField! // Flags (byte, uint32)
+    public var CNAM: UI32Field!
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
             switch type {
             case "NAME": EDID = STRVField(r, dataSize)
             case "FNAM": FNAM = STRVField(r, dataSize)
-            case "RNAM": RNAMs.append(RNAMGroup(MNAM: STRVField(r, dataSize)))
+            case "RNAM": RNAMs.append(RNAMGroup(RNAM: STRVField(r, dataSize)))
             case "FADT": FADT = FADTField(r, dataSize)
             case "ANAM": ANAMs.append(STRVField(r, dataSize))
             case "INTV": INTVs.append(INTVField(r, dataSize))

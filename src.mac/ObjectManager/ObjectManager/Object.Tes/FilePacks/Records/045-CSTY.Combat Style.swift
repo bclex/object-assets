@@ -37,14 +37,14 @@ public class CSTYRecord: Record {
         public let acrobaticDodgePercentChance: UInt8
         public let rangeMult_optimal: Float
         public let rangeMult_max: Float
-        public let switchDistance_melee: Float
-        public let switchDistance_ranged: Float
-        public let buffStandoffDistance: Float
-        public let rangedStandoffDistance: Float
-        public let groupStandoffDistance: Float
-        public let rushingAttackPercentChance: UInt8
-        public let rushingAttackDistanceMult: Float
-        public let flags2: UInt32
+        public var switchDistance_melee: Float? = nil
+        public var switchDistance_ranged: Float? = nil
+        public var buffStandoffDistance: Float? = nil
+        public var rangedStandoffDistance: Float? = nil
+        public var groupStandoffDistance: Float? = nil
+        public var rushingAttackPercentChance: UInt8? = nil
+        public var rushingAttackDistanceMult: Float? = nil
+        public var flags2: UInt32? = nil
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             dodgePercentChance = r.readByte()
@@ -61,7 +61,7 @@ public class CSTYRecord: Record {
             blockPercentChance = r.readByte()
             attackPercentChance = r.readByte()
             r.skipBytes(2) // Unused
-            recoilStaggerBonusToAttack = r.readLESingler()
+            recoilStaggerBonusToAttack = r.readLESingle()
             unconsciousBonusToAttack = r.readLESingle()
             handToHandBonusToAttack = r.readLESingle()
             powerAttackPercentChance = r.readByte()
@@ -80,7 +80,8 @@ public class CSTYRecord: Record {
             acrobaticDodgePercentChance = r.readByte()
             r.skipBytes(2) // Unused
             guard dataSize != 84 else {
-                rangeMult_optimal = rangeMult_max = 0
+                rangeMult_optimal = 0
+                rangeMult_max = 0
                 return
             }
             rangeMult_optimal = r.readLESingle()
@@ -89,7 +90,7 @@ public class CSTYRecord: Record {
                 return
             }
             switchDistance_melee = r.readLESingle()
-            switchDistance_Ranged = r.readLESingle()
+            switchDistance_ranged = r.readLESingle()
             buffStandoffDistance = r.readLESingle()
             guard dataSize != 104 else {
                 return
@@ -157,13 +158,10 @@ public class CSTYRecord: Record {
         }
     }
 
-    public override var description: String { return "CSTY: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var CSTD: CSTDField // Standard
-    public var CSAD: CSADField // Advanced
-
-    init() {
-    }
+    public override var description: String { return "CSTY: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var CSTD: CSTDField! // Standard
+    public var CSAD: CSADField! // Advanced
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

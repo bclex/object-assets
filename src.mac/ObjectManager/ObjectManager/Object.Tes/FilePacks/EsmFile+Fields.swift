@@ -9,11 +9,11 @@
 import Foundation
 
 public protocol IHaveEDID {
-    var EDID: STRVField? {get}
+    var EDID: STRVField! { get }
 }
 
 public protocol IHaveMODL {
-    var MODL: MODLGroup? {get}
+    var MODL: MODLGroup! { get }
 }
 
 public class MODLGroup: CustomStringConvertible {
@@ -188,11 +188,11 @@ public struct ColorRef: CustomStringConvertible {
     public let blue: UInt8
     public let nullByte: UInt8
 
-    init(red: UInt8, green: UInt8, blue: UInt8) {
+    init(red: UInt8, green: UInt8, blue: UInt8, nullByte: UInt8 = 255) {
         self.red = red
         self.green = green
         self.blue = blue
-        nullByte = 255
+        self.nullByte = nullByte
     }
 
     init(_ r: BinaryReader) {

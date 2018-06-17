@@ -27,7 +27,7 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
                 skillId[i] = r.readLEInt32()
             }
             attributeId = [Int32](); attributeId.reserveCapacity(4)
-            for i in 0..< attributeId.capacity {
+            for i in attributeId.startIndex..<attributeId.capacity {
                 attributeId[i] = r.readLEInt32()
             }
         }
@@ -49,20 +49,17 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public var description: String { return "INGR: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var MODL: MODLGroup // Model Name
-    public var FULL: STRVField // Item Name
-    public var IRDT: IRDTField // Ingrediant Data //: TES3
-    public var DATA: DATAField // Ingrediant Data //: TES4
-    public var ICON: FILEField // Inventory Icon
-    public var SCRI: FMIDField<SCPTRecord> // Script Name
+    public override var description: String { return "INGR: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var MODL: MODLGroup! // Model Name
+    public var FULL: STRVField! // Item Name
+    public var IRDT: IRDTField! // Ingrediant Data //: TES3
+    public var DATA: DATAField! // Ingrediant Data //: TES4
+    public var ICON: FILEField! // Inventory Icon
+    public var SCRI: FMIDField<SCPTRecord>! // Script Name
     // TES4
     public var EFITs = [ENCHRecord.EFITField]() // Effect Data
     public var SCITs = [ENCHRecord.SCITField]() // Script effect data
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

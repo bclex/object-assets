@@ -7,28 +7,25 @@
 //
 
 public class ACHRRecord: Record {
-    public override var description: String { return "ACHR: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var NAME: FMIDField<Record> // Base
-    public var DATA: REFRRecord.DATAField  // Position/Rotation
-    public var XPCI: FMIDField<CELLRecord>? // Unused (optional)
-    public var XLOD: BYTVField? // Distant LOD Data (optional)
-    public var XESP: REFRRecord.XESPField? // Enable Parent (optional)
-    public var XMRC: FMIDField<REFRRecord>? // Merchant container (optional)
-    public var XHRS: FMIDField<ACRERecord>? // Horse (optional)
-    public var XSCL: FLTVField? // Scale (optional)
-    public var XRGD: BYTVField? // Ragdoll Data (optional)
+    public override var description: String { return "ACHR: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var NAME: FMIDField<Record>! // Base
+    public var DATA: REFRRecord.DATAField!  // Position/Rotation
+    public var XPCI: FMIDField<CELLRecord>? = nil// Unused (optional)
+    public var XLOD: BYTVField? = nil // Distant LOD Data (optional)
+    public var XESP: REFRRecord.XESPField? = nil // Enable Parent (optional)
+    public var XMRC: FMIDField<REFRRecord>? = nil// Merchant container (optional)
+    public var XHRS: FMIDField<ACRERecord>? = nil// Horse (optional)
+    public var XSCL: FLTVField? = nil// Scale (optional)
+    public var XRGD: BYTVField? = nil// Ragdoll Data (optional)
 
-    init() {
-    }
-    
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "NAME": NAME = FMIDField<Record>(r, dataSize)
         case "DATA": DATA = REFRRecord.DATAField(r, dataSize)
         case "XPCI": XPCI = FMIDField<CELLRecord>(r, dataSize)
-        case "FULL": XPCI.addName(r.readASCIIString(dataSize))
+        case "FULL": XPCI?.addName(r.readASCIIString(dataSize))
         case "XLOD": XLOD = BYTVField(r, dataSize)
         case "XESP": XESP = REFRRecord.XESPField(r, dataSize)
         case "XMRC": XMRC = FMIDField<REFRRecord>(r, dataSize)

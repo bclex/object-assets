@@ -106,33 +106,30 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public var description: String { return "NPC_: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var FULL: STRVField // NPC name
-    public var MODL: MODLGroup  // Animation
-    public var RNAM: STRVField // Race Name
-    public var ANAM: STRVField // Faction name
-    public var BNAM: STRVField // Head model
-    public var CNAM: STRVField // Class name
-    public var KNAM: STRVField // Hair model
-    public var NPDT: NPDTField // NPC Data
-    public var FLAG: INTVField // NPC Flags
+    public override var description: String { return "NPC_: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var FULL: STRVField! // NPC name
+    public var MODL: MODLGroup!  // Animation
+    public var RNAM: STRVField! // Race Name
+    public var ANAM: STRVField! // Faction name
+    public var BNAM: STRVField! // Head model
+    public var CNAM: STRVField! // Class name
+    public var KNAM: STRVField! // Hair model
+    public var NPDT: NPDTField! // NPC Data
+    public var FLAG: INTVField! // NPC Flags
     public var NPCOs = [CNTOField]() // NPC item
     public var NPCSs = [STRVField]() // NPC spell
-    public var AIDT: CREARecord.AIDTField  // AI data
-    public var AI_W: CREARecord.AI_WField? // AI
-    public var AI_T: CREARecord.AI_TField? // AI Travel
-    public var AI_F: CREARecord.AI_FField? // AI Follow
-    public var AI_E: CREARecord.AI_FField? // AI Escort
-    public var CNDT: STRVField? // Cell escort/follow to string (optional)
-    public var AI_A: CREARecord.AI_AField? // AI Activate
-    public var DODT: DODTField // Cell Travel Destination
-    public var DNAM: STRVField // Cell name for previous DODT, if interior
-    public var XSCL: FLTVField? // Scale (optional) Only present if the scale is not 1.0
-    public var SCRI: FMIDField<SCPTRecord>? // Unknown
-
-    init() {
-    }
+    public var AIDT: CREARecord.AIDTField!  // AI data
+    public var AI_W: CREARecord.AI_WField? = nil // AI
+    public var AI_T: CREARecord.AI_TField? = nil // AI Travel
+    public var AI_F: CREARecord.AI_FField? = nil // AI Follow
+    public var AI_E: CREARecord.AI_FField? = nil // AI Escort
+    public var CNDT: STRVField? = nil // Cell escort/follow to string (optional)
+    public var AI_A: CREARecord.AI_AField? = nil // AI Activate
+    public var DODT: DODTField! // Cell Travel Destination
+    public var DNAM: STRVField! // Cell name for previous DODT, if interior
+    public var XSCL: FLTVField? = nil // Scale (optional) Only present if the scale is not 1.0
+    public var SCRI: FMIDField<SCPTRecord>? = nil // Unknown
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
@@ -149,10 +146,10 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
         case "KNAM": KNAM = STRVField(r, dataSize)
         case "NPDT": NPDT = NPDTField(r, dataSize)
         case "FLAG": FLAG = INTVField(r, dataSize)
-        case "NPCO": NPCOs.append(CNTOField(r, dataSize, format))
-        case "NPCS": NPCSs.append(STRVField(r, dataSize, .zeroPadded))
+        case "NPCO": NPCOs.append(CNTOField(r, dataSize, for: format))
+        case "NPCS": NPCSs.append(STRVField(r, dataSize, format: .zeroPadded))
         case "AIDT": AIDT = CREARecord.AIDTField(r, dataSize)
-        case "AI_W": AI_W = CREARecord.AI_WField(r, dataSize, 1)
+        case "AI_W": AI_W = CREARecord.AI_WField(r, dataSize)
         case "AI_T": AI_T = CREARecord.AI_TField(r, dataSize)
         case "AI_F": AI_F = CREARecord.AI_FField(r, dataSize)
         case "AI_E": AI_E = CREARecord.AI_FField(r, dataSize)

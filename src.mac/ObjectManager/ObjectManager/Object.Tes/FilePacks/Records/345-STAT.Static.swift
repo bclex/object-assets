@@ -8,8 +8,8 @@
 
 public class STATRecord: Record, IHaveEDID, IHaveMODL {
     public override var description: String { return "STAT: \(EDID!)" }
-    public var EDID: STRVField? = nil // Editor ID
-    public var MODL: MODLGroup? = nil // Model
+    public var EDID: STRVField! // Editor ID
+    public var MODL: MODLGroup! // Model
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

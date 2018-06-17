@@ -85,20 +85,17 @@ public class ENCHRecord: Record {
         }
 
         func FULLField(_ r: BinaryReader, _ dataSize: Int) {
-            name = r.readASCIIString(dataSize, .possiblyNullTerminated)
+            name = r.readASCIIString(dataSize, format: .possibleNullTerminated)
         }
     }
 
-    public var description: String { return "ENCH: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var FULL: STRVField // Enchant name
-    public var ENIT: ENITField // Enchant Data
+    public override var description: String { return "ENCH: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var FULL: STRVField! // Enchant name
+    public var ENIT: ENITField! // Enchant Data
     public var EFITs = [EFITField]() // Effect Data
     // TES4
     public var SCITs = [SCITField]() // Script effect data
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

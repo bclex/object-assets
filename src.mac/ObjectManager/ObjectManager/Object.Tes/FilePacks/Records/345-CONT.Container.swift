@@ -9,7 +9,7 @@
 public class CONTRecord: Record, IHaveEDID, IHaveMODL {
     // TESX
     public class DATAField {
-        public let flags: UInt8 // flags 0x0001 = Organic, 0x0002 = Respawns, organic only, 0x0008 = Default, unknown
+        public var flags: UInt8 // flags 0x0001 = Organic, 0x0002 = Respawns, organic only, 0x0008 = Default, unknown
         public let weight: Float
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
@@ -26,20 +26,17 @@ public class CONTRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public var description: String { return "CONT: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var MODL: MODLGroup  // Model
-    public var FULL: STRVField // Container Name
-    public var DATA: DATAField // Container Data
-    public var SCRI: FMIDField<SCPTRecord>?
+    public override var description: String { return "CONT: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var MODL: MODLGroup!  // Model
+    public var FULL: STRVField! // Container Name
+    public var DATA: DATAField! // Container Data
+    public var SCRI: FMIDField<SCPTRecord>? = nil
     public var CNTOs = [CNTOField]()
     // TES4
-    public var SNAM: FMIDField<SOUNRecord> // Open sound
-    public var QNAM: FMIDField<SOUNRecord> // Close sound
-
-    init() {
-    }
-
+    public var SNAM: FMIDField<SOUNRecord>! // Open sound
+    public var QNAM: FMIDField<SOUNRecord>! // Close sound
+    
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
@@ -53,7 +50,7 @@ public class CONTRecord: Record, IHaveEDID, IHaveMODL {
              "CNDT": DATA = DATAField(r, dataSize, format)
         case "FLAG": DATA.FLAGField(r, dataSize)
         case "CNTO",
-             "NPCO": CNTOs.append(CNTOField(r, dataSize, format))
+             "NPCO": CNTOs.append(CNTOField(r, dataSize, for: format))
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         case "SNAM": SNAM = FMIDField<SOUNRecord>(r, dataSize)
         case "QNAM": QNAM = FMIDField<SOUNRecord>(r, dataSize)

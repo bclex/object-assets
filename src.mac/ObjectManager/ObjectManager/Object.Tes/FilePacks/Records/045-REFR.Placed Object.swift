@@ -81,33 +81,30 @@ public class REFRRecord: Record {
         }
     }
 
-    public override var description: String { return "REFR: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var NAME: FMIDField<Record> // Base
-    public var XTEL: XTELField? // Teleport Destination (optional)
-    public var DATA: DATAField // Position/Rotation
-    public var XLOC: XLOCField? // Lock information (optional)
-    public var XOWNs: [CELLRecord.XOWNGroup]? // Ownership (optional)
-    public var XESP: XESPField? // Enable Parent (optional)
-    public var XTRG: FMIDField<Record>? // Target (optional)
-    public var XSED: XSEDField? // SpeedTree (optional)
-    public var XLOD: BYTVField? // Distant LOD Data (optional)
-    public var XCHG: FLTVField? // Charge (optional)
-    public var XHLT: FLTVField? // Health (optional)
-    public var XPCI: FMIDField<CELLRecord>? // Unused (optional)
-    public var XLCM: IN32Field? // Level Modifier (optional)
-    public var XRTM: FMIDField<REFRRecord>? // Unknown (optional)
-    public var XACT: UI32Field? // Action Flag (optional)
-    public var XCNT: IN32Field? // Count (optional)
-    public var XMRKs: [XMRKGroup] // Ownership (optional)
+    public override var description: String { return "REFR: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var NAME: FMIDField<Record>! // Base
+    public var XTEL: XTELField? = nil// Teleport Destination (optional)
+    public var DATA: DATAField! // Position/Rotation
+    public var XLOC: XLOCField? = nil // Lock information (optional)
+    public var XOWNs: [CELLRecord.XOWNGroup]? = nil // Ownership (optional)
+    public var XESP: XESPField? = nil // Enable Parent (optional)
+    public var XTRG: FMIDField<Record>? = nil // Target (optional)
+    public var XSED: XSEDField? = nil // SpeedTree (optional)
+    public var XLOD: BYTVField? = nil // Distant LOD Data (optional)
+    public var XCHG: FLTVField? = nil // Charge (optional)
+    public var XHLT: FLTVField? = nil // Health (optional)
+    public var XPCI: FMIDField<CELLRecord>? = nil // Unused (optional)
+    public var XLCM: IN32Field? = nil // Level Modifier (optional)
+    public var XRTM: FMIDField<REFRRecord>? = nil // Unknown (optional)
+    public var XACT: UI32Field? = nil // Action Flag (optional)
+    public var XCNT: IN32Field? = nil // Count (optional)
+    public var XMRKs: [XMRKGroup]? = nil // Ownership (optional)
     //public var ONAM: Bool? // Open by Default
-    public var XRGD: BYTVField? // Ragdoll Data (optional)
-    public var XSCL: FLTVField? // Scale (optional)
-    public var XSOL: BYTEField? // Contained Soul (optional)
+    public var XRGD: BYTVField? = nil // Ragdoll Data (optional)
+    public var XSCL: FLTVField? = nil // Scale (optional)
+    public var XSOL: BYTEField? = nil // Contained Soul (optional)
     var _nextFull: Int
-
-    init() {
-    }
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
@@ -127,8 +124,8 @@ public class REFRRecord: Record {
         case "XHLT": XCHG = FLTVField(r, dataSize)
         case "XPCI": XPCI = FMIDField<CELLRecord>(r, dataSize); _nextFull = 1
         case "FULL":
-            if _nextFull == 1 { XPCI?.value.adding(name: r.readASCIIString(dataSize)) }
-            else if _nextFull == 2 { XMRKs.last!.FULL = STRVField(r, dataSize) }
+            if _nextFull == 1 { XPCI!.value.adding(name: r.readASCIIString(dataSize)) }
+            else if _nextFull == 2 { XMRKs!.last!.FULL = STRVField(r, dataSize) }
             _nextFull = 0
         case "XLCM": XLCM = IN32Field(r, dataSize)
         case "XRTM": XRTM = FMIDField<REFRRecord>(r, dataSize)
@@ -136,7 +133,7 @@ public class REFRRecord: Record {
         case "XCNT": XCNT = IN32Field(r, dataSize)
         case "XMRK": if XMRKs == nil { XMRKs = [XMRKGroup]() }; XMRKs.append(XMRKGroup()); _nextFull = 2
         case "FNAM": XMRKs.last!.FNAM = BYTEField(r, dataSize)
-        case "TNAM": XMRKs.last!.TNAM = BYTEField(r, dataSize); _ = r.readByte()
+        case "TNAM": XMRKs.last!.TNAM = BYTEField(r, dataSize); r.skipBytes(1)
         case "ONAM": break
         case "XRGD": XRGD = BYTVField(r, dataSize)
         case "XSCL": XSCL = FLTVField(r, dataSize)

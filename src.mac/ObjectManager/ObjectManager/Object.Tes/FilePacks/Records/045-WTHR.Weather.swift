@@ -97,19 +97,16 @@ public class WTHRRecord: Record {
         }
     }
 
-    public var description: String { return "WTHR: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var MODL: MODLGroup  // Model
-    public var CNAM: FILEField // Lower Cloud Layer
-    public var DNAM: FILEField // Upper Cloud Layer
-    public var NAM0: BYTVField // Colors by Types/Times
-    public var FNAM: FNAMField // Fog Distance
-    public var HNAM: HNAMField // HDR Data
-    public var DATA: DATAField // Weather Data
+    public override var description: String { return "WTHR: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var MODL: MODLGroup!  // Model
+    public var CNAM: FILEField! // Lower Cloud Layer
+    public var DNAM: FILEField! // Upper Cloud Layer
+    public var NAM0: BYTVField! // Colors by Types/Times
+    public var FNAM: FNAMField! // Fog Distance
+    public var HNAM: HNAMField! // HDR Data
+    public var DATA: DATAField! // Weather Data
     public var SNAMs = [SNAMField]() // Sounds
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

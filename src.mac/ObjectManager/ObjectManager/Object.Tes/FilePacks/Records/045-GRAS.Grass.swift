@@ -31,7 +31,7 @@ public class GRASRecord: Record {
             density = r.readByte()
             minSlope = r.readByte()
             maxSlope = r.readByte()
-            r.readByte()
+            r.skipBytes(1)
             unitFromWaterAmount = r.readLEUInt16()
             r.skipBytes(2)
             unitFromWaterType = r.readLEUInt32()
@@ -44,13 +44,10 @@ public class GRASRecord: Record {
         }
     }
 
-    public var description: String { return "GRAS: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var MODL: MODLGroup
-    public var DATA: DATAField
-
-    init() {
-    }
+    public override var description: String { return "GRAS: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var MODL: MODLGroup!
+    public var DATA: DATAField!
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

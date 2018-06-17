@@ -6,6 +6,8 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
+import CoreGraphics
+
 public class WRLDRecord: Record {
     public struct MNAMField {
         public let usableDimensions: Vector2Int
@@ -16,7 +18,7 @@ public class WRLDRecord: Record {
         public let seCell_y: Int16
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            usableDimensions = Vector2Int(r.readLEInt32(), r.readLEInt32())
+            usableDimensions = Vector2Int(Int(r.readLEInt32()), Int(r.readLEInt32()))
             nwCell_x = r.readLEInt16()
             nwCell_y = r.readLEInt16()
             seCell_x = r.readLEInt16()
@@ -26,31 +28,28 @@ public class WRLDRecord: Record {
 
     public class NAM0Field {
         public let min: Vector2 
-        public var max: Vector2
+        public var max: Vector2!
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            min = Vector2(dx: r.readLESingle(), dy: r.readLESingle())
+            min = Vector2(dx: CGFloat(r.readLESingle()), dy: CGFloat(r.readLESingle()))
         }
 
         func NAM9Field(_ r: BinaryReader, _ dataSize: Int) {
-            max = Vector2(dx: r.readLESingle(), dy: r.readLESingle())
+            max = Vector2(dx: CGFloat(r.readLESingle()), dy: CGFloat(r.readLESingle()))
         }
     }
 
-    public var description: String { return "WRLD: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var FULL: STRVField
-    public var WNAM: FMIDField<WRLDRecord>? // Parent Worldspace
-    public var CNAM: FMIDField<CLMTRecord>? // Climate
-    public var NAM2: FMIDField<WATRRecord>? // Water
-    public var ICON: FILEField? // Icon
-    public var MNAM: MNAMField? // Map Data
-    public var DATA: BYTEField? // Flags
-    public var NAM0: NAM0Field  // Object Bounds
-    public var SNAM: UI32Field? // Music
-
-    init() {
-    }
+    public override var description: String { return "WRLD: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var FULL: STRVField!
+    public var WNAM: FMIDField<WRLDRecord>? = nil // Parent Worldspace
+    public var CNAM: FMIDField<CLMTRecord>? = nil // Climate
+    public var NAM2: FMIDField<WATRRecord>? = nil // Water
+    public var ICON: FILEField? = nil // Icon
+    public var MNAM: MNAMField? = nil // Map Data
+    public var DATA: BYTEField? = nil // Flags
+    public var NAM0: NAM0Field! // Object Bounds
+    public var SNAM: UI32Field? = nil // Music
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

@@ -81,6 +81,9 @@ public class CELLRecord: Record, ICellRecord {
         public var XOWN: FMIDField<Record>
         public var XRNK: IN32Field // Faction rank
         public var XGLB: FMIDField<Record>
+        
+        init() {
+        }
     }
 
     public class RefObj: CustomStringConvertible {
@@ -94,48 +97,48 @@ public class CELLRecord: Record, ICellRecord {
             }
         }
 
-        public var FRMR: UI32Field? // Object Index (starts at 1)
+        public var FRMR: UI32Field? = nil // Object Index (starts at 1)
         // This is used to uniquely identify objects in the cell. For files the index starts at 1 and is incremented for each object added. For modified
         // objects the index is kept the same.
-        public var description: String { return "CREF: \(EDID)" }
-        public var EDID: STRVField // Object ID
-        public var XSCL: FLTVField? // Scale (Static)
-        public var DELE: IN32Field? // Indicates that the reference is deleted.
-        public var DODT: XYZAField? // XYZ Pos, XYZ Rotation of exit
-        public var DNAM: STRVField // Door exit name (Door objects)
-        public var FLTV: FLTVField? // Follows the DNAM optionally, lock level
-        public var KNAM: STRVField // Door key
-        public var TNAM: STRVField // Trap name
-        public var UNAM: BYTEField? // Reference Blocked (only occurs once in MORROWIND.ESM)
-        public var ANAM: STRVField // Owner ID string
-        public var BNAM: STRVField // Global variable/rank ID
-        public var INTV: IN32Field? // Number of uses, occurs even for objects that don't use it
-        public var NAM9: UI32Field? // Unknown
-        public var XSOL: STRVField // Soul Extra Data (ID string of creature)
-        public var DATA: XYZAField // Ref Position Data
+        public var description: String { return "CREF: \(EDID!)" }
+        public var EDID: STRVField! // Object ID
+        public var XSCL: FLTVField? = nil // Scale (Static)
+        public var DELE: IN32Field? = nil // Indicates that the reference is deleted.
+        public var DODT: XYZAField? = nil // XYZ Pos, XYZ Rotation of exit
+        public var DNAM: STRVField! // Door exit name (Door objects)
+        public var FLTV: FLTVField? = nil // Follows the DNAM optionally, lock level
+        public var KNAM: STRVField! // Door key
+        public var TNAM: STRVField! // Trap name
+        public var UNAM: BYTEField? = nil // Reference Blocked (only occurs once in MORROWIND.ESM)
+        public var ANAM: STRVField! // Owner ID string
+        public var BNAM: STRVField! // Global variable/rank ID
+        public var INTV: IN32Field? = nil // Number of uses, occurs even for objects that don't use it
+        public var NAM9: UI32Field? = nil // Unknown
+        public var XSOL: STRVField! // Soul Extra Data (ID string of creature)
+        public var DATA: XYZAField! // Ref Position Data
         //
-        public var CNAM: STRVField  // Unknown
-        public var NAM0: UI32Field? // Unknown
-        public var XCHG: IN32Field? // Unknown
-        public var INDX: IN32Field? // Unknown
+        public var CNAM: STRVField!  // Unknown
+        public var NAM0: UI32Field? = nil // Unknown
+        public var XCHG: IN32Field? = nil // Unknown
+        public var INDX: IN32Field? = nil // Unknown
     }
 
-    public override var description: String { return "CELL: \(FULL)" }
-    public var EDID: STRVField  // Editor ID. Can be an empty string for exterior cells in which case the region name is used instead.
-    public var FULL: STRVField // Full Name / TES3:RGNN - Region name
-    public var DATA: UI16Field // Flags
-    public var XCLC: XCLCField? // Cell Data (only used for exterior cells)
-    public var XCLL: XCLLField? // Lighting (only used for interior cells)
-    public var XCLW: FLTVField? // Water Height
+    public override var description: String { return "CELL: \(FULL!)" }
+    public var EDID: STRVField!  // Editor ID. Can be an empty string for exterior cells in which case the region name is used instead.
+    public var FULL: STRVField! // Full Name / TES3:RGNN - Region name
+    public var DATA: UI16Field! // Flags
+    public var XCLC: XCLCField? = nil // Cell Data (only used for exterior cells)
+    public var XCLL: XCLLField? = nil // Lighting (only used for interior cells)
+    public var XCLW: FLTVField? = nil // Water Height
     // TES3
-    public var NAM0: UI32Field? // Number of objects in cell in current file (Optional)
-    public var INTV: INTVField // Unknown
-    public var NAM5: CREFField? // Map Color (COLORREF)
+    public var NAM0: UI32Field? = nil // Number of objects in cell in current file (Optional)
+    public var INTV: INTVField! // Unknown
+    public var NAM5: CREFField? = nil // Map Color (COLORREF)
     // TES4
-    public var XCLRs: [FMIDField<REGNRecord>]  // Regions
-    public var XCMT: BYTEField? // Music (optional)
-    public var XCCM: FMIDField<CLMTRecord>? // Climate
-    public var XCWT: FMIDField<WATRRecord>? // Water
+    public var XCLRs: [FMIDField<REGNRecord>]!  // Regions
+    public var XCMT: BYTEField? = nil // Music (optional)
+    public var XCCM: FMIDField<CLMTRecord>? = nil // Climate
+    public var XCWT: FMIDField<WATRRecord>? = nil // Water
     public var XOWNs = [XOWNGroup]() // Ownership
 
     // Referenced Object Data Grouping
@@ -145,9 +148,6 @@ public class CELLRecord: Record, ICellRecord {
     public var isInterior: Bool { return Utils.containsBitFlags(DATA.value, 0x01) }
     public var gridCoords: Vector2Int { return Vector2Int(Int(XCLC!.gridX), Int(XCLC!.gridY)) }
     public var ambientLight: CGColor? { return XCLL != nil ? XCLL!.ambientColor.toColor32() : nil }
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if !InFRMR && type == "FRMR" {

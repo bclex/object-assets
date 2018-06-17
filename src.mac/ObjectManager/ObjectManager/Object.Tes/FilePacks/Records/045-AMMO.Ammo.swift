@@ -23,17 +23,14 @@ public class AMMORecord: Record {
         }
     }
 
-    public override var description: String { return "AMMO: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var MODL: MODLGroup // Model
-    public var FULL: STRVField // Item Name
-    public var ICON: FILEField? // Male Icon (optional)
-    public var ENAM: FMIDField<ENCHRecord>?  // Enchantment ID (optional)
-    public var ANAM: IN16Field? // Enchantment points (optional)
-    public var DATA: DATAField // Ammo Data
-
-    init() {
-    }
+    public override var description: String { return "AMMO: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var MODL: MODLGroup! // Model
+    public var FULL: STRVField! // Item Name
+    public var ICON: FILEField? = nil// Male Icon (optional)
+    public var ENAM: FMIDField<ENCHRecord>? = nil // Enchantment ID (optional)
+    public var ANAM: IN16Field? = nil // Enchantment points (optional)
+    public var DATA: DATAField! // Ammo Data
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

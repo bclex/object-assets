@@ -10,7 +10,7 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
     // TESX
     public struct DATAField {
         public struct ColorFlags: OptionSet {
-            public let rawValue: Int32
+            public let rawValue: UInt32
             public static let dynamic = ColorFlags(rawValue: 0x0001)
             public static let canCarry = ColorFlags(rawValue: 0x0002)
             public static let negative = ColorFlags(rawValue: 0x0004)
@@ -65,19 +65,16 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public var description: String { return "LIGH: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var MODL: MODLGroup  // Model
-    public var FULL: STRVField? // Item Name (optional)
-    public var DATA: DATAField  // Light Data
-    public var SCPT: STRVField? // Script Name (optional)??
-    public var SCRI: FMIDField<SCPTRecord>? // Script FormId (optional)
-    public var ICON: FILEField? // Male Icon (optional)
-    public var FNAM: FLTVField  // Fade Value
-    public var SNAM: FMIDField<SOUNRecord> // Sound FormId (optional)
-
-    init() {
-    }
+    public override var description: String { return "LIGH: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var MODL: MODLGroup!  // Model
+    public var FULL: STRVField? = nil // Item Name (optional)
+    public var DATA: DATAField!  // Light Data
+    public var SCPT: STRVField? = nil // Script Name (optional)??
+    public var SCRI: FMIDField<SCPTRecord>? = nil // Script FormId (optional)
+    public var ICON: FILEField? = nil // Male Icon (optional)
+    public var FNAM: FLTVField! // Fade Value
+    public var SNAM: FMIDField<SOUNRecord>? = nil // Sound FormId (optional)
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

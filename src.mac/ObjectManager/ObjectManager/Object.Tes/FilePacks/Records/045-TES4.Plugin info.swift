@@ -19,17 +19,14 @@ public class TES4Record: Record {
         }
     }
 
-    public var HEDR: HEDRField
-    public var CNAM: STRVField? // author (Optional)
-    public var SNAM: STRVField? // description (Optional)
-    public var MASTs: [STRVField]? // master
-    public var DATAs: [INTVField]? // fileSize
-    public var ONAM: UNKNField? // overrides (Optional)
-    public var INTV: IN32Field // unknown
-    public var INCC: IN32Field? // unknown (Optional)
-
-    init() {
-    }
+    public var HEDR: HEDRField!
+    public var CNAM: STRVField? = nil// author (Optional)
+    public var SNAM: STRVField? = nil// description (Optional)
+    public var MASTs: [STRVField]? = nil// master
+    public var DATAs: [INTVField]? = nil// fileSize
+    public var ONAM: UNKNField? = nil // overrides (Optional)
+    public var INTV: IN32Field! // unknown
+    public var INCC: IN32Field? = nil// unknown (Optional)
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

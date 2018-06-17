@@ -17,16 +17,13 @@ public class KEYMRecord: Record {
         }
     }
 
-    public override var description: String { return "KEYM: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var MODL: MODLGroup // Model
-    public var FULL: STRVField // Item Name
-    public var SCRI: FMIDField<SCPTRecord> // Script (optional)
-    public var DATA: DATAField // Type of soul contained in the gem
-    public var ICON: FILEField // Icon (optional)
-
-    init() {
-    }
+    public override var description: String { return "KEYM: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var MODL: MODLGroup! // Model
+    public var FULL: STRVField! // Item Name
+    public var SCRI: FMIDField<SCPTRecord>? = nil // Script (optional)
+    public var DATA: DATAField! // Type of soul contained in the gem
+    public var ICON: FILEField! // Icon (optional)
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

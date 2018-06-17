@@ -9,7 +9,7 @@
 import Foundation
 
 public class TesDataPack: EsmFile, IDataPack {
-    init(_ filePath: URL?, for game: GameId) {
+    override init(_ filePath: URL?, for game: GameId) {
         let fileManager = FileManager.default
         super.init(filePath != nil && fileManager.fileExists(atPath: filePath!.path) ? filePath : nil, for: game)
     }

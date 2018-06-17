@@ -173,7 +173,7 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
             y = r.readLESingle()
             z = r.readLESingle()
             duration = r.readLEInt16()
-            id = r.readASCIIString(32, .zeroPadded)
+            id = r.readASCIIString(32, format: .zeroPadded)
             unknown = r.readLEInt16()
         }
     }
@@ -183,34 +183,31 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
         public let unknown: UInt8
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            name = r.readASCIIString(32, .zeroPadded)
-            uUnknown = r.readByte()
+            name = r.readASCIIString(32, format: .zeroPadded)
+            unknown = r.readByte()
         }
     }
 
-    public var description: String { return "CREA: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var MODL: MODLGroup  // NIF Model
-    public var FNAM: STRVField // Creature name
-    public var NPDT: NPDTField // Creature data
-    public var FLAG: IN32Field // Creature Flags
-    public var SCRI: FMIDField<SCPTRecord> // Script
-    public var NPCO: CNTOField // Item record
-    public var AIDT: AIDTField // AI data
-    public var AI_W: AI_WField // AI Wander
-    public var AI_T: AI_TField? // AI Travel
-    public var AI_F: AI_FField? // AI Follow
-    public var AI_E: AI_FField? // AI Escort
-    public var AI_A: AI_AField? // AI Activate
-    public var XSCL: FLTVField? // Scale (optional), Only present if the scale is not 1.0
-    public var CNAM: STRVField?
+    public override var description: String { return "CREA: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var MODL: MODLGroup!  // NIF Model
+    public var FNAM: STRVField! // Creature name
+    public var NPDT: NPDTField! // Creature data
+    public var FLAG: IN32Field! // Creature Flags
+    public var SCRI: FMIDField<SCPTRecord>! // Script
+    public var NPCO: CNTOField! // Item record
+    public var AIDT: AIDTField! // AI data
+    public var AI_W: AI_WField! // AI Wander
+    public var AI_T: AI_TField? = nil // AI Travel
+    public var AI_F: AI_FField? = nil // AI Follow
+    public var AI_E: AI_FField? = nil // AI Escort
+    public var AI_A: AI_AField? = nil // AI Activate
+    public var XSCL: FLTVField? = nil // Scale (optional), Only present if the scale is not 1.0
+    public var CNAM: STRVField? = nil
     public var NPCSs = [STRVField]()
 
-    init() {
-    }
-
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
-        guard format == .TES3) else {
+        guard format == .TES3 else {
             return false
         }
         switch type {
@@ -220,16 +217,16 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
         case "NPDT": NPDT = NPDTField(r, dataSize)
         case "FLAG": FLAG = IN32Field(r, dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
-        case "NPCO": NPCO = CNTOField(r, dataSize, formatId)
+        case "NPCO": NPCO = CNTOField(r, dataSize, for: format)
         case "AIDT": AIDT = AIDTField(r, dataSize)
-        case "AI_W": AI_W = AI_WField(r, dataSize, 0)
+        case "AI_W": AI_W = AI_WField(r, dataSize)
         case "AI_T": AI_T = AI_TField(r, dataSize)
         case "AI_F": AI_F = AI_FField(r, dataSize)
         case "AI_E": AI_E = AI_FField(r, dataSize)
         case "AI_A": AI_A = AI_AField(r, dataSize)
         case "XSCL": XSCL = FLTVField(r, dataSize)
         case "CNAM": CNAM = STRVField(r, dataSize)
-        case "NPCS": NPCSs.append(STRVField(r, dataSize, ASCIIFormat.ZeroPadded))
+        case "NPCS": NPCSs.append(STRVField(r, dataSize, format: .zeroPadded))
         default: return false
         }
         return true

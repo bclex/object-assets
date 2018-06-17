@@ -7,13 +7,10 @@
 //
 
 public class SSCRRecord: Record {
-    public var description: String { return "SSCR: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var DATA: STRVField // Digits
-
-    init() {
-    }
-
+    public override var description: String { return "SSCR: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var DATA: STRVField! // Digits
+    
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard format == .TES3 else {
             return false

@@ -8,10 +8,10 @@
 
 public class LSCRRecord: Record {
     public struct LNAMField {
-        public let Direct: FormId<Record>
-        public let IndirectWorld: FormId<WRLDRecord>
-        public let IndirectGridX: Int16
-        public let IndirectGridY: Int16
+        public let direct: FormId<Record>
+        public let indirectWorld: FormId<WRLDRecord>
+        public let indirectGridX: Int16
+        public let indirectGridY: Int16
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             direct = FormId<Record>(r.readLEUInt32())
@@ -21,14 +21,11 @@ public class LSCRRecord: Record {
         }
     }
 
-    public var description: String { return "LSCR: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var ICON: FILEField // Icon
-    public var DESC: STRVField // Description
-    public var LNAMs: [LNAMField] // LoadForm
-
-    init() {
-    }
+    public override var description: String { return "LSCR: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var ICON: FILEField! // Icon
+    public var DESC: STRVField! // Description
+    public var LNAMs: [LNAMField]! // LoadForm
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

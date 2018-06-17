@@ -32,28 +32,25 @@ public class BOOKRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override var description: String { return "BOOK: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var MODL: MODLGroup  // Model (optional)
-    public var FULL: STRVField // Item Name
-    public var DATA: DATAField // Book Data
-    public var DESC: STRVField // Book Text
-    public var ICON: FILEField // Inventory Icon (optional)
-    public var SCRI: FMIDField<SCPTRecord> // Script Name (optional)
-    public var ENAM: FMIDField<ENCHRecord> // Enchantment FormId (optional)
+    public override var description: String { return "BOOK: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var MODL: MODLGroup? = nil  // Model (optional)
+    public var FULL: STRVField! // Item Name
+    public var DATA: DATAField! // Book Data
+    public var DESC: STRVField! // Book Text
+    public var ICON: FILEField? = nil // Inventory Icon (optional)
+    public var SCRI: FMIDField<SCPTRecord>? = nil // Script Name (optional)
+    public var ENAM: FMIDField<ENCHRecord>? = nil // Enchantment FormId (optional)
     // TES4
-    public var ANAM: IN16Field? // Enchantment points (optional)
-
-    init() {
-    }
+    public var ANAM: IN16Field? = nil // Enchantment points (optional)
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
-        case "MODT": MODL.MODTField(r, dataSize)
+        case "MODB": MODL?.MODBField(r, dataSize)
+        case "MODT": MODL?.MODTField(r, dataSize)
         case "FULL",
              "FNAM": FULL = STRVField(r, dataSize)
         case "DATA",

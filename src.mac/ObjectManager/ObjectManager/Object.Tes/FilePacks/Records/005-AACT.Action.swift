@@ -7,12 +7,9 @@
 //
 
 public class AACTRecord: Record {
-    public override var description: String { return "AACT: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var CNAME: CREFField // RGB color
-
-    init() {
-    }
+    public override var description: String { return "AACT: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var CNAME: CREFField! // RGB color
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

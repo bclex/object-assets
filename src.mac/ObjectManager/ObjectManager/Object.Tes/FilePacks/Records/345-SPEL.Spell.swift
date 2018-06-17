@@ -26,16 +26,13 @@ public class SPELRecord: Record {
         }
     }
 
-    public override var description: String { return "SPEL: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var FULL: STRVField // Spell name
-    public var SPIT: SPITField // Spell data
+    public override var description: String { return "SPEL: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var FULL: STRVField! // Spell name
+    public var SPIT: SPITField! // Spell data
     public var EFITs = [ENCHRecord.EFITField]() // Effect Data
     // TES4
     public var SCITs = [ENCHRecord.SCITField]() // Script effect data
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

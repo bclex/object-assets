@@ -29,16 +29,13 @@ public class APPARecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override var description: String { return "APPA: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var MODL: MODLGroup  // Model Name
-    public var FULL: STRVField // Item Name
-    public var DATA: DATAField // Alchemy Data
-    public var ICON: FILEField // Inventory Icon
-    public var SCRI: FMIDField<SCPTRecord> // Script Name
-
-    init() {
-    }
+    public override var description: String { return "APPA: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var MODL: MODLGroup!  // Model Name
+    public var FULL: STRVField! // Item Name
+    public var DATA: DATAField! // Alchemy Data
+    public var ICON: FILEField! // Inventory Icon
+    public var SCRI: FMIDField<SCPTRecord>! // Script Name
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

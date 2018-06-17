@@ -89,7 +89,7 @@ public class Header: CustomStringConvertible {
                 _ = r.readLEUInt32() // version + uknown
             }
             position = r.baseStream.position
-            flags = Flags(rawValue: 0)!
+            flags = Flags(rawValue: 0)
             formId = 0
             return
         }
@@ -99,7 +99,7 @@ public class Header: CustomStringConvertible {
         if format == .TES3 {
             _ = r.readLEUInt32() // Unknown
         }
-        flags = Flags(rawValue: r.readLEUInt32())!
+        flags = Flags(rawValue: r.readLEUInt32())
         if format == .TES3 {
             position = r.baseStream.position
             formId = 0
@@ -117,7 +117,7 @@ public class Header: CustomStringConvertible {
         position = r.baseStream.position
     }
 
-    static let create:[String : (f: (Header)->Record, l: (Int)->Bool)] = [
+    static let create:[String : (f: (Header) -> Record, l: (Int) -> Bool)] = [
         "TES3" : ({x in return TES3Record(x)}, {x in return true})
          /*
         "TES4" : ({x in return TES4Record(x)}, {x in return true}),

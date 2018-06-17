@@ -11,14 +11,11 @@ public class SNDGRecord: Record {
         case leftFoot = 0, rightFoot, swimLeft, swimRight, moan, roar, scream, land = 7
     }
 
-    public var description: String { return "SNDG: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var DATA: IN32Field // Sound Type Data
-    public var SNAM: STRVField // Sound ID
-    public var CNAM: STRVField? // Creature name (optional)
-
-    init() {
-    }
+    public override var description: String { return "SNDG: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var DATA: IN32Field! // Sound Type Data
+    public var SNAM: STRVField! // Sound ID
+    public var CNAM: STRVField? = nil// Creature name (optional)
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard format == .TES3 else {

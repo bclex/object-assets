@@ -7,16 +7,13 @@
 //
 
 public class FLORRecord: Record {
-    public var description: String { return "FLOR: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var MODL: MODLGroup // Model
-    public var FULL: STRVField // Plant Name
-    public var SCRI: FMIDField<SCPTRecord> // Script (optional)
-    public var PFIG: FMIDField<INGRRecord> // The ingredient the plant produces (optional)
-    public var PFPC: BYTVField // Spring, Summer, Fall, Winter Ingredient Production (byte)
-
-    init() {
-    }
+    public override var description: String { return "FLOR: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var MODL: MODLGroup! // Model
+    public var FULL: STRVField! // Plant Name
+    public var SCRI: FMIDField<SCPTRecord>? = nil // Script (optional)
+    public var PFIG: FMIDField<INGRRecord>? = nil // The ingredient the plant produces (optional)
+    public var PFPC: BYTVField! // Spring, Summer, Fall, Winter Ingredient Production (byte)
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

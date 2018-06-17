@@ -95,18 +95,15 @@ public class WATRRecord: Record {
         }
     }
 
-    public var description: String { return "WATR: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var TNAM: STRVField // Texture
-    public var ANAM: BYTEField // Opacity
-    public var FNAM: BYTEField // Flags
-    public var MNAM: STRVField // Material ID
-    public var SNAM: FMIDField<SOUNRecord> // Sound
-    public var DATA: DATAField // DATA
-    public var GNAM: GNAMField // GNAM
-
-    init() {
-    }
+    public override var description: String { return "WATR: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var TNAM: STRVField! // Texture
+    public var ANAM: BYTEField! // Opacity
+    public var FNAM: BYTEField! // Flags
+    public var MNAM: STRVField! // Material ID
+    public var SNAM: FMIDField<SOUNRecord>! // Sound
+    public var DATA: DATAField! // DATA
+    public var GNAM: GNAMField! // GNAM
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

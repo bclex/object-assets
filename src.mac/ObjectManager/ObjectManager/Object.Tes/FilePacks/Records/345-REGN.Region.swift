@@ -96,7 +96,7 @@ public class REGNRecord: Record, IHaveEDID {
             guard format != .TES3 else {
                 sound = FormId<SOUNRecord>(r.readASCIIString(32, format: .zeroPadded))
                 flags = 0
-                chance = r.readByte()
+                chance = UInt32(r.readByte())
                 return
             }
             sound = FormId<SOUNRecord>(r.readLEUInt32())
@@ -157,25 +157,22 @@ public class REGNRecord: Record, IHaveEDID {
 
         func RPLDField(_ r: BinaryReader, _ dataSize: Int) {
             points = [Vector2](); points.reserveCapacity(dataSize >> 3)
-            for i in 0..<points.capacity {
-                points[i] = Vector2(dx: r.readLESingle(), dy: r.readLESingle())
+            for i in points.startIndex..<points.capacity {
+                points[i] = Vector2(dx: CGFloat(r.readLESingle()), dy: CGFloat(r.readLESingle()))
             }
         }
     }
 
-    public override var description: String { return "REGN: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var ICON: STRVField // Icon / Sleep creature
-    public var WNAM: FMIDField<WRLDRecord> // Worldspace - Region name
-    public var RCLR: CREFField // Map Color (COLORREF)
+    public override var description: String { return "REGN: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var ICON: STRVField! // Icon / Sleep creature
+    public var WNAM: FMIDField<WRLDRecord>! // Worldspace - Region name
+    public var RCLR: CREFField! // Map Color (COLORREF)
     public var RDATs = [RDATField]() // Region Data Entries / TES3: Sound Record (order determines the sound priority)
     // TES3
-    public var WEAT: WEATField? // Weather Data
+    public var WEAT: WEATField? = nil // Weather Data
     // TES4
     public var RPLIs = [RPLIField]() // Region Areas
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

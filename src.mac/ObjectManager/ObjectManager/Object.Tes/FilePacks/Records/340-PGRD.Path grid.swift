@@ -60,30 +60,27 @@ public class PGRDRecord: Record {
 
     public struct PGRLField {
         public let reference: FormId<REFRRecord>
-        public let pointIds: [Int16]
+        public var pointIds: [Int16]
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             reference = FormId<REFRRecord>(r.readLEUInt32())
             pointIds = [Int16](); pointIds.reserveCapacity((dataSize - 4) >> 2)
-            for i in 0..<pointIds.capactiy {
+            for i in pointIds.startIndex..<pointIds.capacity {
                 pointIds[i] = r.readLEInt16()
                 r.skipBytes(2) // Unused (can merge back)
             }
         }
     }
 
-    public override var description: String { return "PGRD: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var DATA: DATAField // Number of nodes
-    public var PGRPs: [PGRPField]
-    public var PGRC: UNKNField
-    public var PGAG: UNKNField
-    public var PGRRs: [PGRRField] // Point-to-Point Connections
-    public var PGRLs: [PGRLField]? // Point-to-Reference Mappings
-    public var PGRIs: [PGRIField] // Inter-Cell Connections
-    
-    init() {
-    }
+    public override var description: String { return "PGRD: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var DATA: DATAField! // Number of nodes
+    public var PGRPs: [PGRPField]!
+    public var PGRC: UNKNField!
+    public var PGAG: UNKNField!
+    public var PGRRs: [PGRRField]! // Point-to-Point Connections
+    public var PGRLs: [PGRLField]? = nil// Point-to-Reference Mappings
+    public var PGRIs: [PGRIField]! // Inter-Cell Connections
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

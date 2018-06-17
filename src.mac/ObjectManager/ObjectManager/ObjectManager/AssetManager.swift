@@ -29,8 +29,8 @@ public protocol IDataPack {
 
 public protocol IAssetManager {
     func getAssetPack(_ url: URL?) -> IAssetPack?
-//    func getDataPack(_ url: URL?) -> IDataPack?
-//    func getCellManager(asset: IAssetPack, data: IDataPack, loadBalancer: TemporalLoadBalancer) -> ICellManager?
+    func getDataPack(_ url: URL?) -> IDataPack?
+    func getCellManager(asset: IAssetPack, data: IDataPack, loadBalancer: TemporalLoadBalancer) -> ICellManager?
 }
 
 public class AssetManager {

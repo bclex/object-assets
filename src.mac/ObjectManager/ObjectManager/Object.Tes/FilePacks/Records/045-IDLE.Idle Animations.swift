@@ -7,15 +7,12 @@
 //
 
 public class IDLERecord: Record {
-    public override var description: String { return "IDLE: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var MODL: MODLGroup
+    public override var description: String { return "IDLE: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var MODL: MODLGroup!
     public var CTDAs = [SCPTRecord.CTDAField]() // Conditions
-    public var ANAM: BYTEField
-    public var DATAs: [FMIDField<IDLERecord>]
-
-    init() {
-    }
+    public var ANAM: BYTEField!
+    public var DATAs: [FMIDField<IDLERecord>]!
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

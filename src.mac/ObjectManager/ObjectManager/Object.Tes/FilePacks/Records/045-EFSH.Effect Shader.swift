@@ -32,38 +32,38 @@ public class EFSHRecord: Record {
         public let fillTextureEffect_fullAlphaRatio: Float
         public let edgeEffect_fullAlphaRatio: Float
         public let membraneShader_destBlendMode: UInt32
-        public let particleShader_sourceBlendMode: UInt32
-        public let particleShader_blendOperation: UInt32
-        public let particleShader_ztestFunction: UInt32
-        public let particleShader_destBlendMode: UInt32
-        public let particleShader_particleBirthRampUpTime: Float
-        public let particleShader_fullParticleBirthTime: Float
-        public let particleShader_particleBirthRampDownTime: Float
-        public let particleShader_fullParticleBirthRatio: Float
-        public let particleShader_persistantParticleBirthRatio: Float
-        public let particleShader_particleLifetime: Float
-        public let particleShader_particleLifetime_Delta: Float
-        public let particleShader_initialSpeedAlongNormal: Float
-        public let particleShader_accelerationAlongNormal: Float
-        public let particleShader_initialVelocity1: Float
-        public let particleShader_initialVelocity2: Float
-        public let particleShader_initialVelocity3: Float
-        public let particleShader_acceleration1: Float
-        public let particleShader_acceleration2: Float
-        public let particleShader_acceleration3: Float
-        public let particleShader_scaleKey1: Float
-        public let particleShader_scaleKey2: Float
-        public let particleShader_scaleKey1Time: Float
-        public let particleShader_scaleKey2Time: Float
-        public let colorKey1_color: ColorRef
-        public let colorKey2_color: ColorRef
-        public let colorKey3_color: ColorRef
-        public let colorKey1_colorAlpha: Float
-        public let colorKey2_colorAlpha: Float
-        public let colorKey3_colorAlpha: Float
-        public let colorKey1_colorKeyTime: Float
-        public let colorKey2_colorKeyTime: Float
-        public let colorKey3_colorKeyTime: Float
+        public var particleShader_sourceBlendMode: UInt32? = nil
+        public var particleShader_blendOperation: UInt32? = nil
+        public var particleShader_ztestFunction: UInt32? = nil
+        public var particleShader_destBlendMode: UInt32? = nil
+        public var particleShader_particleBirthRampUpTime: Float? = nil
+        public var particleShader_fullParticleBirthTime: Float? = nil
+        public var particleShader_particleBirthRampDownTime: Float? = nil
+        public var particleShader_fullParticleBirthRatio: Float? = nil
+        public var particleShader_persistantParticleBirthRatio: Float? = nil
+        public var particleShader_particleLifetime: Float? = nil
+        public var particleShader_particleLifetime_Delta: Float? = nil
+        public var particleShader_initialSpeedAlongNormal: Float? = nil
+        public var particleShader_accelerationAlongNormal: Float? = nil
+        public var particleShader_initialVelocity1: Float? = nil
+        public var particleShader_initialVelocity2: Float? = nil
+        public var particleShader_initialVelocity3: Float? = nil
+        public var particleShader_acceleration1: Float? = nil
+        public var particleShader_acceleration2: Float? = nil
+        public var particleShader_acceleration3: Float? = nil
+        public var particleShader_scaleKey1: Float? = nil
+        public var particleShader_scaleKey2: Float? = nil
+        public var particleShader_scaleKey1Time: Float? = nil
+        public var particleShader_scaleKey2Time: Float? = nil
+        public var colorKey1_color: ColorRef? = nil
+        public var colorKey2_color: ColorRef? = nil
+        public var colorKey3_color: ColorRef? = nil
+        public var colorKey1_colorAlpha: Float? = nil
+        public var colorKey2_colorAlpha: Float? = nil
+        public var colorKey3_colorAlpha: Float? = nil
+        public var colorKey1_colorKeyTime: Float? = nil
+        public var colorKey2_colorKeyTime: Float? = nil
+        public var colorKey3_colorKeyTime: Float? = nil
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             flags = r.readByte()
@@ -129,14 +129,11 @@ public class EFSHRecord: Record {
         }
     }
 
-    public override var description: String { return "EFSH: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var ICON: FILEField // Fill Texture
-    public var ICO2: FILEField // Particle Shader Texture
-    public var DATA: DATAField // Data
-
-    init() {
-    }
+    public override var description: String { return "EFSH: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var ICON: FILEField! // Fill Texture
+    public var ICO2: FILEField! // Particle Shader Texture
+    public var DATA: DATAField! // Data
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

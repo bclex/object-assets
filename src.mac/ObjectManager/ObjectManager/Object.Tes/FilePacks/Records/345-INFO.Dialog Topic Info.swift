@@ -9,12 +9,12 @@
 public class INFORecord: Record {
     // TES3
     public struct DATA3Field {
-        public let Unknown1: Int32
-        public let Disposition: Int32
-        public let Rank: UInt8 // (0-10)
-        public let Gender: UInt8 // 0xFF = None, 0x00 = Male, 0x01 = Female
+        public let unknown1: Int32
+        public let disposition: Int32
+        public let rank: UInt8 // (0-10)
+        public let gender: UInt8 // 0xFF = None, 0x00 = Male, 0x01 = Female
         public let pcRank: UInt8 // (0-10)
-        public let Unknown2: UInt8
+        public let unknown2: UInt8
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             unknown1 = r.readLEInt32()
@@ -44,6 +44,9 @@ public class INFORecord: Record {
         public var INTV: UNKNField //
         public var FLTV: UNKNField // The function/variable result for the previous SCVR
         public var BNAM: STRVField // Result text (not compiled)
+        
+        init() {
+        }
     }
 
     // TES4
@@ -75,11 +78,11 @@ public class INFORecord: Record {
         }
 
         func NAM1Field(_ r: BinaryReader, _ dataSize: Int) {
-            responseText = r.readASCIIString(dataSize, .possiblyNullTerminated)
+            responseText = r.readASCIIString(dataSize, format: .possibleNullTerminated)
         }
 
         func NAM2Field(_ r: BinaryReader, _ dataSize: Int) {
-            sctorNotes = r.readASCIIString(dataSize, .possiblyNullTerminated)
+            sctorNotes = r.readASCIIString(dataSize, format: .possibleNullTerminated)
         }
     }
 
@@ -89,23 +92,23 @@ public class INFORecord: Record {
         public var TPIC: FMIDField<DIALRecord> // Topic
         public var NAMEs = [FMIDField<DIALRecord>]() // Topics
         public var RDTs = [TRDTField]() // Responses
-        public var CTDAs = [SCPTRecord.CTDAField>]() // Conditions
+        public var CTDAs = [SCPTRecord.CTDAField]() // Conditions
         public var TCLTs = [FMIDField<DIALRecord>]() // Choices
-        public var TCLFs = [FMIDField<DIALRecord] // Link From Topics
+        public var TCLFs = [FMIDField<DIALRecord>]() // Link From Topics
         public var SCHR: SCPTRecord.SCHRField // Script Data
         public var SCDA: BYTVField // Compiled Script
         public var SCTX: STRVField // Script Source
         public var SCROs = [FMIDField<Record>]() // Global variable reference
+        
+        init() {
+        }
     }
 
-    public var description: String { return "INFO: \(EDID)" }
-    public var EDID: STRVField // Editor ID - Info name string (unique sequence of #'s), ID
-    public var PNAM: FMIDField<INFORecord> // Previous info ID
+    public override var description: String { return "INFO: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID - Info name string (unique sequence of #'s), ID
+    public var PNAM: FMIDField<INFORecord>! // Previous info ID
     public var TES3 = TES3Group()
     public var TES4 = TES4Group()
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {

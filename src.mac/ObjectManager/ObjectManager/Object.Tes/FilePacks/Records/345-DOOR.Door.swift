@@ -7,20 +7,17 @@
 //
 
 public class DOORRecord: Record, IHaveEDID, IHaveMODL {
-    public var description: String { return "DOOR: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var FULL: STRVField // Door name
-    public var MODL: MODLGroup  // NIF model filename
-    public var SCRI: FMIDField<SCPTRecord>? // Script (optional)
-    public var SNAM: FMIDField<SOUNRecord>  // Open Sound
-    public var ANAM: FMIDField<SOUNRecord>  // Close Sound
+    public override var description: String { return "DOOR: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var FULL: STRVField! // Door name
+    public var MODL: MODLGroup!  // NIF model filename
+    public var SCRI: FMIDField<SCPTRecord>? = nil // Script (optional)
+    public var SNAM: FMIDField<SOUNRecord>!  // Open Sound
+    public var ANAM: FMIDField<SOUNRecord>!  // Close Sound
     // TES4
-    public var BNAM: FMIDField<SOUNRecord> // Loop Sound
+    public var BNAM: FMIDField<SOUNRecord>! // Loop Sound
     public var FNAM: BYTEField // Flags
-    public var TNAM: FMIDField<Record> // Random teleport destination
-
-    init() {
-    }
+    public var TNAM: FMIDField<Record>! // Random teleport destination
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

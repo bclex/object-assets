@@ -21,14 +21,11 @@ public class BODYRecord: Record {
         }
     }
 
-    public var description: String { return "BODY: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var MODL: MODLGroup  // NIF Model
-    public var FNAM: STRVField // Body name
-    public var BYDT: BYDTField
-
-    init() {
-    }
+    public override var description: String { return "BODY: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var MODL: MODLGroup!  // NIF Model
+    public var FNAM: STRVField! // Body name
+    public var BYDT: BYDTField!
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard format == .TES3 else {

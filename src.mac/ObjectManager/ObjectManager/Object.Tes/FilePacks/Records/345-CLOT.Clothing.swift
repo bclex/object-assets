@@ -9,7 +9,7 @@
 public class CLOTRecord: Record, IHaveEDID, IHaveMODL {
     // TESX
     public struct DATAField {
-        public enum CLOTType {
+        public enum CLOTType: UInt32 {
             case pants = 0, shoes, shirt, belt, robe, r_glove, l_glove, skirt, ring, amulet
         }
 
@@ -36,31 +36,28 @@ public class CLOTRecord: Record, IHaveEDID, IHaveMODL {
 
     public class INDXFieldGroup: CustomStringConvertible {
         public var description: String { return "\(INDX.value): \(BNAM.value)" }
-        public var INDX: INTVField
-        public var BNAM: STRVField
-        public var CNAM: STRVField
+        public var INDX: INTVField!
+        public var BNAM: STRVField!
+        public var CNAM: STRVField!
     }
 
-    public var description: String { return "CLOT: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var MODL: MODLGroup  // Model Name
-    public var FULL: STRVField // Item Name
-    public var DATA: DATAField // Clothing Data
-    public var ICON: FILEField // Male Icon
-    public var ENAM: STRVField // Enchantment Name
-    public var SCRI: FMIDField<SCPTRecord> // Script Name
+    public var description: String { return "CLOT: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var MODL: MODLGroup!  // Model Name
+    public var FULL: STRVField! // Item Name
+    public var DATA: DATAField! // Clothing Data
+    public var ICON: FILEField! // Male Icon
+    public var ENAM: STRVField! // Enchantment Name
+    public var SCRI: FMIDField<SCPTRecord>! // Script Name
     // TES3
     public var INDXs = [INDXFieldGroup]() // Body Part Index (Moved to Race)
     // TES4
-    public var BMDT: UI32Field  // Clothing Flags
-    public var MOD2: MODLGroup  // Male world model (optional)
-    public var MOD3: MODLGroup  // Female biped (optional)
-    public var MOD4: MODLGroup  // Female world model (optional)
-    public var ICO2: FILEField? // Female icon (optional)
-    public var ANAM: IN16Field? // Enchantment points (optional)
-
-    init() {
-    }
+    public var BMDT: UI32Field!  // Clothing Flags
+    public var MOD2: MODLGroup!  // Male world model (optional)
+    public var MOD3: MODLGroup!  // Female biped (optional)
+    public var MOD4: MODLGroup!  // Female world model (optional)
+    public var ICO2: FILEField? = nil // Female icon (optional)
+    public var ANAM: IN16Field? = nil // Enchantment points (optional)
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

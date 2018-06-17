@@ -17,18 +17,15 @@ public class SLGMRecord: Record {
         }
     }
 
-    public var description: String { return "SLGM: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var MODL: MODLGroup // Model
-    public var FULL: STRVField // Item Name
-    public var SCRI: FMIDField<SCPTRecord> // Script (optional)
-    public var DATA: DATAField // Type of soul contained in the gem
-    public var ICON: FILEField // Icon (optional)
-    public var SOUL: BYTEField // Type of soul contained in the gem
-    public var SLCP: BYTEField // Soul gem maximum capacity
-
-    init() {
-    }
+    public override var description: String { return "SLGM: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var MODL: MODLGroup! // Model
+    public var FULL: STRVField! // Item Name
+    public var SCRI: FMIDField<SCPTRecord>? = nil // Script (optional)
+    public var DATA: DATAField! // Type of soul contained in the gem
+    public var ICON: FILEField? = nil // Icon (optional)
+    public var SOUL: BYTEField! // Type of soul contained in the gem
+    public var SLCP: BYTEField! // Soul gem maximum capacity
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

@@ -8,11 +8,8 @@
 
 public class ROADRecord: Record {
     public override var description: String { return "ROAD:" }
-    public var PGRPs: [PGRDRecord.PGRPField]
-    public var PGRR: UNKNField
-
-    init() {
-    }
+    public var PGRPs: [PGRDRecord.PGRPField]!
+    public var PGRR: UNKNField!
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

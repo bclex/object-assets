@@ -7,15 +7,12 @@
 //
 
 public class FURNRecord: Record {
-    public var description: String { return "FURN: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var MODL: MODLGroup // Model
-    public var FULL: STRVField // Furniture Name
-    public var SCRI: FMIDField<SCPTRecord> // Script (optional)
-    public var MNAM: IN32Field // Active marker flags, required. A bit field with a bit value of 1 indicating that the matching marker position in the NIF file is active.
-
-    init() {
-    }
+    public override var description: String { return "FURN: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var MODL: MODLGroup! // Model
+    public var FULL: STRVField! // Furniture Name
+    public var SCRI: FMIDField<SCPTRecord>? = nil // Script (optional)
+    public var MNAM: IN32Field! // Active marker flags, required. A bit field with a bit value of 1 indicating that the matching marker position in the NIF file is active.
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

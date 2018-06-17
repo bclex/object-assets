@@ -75,7 +75,7 @@ public class SCPTRecord: Record {
         }
 
         func SCVRField(_ r: BinaryReader, _ dataSize: Int) {
-            variables = r.readASCIIMultiString(dataSize)
+            variables = r.readASCIIString(dataSize)
         }
     }
 
@@ -123,19 +123,16 @@ public class SCPTRecord: Record {
     }
 
     public override var description: String { return "SCPT: \(EDID ?? SCHD)" }
-    public var EDID: STRVField  // Editor ID
-    public var SCDA: BYTVField // Compiled Script
-    public var SCTX: STRVField // Script Source
+    public var EDID: STRVField!  // Editor ID
+    public var SCDA: BYTVField! // Compiled Script
+    public var SCTX: STRVField! // Script Source
     // TES3
-    public var SCHD: SCHDField // Script Data
+    public var SCHD: SCHDField! // Script Data
     // TES4
-    public var SCHR: SCHRField // Script Data
+    public var SCHR: SCHRField! // Script Data
     public var SLSDs = [SLSDField]() // Variable data
     public var SCRVs = [SLSDField]() // Ref variable data (one for each ref declared)
     public var SCROs = [FMIDField<Record>]() // Global variable reference
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

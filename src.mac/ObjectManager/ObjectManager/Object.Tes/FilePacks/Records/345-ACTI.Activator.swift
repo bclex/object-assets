@@ -7,18 +7,15 @@
 //
 
 public class ACTIRecord: Record, IHaveEDID, IHaveMODL {
-    public override var description: String { return "ACTI: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var MODL: MODLGroup  // Model Name
-    public var MODB: FLTVField  // Model Bounds
-    public var MODT: BYTVField // Texture Files Hashes
-    public var FULL: STRVField // Item Name
-    public var SCRI: FMIDField<SCPTRecord> // Script (Optional)
+    public override var description: String { return "ACTI: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var MODL: MODLGroup!  // Model Name
+    public var MODB: FLTVField!  // Model Bounds
+    public var MODT: BYTVField! // Texture Files Hashes
+    public var FULL: STRVField! // Item Name
+    public var SCRI: FMIDField<SCPTRecord>? = nil // Script (Optional)
     // TES4
-    public var SNAM: FMIDField<SOUNRecord> // Sound (Optional)
-
-    init() {
-    }
+    public var SNAM: FMIDField<SOUNRecord>? = nil // Sound (Optional)
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

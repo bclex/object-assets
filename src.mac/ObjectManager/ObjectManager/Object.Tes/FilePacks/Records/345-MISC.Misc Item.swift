@@ -26,18 +26,15 @@ public class MISCRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public var description: String { return "MISC: \(EDID)" }
-    public EDID: STRVField  // Editor ID
-    public MODL: MODLGroup  // Model
-    public FULL: STRVField // Item Name
-    public DATA: DATAField // Misc Item Data
-    public ICON: FILEField // Icon (optional)
-    public SCRI: FMIDField<SCPTRecord> // Script FormID (optional)
+    public override var description: String { return "MISC: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var MODL: MODLGroup!  // Model
+    public var FULL: STRVField! // Item Name
+    public var DATA: DATAField! // Misc Item Data
+    public var ICON: FILEField? = nil // Icon (optional)
+    public var SCRI: FMIDField<SCPTRecord>? = nil // Script FormID (optional)
     // TES3
-    public ENAM: FMIDField<ENCHRecord> // enchantment ID
-
-    init() {
-    }
+    public var ENAM: FMIDField<ENCHRecord>! // enchantment ID
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

@@ -7,13 +7,10 @@
 //
 
 public class GLOBRecord: Record, IHaveEDID {
-    public var description: String { return "GLOB: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var FNAM: BYTEField? // Type of global (s, l, f)
-    public var FLTV: FLTVField? // Float data
-
-    init() {
-    }
+    public override var description: String { return "GLOB: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var FNAM: BYTEField? = nil // Type of global (s, l, f)
+    public var FLTV: FLTVField? = nil // Float data
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

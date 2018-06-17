@@ -9,13 +9,13 @@
 public class MGEFRecord: Record {
     // TES3
     public struct MEDTField {
-        public let SpellSchool: Int32 // 0 = Alteration, 1 = Conjuration, 2 = Destruction, 3 = Illusion, 4 = Mysticism, 5 = Restoration
-        public let BaseCost: Float
-        public let Flags: Int // 0x0200 = Spellmaking, 0x0400 = Enchanting, 0x0800 = Negative
-        public let Color: ColorRef
-        public let SpeedX: Float
-        public let SizeX: Float
-        public let SizeCap: Float
+        public let spellSchool: Int32 // 0 = Alteration, 1 = Conjuration, 2 = Destruction, 3 = Illusion, 4 = Mysticism, 5 = Restoration
+        public let baseCost: Float
+        public let flags: Int // 0x0200 = Spellmaking, 0x0400 = Enchanting, 0x0800 = Negative
+        public let color: ColorRef
+        public let speedX: Float
+        public let sizeX: Float
+        public let sizeCap: Float
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             spellSchool = r.readLEInt32()
@@ -117,30 +117,27 @@ public class MGEFRecord: Record {
         }
     }
 
-    public var description: String { return "MGEF: \(INDX):\(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var DESC: STRVField // Description
+    public override var description: String { return "MGEF: \(INDX!):\(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var DESC: STRVField! // Description
     // TES3
-    public var INDX: INTVField // The Effect ID (0 to 137)
-    public var MEDT: MEDTField // Effect Data
-    public var ICON: FILEField // Effect Icon
-    public var PTEX: STRVField // Particle texture
-    public var CVFX: STRVField // Casting visual
-    public var BVFX: STRVField // Bolt visual
-    public var HVFX: STRVField // Hit visual
-    public var AVFX: STRVField // Area visual
-    public var CSND: STRVField? // Cast sound (optional)
-    public var BSND: STRVField? // Bolt sound (optional)
-    public var HSND: STRVField? // Hit sound (optional)
-    public var ASND: STRVField? // Area sound (optional)
+    public var INDX: INTVField! // The Effect ID (0 to 137)
+    public var MEDT: MEDTField! // Effect Data
+    public var ICON: FILEField! // Effect Icon
+    public var PTEX: STRVField! // Particle texture
+    public var CVFX: STRVField! // Casting visual
+    public var BVFX: STRVField! // Bolt visual
+    public var HVFX: STRVField! // Hit visual
+    public var AVFX: STRVField! // Area visual
+    public var CSND: STRVField? = nil // Cast sound (optional)
+    public var BSND: STRVField? = nil// Bolt sound (optional)
+    public var HSND: STRVField? = nil// Hit sound (optional)
+    public var ASND: STRVField? = nil// Area sound (optional)
     // TES4
     public var FULL: STRVField
     public var MODL: MODLGroup
     public var DATA: DATAField
     public var ESCEs: [STRVField]
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {

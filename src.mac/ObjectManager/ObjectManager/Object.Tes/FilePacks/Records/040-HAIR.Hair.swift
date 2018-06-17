@@ -7,15 +7,12 @@
 //
 
 public class HAIRRecord: Record {
-    public override var description: String { return "HAIR: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var FULL: STRVField
-    public var MODL: MODLGroup
-    public var ICON: FILEField
-    public var DATA: BYTEField // Playable, Not Male, Not Female, Fixed
-
-    init() {
-    }
+    public override var description: String { return "HAIR: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var FULL: STRVField!
+    public var MODL: MODLGroup!
+    public var ICON: FILEField!
+    public var DATA: BYTEField! // Playable, Not Male, Not Female, Fixed
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

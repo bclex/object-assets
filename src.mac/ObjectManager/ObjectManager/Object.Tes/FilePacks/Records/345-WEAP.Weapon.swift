@@ -59,14 +59,14 @@ public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override var description: String { return "WEAP: \(EDID)" }
-    public var EDID: STRVField? // Editor ID
-    public var MODL: MODLGroup? // Model
-    public var FULL: STRVField // Item Name
-    public var DATA: DATAField // Weapon Data
-    public var ICON: FILEField // Male Icon (optional)
-    public var ENAM: FMIDField<ENCHRecord> // Enchantment ID
-    public var SCRI: FMIDField<SCPTRecord> // Script (optional)
+    public override var description: String { return "WEAP: \(String(describing: EDID))" }
+    public var EDID: STRVField? = nil // Editor ID
+    public var MODL: MODLGroup? = nil // Model
+    public var FULL: STRVField! // Item Name
+    public var DATA: DATAField! // Weapon Data
+    public var ICON: FILEField? = nil // Male Icon (optional)
+    public var ENAM: FMIDField<ENCHRecord>! // Enchantment ID
+    public var SCRI: FMIDField<SCPTRecord>? = nil // Script (optional)
     // TES4
     public var ANAM: IN16Field? // Enchantment points (optional)
 

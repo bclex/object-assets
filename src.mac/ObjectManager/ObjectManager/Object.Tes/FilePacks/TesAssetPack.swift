@@ -12,7 +12,7 @@ import SceneKit
 public class TesAssetPack: BsaMultiFile, IAssetPack {
     var _textureManager: TextureManager? = nil
     var _materialManager: MaterialManager? = nil
-    //var _nifManager: NifManager? = nil
+//    var _nifManager: NifManager? = nil
 
     convenience init(_ filePath: URL) {
         self.init([filePath])
@@ -21,7 +21,7 @@ public class TesAssetPack: BsaMultiFile, IAssetPack {
         super.init(filePaths)
         _textureManager = TextureManager(asset: self)
         _materialManager = MaterialManager(textureManager: _textureManager!)
-        //_nifManager = NifManager(asset: self, materialManager: _materialManager!, markerLayer: 0)
+//        _nifManager = NifManager(asset: self, materialManager: _materialManager!, markerLayer: 0)
     }
 
     public func loadTexture(texturePath: String, method: Int = 0) -> Texture2D {

@@ -22,18 +22,14 @@ public class CLASRecord: Record {
         }
     }
 
-    public var description: String { return "CLAS: \(EDID)" }
-    public var EDID: STRVField   // Editor ID
-    public var FULL: STRVField  // Name
-    public var DESC: STRVField  // Description
-    public var ICON: STRVField? // Icon (Optional)
-    public var DATA: DATAField  // Data
-
-    init() {
-    }
+    public override var description: String { return "CLAS: \(EDID!)" }
+    public var EDID: STRVField!   // Editor ID
+    public var FULL: STRVField!  // Name
+    public var DESC: STRVField!  // Description
+    public var ICON: STRVField? = nil // Icon (Optional)
+    public var DATA: DATAField!  // Data
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
-    {
         if format == .TES3 {
             switch type {
             case "NAME": EDID = STRVField(r, dataSize)

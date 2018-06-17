@@ -8,11 +8,11 @@
 
 public class TREERecord: Record {
     public struct SNAMField {
-        public let values: [Int32]
+        public var values: [Int32]
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             values = [Int32](); values.reserveCapacity(dataSize >> 2)
-            for i in 0..<values.capactiy {
+            for i in values.startIndex..<values.capacity {
                 values[i] = r.readLEInt32()
             }
         }
@@ -50,16 +50,13 @@ public class TREERecord: Record {
         }
     }
 
-    public var description: String { return "TREE: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var MODL: MODLGroup // Model
-    public var ICON: FILEField // Leaf Texture
-    public var SNAM: SNAMField // SpeedTree Seeds, array of ints
-    public var CNAM: CNAMField // Tree Parameters
-    public var BNAM: BNAMField // Billboard Dimensions
-
-    init() {
-    }
+    public override var description: String { return "TREE: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var MODL: MODLGroup! // Model
+    public var ICON: FILEField! // Leaf Texture
+    public var SNAM: SNAMField! // SpeedTree Seeds, array of ints
+    public var CNAM: CNAMField! // Tree Parameters
+    public var BNAM: BNAMField! // Billboard Dimensions
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

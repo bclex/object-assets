@@ -21,16 +21,13 @@ public class REPARecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public var description: String { return "REPA: \(EDID)" }
-    public var EDID: STRVField  // Editor ID
-    public var MODL: MODLGroup  // Model Name
-    public var FNAM: STRVField // Item Name
-    public var RIDT: RIDTField // Repair Data
-    public var ICON: FILEField // Inventory Icon
-    public var SCRI: FMIDField<SCPTRecord> // Script Name
-    
-    init() {
-    }
+    public override var description: String { return "REPA: \(EDID!)" }
+    public var EDID: STRVField!  // Editor ID
+    public var MODL: MODLGroup!  // Model Name
+    public var FNAM: STRVField! // Item Name
+    public var RIDT: RIDTField! // Repair Data
+    public var ICON: FILEField! // Inventory Icon
+    public var SCRI: FMIDField<SCPTRecord>! // Script Name
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         guard format == .TES3 else {

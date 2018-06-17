@@ -20,18 +20,15 @@ public class LTEXRecord: Record, IHaveEDID {
         }
     }
 
-    public override var description: String { return "LTEX: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var ICON: FILEField // Texture
+    public override var description: String { return "LTEX: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var ICON: FILEField! // Texture
     // TES3
-    public var INTV: INTVField
+    public var INTV: INTVField!
     // TES4
-    public var HNAM: HNAMField // Havok data
-    public var SNAM: BYTEField // Texture specular exponent
+    public var HNAM: HNAMField! // Havok data
+    public var SNAM: BYTEField! // Texture specular exponent
     public var GNAMs = [FMIDField<GRASRecord>]() // Potential grass
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {

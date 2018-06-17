@@ -58,16 +58,13 @@ public class PACKRecord: Record {
         }
     }
 
-    public var description: String { return "PACK: \(EDID)" }
-    public var EDID: STRVField // Editor ID
-    public var PKDT: PKDTField // General
-    public var PLDT: PLDTField // Location
-    public var PSDT: PSDTField // Schedule
-    public var PTDT: PTDTField // Target
+    public override var description: String { return "PACK: \(EDID!)" }
+    public var EDID: STRVField! // Editor ID
+    public var PKDT: PKDTField! // General
+    public var PLDT: PLDTField! // Location
+    public var PSDT: PSDTField! // Schedule
+    public var PTDT: PTDTField! // Target
     public var CTDAs = [SCPTRecord.CTDAField]() // Conditions
-
-    init() {
-    }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
