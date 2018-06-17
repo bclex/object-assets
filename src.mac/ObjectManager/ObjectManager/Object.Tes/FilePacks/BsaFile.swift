@@ -129,12 +129,12 @@ public class BsaFile {
     // MARK:Code
 
     var _r: BinaryReader!
-    public var magic: UInt32 // 4 bytes
-    public var version: UInt32 // 4 bytes
-    var _compressToggle: UInt16 // Whether the %BSA is compressed
-    var _hasNamePrefix: Bool // Whether Fallout 3 names are prefixed with an extra string
-    var _files: [FileMetadata]
-    var _filesByHash: [UInt64 : [FileMetadata]]
+    public var magic: UInt32 = 0 // 4 bytes
+    public var version: UInt32 = 0// 4 bytes
+    var _compressToggle: UInt16 = 0// Whether the %BSA is compressed
+    var _hasNamePrefix = false// Whether Fallout 3 names are prefixed with an extra string
+    var _files = [FileMetadata]()
+    var _filesByHash = [UInt64 : [FileMetadata]]()
     public let filePath: String
     //public let RootDir: VirtualFileSystem.Directory
 
@@ -142,7 +142,7 @@ public class BsaFile {
 
     init(_ filePath: String?) {
         guard let filePath = filePath else {
-            return
+            fatalError("filepath is nil")
         }
         self.filePath = filePath
         _r = BinaryReader(FileBaseStream(forReadingAtPath: filePath)!)

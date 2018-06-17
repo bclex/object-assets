@@ -44,7 +44,7 @@ fileprivate func perform(operation: compression_stream_operation, algorithm: com
     stream.src_size = sourceSize
     
     var res = Data()
-    let flags: Int32 = Int32(COMPRESSION_STREAM_FINALIZE.rawValue)
+    let flags = Int32(COMPRESSION_STREAM_FINALIZE.rawValue)
     
     while true {
         switch compression_stream_process(&stream, flags) {
