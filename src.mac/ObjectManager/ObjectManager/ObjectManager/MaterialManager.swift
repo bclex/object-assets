@@ -8,11 +8,11 @@
 
 //public enum MatTestMode { Always, Less, LEqual, Equal, GEqual, Greater, NotEqual, Never }
 
-//public enum MaterialType {
-//    case none, default
-//}
-
 import SceneKit
+
+public enum MaterialType {
+    case standard
+}
 
 public enum BlendMode: Int {
     case one
@@ -50,8 +50,10 @@ public class MaterialManager {
 
     init(textureManager: TextureManager) {
         self.textureManager = textureManager
-        //var game = BaseSettings.Game;
-        _material = DefaultMaterial(textureManager: textureManager)
+        let game = BaseSettings.game
+        switch game.materialType {
+        case .standard: _material = DefaultMaterial(textureManager: textureManager)
+        }
     }
    
     public func buildMaterialFromProperties(_ mp: MaterialProps) -> SCNMaterial {
