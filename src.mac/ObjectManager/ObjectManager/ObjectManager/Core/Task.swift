@@ -6,6 +6,8 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
+import Foundation
+
 // https://stackoverflow.com/questions/42484281/waiting-until-the-task-finishes/42484670
 public class Task<T> {
     var value: T? = nil
@@ -13,9 +15,9 @@ public class Task<T> {
 
     init() {
         group = DispatchGroup()
-        group.enter()
+        group!.enter()
     }
-    init(value: value) {
+    init(value: T) {
         self.value = value
     }
 

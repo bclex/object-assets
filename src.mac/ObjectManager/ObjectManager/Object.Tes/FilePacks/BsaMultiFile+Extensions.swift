@@ -14,8 +14,8 @@ extension BsaMultiFile {
             debugPrint("Could not find file '\(texturePath)' in a BSA file.")
             return Task(value: nil)
         }
-        var task = Task<Texture2DInfo?>()
         let fileData = loadFileData(filePath)
+        var task = Task<Texture2DInfo?>()
         DispatchQueue.global().async {
             let fileExtension = URL(string: filePath)!.pathExtension
             guard fileExtension.lowercased() == ".dds" else {
@@ -26,20 +26,22 @@ extension BsaMultiFile {
             let texture = DdsReader.loadDDSTexture(r)
             task.callback(texture)
         }
+        return task
     }
 
-    public func loadObjectInfoAsync(filePath: String) -> Task<Any> {
-        let fileUrl = URL(string: filePath)!
-        let fileData = loadFileData(filePath)
-        var task = Task<Any?>()
-        DispatchQueue.global().async {
-            var file = NiFile(name: fileUrl.deletingPathExtension().lastPathComponent)
-            let r = BinaryReader(DataBaseStream(data: fileData))
-            defer { r.close() }
-            file.read(r)
-            task.callback(file)
-        }
-    }
+//    public func loadObjectInfoAsync(filePath: String) -> Task<Any> {
+//        let fileUrl = URL(string: filePath)!
+//        let fileData = loadFileData(filePath)
+//        var task = Task<Any?>()
+//        DispatchQueue.global().async {
+//            var file = NiFile(name: fileUrl.deletingPathExtension().lastPathComponent)
+//            let r = BinaryReader(DataBaseStream(data: fileData))
+//            defer { r.close() }
+//            file.read(r)
+//            task.callback(file)
+//        }
+//        return task
+//    }
     
     func findTexture(_ texturePath: String) -> String? {
         let textureUrl = URL(string: texturePath)!

@@ -29,7 +29,6 @@ public enum GameId: Int, CustomStringConvertible {
         case .falloutNV: return "falloutNV"
         case .fallout4: return "fallout4"
         case .fallout4VR: return "fallout4VR"
-        default: return "?"
         }
     }
     
@@ -69,25 +68,25 @@ public class TesAssetManager: IAssetManager {
         }
     }
     
-    public func getDataPack(_ url: URL?) -> IDataPack? {
-        guard let url = url, let scheme = url.scheme else {
-            fatalError("should not happen")
-        }
-        debugPrint("\(url)")
-        switch scheme {
-        case "game":
-            let localPath = String(url.path[url.path.index(after: url.path.startIndex)..<url.path.endIndex])
-            let game = TesAssetManager.stringToGameId(url.host)
-            let filePath = FileManager.default.getFilePath(localPath, for: game)
-            let pack = TesDataPack(filePath, for: game) as IDataPack
-            return pack
-        default: return nil
-        }
-    }
-    
-    public func getCellManager(asset: IAssetPack, data: IDataPack, loadBalancer: TemporalLoadBalancer) -> ICellManager? {
-        return TesCellManager(asset: asset as! TesAssetPack, data: data as! TesDataPack, loadBalancer: loadBalancer)
-    }
+//    public func getDataPack(_ url: URL?) -> IDataPack? {
+//        guard let url = url, let scheme = url.scheme else {
+//            fatalError("should not happen")
+//        }
+//        debugPrint("\(url)")
+//        switch scheme {
+//        case "game":
+//            let localPath = String(url.path[url.path.index(after: url.path.startIndex)..<url.path.endIndex])
+//            let game = TesAssetManager.stringToGameId(url.host)
+//            let filePath = FileManager.default.getFilePath(localPath, for: game)
+//            let pack = TesDataPack(filePath, for: game) as IDataPack
+//            return pack
+//        default: return nil
+//        }
+//    }
+//
+//    public func getCellManager(asset: IAssetPack, data: IDataPack, loadBalancer: TemporalLoadBalancer) -> ICellManager? {
+//        return TesCellManager(asset: asset as! TesAssetPack, data: data as! TesDataPack, loadBalancer: loadBalancer)
+//    }
 
     static func stringToGameId(_ key: String?) -> GameId {
         guard let key = key else {
@@ -97,6 +96,6 @@ public class TesAssetManager: IAssetManager {
         if newKey.starts(with: "#") {
             newKey.remove(at: newKey.startIndex)
         }
-        return GameId(newKey)
+        return GameId(newKey)!
     }
 }

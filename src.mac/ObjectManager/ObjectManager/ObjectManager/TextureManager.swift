@@ -31,7 +31,7 @@ public class TextureManager {
         guard _cachedTextures[texturePath] == nil else { return }
         // Start loading the texture file asynchronously if we haven't already started.
         if _textureFilePreloadTasks[texturePath] == nil {
-            let textureFileLoadingTask = _asset.loadTextureInfoAsync(texturePath)
+            let textureFileLoadingTask = _asset.loadTextureInfoAsync(texturePath: texturePath)
             _textureFilePreloadTasks[texturePath] = textureFileLoadingTask
         }
     }
@@ -39,7 +39,7 @@ public class TextureManager {
     func loadTextureInfo(_ texturePath: String) -> Texture2DInfo? {
         assert(_cachedTextures[texturePath] != nil, "Invalid parameter")
         preloadTextureFileAsync(texturePath)
-        let textureInfo = _textureFilePreloadTasks[texturePath].result
+        let textureInfo = _textureFilePreloadTasks[texturePath]!.result
         _textureFilePreloadTasks.removeValue(forKey: texturePath)
         return textureInfo
     }
