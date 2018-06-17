@@ -6,10 +6,10 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
-public class IDLERecord: Record {
-    public override var description: String { return "IDLE: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
-    public var MODL: MODLGroup!
+public class IDLERecord: Record, IHaveEDID, IHaveMODL {
+    public override var description: String { return "IDLE: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var MODL: MODLGroup? = nil
     public var CTDAs = [SCPTRecord.CTDAField]() // Conditions
     public var ANAM: BYTEField!
     public var DATAs: [FMIDField<IDLERecord>]!
@@ -18,7 +18,7 @@ public class IDLERecord: Record {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
         case "CTDA",
              "CTDT": CTDAs.append(SCPTRecord.CTDAField(r, dataSize, format))
         case "ANAM": ANAM = BYTEField(r, dataSize)

@@ -27,26 +27,23 @@ public class INFORecord: Record {
     }
 
     public class TES3Group {
-        public var NNAM: STRVField  // Next info ID (form a linked list of INFOs for the DIAL). First INFO has an empty PNAM, last has an empty NNAM.
-        public var DATA: DATA3Field // Info data
-        public var ONAM: STRVField  // Actor
-        public var RNAM: STRVField  // Race
-        public var CNAM: STRVField  // Class
-        public var FNAM: STRVField  // Faction 
-        public var ANAM: STRVField  // Cell
-        public var DNAM: STRVField  // PC Faction
-        public var NAME: STRVField  // The info response string (512 max)
-        public var SNAM: FILEField  // Sound
-        public var QSTN: BYTEField  // Journal Name
-        public var QSTF: BYTEField  // Journal Finished
-        public var QSTR: BYTEField  // Journal Restart
-        public var SCVR: SCPTRecord.CTDAField // String for the function/variable choice
-        public var INTV: UNKNField //
-        public var FLTV: UNKNField // The function/variable result for the previous SCVR
-        public var BNAM: STRVField // Result text (not compiled)
-        
-        init() {
-        }
+        public var NNAM: STRVField!  // Next info ID (form a linked list of INFOs for the DIAL). First INFO has an empty PNAM, last has an empty NNAM.
+        public var DATA: DATA3Field! // Info data
+        public var ONAM: STRVField!  // Actor
+        public var RNAM: STRVField!  // Race
+        public var CNAM: STRVField!  // Class
+        public var FNAM: STRVField!  // Faction
+        public var ANAM: STRVField!  // Cell
+        public var DNAM: STRVField!  // PC Faction
+        public var NAME: STRVField!  // The info response string (512 max)
+        public var SNAM: FILEField!  // Sound
+        public var QSTN: BYTEField!  // Journal Name
+        public var QSTF: BYTEField!  // Journal Finished
+        public var QSTR: BYTEField!  // Journal Restart
+        public var SCVR: SCPTRecord.CTDAField! // String for the function/variable choice
+        public var INTV: UNKNField! //
+        public var FLTV: UNKNField! // The function/variable result for the previous SCVR
+        public var BNAM: STRVField! // Result text (not compiled)
     }
 
     // TES4
@@ -66,8 +63,8 @@ public class INFORecord: Record {
         public let emotionType: UInt32
         public let emotionValue: Int32
         public let responseNumber: UInt8
-        public var responseText: String
-        public var actorNotes: String
+        public var responseText: String = ""
+        public var actorNotes: String = ""
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             emotionType = r.readLEUInt32()
@@ -82,30 +79,27 @@ public class INFORecord: Record {
         }
 
         func NAM2Field(_ r: BinaryReader, _ dataSize: Int) {
-            sctorNotes = r.readASCIIString(dataSize, format: .possibleNullTerminated)
+            actorNotes = r.readASCIIString(dataSize, format: .possibleNullTerminated)
         }
     }
 
     public class TES4Group {
-        public var DATA: DATA4Field // Info data
-        public var QSTI: FMIDField<QUSTRecord> // Quest
-        public var TPIC: FMIDField<DIALRecord> // Topic
+        public var DATA: DATA4Field! // Info data
+        public var QSTI: FMIDField<QUSTRecord>! // Quest
+        public var TPIC: FMIDField<DIALRecord>! // Topic
         public var NAMEs = [FMIDField<DIALRecord>]() // Topics
-        public var RDTs = [TRDTField]() // Responses
+        public var TRDTs = [TRDTField]() // Responses
         public var CTDAs = [SCPTRecord.CTDAField]() // Conditions
         public var TCLTs = [FMIDField<DIALRecord>]() // Choices
         public var TCLFs = [FMIDField<DIALRecord>]() // Link From Topics
-        public var SCHR: SCPTRecord.SCHRField // Script Data
-        public var SCDA: BYTVField // Compiled Script
-        public var SCTX: STRVField // Script Source
+        public var SCHR: SCPTRecord.SCHRField! // Script Data
+        public var SCDA: BYTVField! // Compiled Script
+        public var SCTX: STRVField! // Script Source
         public var SCROs = [FMIDField<Record>]() // Global variable reference
-        
-        init() {
-        }
     }
 
-    public override var description: String { return "INFO: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID - Info name string (unique sequence of #'s), ID
+    public override var description: String { return "INFO: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID - Info name string (unique sequence of #'s), ID
     public var PNAM: FMIDField<INFORecord>! // Previous info ID
     public var TES3 = TES3Group()
     public var TES4 = TES4Group()
@@ -113,7 +107,7 @@ public class INFORecord: Record {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
             switch type {
-            case "INAM": EDID = STRVField(r, dataSize); DIALRecord.LastRecord?.INFOs.append(self)
+            case "INAM": EDID = STRVField(r, dataSize); DIALRecord.lastRecord?.INFOs.append(self)
             case "PNAM": PNAM = FMIDField<INFORecord>(r, dataSize)
             case "NNAM": TES3.NNAM = STRVField(r, dataSize)
             case "DATA": TES3.DATA = DATA3Field(r, dataSize)

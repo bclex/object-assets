@@ -23,7 +23,7 @@ public class CLOTRecord: Record, IHaveEDID, IHaveMODL {
             guard format != .TES3 else {
                 type = r.readLEInt32()
                 weight = r.readLESingle()
-                value = r.readLEInt16()
+                value = Int32(r.readLEInt16())
                 enchantPts = r.readLEInt16()
                 return
             }
@@ -36,14 +36,18 @@ public class CLOTRecord: Record, IHaveEDID, IHaveMODL {
 
     public class INDXFieldGroup: CustomStringConvertible {
         public var description: String { return "\(INDX.value): \(BNAM.value)" }
-        public var INDX: INTVField!
+        public var INDX: INTVField
         public var BNAM: STRVField!
         public var CNAM: STRVField!
+        
+        init(INDX: INTVField) {
+            self.INDX = INDX
+        }
     }
 
-    public var description: String { return "CLOT: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
-    public var MODL: MODLGroup!  // Model Name
+    public override var description: String { return "CLOT: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var MODL: MODLGroup? = nil // Model Name
     public var FULL: STRVField! // Item Name
     public var DATA: DATAField! // Clothing Data
     public var ICON: FILEField! // Male Icon
@@ -64,8 +68,8 @@ public class CLOTRecord: Record, IHaveEDID, IHaveMODL {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
-        case "MODT": MODL.MODTField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
+        case "MODT": MODL!.MODTField(r, dataSize)
         case "FULL",
              "FNAM": FULL = STRVField(r, dataSize)
         case "DATA",

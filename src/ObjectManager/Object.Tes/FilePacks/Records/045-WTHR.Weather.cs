@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
 {
-    public class WTHRRecord : Record
+    public class WTHRRecord : Record, IHaveEDID, IHaveMODL
     {
         public struct FNAMField
         {

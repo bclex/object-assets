@@ -58,8 +58,8 @@ public class PACKRecord: Record {
         }
     }
 
-    public override var description: String { return "PACK: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "PACK: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var PKDT: PKDTField! // General
     public var PLDT: PLDTField! // Location
     public var PSDT: PSDTField! // Schedule

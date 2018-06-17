@@ -26,8 +26,8 @@ public class SPELRecord: Record {
         }
     }
 
-    public override var description: String { return "SPEL: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "SPEL: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var FULL: STRVField! // Spell name
     public var SPIT: SPITField! // Spell data
     public var EFITs = [ENCHRecord.EFITField]() // Effect Data

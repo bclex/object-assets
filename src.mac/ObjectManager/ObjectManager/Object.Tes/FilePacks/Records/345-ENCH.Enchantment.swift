@@ -38,11 +38,11 @@ public class ENCHRecord: Record {
         public let duration: Int32
         public let magnitudeMin: Int32
         // TES3
-        public let skillId: UInt8 // (-1 if NA)
-        public let attributeId: UInt8 // (-1 if NA)
-        public let magnitudeMax: Int32
+        public var skillId: UInt8 = 0 // (-1 if NA)
+        public var attributeId: UInt8 = 0 // (-1 if NA)
+        public var magnitudeMax: Int32 = 0
         // TES4
-        public let actorValue: Int32
+        public var actorValue: Int32 = 0
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             guard format != .TES3 else {
@@ -69,13 +69,13 @@ public class ENCHRecord: Record {
     public class SCITField {
         public var name: String
         public let scriptFormId: Int32
-        public let school: Int32 // 0 = Alteration, 1 = Conjuration, 2 = Destruction, 3 = Illusion, 4 = Mysticism, 5 = Restoration
-        public let visualEffect: String
-        public let flags: UInt32
+        public var school: Int32 = 0// 0 = Alteration, 1 = Conjuration, 2 = Destruction, 3 = Illusion, 4 = Mysticism, 5 = Restoration
+        public var visualEffect: String = ""
+        public var flags: UInt32 = 0
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            name = "Script Effect";
-            scriptFormId = r.readLEInt32();
+            name = "Script Effect"
+            scriptFormId = r.readLEInt32()
             guard dataSize != 4 else {
                 return
             }
@@ -89,8 +89,8 @@ public class ENCHRecord: Record {
         }
     }
 
-    public override var description: String { return "ENCH: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
+    public override var description: String { return "ENCH: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
     public var FULL: STRVField! // Enchant name
     public var ENIT: ENITField! // Enchant Data
     public var EFITs = [EFITField]() // Effect Data

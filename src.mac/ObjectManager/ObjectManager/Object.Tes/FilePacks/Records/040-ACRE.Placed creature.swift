@@ -7,8 +7,8 @@
 //
 
 public class ACRERecord: Record {
-    public override var description: String { return "GMST: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "GMST: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var NAME: FMIDField<Record>! // Base
     public var DATA: REFRRecord.DATAField! // Position/Rotation
     public var XOWNs: [CELLRecord.XOWNGroup]? // Ownership (optional)

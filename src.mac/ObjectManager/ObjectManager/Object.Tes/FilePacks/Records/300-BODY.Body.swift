@@ -21,9 +21,9 @@ public class BODYRecord: Record {
         }
     }
 
-    public override var description: String { return "BODY: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
-    public var MODL: MODLGroup!  // NIF Model
+    public override var description: String { return "BODY: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var MODL: MODLGroup? = nil // NIF Model
     public var FNAM: STRVField! // Body name
     public var BYDT: BYDTField!
 

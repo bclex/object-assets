@@ -2,7 +2,7 @@
 
 namespace OA.Tes.FilePacks.Records
 {
-    public class ANIORecord : Record
+    public class ANIORecord : Record, IHaveEDID, IHaveMODL
     {
         public override string ToString() => $"ANIO: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID

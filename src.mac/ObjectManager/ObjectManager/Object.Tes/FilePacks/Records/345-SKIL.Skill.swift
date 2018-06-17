@@ -18,15 +18,16 @@ public class SKILRecord: Record {
             action = format == .TES3 ? 0 : r.readLEInt32()
             attribute = r.readLEInt32()
             specialization = r.readLEUInt32()
-            useValue = [Float](); useValue.reserveCapacity(format == .TES3 ? 4 : 2)
+            var useValue = [Float](); useValue.reserveCapacity(format == .TES3 ? 4 : 2)
             for i in useValue.startIndex..<useValue.capacity {
                 useValue[i] = r.readLESingle()
             }
+            self.useValue = useValue
         }
     }
 
-    public override var description: String { return "SKIL: \(INDX!):\(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "SKIL: \(INDX!):\(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var INDX: IN32Field! // Skill ID
     public var DATA: DATAField! // Skill Data
     public var DESC: STRVField! // Skill description

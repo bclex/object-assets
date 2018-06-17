@@ -2,7 +2,7 @@
 
 namespace OA.Tes.FilePacks.Records
 {
-    public class SLGMRecord : Record
+    public class SLGMRecord : Record, IHaveEDID, IHaveMODL
     {
         public struct DATAField
         {

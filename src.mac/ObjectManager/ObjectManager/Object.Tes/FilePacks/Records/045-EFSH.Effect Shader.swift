@@ -129,8 +129,8 @@ public class EFSHRecord: Record {
         }
     }
 
-    public override var description: String { return "EFSH: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "EFSH: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var ICON: FILEField! // Fill Texture
     public var ICO2: FILEField! // Particle Shader Texture
     public var DATA: DATAField! // Data

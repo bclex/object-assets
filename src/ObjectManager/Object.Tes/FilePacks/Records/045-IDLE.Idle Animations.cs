@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
 {
-    public class IDLERecord : Record
+    public class IDLERecord : Record, IHaveEDID, IHaveMODL
     {
         public override string ToString() => $"IDLE: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID

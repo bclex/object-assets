@@ -21,9 +21,9 @@ public class PROBRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override var description: String { return "PROB: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
-    public var MODL: MODLGroup!  // Model Name
+    public override var description: String { return "PROB: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var MODL: MODLGroup? = nil // Model Name
     public var FNAM: STRVField! // Item Name
     public var PBDT: PBDTField! // Probe Data
     public var ICON: FILEField! // Inventory Icon

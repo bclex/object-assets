@@ -2,7 +2,7 @@
 
 namespace OA.Tes.FilePacks.Records
 {
-    public class BODYRecord : Record
+    public class BODYRecord : Record, IHaveEDID, IHaveMODL
     {
         public struct BYDTField
         {

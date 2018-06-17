@@ -1,10 +1,12 @@
-v//
+//
 //  CREARecord.swift
 //  ObjectManager
 //
 //  Created by Sky Morey on 5/28/18.
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
+
+import Foundation
 
 public class CREARecord: Record, IHaveEDID, IHaveMODL {
     public struct CREAFlags: OptionSet {
@@ -134,8 +136,8 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
         public let distance: Int16
         public let duration: Int16
         public let timeOfDay: UInt8
-        public let idle: [UInt8]
-        public let unknown: Int8
+        public let idle: Data
+        public let unknown: UInt8
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             distance = r.readLEInt16()
@@ -188,9 +190,9 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override var description: String { return "CREA: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
-    public var MODL: MODLGroup!  // NIF Model
+    public override var description: String { return "CREA: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var MODL: MODLGroup? = nil // NIF Model
     public var FNAM: STRVField! // Creature name
     public var NPDT: NPDTField! // Creature data
     public var FLAG: IN32Field! // Creature Flags

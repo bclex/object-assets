@@ -21,8 +21,8 @@ public class LSCRRecord: Record {
         }
     }
 
-    public override var description: String { return "LSCR: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "LSCR: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var ICON: FILEField! // Icon
     public var DESC: STRVField! // Description
     public var LNAMs: [LNAMField]! // LoadForm

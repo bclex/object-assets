@@ -7,8 +7,8 @@
 //
 
 public class ACHRRecord: Record {
-    public override var description: String { return "ACHR: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "ACHR: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var NAME: FMIDField<Record>! // Base
     public var DATA: REFRRecord.DATAField!  // Position/Rotation
     public var XPCI: FMIDField<CELLRecord>? = nil// Unused (optional)
@@ -25,7 +25,7 @@ public class ACHRRecord: Record {
         case "NAME": NAME = FMIDField<Record>(r, dataSize)
         case "DATA": DATA = REFRRecord.DATAField(r, dataSize)
         case "XPCI": XPCI = FMIDField<CELLRecord>(r, dataSize)
-        case "FULL": XPCI?.addName(r.readASCIIString(dataSize))
+        case "FULL": XPCI!.add(name: r.readASCIIString(dataSize))
         case "XLOD": XLOD = BYTVField(r, dataSize)
         case "XESP": XESP = REFRRecord.XESPField(r, dataSize)
         case "XMRC": XMRC = FMIDField<REFRRecord>(r, dataSize)

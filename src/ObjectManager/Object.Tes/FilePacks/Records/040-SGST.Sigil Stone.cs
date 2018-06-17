@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
 {
-    public class SGSTRecord : Record
+    public class SGSTRecord : Record, IHaveEDID, IHaveMODL
     {
         public struct DATAField
         {

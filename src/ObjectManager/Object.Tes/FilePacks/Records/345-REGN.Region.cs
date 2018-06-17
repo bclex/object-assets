@@ -115,9 +115,9 @@ namespace OA.Tes.FilePacks.Records
         public struct RDWTField
         {
             public override string ToString() => $"{Weather}";
+            public static byte SizeOf(GameFormatId format) => format == GameFormatId.TES4 ? (byte)8 : (byte)12;
             public FormId<WTHRRecord> Weather;
             public uint Chance;
-            public static byte SizeOf(GameFormatId format) => format == GameFormatId.TES4 ? (byte)8 : (byte)12;
             public FormId<GLOBRecord> Global;
 
             public RDWTField(UnityBinaryReader r, int dataSize, GameFormatId format)

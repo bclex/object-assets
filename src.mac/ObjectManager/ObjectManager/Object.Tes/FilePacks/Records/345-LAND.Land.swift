@@ -12,10 +12,11 @@ public class LANDRecord: Record {
         public let vertexs: [Vector3] // XYZ 8 bit floats
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            vertexs = [Vector3](); vertexs.reserveCapacity(dataSize / 3)
+            var vertexs = [Vector3](); vertexs.reserveCapacity(dataSize / 3)
             for i in vertexs.startIndex..<vertexs.capacity {
                 vertexs[i] = Vector3(Int(r.readByte()), Int(r.readByte()), Int(r.readByte()))
             }
+            self.vertexs = vertexs
         }
     }
 
@@ -25,10 +26,11 @@ public class LANDRecord: Record {
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             referenceHeight = r.readLESingle()
-            heightData = [Int8](); heightData.reserveCapacity(dataSize - 4 - 3)
+            var heightData = [Int8](); heightData.reserveCapacity(dataSize - 4 - 3)
             for i in heightData.startIndex..<heightData.capacity {
                 heightData[i] = r.readSByte()
             }
+            self.heightData = heightData
             r.skipBytes(3) // Unused
         }
     }
@@ -37,10 +39,11 @@ public class LANDRecord: Record {
         public let colors: [ColorRef] // 24-bit RGB
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            colors = [ColorRef](); colors.reserveCapacity(dataSize / 24)
+            var colors = [ColorRef](); colors.reserveCapacity(dataSize / 24)
             for i in colors.startIndex..<colors.capacity {
                 colors[i] = ColorRef(red: r.readByte(), green: r.readByte(), blue: r.readByte())
             }
+            self.colors = colors
         }
     }
 
@@ -49,16 +52,18 @@ public class LANDRecord: Record {
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             guard format != .TES3 else {
-                textureIndices = [UInt32](); textureIndices.reserveCapacity(dataSize >> 1)
+                var textureIndices = [UInt32](); textureIndices.reserveCapacity(dataSize >> 1)
                 for i in textureIndices.startIndex..<textureIndices.capacity {
                     textureIndices[i] = UInt32(r.readLEUInt16())
                 }
+                self.textureIndices = textureIndices
                 return
             }
-            textureIndices = [UInt32](); textureIndices.reserveCapacity(dataSize >> 2)
+            var textureIndices = [UInt32](); textureIndices.reserveCapacity(dataSize >> 2)
             for i in textureIndices.startIndex..<textureIndices.capacity {
                 textureIndices[i] = r.readLEUInt32()
             }
+            self.textureIndices = textureIndices
         }
     }
 
@@ -78,7 +83,7 @@ public class LANDRecord: Record {
         init(_ r: BinaryReader, _ dataSize: Int) {
             let heightCount = dataSize
             for _ in 0..<heightCount {
-                let height = r.readByte()
+                _ = r.readByte()
             }
         }
     }
@@ -109,15 +114,16 @@ public class LANDRecord: Record {
     }
 
     public class ATXTGroup {
-        public var ATXT: BTXTField
-        public var VTXTs: [VTXTField]
+        public let ATXT: BTXTField
+        public var VTXTs: [VTXTField]!
         
-        init() {
+        init(ATXT: BTXTField) {
+            self.ATXT = ATXT
         }
     }
 
     public override var description: String { return "LAND: \(INTV!)" }
-    public var DATA: IN32Field // Unknown (default of 0x09) Changing this value makes the land 'disappear' in the editor.
+    public var DATA: IN32Field! // Unknown (default of 0x09) Changing this value makes the land 'disappear' in the editor.
     // A RGB color map 65x65 pixels in size representing the land normal vectors.
     // The signed value of the 'color' represents the vector's component. Blue
     // is vertical(Z), Red the X direction and Green the Y direction.Note that
@@ -130,14 +136,15 @@ public class LANDRecord: Record {
     public var INTV: CORDField! // The cell coordinates of the cell
     public var WNAM: WNAMField! // Unknown byte data.
     // TES4
-    public var BTXTs = BTXTField() // Base Layer
+    public var BTXTs = [BTXTField]() // Base Layer
     public var ATXTs: [ATXTGroup]! // Alpha Layer
     var _lastATXT: ATXTGroup!
 
     public var GridCoords: Vector2Int { return Vector2Int(Int(INTV!.cellX), Int(INTV!.cellY)) }
 
-    init() {
+    override init(_ header: Header) {
         BTXTs.reserveCapacity(4)
+        super.init(header)
     }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
@@ -151,9 +158,13 @@ public class LANDRecord: Record {
         case "INTV": INTV = CORDField(r, dataSize)
         case "WNAM": WNAM = WNAMField(r, dataSize)
         // TES4
-        case "BTXT": var btxt = BTXTField(r, dataSize); BTXTs[btxt.Quadrant] = btxt
-        case "ATXT": if ATXTs == nil { ATXTs = [ATXTGroup](); ATXTs!.reserveCapacity(4) }; let atxt = BTXTField(r, dataSize); _lastATXT = ATXTs![Int(atxt.quadrant)] = ATXTGroup(atxt)
-        case "VTXT": var vtxt = [VTXTField](); vtxt.reserveCapacity(dataSize >> 3); for i in 0..<vtxt.capacity { vtxt[i] = VTXTField(r, dataSize) }; _lastATXT.VTXTs = vtxt
+        case "BTXT": let btxt = BTXTField(r, dataSize); BTXTs[Int(btxt.quadrant)] = btxt
+        case "ATXT":
+            if ATXTs == nil { ATXTs = [ATXTGroup](); ATXTs!.reserveCapacity(4) }
+            let atxt = BTXTField(r, dataSize); _lastATXT = ATXTGroup(ATXT: atxt); ATXTs![Int(atxt.quadrant)] = _lastATXT
+        case "VTXT":
+            var vtxt = [VTXTField](); vtxt.reserveCapacity(dataSize >> 3)
+            for i in 0..<vtxt.capacity { vtxt[i] = VTXTField(r, dataSize) }; _lastATXT.VTXTs = vtxt
         default: return false
         }
         return true

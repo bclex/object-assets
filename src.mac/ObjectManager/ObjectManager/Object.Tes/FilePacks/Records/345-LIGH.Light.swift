@@ -65,9 +65,9 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override var description: String { return "LIGH: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
-    public var MODL: MODLGroup!  // Model
+    public override var description: String { return "LIGH: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var MODL: MODLGroup? = nil // Model
     public var FULL: STRVField? = nil // Item Name (optional)
     public var DATA: DATAField!  // Light Data
     public var SCPT: STRVField? = nil // Script Name (optional)??
@@ -89,8 +89,8 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
         case "ICON",
              "ITEX": ICON = FILEField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
-        case "MODT": MODL.MODTField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
+        case "MODT": MODL!.MODTField(r, dataSize)
         case "SNAM": SNAM = FMIDField<SOUNRecord>(r, dataSize)
         default: return false
         }

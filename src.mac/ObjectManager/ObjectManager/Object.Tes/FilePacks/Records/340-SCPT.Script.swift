@@ -75,7 +75,7 @@ public class SCPTRecord: Record {
         }
 
         func SCVRField(_ r: BinaryReader, _ dataSize: Int) {
-            variables = r.readASCIIString(dataSize)
+            variables = r.readASCIIMultiString(dataSize)
         }
     }
 
@@ -122,8 +122,8 @@ public class SCPTRecord: Record {
         }
     }
 
-    public override var description: String { return "SCPT: \(EDID ?? SCHD)" }
-    public var EDID: STRVField!  // Editor ID
+    public override var description: String { return "SCPT: \(!EDID.value.isEmpty ? EDID.value : SCHD.name)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
     public var SCDA: BYTVField! // Compiled Script
     public var SCTX: STRVField! // Script Source
     // TES3

@@ -16,15 +16,15 @@ namespace OA.Tes.FilePacks.Records
 
             public DATAField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
-                if (format == GameFormatId.TES3)
+                if (format != GameFormatId.TES3)
                 {
-                    X = r.ReadLEInt32();
-                    Y = r.ReadLEInt32();
-                    Granularity = r.ReadLEInt16();
+                    X = Y = Granularity = 0;
                     PointCount = r.ReadLEInt16();
                     return;
                 }
-                else X = Y = Granularity = 0;
+                X = r.ReadLEInt32();
+                Y = r.ReadLEInt32();
+                Granularity = r.ReadLEInt16();
                 PointCount = r.ReadLEInt16();
             }
         }

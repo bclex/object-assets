@@ -79,10 +79,11 @@ public class CELLRecord: Record, ICellRecord {
 
     public class XOWNGroup {
         public var XOWN: FMIDField<Record>
-        public var XRNK: IN32Field // Faction rank
-        public var XGLB: FMIDField<Record>
+        public var XRNK: IN32Field! // Faction rank
+        public var XGLB: FMIDField<Record>!
         
-        init() {
+        init(XOWN: FMIDField<Record>) {
+            self.XOWN = XOWN
         }
     }
 
@@ -100,8 +101,8 @@ public class CELLRecord: Record, ICellRecord {
         public var FRMR: UI32Field? = nil // Object Index (starts at 1)
         // This is used to uniquely identify objects in the cell. For files the index starts at 1 and is incremented for each object added. For modified
         // objects the index is kept the same.
-        public var description: String { return "CREF: \(EDID!)" }
-        public var EDID: STRVField! // Object ID
+        public var description: String { return "CREF: \(EDID)" }
+        public var EDID: STRVField = STRVField.empty // Object ID
         public var XSCL: FLTVField? = nil // Scale (Static)
         public var DELE: IN32Field? = nil // Indicates that the reference is deleted.
         public var DODT: XYZAField? = nil // XYZ Pos, XYZ Rotation of exit
@@ -124,7 +125,7 @@ public class CELLRecord: Record, ICellRecord {
     }
 
     public override var description: String { return "CELL: \(FULL!)" }
-    public var EDID: STRVField!  // Editor ID. Can be an empty string for exterior cells in which case the region name is used instead.
+    public var EDID: STRVField = STRVField.empty  // Editor ID. Can be an empty string for exterior cells in which case the region name is used instead.
     public var FULL: STRVField! // Full Name / TES3:RGNN - Region name
     public var DATA: UI16Field! // Flags
     public var XCLC: XCLCField? = nil // Cell Data (only used for exterior cells)
@@ -145,9 +146,9 @@ public class CELLRecord: Record, ICellRecord {
     public var InFRMR = false
     public var RefObjs = [RefObj]()
 
-    public var isInterior: Bool { return Utils.containsBitFlags(DATA.value, 0x01) }
+    public var isInterior: Bool { return Utils.containsBitFlags(UInt(DATA.value), 0x01) }
     public var gridCoords: Vector2Int { return Vector2Int(Int(XCLC!.gridX), Int(XCLC!.gridY)) }
-    public var ambientLight: CGColor? { return XCLL != nil ? XCLL!.ambientColor.toColor32() : nil }
+    public var ambientLight: CGColor? { return XCLL != nil ? XCLL!.ambientColor.toColor32 : nil }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if !InFRMR && type == "FRMR" {
@@ -159,7 +160,7 @@ public class CELLRecord: Record, ICellRecord {
                  "NAME": EDID = STRVField(r, dataSize)
             case "FULL",
                  "RGNN": FULL = STRVField(r, dataSize)
-            case "DATA": DATA = INTVField(r, format == .TES3 ? 4 : dataSize).toUI16Field(); if format == .TES3 { fallthrough }
+            case "DATA": DATA = INTVField(r, format == .TES3 ? 4 : dataSize).toUI16Field; if format == .TES3 { fallthrough }
             case "XCLC": XCLC = XCLCField(r, dataSize, format)
             case "XCLL",
                  "AMBI": XCLL = XCLLField(r, dataSize, format)
@@ -171,7 +172,7 @@ public class CELLRecord: Record, ICellRecord {
             case "NAM5": NAM5 = CREFField(r, dataSize)
             // TES4
             case "XCLR":
-                XCLRs = [FMIDField<REGNRecord>](); XCLRs.reserveCapacity(dataSize >> 2); for i in 0..<XCLRs.capactiy { XCLRs[i] = FMIDField<REGNRecord>(r, 4) }
+                XCLRs = [FMIDField<REGNRecord>](); XCLRs.reserveCapacity(dataSize >> 2); for i in 0..<XCLRs.capacity { XCLRs[i] = FMIDField<REGNRecord>(r, 4) }
             case "XCMT": XCMT = BYTEField(r, dataSize)
             case "XCCM": XCCM = FMIDField<CLMTRecord>(r, dataSize)
             case "XCWT": XCWT = FMIDField<WATRRecord>(r, dataSize)

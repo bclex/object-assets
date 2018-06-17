@@ -6,12 +6,12 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
-public class MGEFRecord: Record {
+public class MGEFRecord: Record, IHaveEDID, IHaveMODL {
     // TES3
     public struct MEDTField {
         public let spellSchool: Int32 // 0 = Alteration, 1 = Conjuration, 2 = Destruction, 3 = Illusion, 4 = Mysticism, 5 = Restoration
         public let baseCost: Float
-        public let flags: Int // 0x0200 = Spellmaking, 0x0400 = Enchanting, 0x0800 = Negative
+        public let flags: Int32 // 0x0200 = Spellmaking, 0x0400 = Enchanting, 0x0800 = Negative
         public let color: ColorRef
         public let speedX: Float
         public let sizeX: Float
@@ -21,7 +21,7 @@ public class MGEFRecord: Record {
             spellSchool = r.readLEInt32()
             baseCost = r.readLESingle()
             flags = r.readLEInt32()
-            color = ColorRef(UInt8(r.readLEInt32()), UInt8(r.readLEInt32()), UInt8(r.readLEInt32()))
+            color = ColorRef(red: UInt8(r.readLEInt32()), green: UInt8(r.readLEInt32()), blue: UInt8(r.readLEInt32()))
             speedX = r.readLESingle()
             sizeX = r.readLESingle()
             sizeCap = r.readLESingle()
@@ -75,17 +75,17 @@ public class MGEFRecord: Record {
         public let assocItem: Int32
         public let magicSchool: Int32
         public let resistValue: Int32
-        public let counterEffectCount: UInt32 // Must be updated automatically when ESCE length changes!
+        public let counterEffectCount: UInt16 // Must be updated automatically when ESCE length changes!
         public let light: FormId<LIGHRecord>
         public let projectileSpeed: Float
         public let effectShader: FormId<EFSHRecord>
-        public let enchantEffect: FormId<EFSHRecord>
-        public let castingSound: FormId<SOUNRecord>
-        public let boltSound: FormId<SOUNRecord>
-        public let hitSound: FormId<SOUNRecord>
-        public let areaSound: FormId<SOUNRecord>
-        public let constantEffectEnchantmentFactor: Float
-        public let constantEffectBarterFactor: Float
+        public var enchantEffect: FormId<EFSHRecord>? = nil
+        public var castingSound: FormId<SOUNRecord>? = nil
+        public var boltSound: FormId<SOUNRecord>? = nil
+        public var hitSound: FormId<SOUNRecord>? = nil
+        public var areaSound: FormId<SOUNRecord>? = nil
+        public var constantEffectEnchantmentFactor: Float = 0
+        public var constantEffectBarterFactor: Float = 0
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             flags = r.readLEUInt32()
@@ -117,8 +117,8 @@ public class MGEFRecord: Record {
         }
     }
 
-    public override var description: String { return "MGEF: \(INDX!):\(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
+    public override var description: String { return "MGEF: \(INDX!):\(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
     public var DESC: STRVField! // Description
     // TES3
     public var INDX: INTVField! // The Effect ID (0 to 137)
@@ -134,10 +134,10 @@ public class MGEFRecord: Record {
     public var HSND: STRVField? = nil// Hit sound (optional)
     public var ASND: STRVField? = nil// Area sound (optional)
     // TES4
-    public var FULL: STRVField
-    public var MODL: MODLGroup
-    public var DATA: DATAField
-    public var ESCEs: [STRVField]
+    public var FULL: STRVField!
+    public var MODL: MODLGroup? = nil
+    public var DATA: DATAField!
+    public var ESCEs: [STRVField]!
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
@@ -165,9 +165,11 @@ public class MGEFRecord: Record {
         case "DESC": DESC = STRVField(r, dataSize)
         case "ICON": ICON = FILEField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
-        case "ESCE": ESCEs = [STRVField](); ESCEs.reserveCapacity(dataSize >> 2) for i in 0..<ESCEs.capacity { ESCEs.append(STRVField(r, 4)) }
+        case "ESCE":
+            ESCEs = [STRVField](); ESCEs.reserveCapacity(dataSize >> 2)
+            for _ in 0..<ESCEs.capacity { ESCEs.append(STRVField(r, 4)) }
         default: return false
         }
         return true

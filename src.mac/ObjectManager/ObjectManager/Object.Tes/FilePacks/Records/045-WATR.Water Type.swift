@@ -8,32 +8,32 @@
 
 public class WATRRecord: Record {
     public class DATAField {
-        public let windVelocity: Float
-        public let windDirection: Float
-        public let waveAmplitude: Float
-        public let waveFrequency: Float
-        public let sunPower: Float
-        public let reflectivityAmount: Float
-        public let fresnelAmount: Float
-        public let scrollXSpeed: Float
-        public let scrollYSpeed: Float
-        public let fogDistance_nearPlane: Float
-        public let fogDistance_farPlane: Float
-        public let shallowColor: ColorRef
-        public let deepColor: ColorRef
-        public let reflectionColor: ColorRef
-        public let textureBlend: UInt8
-        public let rainSimulator_force: Float
-        public let rainSimulator_velocity: Float
-        public let rainSimulator_falloff: Float
-        public let rainSimulator_dampner: Float
-        public let rainSimulator_startingSize: Float
-        public let displacementSimulator_force: Float
-        public let displacementSimulator_velocity: Float
-        public let displacementSimulator_falloff: Float
-        public let displacementSimulator_dampner: Float
-        public let displacementSimulator_startingSize: Float
-        public let damage: UInt16
+        public var windVelocity: Float = 0
+        public var windDirection: Float = 0
+        public var waveAmplitude: Float = 0
+        public var waveFrequency: Float = 0
+        public var sunPower: Float = 0
+        public var reflectivityAmount: Float = 0
+        public var fresnelAmount: Float = 0
+        public var scrollXSpeed: Float = 0
+        public var scrollYSpeed: Float = 0
+        public var fogDistance_nearPlane: Float = 0
+        public var fogDistance_farPlane: Float = 0
+        public var shallowColor: ColorRef = ColorRef.empty
+        public var deepColor: ColorRef = ColorRef.empty
+        public var reflectionColor: ColorRef = ColorRef.empty
+        public var textureBlend: UInt8 = 0
+        public var rainSimulator_force: Float = 0
+        public var rainSimulator_velocity: Float = 0
+        public var rainSimulator_falloff: Float = 0
+        public var rainSimulator_dampner: Float = 0
+        public var rainSimulator_startingSize: Float = 0
+        public var displacementSimulator_force: Float = 0
+        public var displacementSimulator_velocity: Float = 0
+        public var displacementSimulator_falloff: Float = 0
+        public var displacementSimulator_dampner: Float = 0
+        public var displacementSimulator_startingSize: Float = 0
+        public var damage: UInt16 = 0
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             guard dataSize != 2 else {
@@ -71,7 +71,6 @@ public class WATRRecord: Record {
             rainSimulator_startingSize = r.readLESingle()
             displacementSimulator_force = r.readLESingle()
             guard dataSize != 86 else {
-                //displacementSimulator_velocity = displacementSimulator_falloff = displacementSimulator_dampner = displacementSimulator_startingSize = 0
                 damage = r.readLEUInt16()
                 return
             }
@@ -95,8 +94,8 @@ public class WATRRecord: Record {
         }
     }
 
-    public override var description: String { return "WATR: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "WATR: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var TNAM: STRVField! // Texture
     public var ANAM: BYTEField! // Opacity
     public var FNAM: BYTEField! // Flags

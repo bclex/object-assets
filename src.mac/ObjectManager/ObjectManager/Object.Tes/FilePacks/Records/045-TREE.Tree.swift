@@ -50,9 +50,9 @@ public class TREERecord: Record {
         }
     }
 
-    public override var description: String { return "TREE: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
-    public var MODL: MODLGroup! // Model
+    public override var description: String { return "TREE: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var MODL: MODLGroup? = nil // Model
     public var ICON: FILEField! // Leaf Texture
     public var SNAM: SNAMField! // SpeedTree Seeds, array of ints
     public var CNAM: CNAMField! // Tree Parameters
@@ -62,8 +62,8 @@ public class TREERecord: Record {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
-        case "MODT": MODL.MODTField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
+        case "MODT": MODL!.MODTField(r, dataSize)
         case "ICON": ICON = FILEField(r, dataSize)
         case "SNAM": SNAM = SNAMField(r, dataSize)
         case "CNAM": CNAM = CNAMField(r, dataSize)

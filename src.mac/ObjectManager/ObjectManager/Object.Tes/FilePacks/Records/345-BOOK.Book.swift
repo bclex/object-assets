@@ -32,9 +32,9 @@ public class BOOKRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override var description: String { return "BOOK: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
-    public var MODL: MODLGroup? = nil  // Model (optional)
+    public override var description: String { return "BOOK: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var MODL: MODLGroup? = nil // Model (optional)
     public var FULL: STRVField! // Item Name
     public var DATA: DATAField! // Book Data
     public var DESC: STRVField! // Book Text

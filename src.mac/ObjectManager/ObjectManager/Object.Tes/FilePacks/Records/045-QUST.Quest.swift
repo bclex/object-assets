@@ -17,8 +17,8 @@ public class QUSTRecord: Record {
         }
     }
 
-    public override var description: String { return "QUST: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "QUST: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var FULL: STRVField!  // Item Name
     public var ICON: FILEField!  // Icon
     public var DATA: DATAField!  // Icon

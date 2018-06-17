@@ -15,9 +15,10 @@ public class PGRDRecord: Record {
         public let pointCount: Int16
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
-            guard format != .TES3 else {
+            guard format == .TES3 else {
                 x = 0; y = 0; granularity = 0
                 pointCount = r.readLEInt16()
+                return
             }
             x = r.readLEInt32()
             y = r.readLEInt32()
@@ -72,8 +73,8 @@ public class PGRDRecord: Record {
         }
     }
 
-    public override var description: String { return "PGRD: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "PGRD: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var DATA: DATAField! // Number of nodes
     public var PGRPs: [PGRPField]!
     public var PGRC: UNKNField!

@@ -19,13 +19,13 @@ public typealias Matrix4x4 = SCNMatrix4
 public typealias Quaternion = SCNQuaternion
 
 public class Utils {
-//    public static func containsBitFlags<T>(_ bits: T, _ args: Int...) -> Bool where T: OptionSet {
-//        var flagBits: UInt64 = 0
-//        for arg in args {
-//            flagBits |= UInt64(arg)
-//        }
-//        return (UInt64(Self.RawValue(bits.rawValue)) & flagBits) == flagBits
-//    }
+    public static func containsBitFlags(_ bits: UInt, _ args: UInt...) -> Bool {
+        var flagBits: UInt = 0
+        for arg in args {
+            flagBits |= arg
+        }
+        return (bits & flagBits) == flagBits
+    }
     
     public static func swap(_ a: inout CGFloat, _ b: inout CGFloat) {
         let temp = a

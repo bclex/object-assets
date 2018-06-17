@@ -18,26 +18,29 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
         init(_ r: BinaryReader, _ dataSize: Int) {
             weight = r.readLESingle();
             value = r.readLEInt32();
-            effectId = [Int32](); effectId.reserveCapacity(4)
+            var effectId = [Int32](); effectId.reserveCapacity(4)
             for i in 0..<effectId.capacity {
                 effectId[i] = r.readLEInt32()
             }
-            skillId = [Int32](); skillId.reserveCapacity(4)
+            self.effectId = effectId
+            var skillId = [Int32](); skillId.reserveCapacity(4)
             for i in 0..<skillId.capacity {
                 skillId[i] = r.readLEInt32()
             }
-            attributeId = [Int32](); attributeId.reserveCapacity(4)
+            self.skillId = skillId
+            var attributeId = [Int32](); attributeId.reserveCapacity(4)
             for i in attributeId.startIndex..<attributeId.capacity {
                 attributeId[i] = r.readLEInt32()
             }
+            self.attributeId = attributeId
         }
     }
 
     // TES4
     public class DATAField {
         public let weight: Float
-        public var value: Int32
-        public var flags: UInt32
+        public var value: Int32 = 0
+        public var flags: UInt32 = 0
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             weight = r.readLESingle()
@@ -49,9 +52,9 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override var description: String { return "INGR: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
-    public var MODL: MODLGroup! // Model Name
+    public override var description: String { return "INGR: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var MODL: MODLGroup? = nil // Model Name
     public var FULL: STRVField! // Item Name
     public var IRDT: IRDTField! // Ingrediant Data //: TES3
     public var DATA: DATAField! // Ingrediant Data //: TES4
@@ -66,8 +69,8 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
-        case "MODT": MODL.MODTField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
+        case "MODT": MODL!.MODTField(r, dataSize)
         case "FULL": if SCITs.count == 0 { FULL = STRVField(r, dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
         case "FNAM": FULL = STRVField(r, dataSize)
         case "DATA": DATA = DATAField(r, dataSize)

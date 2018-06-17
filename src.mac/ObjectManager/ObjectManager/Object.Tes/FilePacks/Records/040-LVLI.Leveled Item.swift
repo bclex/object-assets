@@ -24,8 +24,8 @@ public class LVLIRecord: Record {
         }
     }
 
-    public override var description: String { return "LVLI: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "LVLI: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var LVLD: BYTEField! // Chance
     public var LVLF: BYTEField! // Flags - 0x01 = Calculate from all levels <= player's level, 0x02 = Calculate for each item in count
     public var DATA: BYTEField? = nil // Data (optional)

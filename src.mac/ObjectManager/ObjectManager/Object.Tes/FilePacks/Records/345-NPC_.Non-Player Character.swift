@@ -6,6 +6,8 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
+import Foundation
+
 public class NPC_Record: Record, IHaveEDID, IHaveMODL {
     public struct NPC_Flags: OptionSet {
         public let rawValue: UInt32
@@ -24,19 +26,19 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
 
     public class NPDTField {
         public let level: Int16
-        public let strength: UInt8
-        public let intelligence: UInt8
-        public let willpower: UInt8
-        public let agility: UInt8
-        public let speed: UInt8
-        public let endurance: UInt8
-        public let personality: UInt8
-        public let luck: UInt8
-        public let skills: [UInt8]
-        public let reputation: UInt8
-        public let health: Int16
-        public let spellPts: Int16
-        public let fatigue: Int16
+        public var strength: UInt8 = 0
+        public var intelligence: UInt8 = 0
+        public var willpower: UInt8 = 0
+        public var agility: UInt8 = 0
+        public var speed: UInt8 = 0
+        public var endurance: UInt8 = 0
+        public var personality: UInt8 = 0
+        public var luck: UInt8 = 0
+        public var skills: Data = Data()
+        public var reputation: UInt8 = 0
+        public var health: Int16 = 0
+        public var spellPts: Int16 = 0
+        public var fatigue: Int16 = 0
         public let disposition: UInt8
         public let factionId: UInt8
         public let rank: UInt8
@@ -49,8 +51,8 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
         //public byte FactionId;
         //public byte Rank;
         //public byte Unknown1;
-        public let unknown2: UInt8
-        public let unknown3: UInt8
+        public var unknown2: UInt8 = 0
+        public var unknown3: UInt8 = 0
         //public int Gold;
 
         init(_ r: BinaryReader, _ dataSize: Int) {
@@ -106,10 +108,10 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override var description: String { return "NPC_: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
+    public override var description: String { return "NPC_: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
     public var FULL: STRVField! // NPC name
-    public var MODL: MODLGroup!  // Animation
+    public var MODL: MODLGroup? = nil // Animation
     public var RNAM: STRVField! // Race Name
     public var ANAM: STRVField! // Faction name
     public var BNAM: STRVField! // Head model
@@ -138,7 +140,7 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
         case "FULL",
              "FNAM": FULL = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
         case "RNAM": RNAM = STRVField(r, dataSize)
         case "ANAM": ANAM = STRVField(r, dataSize)
         case "BNAM": BNAM = STRVField(r, dataSize)

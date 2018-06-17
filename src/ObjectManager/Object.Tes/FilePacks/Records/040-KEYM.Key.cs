@@ -2,7 +2,7 @@
 
 namespace OA.Tes.FilePacks.Records
 {
-    public class KEYMRecord : Record
+    public class KEYMRecord : Record, IHaveEDID, IHaveMODL
     {
         public struct DATAField
         {

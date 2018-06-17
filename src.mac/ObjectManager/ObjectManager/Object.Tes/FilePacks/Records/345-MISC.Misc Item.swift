@@ -26,9 +26,9 @@ public class MISCRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override var description: String { return "MISC: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
-    public var MODL: MODLGroup!  // Model
+    public override var description: String { return "MISC: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var MODL: MODLGroup? = nil // Model
     public var FULL: STRVField! // Item Name
     public var DATA: DATAField! // Misc Item Data
     public var ICON: FILEField? = nil // Icon (optional)
@@ -41,8 +41,8 @@ public class MISCRecord: Record, IHaveEDID, IHaveMODL {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
-        case "MODT": MODL.MODTField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
+        case "MODT": MODL!.MODTField(r, dataSize)
         case "FULL",
              "FNAM": FULL = STRVField(r, dataSize)
         case "DATA",

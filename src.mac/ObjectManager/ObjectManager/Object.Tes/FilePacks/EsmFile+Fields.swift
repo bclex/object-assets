@@ -9,11 +9,11 @@
 import Foundation
 
 public protocol IHaveEDID {
-    var EDID: STRVField! { get }
+    var EDID: STRVField { get }
 }
 
 public protocol IHaveMODL {
-    var MODL: MODLGroup! { get }
+    var MODL: MODLGroup? { get }
 }
 
 public class MODLGroup: CustomStringConvertible {
@@ -36,9 +36,13 @@ public class MODLGroup: CustomStringConvertible {
 }
 
 public struct STRVField: CustomStringConvertible {
+    public static let empty = STRVField(value: "")
     public var description: String { return "\(value)" }
     public let value: String
 
+    init(value: String) {
+        self.value = value
+    }
     init(_ r: BinaryReader, _ dataSize: Int, format: ASCIIFormat = .possibleNullTerminated) {
         value = r.readASCIIString(dataSize, format: format)
     }
@@ -67,7 +71,7 @@ public struct INTVField: CustomStringConvertible {
         }
     }
     
-    var toUI16Field: UI16Field { return UI16Field(value: UInt16(value)) }
+    public var toUI16Field: UI16Field { return UI16Field(value: UInt16(value)) }
 }
 
 public struct DATVField: CustomStringConvertible {
@@ -182,6 +186,7 @@ public struct FMID2Field<TRecord>: CustomStringConvertible {
 }
 
 public struct ColorRef: CustomStringConvertible {
+    public static let empty = ColorRef(red: 0, green: 0, blue: 0)
     public var description: String { return "\(red):\(green):\(blue)" }
     public let red: UInt8
     public let green: UInt8
@@ -202,7 +207,7 @@ public struct ColorRef: CustomStringConvertible {
         nullByte = r.readByte()
     }
 
-    public func toColor32() -> CGColor { return CGColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: 255) }
+    public var toColor32: CGColor { return CGColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: 255) }
 }
 
 public struct CREFField: CustomStringConvertible {

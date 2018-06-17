@@ -7,8 +7,8 @@
 //
 
 public class GLOBRecord: Record, IHaveEDID {
-    public override var description: String { return "GLOB: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "GLOB: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var FNAM: BYTEField? = nil // Type of global (s, l, f)
     public var FLTV: FLTVField? = nil // Float data
 

@@ -2,7 +2,7 @@
 
 namespace OA.Tes.FilePacks.Records
 {
-    public class AMMORecord : Record
+    public class AMMORecord : Record, IHaveEDID, IHaveMODL
     {
         public struct DATAField
         {

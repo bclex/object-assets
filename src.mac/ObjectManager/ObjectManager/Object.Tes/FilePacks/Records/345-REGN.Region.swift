@@ -15,21 +15,23 @@ public class REGNRecord: Record, IHaveEDID {
             case objects = 2, weather, map, landscape, grass, sound
         }
 
-        public var type: UInt32
-        public var flags: REGNType
-        public var priority: UInt8
+        public var type: UInt32 = 0
+        public var flags: REGNType = .objects
+        public var priority: UInt8 = 0
         // groups
-        public var RDOTs: [RDOTField] // Objects
-        public var RDMP: STRVField // MapName
-        public var RDGSs: [RDGSField] // Grasses
-        public var RDMD: UI32Field // Music Type
-        public var RDSDs: [RDSDField] // Sounds
-        public var RDWTs: [RDWTField] // Weather Types
+        public var RDOTs: [RDOTField]! // Objects
+        public var RDMP: STRVField! // MapName
+        public var RDGSs: [RDGSField]! // Grasses
+        public var RDMD: UI32Field! // Music Type
+        public var RDSDs: [RDSDField]! // Sounds
+        public var RDWTs: [RDWTField]! // Weather Types
 
-        init() { }
+        init(RDSDs: [RDSDField]) {
+            self.RDSDs = RDSDs
+        }
         init(_ r: BinaryReader, _ dataSize: Int) {
             type = r.readLEUInt32()
-            flags = REGNType(rawValue: r.readByte())
+            flags = REGNType(rawValue: r.readByte())!
             priority = r.readByte()
             r.skipBytes(2) // Unused
         }
@@ -70,7 +72,7 @@ public class REGNRecord: Record, IHaveEDID {
             sink = r.readLESingle()
             sinkVariance = r.readLESingle()
             sizeVariance = r.readLESingle()
-            angleVariance = Vector3Int(r.readLEUInt16(), r.readLEUInt16(), r.readLEUInt16())
+            angleVariance = Vector3Int(Int(r.readLEUInt16()), Int(r.readLEUInt16()), Int(r.readLEUInt16()))
             r.skipBytes(2) // Unused
             vertexShading = ColorRef(r)
         }
@@ -107,15 +109,15 @@ public class REGNRecord: Record, IHaveEDID {
 
     public struct RDWTField: CustomStringConvertible {
         public var description: String { return "\(weather)" }
+        public static func sizeOf(for format: GameFormatId) -> Int { return format == .TES4 ? 8 : 12 }
         public let weather: FormId<WTHRRecord>
         public let chance: UInt32
-        public static var sizeOf(for format: GameFormatId): UInt8 { return format == .TES4 ? 8 : 12 }
         public let global: FormId<GLOBRecord>
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             weather = FormId<WTHRRecord>(r.readLEUInt32())
             chance = r.readLEUInt32()
-            global = format == .TES5 ? FormId<GLOBRecord>(r.readLEUInt32()) : FormId<GLOBRecord>()
+            global = format == .TES5 ? FormId<GLOBRecord>(r.readLEUInt32()) : FormId<GLOBRecord>(0)
         }
     }
 
@@ -149,7 +151,7 @@ public class REGNRecord: Record, IHaveEDID {
     // TES4
     public class RPLIField {
         public let edgeFalloff: UInt32 // (World Units)
-        public var points: [Vector2] // Region Point List Data
+        public var points: [Vector2]! // Region Point List Data
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             edgeFalloff = r.readLEUInt32()
@@ -163,8 +165,8 @@ public class REGNRecord: Record, IHaveEDID {
         }
     }
 
-    public override var description: String { return "REGN: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
+    public override var description: String { return "REGN: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
     public var ICON: STRVField! // Icon / Sleep creature
     public var WNAM: FMIDField<WRLDRecord>! // Worldspace - Region name
     public var RCLR: CREFField! // Map Color (COLORREF)
@@ -201,7 +203,7 @@ public class REGNRecord: Record, IHaveEDID {
             var rdsd = [RDSDField](); RDATs.last!.RDSDs = rdsd; rdsd.reserveCapacity(dataSize / 12)
             for i in 0..<rdsd.capacity { rdsd[i] = RDSDField(r, dataSize, format) }
         case "RDWT":
-            var rdwt = [RDWTField](); RDATs.last!.RDWTs = rdwt; rdwt.reserveCapacity(dataSize / RDWTField.SizeOf(format))
+            var rdwt = [RDWTField](); RDATs.last!.RDWTs = rdwt; rdwt.reserveCapacity(dataSize / RDWTField.sizeOf(for: format))
             for i in 0..<rdwt.capacity { rdwt[i] = RDWTField(r, dataSize, format) }
         default: return false
         }

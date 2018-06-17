@@ -6,11 +6,11 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
-public class HAIRRecord: Record {
-    public override var description: String { return "HAIR: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+public class HAIRRecord: Record, IHaveEDID, IHaveMODL {
+    public override var description: String { return "HAIR: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var FULL: STRVField!
-    public var MODL: MODLGroup!
+    public var MODL: MODLGroup? = nil
     public var ICON: FILEField!
     public var DATA: BYTEField! // Playable, Not Male, Not Female, Fixed
     
@@ -19,7 +19,7 @@ public class HAIRRecord: Record {
         case "EDID": EDID = STRVField(r, dataSize)
         case "FULL": FULL = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
         case "ICON": ICON = FILEField(r, dataSize)
         case "DATA": DATA = BYTEField(r, dataSize)
         default: return false

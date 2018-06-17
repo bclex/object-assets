@@ -6,7 +6,7 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
-public class WTHRRecord: Record {
+public class WTHRRecord: Record, IHaveEDID, IHaveMODL {
     public struct FNAMField {
         public let dayNear: Float
         public let dayFar: Float
@@ -97,9 +97,9 @@ public class WTHRRecord: Record {
         }
     }
 
-    public override var description: String { return "WTHR: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
-    public var MODL: MODLGroup!  // Model
+    public override var description: String { return "WTHR: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var MODL: MODLGroup? = nil // Model
     public var CNAM: FILEField! // Lower Cloud Layer
     public var DNAM: FILEField! // Upper Cloud Layer
     public var NAM0: BYTVField! // Colors by Types/Times
@@ -112,7 +112,7 @@ public class WTHRRecord: Record {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
         case "CNAM": CNAM = FILEField(r, dataSize)
         case "DNAM": DNAM = FILEField(r, dataSize)
         case "NAM0": NAM0 = BYTVField(r, dataSize)

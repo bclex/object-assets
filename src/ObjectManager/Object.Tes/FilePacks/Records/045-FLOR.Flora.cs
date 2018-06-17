@@ -2,7 +2,7 @@
 
 namespace OA.Tes.FilePacks.Records
 {
-    public class FLORRecord : Record
+    public class FLORRecord : Record, IHaveEDID, IHaveMODL
     {
         public override string ToString() => $"FLOR: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID

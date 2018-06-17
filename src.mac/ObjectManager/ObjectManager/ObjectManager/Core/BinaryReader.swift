@@ -125,6 +125,24 @@ public class BinaryReader {
         return String(data: data, encoding: .utf8)!
     }
     
+    public func readASCIIMultiString(_ length: Int, bufSize: Int = 64) -> [String] {
+        var list = [String]()
+        var data = [UInt8](); data.reserveCapacity(bufSize)
+        var len = length
+        while len > 0 {
+            data.removeAll()
+            len -= 1
+            var c = readByte()
+            while len > 0 && c != 0 {
+                data.append(c)
+                len -= 1
+                c = readByte()
+            }
+            list.append(String(bytes: data, encoding: .utf8)!)
+        }
+        return list
+    }
+    
     // MARK: A
 
     public func readLEBool32() -> Bool {

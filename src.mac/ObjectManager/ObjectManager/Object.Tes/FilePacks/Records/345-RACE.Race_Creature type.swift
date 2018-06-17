@@ -65,31 +65,28 @@ public class RACERecord: Record {
         }
 
         public class RaceStats {
-            public var height: Float
-            public var weight: Float
+            public var height: Float!
+            public var weight: Float!
             // Attributes
-            public var strength: UInt8
-            public var intelligence: UInt8
-            public var willpower: UInt8
-            public var agility: UInt8
-            public var speed: UInt8
-            public var endurance: UInt8
-            public var personality: UInt8
-            public var luck: UInt8
-            
-            init() {
-            }
+            public var strength: UInt8!
+            public var intelligence: UInt8!
+            public var willpower: UInt8!
+            public var agility: UInt8!
+            public var speed: UInt8!
+            public var endurance: UInt8!
+            public var personality: UInt8!
+            public var luck: UInt8!
         }
 
-        public let skillBoosts = [SkillBoost]() // Skill Boosts
+        public let skillBoosts: [SkillBoost] // Skill Boosts
         public let male = RaceStats()
         public let female = RaceStats()
         public let flags: UInt32 // 1 = Playable 2 = Beast Race
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
-            skillBoosts.reserveCapacity(7)
+            var skillBoosts = [SkillBoost](); skillBoosts.reserveCapacity(7)
             guard format != .TES3 else {
-                for i in skillBoosts.startIndex..<skillBoosts.capacity {
+                for i in 0..<7 {
                     skillBoosts[i] = SkillBoost(r, 8, format)
                 }
                 male.strength = UInt8(r.readLEInt32()); female.strength = UInt8(r.readLEInt32())
@@ -103,11 +100,13 @@ public class RACERecord: Record {
                 male.height = r.readLESingle(); female.height = r.readLESingle()
                 male.weight = r.readLESingle(); female.weight = r.readLESingle()
                 flags = r.readLEUInt32()
+                self.skillBoosts = skillBoosts
                 return
             }
-            for i in 0..<skillBoosts.capacity {
+            for i in 0..<7 {
                 skillBoosts[i] = SkillBoost(r, 2, format)
             }
+            self.skillBoosts = skillBoosts
             r.skipBytes(2) // padding
             male.height = r.readLESingle(); female.height = r.readLESingle()
             male.weight = r.readLESingle(); female.weight = r.readLESingle()
@@ -137,40 +136,39 @@ public class RACERecord: Record {
     // TES4
     public class FacePartGroup {
         public enum Indx: UInt32 {
-            case head, ear_male, ear_female, mouth, teeth_lower, teeth_upper, tongue, eye_left, eye_right
+            case head = 0, ear_male, ear_female, mouth, teeth_lower, teeth_upper, tongue, eye_left, eye_right
         }
 
-        public var INDX: UI32Field
-        public var MODL: MODLGroup
-        public var ICON: FILEField
+        public let INDX: UI32Field
+        public var MODL: MODLGroup!
+        public var ICON: FILEField!
         
-        init() {
+        init(INDX: UI32Field) {
+            self.INDX = INDX
         }
     }
 
     public class BodyPartGroup {
         public enum Indx: UInt32 {
-            case upperBody, lowerBody, hand, foot, tail
+            case upperBody = 0, lowerBody, hand, foot, tail
         }
 
-        public var INDX: UI32Field
-        public var ICON: FILEField
+        public let INDX: UI32Field
+        public var ICON: FILEField!
         
-        init() {
+        init(INDX: UI32Field) {
+            self.INDX = INDX
         }
     }
 
     public class BodyGroup {
-        public var MODL: FILEField
-        public var MODB: FLTVField 
-        public var BodyParts = [BodyPartGroup]()
-        
-        init() {
-        }
+        public var MODL: FILEField!
+        public var MODB: FLTVField!
+        public var bodyParts = [BodyPartGroup]()
     }
 
-    public override var description: String { return "RACE: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
+    public override var description: String { return "RACE: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
     public var FULL: STRVField! // Race name
     public var DESC: STRVField! // Race description
     public var SPLOs = [STRVField]() // NPCs: Special power/ability name
@@ -194,8 +192,8 @@ public class RACERecord: Record {
     // Parts
     public var faceParts = [FacePartGroup]()
     public var bodys = [BodyGroup(), BodyGroup()]
-    var _nameState: Int8
-    var _genderState: Int8
+    var _nameState: Int8 = 0
+    var _genderState: Int = 0
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
@@ -228,7 +226,6 @@ public class RACERecord: Record {
                 case "NAM0": _nameState += 1
                 default: return false
                 }
-                return true
             case 1: // Face Data
                 switch type {
                 case "INDX": faceParts.append(FacePartGroup(INDX: UI32Field(r, dataSize)))
@@ -238,7 +235,6 @@ public class RACERecord: Record {
                 case "NAM1": _nameState += 1
                 default: return false
                 }
-                return true
             case 2: // Body Data
                 switch type {
                 case "MNAM": _genderState = 0
@@ -256,15 +252,14 @@ public class RACERecord: Record {
                 fallthrough
             case 3: // Postamble
                 switch type {
-                case "HNAM": for i in 0..<(dataSize >> 2) { HNAMs.append(FMIDField<HAIRRecord>(r, 4)) }
-                case "ENAM": for i in 0..<(dataSize >> 2) { ENAMs.append(FMIDField<EYESRecord>(r, 4)) }
+                case "HNAM": for _ in 0..<(dataSize >> 2) { HNAMs.append(FMIDField<HAIRRecord>(r, 4)) }
+                case "ENAM": for _ in 0..<(dataSize >> 2) { ENAMs.append(FMIDField<EYESRecord>(r, 4)) }
                 case "FGGS": FGGS = BYTVField(r, dataSize)
                 case "FGGA": FGGA = BYTVField(r, dataSize)
                 case "FGTS": FGTS = BYTVField(r, dataSize)
                 case "SNAM": SNAM = UNKNField(r, dataSize)
                 default: return false
                 }
-                return true
             default: return false
             }
             return true

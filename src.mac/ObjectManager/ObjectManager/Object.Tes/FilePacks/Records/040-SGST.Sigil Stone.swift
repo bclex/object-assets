@@ -19,9 +19,9 @@ public class SGSTRecord: Record {
         }
     }
 
-    public override var description: String { return "SGST: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
-    public var MODL: MODLGroup! // Model
+    public override var description: String { return "SGST: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var MODL: MODLGroup? = nil // Model
     public var FULL: STRVField! // Item Name
     public var DATA: DATAField! // Sigil Stone Data
     public var ICON: FILEField! // Icon
@@ -33,8 +33,8 @@ public class SGSTRecord: Record {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
-        case "MODT": MODL.MODTField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
+        case "MODT": MODL!.MODTField(r, dataSize)
         case "FULL": if SCITs.count == 0 { FULL = STRVField(r, dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
         case "DATA": DATA = DATAField(r, dataSize)
         case "ICON": ICON = FILEField(r, dataSize)

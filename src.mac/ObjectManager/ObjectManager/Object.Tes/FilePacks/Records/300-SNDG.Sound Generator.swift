@@ -11,8 +11,8 @@ public class SNDGRecord: Record {
         case leftFoot = 0, rightFoot, swimLeft, swimRight, moan, roar, scream, land = 7
     }
 
-    public override var description: String { return "SNDG: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "SNDG: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var DATA: IN32Field! // Sound Type Data
     public var SNAM: STRVField! // Sound ID
     public var CNAM: STRVField? = nil// Creature name (optional)

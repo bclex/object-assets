@@ -10,13 +10,13 @@ public class FACTRecord: Record {
     // TESX
     public class RNAMGroup: CustomStringConvertible {
         public var description: String { return "FACT: \(RNAM.value):\(MNAM.value)" }
-        public var RNAM: IN32Field // rank
-        public var MNAM: STRVField // male
-        public var FNAM: STRVField // female
-        public var INAM: STRVField // insignia
+        public var RNAM: IN32Field! // rank
+        public var MNAM: STRVField! // male
+        public var FNAM: STRVField! // female
+        public var INAM: STRVField! // insignia
         
-        init(MNAM: STRField) { self.MNAM = MNAM}
-        init(RNAM: IN32Field) { self.RNAM = RNAM}
+        init(MNAM: STRVField) { self.MNAM = MNAM }
+        init(RNAM: IN32Field) { self.RNAM = RNAM }
     }
 
     // TES3
@@ -40,8 +40,8 @@ public class FACTRecord: Record {
         }
     }
 
-    public override var description: String { return "FACT: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "FACT: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var FNAM: STRVField! // Faction name
     public var RNAMs = [RNAMGroup]() // Rank Name
     public var FADT: FADTField! // Faction data
@@ -57,7 +57,7 @@ public class FACTRecord: Record {
             switch type {
             case "NAME": EDID = STRVField(r, dataSize)
             case "FNAM": FNAM = STRVField(r, dataSize)
-            case "RNAM": RNAMs.append(RNAMGroup(RNAM: STRVField(r, dataSize)))
+            case "RNAM": RNAMs.append(RNAMGroup(MNAM: STRVField(r, dataSize)))
             case "FADT": FADT = FADTField(r, dataSize)
             case "ANAM": ANAMs.append(STRVField(r, dataSize))
             case "INTV": INTVs.append(INTVField(r, dataSize))

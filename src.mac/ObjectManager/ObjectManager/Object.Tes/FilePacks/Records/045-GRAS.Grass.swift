@@ -6,7 +6,7 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
-public class GRASRecord: Record {
+public class GRASRecord: Record, IHaveEDID, IHaveMODL {
     public struct DATAField {
         public let density: UInt8
         public let minSlope: UInt8
@@ -44,17 +44,17 @@ public class GRASRecord: Record {
         }
     }
 
-    public override var description: String { return "GRAS: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
-    public var MODL: MODLGroup!
+    public override var description: String { return "GRAS: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var MODL: MODLGroup? = nil
     public var DATA: DATAField!
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
-        case "MODT": MODL.MODTField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
+        case "MODT": MODL!.MODTField(r, dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
         default: return false
         }

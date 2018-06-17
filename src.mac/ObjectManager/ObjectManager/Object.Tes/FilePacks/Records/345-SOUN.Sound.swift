@@ -29,11 +29,11 @@ public class SOUNRecord: Record, IHaveEDID {
         public let minRange: UInt8 // Minimum attenuation distance
         public let maxRange: UInt8 // Maximum attenuation distance
         // Tes4
-        public let frequencyAdjustment: Int8 // Frequency adjustment %
-        public let flags: UInt16 // Flags
-        public let staticAttenuation: UInt16 // Static Attenuation (db)
-        public let stopTime: UInt8 // Stop time
-        public let startTime: UInt8 // Start time
+        public var frequencyAdjustment: Int8 = 0 // Frequency adjustment %
+        public var flags: UInt16 = 0 // Flags
+        public var staticAttenuation: UInt16 = 0 // Static Attenuation (db)
+        public var stopTime: UInt8 = 0 // Stop time
+        public var startTime: UInt8 = 0 // Start time
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             volume = format == .TES3 ? r.readByte() : 0
@@ -55,8 +55,8 @@ public class SOUNRecord: Record, IHaveEDID {
         }
     }
 
-    public override var description: String { return "SOUN: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "SOUN: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var FNAM: FILEField! // Sound Filename (relative to Sounds\)
     public var DATA: DATAField! // Sound Data
 

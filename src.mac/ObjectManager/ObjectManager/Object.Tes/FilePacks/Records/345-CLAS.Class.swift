@@ -22,8 +22,8 @@ public class CLASRecord: Record {
         }
     }
 
-    public override var description: String { return "CLAS: \(EDID!)" }
-    public var EDID: STRVField!   // Editor ID
+    public override var description: String { return "CLAS: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty   // Editor ID
     public var FULL: STRVField!  // Name
     public var DESC: STRVField!  // Description
     public var ICON: STRVField? = nil // Icon (Optional)

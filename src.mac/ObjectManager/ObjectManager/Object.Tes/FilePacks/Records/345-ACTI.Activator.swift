@@ -7,10 +7,10 @@
 //
 
 public class ACTIRecord: Record, IHaveEDID, IHaveMODL {
-    public override var description: String { return "ACTI: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
-    public var MODL: MODLGroup!  // Model Name
-    public var MODB: FLTVField!  // Model Bounds
+    public override var description: String { return "ACTI: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var MODL: MODLGroup? = nil // Model Name
+    public var MODB: FLTVField! // Model Bounds
     public var MODT: BYTVField! // Texture Files Hashes
     public var FULL: STRVField! // Item Name
     public var SCRI: FMIDField<SCPTRecord>? = nil // Script (Optional)
@@ -22,8 +22,8 @@ public class ACTIRecord: Record, IHaveEDID, IHaveMODL {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
-        case "MODT": MODL.MODTField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
+        case "MODT": MODL!.MODTField(r, dataSize)
         case "FULL",
              "FNAM": FULL = STRVField(r, dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)

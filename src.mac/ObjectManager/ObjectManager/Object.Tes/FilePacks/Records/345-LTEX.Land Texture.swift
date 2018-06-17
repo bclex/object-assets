@@ -20,8 +20,8 @@ public class LTEXRecord: Record, IHaveEDID {
         }
     }
 
-    public override var description: String { return "LTEX: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "LTEX: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var ICON: FILEField! // Texture
     // TES3
     public var INTV: INTVField!

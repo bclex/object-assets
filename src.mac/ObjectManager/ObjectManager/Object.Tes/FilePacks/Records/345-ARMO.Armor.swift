@@ -9,7 +9,7 @@
 public class ARMORecord: Record, IHaveEDID, IHaveMODL {
     // TESX
     public struct DATAField {
-        public enum ARMOType {
+        public enum ARMOType: Int32 {
             case helmet = 0, cuirass, l_pauldron, r_pauldron, greaves, boots, l_gauntlet, r_gauntlet, shield, l_bracer, r_bracer
         }
 
@@ -40,9 +40,9 @@ public class ARMORecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public override var description: String { return "ARMO: \(EDID!)" }
-    public var EDID: STRVField!  // Editor ID
-    public var MODL: MODLGroup!  // Male biped model
+    public override var description: String { return "ARMO: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var MODL: MODLGroup? = nil // Male biped model
     public var FULL: STRVField! // Item Name
     public var ICON: FILEField! // Male icon
     public var DATA: DATAField! // Armour Data
@@ -63,8 +63,8 @@ public class ARMORecord: Record, IHaveEDID, IHaveMODL {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "MODB": MODL.MODBField(r, dataSize)
-        case "MODT": MODL.MODTField(r, dataSize)
+        case "MODB": MODL!.MODBField(r, dataSize)
+        case "MODT": MODL!.MODTField(r, dataSize)
         case "FULL",
              "FNAM": FULL = STRVField(r, dataSize)
         case "DATA",

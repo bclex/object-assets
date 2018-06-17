@@ -2,7 +2,7 @@
 
 namespace OA.Tes.FilePacks.Records
 {
-    public class TREERecord : Record
+    public class TREERecord : Record, IHaveEDID, IHaveMODL
     {
         public struct SNAMField
         {

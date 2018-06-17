@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks.Records
 {
-    public class CLMTRecord : Record
+    public class CLMTRecord : Record, IHaveEDID, IHaveMODL
     {
         public struct WLSTField
         {

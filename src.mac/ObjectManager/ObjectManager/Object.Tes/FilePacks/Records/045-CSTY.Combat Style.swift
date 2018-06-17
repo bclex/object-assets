@@ -158,8 +158,8 @@ public class CSTYRecord: Record {
         }
     }
 
-    public override var description: String { return "CSTY: \(EDID!)" }
-    public var EDID: STRVField! // Editor ID
+    public override var description: String { return "CSTY: \(EDID)" }
+    public var EDID: STRVField = STRVField.empty // Editor ID
     public var CSTD: CSTDField! // Standard
     public var CSAD: CSADField! // Advanced
     
