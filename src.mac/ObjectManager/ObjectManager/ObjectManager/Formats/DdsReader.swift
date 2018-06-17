@@ -46,6 +46,7 @@ public struct DDSCaps: OptionSet { //: DDSCAPS
 
 public struct DDSCaps2: OptionSet { //: DDSCAPS2
     public let rawValue: UInt32
+    public static let none = DDSCaps2(rawValue: 0)
     public static let cubemap = DDSCaps2(rawValue: 0x200)            // Required for a cube map.
     public static let cubemapPositiveX = DDSCaps2(rawValue: 0x400)   // Required when these surfaces are stored in a cube map.
     public static let cubemapNegativeX = DDSCaps2(rawValue: 0x800)   // Required when these surfaces are stored in a cube map.
@@ -84,6 +85,29 @@ public struct DDSHeader { //: DDS_HEADER
     public let dwCaps4: UInt32
     public let dwReserved2: UInt32
 
+    init(dwFlags: DDSFlags,
+         dwHeight: UInt32, dwWidth: UInt32,
+         dwPitchOrLinearSize: UInt32,
+         dwMipMapCount: UInt32,
+         ddspf: DDSPixelFormat,
+         dwCaps: DDSCaps,
+         dwCaps2: DDSCaps2) {
+        self.dwFlags = dwFlags
+        self.dwHeight = dwHeight; self.dwWidth = dwWidth
+        self.dwPitchOrLinearSize = dwPitchOrLinearSize
+        dwDepth = 0
+        self.dwMipMapCount = dwMipMapCount
+        dwReserved1 = [UInt32](); dwReserved1.reserveCapacity(11)
+        for i in 0..<11 {
+            dwReserved1[i] = 0
+        }
+        self.ddspf = ddspf
+        self.dwCaps = dwCaps
+        self.dwCaps2 = dwCaps2
+        dwCaps3 = 0
+        dwCaps4 = 0
+        dwReserved2 = 0
+    }
     init(_ r: BinaryReader) {
         let size = r.readLEUInt32()
         guard size == 124 else {
@@ -148,9 +172,9 @@ public struct DDSHeader_DXT10 { //: DDS_HEADER_DXT10
 
     init(dxgiFormat: Int32,
          resourceDimension: DDSDimension,
-         miscFlag: UInt32,
-         arraySize: UInt32,
-         miscFlags2: UInt32) {
+         miscFlag: UInt32 = 0,
+         arraySize: UInt32 = 1,
+         miscFlags2: UInt32 = 0) {
         self.dxgiFormat = dxgiFormat
         self.resourceDimension = resourceDimension
         self.miscFlag = miscFlag
@@ -191,6 +215,21 @@ public struct DDSPixelFormat { //: DDS_PIXELFORMAT
     public let dwBBitMask: UInt32
     public let dwABitMask: UInt32
 
+    init(dwFlags: DDSPixelFormats,
+         dwFourCC: String = "",
+         dwRGBBitCount: UInt32 = 0,
+         dwRBitMask: UInt32 = 0,
+         dwGBitMask: UInt32 = 0,
+         dwBBitMask: UInt32 = 0,
+         dwABitMask: UInt32 = 0) {
+        self.dwFlags = dwFlags
+        self.dwFourCC = dwFourCC
+        self.dwRGBBitCount = dwRGBBitCount
+        self.dwRBitMask = dwRBitMask
+        self.dwGBitMask = dwGBitMask
+        self.dwBBitMask = dwBBitMask
+        self.dwABitMask = dwABitMask
+    }
     init(_ r: BinaryReader) {
         let size = r.readLEUInt32()
         guard size == 32 else {
