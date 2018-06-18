@@ -18,7 +18,7 @@ namespace OA.Tes.FilePacks.Records
 
         public override string ToString() => $"KEYM: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID
-        public MODLGroup MODL; // Model
+        public MODLGroup MODL { get; set; } // Model
         public STRVField FULL; // Item Name
         public FMIDField<SCPTRecord> SCRI; // Script (optional)
         public DATAField DATA; // Type of soul contained in the gem

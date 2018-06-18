@@ -6,7 +6,7 @@ namespace OA.Tes.FilePacks.Records
     {
         public override string ToString() => $"FLOR: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID
-        public MODLGroup MODL; // Model
+        public MODLGroup MODL { get; set; } // Model
         public STRVField FULL; // Plant Name
         public FMIDField<SCPTRecord> SCRI; // Script (optional)
         public FMIDField<INGRRecord> PFIG; // The ingredient the plant produces (optional)
