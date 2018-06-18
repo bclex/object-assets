@@ -22,26 +22,25 @@ extension FileManager {
     ]
 
     static var _fileDirectories: [GameId : URL] = {
-        // var game = TesSettings.Game;
-        debugPrint("TES Installation(s):")
-        // if (game.DataDirectory != null && Directory.Exists(game.DataDirectory))
-        // {
-        //     var gameId = (GameId)Enum.Parse(typeof(GameId), game.GameId);
-        //     _fileDirectories.Add(gameId, game.DataDirectory); Utils.Log($"Settings: {game.DataDirectory}");
-        //     _isDataPresent = true;
-        // }
-        // else
+        var game = BaseSettings.game
         var r = [GameId : URL]()
         let fileManager = FileManager.default
+        var isDirectory: ObjCBool = false
+        guard game.dataDirectory == nil || !fileManager.fileExists(atPath: game.dataDirectory!, isDirectory: &isDirectory) || !isDirectory.boolValue else {
+            let key = GameId.morrowind
+            r[key] = URL(string: game.dataDirectory!)
+            debugPrint("Game: \(key)")
+            return r
+        }
+        debugPrint("TES Installation(s):")
         let documentsURL = try! fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         for x in _knownkeys {
             let url = documentsURL.appendingPathComponent(x.value)
-            var isDirectory: ObjCBool = false
             guard fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue else {
                 continue
             }
             r[x.key] = url
-            debugPrint("GameId: \(x.key)")
+            debugPrint("Game: \(x.key)")
         }
         return r
     }()

@@ -20,22 +20,31 @@ public protocol BaseStream {
 }
 
 public class FileBaseStream: FileHandle, BaseStream {
+    public var length: UInt64 = 0
     public var position: UInt64 {
         get { return self.offsetInFile }
-        set { self.seek(toFileOffset: newValue) }
+        set(newValue) { self.seek(toFileOffset: newValue) }
     }
     
-    public var length: UInt64 { return 0 }
-    
     public func close() { super.closeFile() }
-    //public func readData(ofLength: Int) -> Data { return super.readData(ofLength: ofLength) }
+    public override func readData(ofLength: Int) -> Data { return super.readData(ofLength: ofLength) }
     //public required init?(coder: NSCoder) { }
-    //public convenience init?(forReadingAtPath path: String) { self.init(forReadingAtPath: path) }
+    
+    public convenience init?(path: String) {
+        let attribs = try! FileManager.default.attributesOfItem(atPath: path)
+        let length = UInt64(attribs[.size]! as! UInt32)
+        debugPrint("opening", path, length)
+        //let url = URL(fileURLWithPath: path)
+        self.init(forReadingAtPath: path)
+        self.length = length
+        debugPrint("here")
+    }
 }
 
 public class DataBaseStream: BaseStream {
-    let data: Data
+    public var length: UInt64 { return UInt64(data.count) }
     public var position: UInt64
+    let data: Data
     
     init(data: Data) {
         self.data = data
@@ -44,8 +53,6 @@ public class DataBaseStream: BaseStream {
     
     public func close() {
     }
-    
-    public var length: UInt64 { return UInt64(data.count) }
     
     public func readData(ofLength: Int) -> Data {
         let startIndex = Int(position)

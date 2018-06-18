@@ -13,11 +13,12 @@ public class BsaMultiFile {
 
     init(_ filePaths: [URL]?) {
         guard let filePaths = filePaths else {
-            fatalError("name me")
+            fatalError("Requires filePaths")
         }
-        filePaths.filter { [".bsa", ".ba2"].index(of: $0.pathExtension.lowercased()) != nil }
+        filePaths.filter { ["bsa", "ba2"].index(of: $0.pathExtension.lowercased()) != nil }
             .map { BsaFile($0.path) }
             .forEach { packs.append($0) }
+        debugPrint(packs)
     }
 
     deinit {

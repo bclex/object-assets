@@ -151,11 +151,11 @@ public struct FormId<TRecord>: CustomStringConvertible {
     public var description: String { return "\(type):\(name ?? "none")\(id ?? 0)" }
     public let id: UInt32?
     public let name: String?
-    public var type: String { let r = "\(TRecord.self)" ; return String(r[r.startIndex..<r.index(r.startIndex, offsetBy: 4)])  }
+    public var type: String { let r = "\(TRecord.self)"; return String(r[r.startIndex..<r.index(r.startIndex, offsetBy: 4)])  }
 
     init(_ id: UInt32) { self.id = id ; name = nil }
     init(_ name: String) { id = 0 ; self.name = name }
-    init(_ id: UInt32, _ name: String) { self.id = id ; self.name = name }
+    init(_ id: UInt32, _ name: String) { self.id = id; self.name = name }
     func adding(name: String) -> FormId<TRecord> { return FormId<TRecord>(id!, name) }
 }
 

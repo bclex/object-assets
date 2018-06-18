@@ -269,7 +269,7 @@ public enum DXGIFormat: UInt8 { //: DXGI_FORMAT
 
 public class DdsReader {
     public static func loadDDSTexture(filePath: String, flipVertically: Bool = false) -> Texture2DInfo {
-        let r = BinaryReader(FileBaseStream(forReadingAtPath: filePath)!)
+        let r = BinaryReader(FileBaseStream(path: filePath)!)
         defer { r.close() }
         return loadDDSTexture(r, flipVertically: flipVertically)
     }

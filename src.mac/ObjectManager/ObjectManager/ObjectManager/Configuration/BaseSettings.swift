@@ -26,8 +26,8 @@ public class BaseSettings {
     }
 
     public static func createOrOpenSection<T>() -> T where T: ASettingsSection {
-        let sectionName = "T.Self"
-        let section = _file.createOrOpenSection(sectionName)
-        return section as! T
+        let sectionName = "\(T.self)"
+        let section: T = _file.createOrOpenSection(sectionName)
+        return section 
     }
 }

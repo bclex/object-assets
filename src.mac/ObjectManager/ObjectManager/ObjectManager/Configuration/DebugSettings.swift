@@ -7,6 +7,9 @@
 //
 
 public class DebugSettings: ASettingsSection {
+    required public init() {
+    }
+    
     private var _logPackets = false
     public var logPackets: Bool {
         get { return _logPackets }

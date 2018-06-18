@@ -145,9 +145,10 @@ public class BsaFile {
             fatalError("filepath is nil")
         }
         self.filePath = filePath
-        _r = BinaryReader(FileBaseStream(forReadingAtPath: filePath)!)
+        _r = BinaryReader(FileBaseStream(path: filePath)!)
+        debugPrint("read")
         readMetadata()
-        //testContainsFile()
+        testContainsFile()
         //testLoadFileData()
     }
 

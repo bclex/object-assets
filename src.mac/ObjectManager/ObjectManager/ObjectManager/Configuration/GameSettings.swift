@@ -13,8 +13,8 @@ public class GameSettings: ASettingsSection {
         get { return _gameId }
         set(value) { setProperty(&_gameId, value) }
     }
-    private var _dataDirectory: String = ""
-    public var dataDirectory: String {
+    private var _dataDirectory: String? = nil
+    public var dataDirectory: String? {
         get { return _dataDirectory }
         set(value) { setProperty(&_dataDirectory, value) }
     }

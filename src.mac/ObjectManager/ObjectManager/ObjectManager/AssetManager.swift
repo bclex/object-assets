@@ -36,7 +36,7 @@ public protocol IAssetManager {
 public class AssetManager {
     static let statics: [IAssetManager] = [TesAssetManager()]
     
-    static func getAssetManager(_ engine: EngineId) -> IAssetManager {
+    public static func getAssetManager(_ engine: EngineId) -> IAssetManager {
         return statics[engine.rawValue]
     }
 }
