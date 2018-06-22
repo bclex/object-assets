@@ -54,7 +54,7 @@ namespace OA.Tes.FilePacks.Records
 
         public override string ToString() => $"TREE: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID
-        public MODLGroup MODL; // Model
+        public MODLGroup MODL { get; set; } // Model
         public FILEField ICON; // Leaf Texture
         public SNAMField SNAM; // SpeedTree Seeds, array of ints
         public CNAMField CNAM; // Tree Parameters

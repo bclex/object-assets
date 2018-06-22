@@ -7,7 +7,7 @@ namespace OA.Tes.FilePacks.Records
     {
         public override string ToString() => $"IDLE: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID
-        public MODLGroup MODL;
+        public MODLGroup MODL { get; set; }
         public List<SCPTRecord.CTDAField> CTDAs = new List<SCPTRecord.CTDAField>(); // Conditions
         public BYTEField ANAM;
         public FMIDField<IDLERecord>[] DATAs;

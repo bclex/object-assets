@@ -7,7 +7,7 @@ namespace OA.Tes.FilePacks.Records
         public override string ToString() => $"HAIR: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID
         public STRVField FULL;
-        public MODLGroup MODL;
+        public MODLGroup MODL { get; set; }
         public FILEField ICON;
         public BYTEField DATA; // Playable, Not Male, Not Female, Fixed
 

@@ -6,7 +6,7 @@ namespace OA.Tes.FilePacks.Records
     {
         public override string ToString() => $"ANIO: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID
-        public MODLGroup MODL; // Model
+        public MODLGroup MODL { get; set; } // Model
         public FMIDField<IDLERecord> DATA; // IDLE animation
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
