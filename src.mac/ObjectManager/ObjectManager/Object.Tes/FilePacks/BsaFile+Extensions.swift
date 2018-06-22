@@ -11,7 +11,7 @@ import Foundation
 extension BsaFile {
     func testContainsFile() {
         for file in _files {
-            debugPrint(file.path)
+            debugPrint(file.path, file.pathHash)
             guard containsFile(file.path) else {
                 fatalError("Hash Invalid")
             }

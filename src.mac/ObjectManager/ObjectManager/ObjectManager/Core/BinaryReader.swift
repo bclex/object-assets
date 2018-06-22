@@ -19,25 +19,23 @@ public protocol BaseStream {
     var length: UInt64 {get}
 }
 
-public class FileBaseStream: FileHandle, BaseStream {
-    public var length: UInt64 = 0
+public class FileBaseStream: BaseStream {
+    public let length: UInt64
     public var position: UInt64 {
-        get { return self.offsetInFile }
-        set(newValue) { self.seek(toFileOffset: newValue) }
+        get { return data.offsetInFile }
+        set(newValue) { data.seek(toFileOffset: newValue) }
     }
+    let data: FileHandle
     
-    public func close() { super.closeFile() }
-    public override func readData(ofLength: Int) -> Data { return super.readData(ofLength: ofLength) }
-    //public required init?(coder: NSCoder) { }
-    
-    public convenience init?(path: String) {
+    public func close() { data.closeFile() }
+    public func readData(ofLength: Int) -> Data { return data.readData(ofLength: ofLength) }
+   
+    public init?(path: String) {
         let attribs = try! FileManager.default.attributesOfItem(atPath: path)
         let length = UInt64(attribs[.size]! as! UInt32)
         debugPrint("opening", path, length)
-        //let url = URL(fileURLWithPath: path)
-        self.init(forReadingAtPath: path)
+        data = FileHandle(forReadingAtPath: path)!
         self.length = length
-        debugPrint("here")
     }
 }
 

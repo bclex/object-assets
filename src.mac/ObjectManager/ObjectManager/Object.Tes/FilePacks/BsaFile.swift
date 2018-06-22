@@ -146,7 +146,6 @@ public class BsaFile {
         }
         self.filePath = filePath
         _r = BinaryReader(FileBaseStream(path: filePath)!)
-        debugPrint("read")
         readMetadata()
         testContainsFile()
         //testLoadFileData()
@@ -275,13 +274,13 @@ public class BsaFile {
             // Create file metadatas
             _r.baseStream.position = UInt64(header_nameTableOffset)
             _files = [FileMetadata](); _files.reserveCapacity(Int(header_numFiles))
-            for i in 0..<header_numFiles {
+            for _ in 0..<header_numFiles {
                 let length = Int(_r.readLEUInt16())
                 let path = _r.readASCIIString(length)
-                _files[i] = FileMetadata(
+                _files.append(FileMetadata(
                     path: path,
                     pathHash: BsaFile.tes4HashFilePath(path)
-                )
+                ))
             }
             if header_type == "GNRL" { // General BA2 Format
                 _r.baseStream.position = 16 + 8 // sizeof(header) + 8
@@ -316,15 +315,15 @@ public class BsaFile {
                     let info_unk16 = _r.readLEUInt16()         // 16 - 0800
                     // read tex-chunks
                     var texChunks = [F4TexChunk](); texChunks.reserveCapacity(info_numChunks)
-                    for j in 0..<info_numChunks {
-                        texChunks[j] = F4TexChunk(
+                    for _ in 0..<info_numChunks {
+                        texChunks.append(F4TexChunk(
                             offset: _r.readLEUInt64(),         // 00
                             packedSize: _r.readLEUInt32(),     // 08
                             unpackedSize: _r.readLEUInt32(),   // 0C
                             startMip: _r.readLEUInt16(),       // 10
                             endMip: _r.readLEUInt16(),         // 12
                             unk14: _r.readLEUInt32()          // 14 - BAADFOOD
-                        )
+                        ))
                     }
                     let firstChunk = texChunks.first!
                     _files[i].packedSize = firstChunk.packedSize
@@ -371,7 +370,7 @@ public class BsaFile {
                 UInt64(header_folderNameLength + header_folderCount * (folderSize + 1) + header_fileCount * 16)
             _r.baseStream.position = filenamesSectionStartPos
             var buf = Data(); buf.reserveCapacity(64)
-            for i in 0..<header_fileCount {
+            for _ in 0..<header_fileCount {
                 buf.removeAll(keepingCapacity: true)
                 var curCharAsByte: UInt8 = _r.readByte()
                 while curCharAsByte != 0 {
@@ -379,9 +378,9 @@ public class BsaFile {
                     curCharAsByte = _r.readByte()
                 }
                 let path = String(data: buf, encoding: .utf8)!
-                _files[i] = FileMetadata(
+                _files.append(FileMetadata(
                     path: path
-                )
+                ))
             }
             if _r.baseStream.position != filenamesSectionStartPos + UInt64(header_fileNameLength) {
                 fatalError("HEADER FILENAMES")
@@ -429,18 +428,18 @@ public class BsaFile {
 
             // Create file metadatas
             _files = [FileMetadata](); _files.reserveCapacity(header_fileCount)
-            for i in 0..<header_fileCount {
-                _files[i] = FileMetadata(
+            for _ in 0..<header_fileCount {
+                _files.append(FileMetadata(
                     // Read file sizes/offsets
                     sizeFlags: _r.readLEUInt32(),
                     offset: fileDataSectionPostion + UInt64(_r.readLEUInt32())
-                )
+                ))
             }
 
             // Read filename offsets
             var filenameOffsets = [UInt32](); filenameOffsets.reserveCapacity(header_fileCount) // relative offset in filenames section
-            for i in 0..<header_fileCount {
-                filenameOffsets[i] = _r.readLEUInt32()
+            for _ in 0..<header_fileCount {
+                filenameOffsets.append(_r.readLEUInt32())
             }
 
             // Read filenames
@@ -486,21 +485,22 @@ public class BsaFile {
         //
         let l: Int = (len >> 1)
         var off: Int = 0, i: Int = 0
-        var sum: UInt = 0, temp: UInt, n: UInt
+        var sum: UInt32 = 0, temp: UInt32, n: UInt32
         for i in 0..<l {
-            sum ^= UInt(fileData[i]) << (off & 0x1F)
+            sum ^= UInt32(fileData[i]) << (off & 0x1F)
             off += 8
         }
         let value1 = sum
         sum = 0; off = 0
-        for i in i..<len {
-            temp = UInt(fileData[i]) << (off & 0x1F)
+        for j in i..<len {
+            temp = UInt32(fileData[j]) << (off & 0x1F)
             sum ^= temp
             n = temp & 0x1F
             sum = (sum << (32 - n)) | (sum >> n)
             off += 8
         }
         let value2 = sum
+        debugPrint(UInt64((value1 << 32) | value2))
         return UInt64((value1 << 32) | value2)
     }
 
