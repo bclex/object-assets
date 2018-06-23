@@ -58,11 +58,11 @@ public class TesAssetManager: IAssetManager {
         case "game":
             let localPath = String(url.path[url.path.index(after: url.path.startIndex)..<url.path.endIndex])
             let game = TesAssetManager.stringToGameId(url.host)
-            let filePath = FileManager.default.getFilePath(localPath, for: game)
-            guard filePath != nil else {
+            let filePaths = FileManager.default.getFilePaths(searchPattern: localPath, for: game)
+            guard filePaths != nil else {
                 fatalError("\(game) not available")
             }
-            let pack = TesAssetPack(filePath!) as IAssetPack
+            let pack = TesAssetPack(filePaths!) as IAssetPack
             return pack
         default: return nil
         }

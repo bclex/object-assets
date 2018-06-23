@@ -147,8 +147,8 @@ public class BsaFile {
         self.filePath = filePath
         _r = BinaryReader(FileBaseStream(path: filePath)!)
         readMetadata()
-        //testContainsFile()
-        //testLoadFileData()
+        testContainsFile()
+        testLoadFileData()
     }
 
     deinit {
@@ -195,7 +195,7 @@ public class BsaFile {
         if file.sizeFlags > 0 && (file.compressed ^ _compressToggle) != 0 {
              var newFileData: Data
              if version != BsaFile.SSE_BSAHEADER_VERSION {
-                newFileData = fileData.count > 4 ? fileData.inflate(withOffset: 4)! : Data()
+                newFileData = fileData.count > 4 ? fileData.inflate(withOffset: 4) ?? Data() : Data()
             }
             else {
                 newFileData = fileData.lzmaDecompress()!
@@ -389,13 +389,12 @@ public class BsaFile {
             // read-all folders
             _r.baseStream.position = UInt64(header_folderRecordOffset)
             var foldersFiles = [Int](); foldersFiles.reserveCapacity(header_folderCount)
-            for i in 0..<header_folderCount {
+            for _ in 0..<header_folderCount {
                 _ = _r.readLEUInt64() // Hash of the folder name
                 let folder_fileCount = Int(_r.readLEUInt32()) // Number of files in folder
-                var folder_unk: UInt32 = 0; var folder_offset: UInt64 = 0
-                if version == BsaFile.SSE_BSAHEADER_VERSION { folder_unk = _r.readLEUInt32(); folder_offset = _r.readLEUInt64() }
-                else { folder_offset = UInt64(_r.readLEUInt32()) }
-                foldersFiles[i] = folder_fileCount
+                if version == BsaFile.SSE_BSAHEADER_VERSION { _ = _r.readLEUInt32(); _ = _r.readLEUInt64() }
+                else { _ = UInt64(_r.readLEUInt32()) }
+                foldersFiles.append(folder_fileCount)
             }
 
             // add file
@@ -506,13 +505,13 @@ public class BsaFile {
     }
 
     static func tes4HashFilePath(_ filePath: String) -> UInt64 {
-        func genHash2(_ s: String) -> UInt32 {
+        func genHash2(_ s: String) -> UInt64 {
             var hash: UInt32 = 0
             for i in [UInt8](s.utf8) {
-                hash *= 0x1003f
+                hash = hash &* 0x1003f
                 hash += UInt32(i)
             }
-            return hash
+            return UInt64(hash)
         }
         
         func genHash(_ file: String, ext: String) -> UInt64 {
@@ -520,18 +519,18 @@ public class BsaFile {
             let fileLen = fileData.count
             var hash: UInt64 = 0
             if fileLen > 0 {
-                let val0 = (UInt64(fileData[fileLen - 1]) * 0x1) +
-                    (UInt64(fileLen > 2 ? fileData[fileLen - 2] : 0) * 0x100)
-                let val1 = (UInt64(fileLen) * 0x10000) +
-                    (UInt64(fileData[0]) * 0x1000000)
+                let val0 = (UInt64(fileData[fileLen - 1]) &* 0x1) +
+                    (UInt64(fileLen > 2 ? fileData[fileLen - 2] : 0) &* 0x100)
+                let val1 = (UInt64(fileLen) &* 0x10000) +
+                    (UInt64(fileData[0]) &* 0x1000000)
                 hash = UInt64(val0 + val1)
             }
             if fileLen > 3 {
                 let str = String(file[file.index(file.startIndex, offsetBy: 1)..<file.index(file.endIndex, offsetBy: -3)])
-                hash += UInt64(UInt64(genHash2(str)) * 0x100000000)
+                hash = hash &+ (genHash2(str) &* 0x100000000)
             }
             if ext.count > 0 {
-                hash += UInt64(UInt64(genHash2(ext)) * 0x100000000)
+                hash = hash &+ (genHash2(ext) &* 0x100000000)
                 var i: UInt8
                 switch ext {
                 case ".nif": i = 1
@@ -553,6 +552,6 @@ public class BsaFile {
         
         let newPath = filePath.lowercased().replacingOccurrences(of: "/", with: "\\")
         let url = URL(fileURLWithPath: newPath)
-        return genHash(url.deletingPathExtension().path, ext: url.pathExtension)
+        return genHash(url.deletingPathExtension().relativePath, ext: ".\(url.pathExtension)")
     }
 }
