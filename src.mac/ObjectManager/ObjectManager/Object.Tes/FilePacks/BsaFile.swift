@@ -147,7 +147,7 @@ public class BsaFile {
         self.filePath = filePath
         _r = BinaryReader(FileBaseStream(path: filePath)!)
         readMetadata()
-        testContainsFile()
+        //testContainsFile()
         //testLoadFileData()
     }
 
@@ -186,10 +186,10 @@ public class BsaFile {
             fileSize -= len
             _r.baseStream.position = file.offset + UInt64(len)
         }
-        var newFileSize = fileSize
-        if version == BsaFile.SSE_BSAHEADER_VERSION && file.sizeFlags > 0 && (file.compressed ^ _compressToggle) != 0 {
-            newFileSize = Int(_r.readLEInt32()) - 4
-        }
+//        var newFileSize = fileSize
+//        if version == BsaFile.SSE_BSAHEADER_VERSION && file.sizeFlags > 0 && (file.compressed ^ _compressToggle) != 0 {
+//            newFileSize = Int(_r.readLEInt32()) - 4
+//        }
         var fileData = _r.readBytes(fileSize)
         // BSA
         if file.sizeFlags > 0 && (file.compressed ^ _compressToggle) != 0 {
@@ -207,7 +207,7 @@ public class BsaFile {
             fileData = fileData.inflate()!
         }
         // Fill DDS Header
-        else if file.tex!.chunks != nil {
+        else if file.tex?.chunks != nil {
             // map tex format
             let ddspf: DDSPixelFormat
             let dwPitchOrLinearSize: UInt32
@@ -459,13 +459,15 @@ public class BsaFile {
             // Read filename hashes
             _r.baseStream.position = hashTablePosition
             for i in 0..<header_fileCount {
-                _files[i].pathHash = UInt64((_r.readLEUInt32() << 32) | _r.readLEUInt32())
+                _files[i].pathHash = _r.readLEUInt64()
             }
         }
         else { fatalError("BAD MAGIC") }
 
         // Create the file metadata hash table
-        //_filesByHash = _files.ToLookup(x => x.PathHash);
+        _filesByHash = Dictionary(grouping: _files) {
+            $0.pathHash
+        }
 
         // // Create a virtual directory tree.
         // RootDir = VirtualFileSystem.Directory();
@@ -484,24 +486,23 @@ public class BsaFile {
         let len = Int(fileData.count)
         //
         let l: Int = (len >> 1)
-        var off: Int = 0, i: Int = 0
+        var off: Int = 0
         var sum: UInt32 = 0, temp: UInt32, n: UInt32
         for i in 0..<l {
             sum ^= UInt32(fileData[i]) << (off & 0x1F)
             off += 8
         }
-        let value1 = sum
+        let value1 = UInt64(sum)
         sum = 0; off = 0
-        for j in i..<len {
-            temp = UInt32(fileData[j]) << (off & 0x1F)
+        for i in l..<len {
+            temp = UInt32(fileData[i]) << (off & 0x1F)
             sum ^= temp
             n = temp & 0x1F
             sum = (sum << (32 - n)) | (sum >> n)
             off += 8
         }
-        let value2 = sum
-        debugPrint(UInt64((value1 << 32) | value2))
-        return UInt64((value1 << 32) | value2)
+        let value2 = UInt64(sum)
+        return (value2 << 32) | value1
     }
 
     static func tes4HashFilePath(_ filePath: String) -> UInt64 {

@@ -33,7 +33,7 @@ public class FileBaseStream: BaseStream {
     public init?(path: String) {
         let attribs = try! FileManager.default.attributesOfItem(atPath: path)
         let length = UInt64(attribs[.size]! as! UInt32)
-        debugPrint("opening", path, length)
+//        debugPrint("opening", path, length)
         data = FileHandle(forReadingAtPath: path)!
         self.length = length
     }
