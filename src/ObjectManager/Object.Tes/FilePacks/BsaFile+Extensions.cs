@@ -9,7 +9,7 @@ namespace OA.Tes.FilePacks
         {
             foreach (var file in _files)
             {
-                Console.WriteLine(file.Path);
+                Console.WriteLine($"{file.Path} {file.PathHash}");
                 if (!ContainsFile(file.Path))
                     throw new FormatException("Hash Invalid");
                 else if (!_filesByHash[HashFilePath(file.Path)].Any(x => x.Path == file.Path))

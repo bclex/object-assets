@@ -494,7 +494,8 @@ namespace OA.Tes.FilePacks
                 // Read filename hashes
                 _r.BaseStream.Position = hashTablePosition;
                 for (var i = 0; i < header_FileCount; i++)
-                    _files[i].PathHash = (ulong)(_r.ReadLEUInt32() << 32) | _r.ReadLEUInt32();
+                    _files[i].PathHash = _r.ReadLEUInt64();
+
             }
             else throw new InvalidOperationException("BAD MAGIC");
 
@@ -518,6 +519,7 @@ namespace OA.Tes.FilePacks
         {
             filePath = filePath.ToLowerInvariant().Replace('/', '\\');
             var len = (uint)filePath.Length;
+            Console.WriteLine(len.ToString());
             //
             uint l = (len >> 1);
             int off, i;
@@ -537,7 +539,7 @@ namespace OA.Tes.FilePacks
                 off += 8;
             }
             var value2 = sum;
-            return (ulong)(value1 << 32) | value2;
+            return ((ulong)value2 << 32) | value1;
         }
 
         // http://en.uesp.net/wiki/Tes4Mod:Hash_Calculation
