@@ -11,11 +11,11 @@ import Foundation
 extension BsaFile {
     func testContainsFile() {
         for file in _files {
-            debugPrint(file.path)
+            debugPrint(file.path, file.pathHash)
             guard containsFile(file.path) else {
                 fatalError("Hash Invalid")
             }
-            guard !_filesByHash[hashFilePath(file.path)]!.contains(where: { $0.path == file.path }) else {
+            guard _filesByHash[hashFilePath(file.path)]!.contains(where: { $0.path == file.path }) else {
                 fatalError("Hash Invalid")
             }
         }
