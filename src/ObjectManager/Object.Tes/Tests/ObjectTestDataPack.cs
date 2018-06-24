@@ -17,13 +17,13 @@ namespace OA.Tes
 
         public static void Start()
         {
-            var assetUri = "game://Morrowind/Morrowind.bsa";
-            var dataUri = "game://Morrowind/Morrowind.esm";
+            //var assetUri = "game://Morrowind/Morrowind.bsa";
+            //var dataUri = "game://Morrowind/Morrowind.esm";
             //var dataUri = "game://Morrowind/Bloodmoon.esm";
             //var dataUri = "game://Morrowind/Tribunal.esm";
 
-            //var assetUri = "game://Oblivion/Oblivion*";
-            //var dataUri = "game://Oblivion/Oblivion.esm";
+            var assetUri = "game://Oblivion/Oblivion*";
+            var dataUri = "game://Oblivion/Oblivion.esm";
 
             //var assetUri = "game://SkyrimVR/Skyrim*";
             //var dataUri = "game://SkyrimVR/Skyrim.esm";

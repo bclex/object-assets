@@ -118,7 +118,7 @@ namespace OA.Tes.FilePacks
             _r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             ReadMetadata();
             //TestContainsFile();
-            //TestLoadFileData();
+            TestLoadFileData();
         }
 
         void IDisposable.Dispose()
@@ -178,11 +178,12 @@ namespace OA.Tes.FilePacks
                 _r.BaseStream.Position = file.Offset + 1 + len;
             }
             var newFileSize = fileSize;
-            if (Version == SSE_BSAHEADER_VERSION && file.SizeFlags > 0 && file.Compressed ^ _compressToggle)
+            var bsaCompressed = file.SizeFlags > 0 && file.Compressed ^ _compressToggle;
+            if (Version == SSE_BSAHEADER_VERSION && bsaCompressed)
                 newFileSize = _r.ReadLEInt32() - 4;
             var fileData = _r.ReadBytes(fileSize);
             // BSA
-            if (file.SizeFlags > 0 && file.Compressed ^ _compressToggle)
+            if (bsaCompressed)
             {
                 var newFileData = new byte[newFileSize];
                 if (Version != SSE_BSAHEADER_VERSION)
