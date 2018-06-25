@@ -192,6 +192,7 @@ namespace OA.Tes.FilePacks
                         using (var s = new MemoryStream(fileData, 4, fileSize - 4))
                         using (var gs = new InflaterInputStream(s))
                             gs.Read(newFileData, 0, newFileData.Length);
+                    else newFileData = fileData;
                 }
                 else
                 {

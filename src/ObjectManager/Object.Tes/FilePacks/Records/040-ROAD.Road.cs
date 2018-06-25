@@ -12,7 +12,9 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "PGRP": PGRPs = new PGRDRecord.PGRPField[dataSize >> 4]; for (var i = 0; i < PGRPs.Length; i++) PGRPs[i] = new PGRDRecord.PGRPField(r, dataSize); return true;
+                case "PGRP":
+                    PGRPs = new PGRDRecord.PGRPField[dataSize >> 4];
+                    for (var i = 0; i < PGRPs.Length; i++) PGRPs[i] = new PGRDRecord.PGRPField(r, dataSize); return true;
                 case "PGRR": PGRR = new UNKNField(r, dataSize); return true;
                 default: return false;
             }

@@ -101,12 +101,18 @@ namespace OA.Tes.FilePacks.Records
                 case "EDID":
                 case "NAME": EDID = new STRVField(r, dataSize); return true;
                 case "DATA": DATA = new DATAField(r, dataSize, format); return true;
-                case "PGRP": PGRPs = new PGRPField[dataSize >> 4]; for (var i = 0; i < PGRPs.Length; i++) PGRPs[i] = new PGRPField(r, 16); return true;
+                case "PGRP":
+                    PGRPs = new PGRPField[dataSize >> 4];
+                    for (var i = 0; i < PGRPs.Length; i++) PGRPs[i] = new PGRPField(r, 16); return true;
                 case "PGRC": PGRC = new UNKNField(r, dataSize); return true;
                 case "PGAG": PGAG = new UNKNField(r, dataSize); return true;
-                case "PGRR": PGRRs = new PGRRField[dataSize >> 2]; for (var i = 0; i < PGRRs.Length; i++) PGRRs[i] = new PGRRField(r, 4); r.SkipBytes(dataSize % 4); return true;
+                case "PGRR":
+                    PGRRs = new PGRRField[dataSize >> 2];
+                    for (var i = 0; i < PGRRs.Length; i++) PGRRs[i] = new PGRRField(r, 4); r.SkipBytes(dataSize % 4); return true;
                 case "PGRL": if (PGRLs == null) PGRLs = new List<PGRLField>(); PGRLs.Add(new PGRLField(r, dataSize)); return true;
-                case "PGRI": PGRIs = new PGRIField[dataSize >> 4]; for (var i = 0; i < PGRIs.Length; i++) PGRIs[i] = new PGRIField(r, 16); return true;
+                case "PGRI":
+                    PGRIs = new PGRIField[dataSize >> 4];
+                    for (var i = 0; i < PGRIs.Length; i++) PGRIs[i] = new PGRIField(r, 16); return true;
                 default: return false;
             }
         }

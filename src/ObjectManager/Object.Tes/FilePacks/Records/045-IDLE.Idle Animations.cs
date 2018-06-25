@@ -22,8 +22,9 @@ namespace OA.Tes.FilePacks.Records
                 case "CTDA":
                 case "CTDT": CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, format)); return true;
                 case "ANAM": ANAM = new BYTEField(r, dataSize); return true;
-                case "DATA": DATAs = new FMIDField<IDLERecord>[dataSize >> 2]; for (var i = 0; i < DATAs.Length; i++) DATAs[i] = new FMIDField<IDLERecord>(r, 4); return true;
-                    
+                case "DATA":
+                    DATAs = new FMIDField<IDLERecord>[dataSize >> 2];
+                    for (var i = 0; i < DATAs.Length; i++) DATAs[i] = new FMIDField<IDLERecord>(r, 4); return true;
                 default: return false;
             }
         }

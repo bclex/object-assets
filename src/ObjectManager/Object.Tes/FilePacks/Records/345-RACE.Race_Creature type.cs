@@ -86,8 +86,7 @@ namespace OA.Tes.FilePacks.Records
             {
                 if (format == GameFormatId.TES3)
                 {
-                    for (var i = 0; i < SkillBoosts.Length; i++)
-                        SkillBoosts[i] = new SkillBoost(r, 8, format);
+                    for (var i = 0; i < SkillBoosts.Length; i++) SkillBoosts[i] = new SkillBoost(r, 8, format);
                     Male.Strength = (byte)r.ReadLEInt32(); Female.Strength = (byte)r.ReadLEInt32();
                     Male.Intelligence = (byte)r.ReadLEInt32(); Female.Intelligence = (byte)r.ReadLEInt32();
                     Male.Willpower = (byte)r.ReadLEInt32(); Female.Willpower = (byte)r.ReadLEInt32();
@@ -101,8 +100,7 @@ namespace OA.Tes.FilePacks.Records
                     Flags = r.ReadLEUInt32();
                     return;
                 }
-                for (var i = 0; i < SkillBoosts.Length; i++)
-                    SkillBoosts[i] = new SkillBoost(r, 2, format);
+                for (var i = 0; i < SkillBoosts.Length; i++) SkillBoosts[i] = new SkillBoost(r, 2, format);
                 r.ReadLEInt16(); // padding
                 Male.Height = r.ReadLESingle(); Female.Height = r.ReadLESingle();
                 Male.Weight = r.ReadLESingle(); Female.Weight = r.ReadLESingle();
