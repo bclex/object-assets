@@ -17,8 +17,9 @@ public class BsaMultiFile {
         }
         filePaths.filter { ["bsa", "ba2"].index(of: $0.pathExtension.lowercased()) != nil }
             .map { BsaFile($0.path) }
-            .forEach { packs.append($0) }
-        debugPrint(packs)
+            .forEach { packs.append($0) }        
+//        let file1 = loadFileData("trees\\treecottonwoodsu.spt")
+//        debugPrint("file1", file1)
     }
 
     deinit {

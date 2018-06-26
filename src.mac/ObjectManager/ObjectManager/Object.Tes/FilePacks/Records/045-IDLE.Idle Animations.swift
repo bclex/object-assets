@@ -23,7 +23,8 @@ public class IDLERecord: Record, IHaveEDID, IHaveMODL {
              "CTDT": CTDAs.append(SCPTRecord.CTDAField(r, dataSize, format))
         case "ANAM": ANAM = BYTEField(r, dataSize)
         case "DATA":
-            DATAs = [FMIDField<IDLERecord>](); DATAs.reserveCapacity(dataSize >> 2); for i in 0..<DATAs.capacity { DATAs[i] = FMIDField<IDLERecord>(r, 4) }
+            DATAs = [FMIDField<IDLERecord>](); let capacity = dataSize >> 2; DATAs.reserveCapacity(capacity)
+            for _ in 0..<capacity { DATAs.append(FMIDField<IDLERecord>(r, 4)) }
         default: return false
         }
         return true

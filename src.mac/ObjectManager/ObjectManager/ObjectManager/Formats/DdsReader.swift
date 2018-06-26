@@ -97,10 +97,7 @@ public struct DDSHeader { //: DDS_HEADER
         self.dwPitchOrLinearSize = dwPitchOrLinearSize
         dwDepth = 0
         self.dwMipMapCount = dwMipMapCount
-        dwReserved1 = [UInt32](); dwReserved1.reserveCapacity(11)
-        for i in 0..<11 {
-            dwReserved1[i] = 0
-        }
+        dwReserved1 = [UInt32](repeating: 0, count: 11)
         self.ddspf = ddspf
         self.dwCaps = dwCaps
         self.dwCaps2 = dwCaps2
@@ -123,9 +120,7 @@ public struct DDSHeader { //: DDS_HEADER
         dwDepth = r.readLEUInt32()
         dwMipMapCount = r.readLEUInt32()
         dwReserved1 = [UInt32](); dwReserved1.reserveCapacity(11)
-        for i in 0..<11 {
-            dwReserved1[i] = r.readLEUInt32()
-        }
+        for _ in 0..<11 { dwReserved1.append(r.readLEUInt32()) }
         ddspf = DDSPixelFormat(r)
         dwCaps = DDSCaps(rawValue: r.readLEUInt32())
         guard dwCaps.contains(.texture) else {
@@ -288,22 +283,25 @@ public class DdsReader {
         var textureFormat = TextureFormat()
         var bytesPerPixel = 0
         var textureData = Data()
-        extractDDSTextureFormatAndData(header, r,
-                                       hasMipmaps: &hasMipmaps, ddsMipmapLevelCount: &ddsMipmapLevelCount,
-                                       textureFormat: &textureFormat, bytesPerPixel: &bytesPerPixel, textureData: &textureData)
+        extractDDSTextureFormatAndData(
+            header, r,
+            hasMipmaps: &hasMipmaps, ddsMipmapLevelCount: &ddsMipmapLevelCount,
+            textureFormat: &textureFormat, bytesPerPixel: &bytesPerPixel, textureData: &textureData)
         // Post-process the texture to generate missing mipmaps and possibly flip it vertically.
-        postProcessDDSTexture(width: Int(header.dwWidth), height: Int(header.dwHeight), bytesPerPixel: bytesPerPixel,
-                              hasMipmaps: hasMipmaps, ddsMipmapLevelCount: ddsMipmapLevelCount,
-                              data: &textureData, flipVertically: flipVertically)
-        return Texture2DInfo(width: Int(header.dwWidth), height: Int(header.dwHeight),
-                             format: textureFormat, hasMipmaps: hasMipmaps,
-                             bytesPerPixel: bytesPerPixel, rawData: textureData)
+        postProcessDDSTexture(
+            width: Int(header.dwWidth), height: Int(header.dwHeight), bytesPerPixel: bytesPerPixel,
+            hasMipmaps: hasMipmaps, ddsMipmapLevelCount: ddsMipmapLevelCount,
+            data: &textureData, flipVertically: flipVertically)
+        return Texture2DInfo(
+            width: Int(header.dwWidth), height: Int(header.dwHeight),
+            format: textureFormat, hasMipmaps: hasMipmaps,
+            bytesPerPixel: bytesPerPixel, rawData: textureData)
     }
 
     static func decodeDXT1TexelBlock(_ r: BinaryReader, colorTable: [Color]) -> [Color32] {
         assert(colorTable.count == 4)
         // Read pixel color indices.
-        var colorIndices = [Int](); colorIndices.reserveCapacity(16)
+        var colorIndices = [Int](repeating: 0, count: 16)
         let colorIndexBytes = r.readBytes(4)
         let bitsPerColorIndex = 2
         for rowIndex in 0..<4 {
@@ -317,24 +315,22 @@ public class DdsReader {
         }
         // Calculate pixel colors.
         var colors = [Color32](); colors.reserveCapacity(16)
-        for i in 0..<16 {
-            colors[i] = Color32(color: colorTable[colorIndices[i]])
-        }
+        for i in 0..<16 { colors.append(Color32(color: colorTable[colorIndices[i]])) }
         return colors
     }
 
     static func decodeDXT1TexelBlock(_ r: BinaryReader, containsAlpha: Bool) -> [Color32] {
         // Create the color table.
         var colorTable = [Color](); colorTable.reserveCapacity(4)
-        colorTable[0] = Color.color(b565: r.readLEUInt16())
-        colorTable[1] = Color.color(b565: r.readLEUInt16())
+        colorTable.append(Color.color(b565: r.readLEUInt16()))
+        colorTable.append(Color.color(b565: r.readLEUInt16()))
         if !containsAlpha {
-            colorTable[2] = Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)!
-            colorTable[3] = Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)!
+            colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)!)
+            colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)!)
         }
         else {
-            colorTable[2] = Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 2)!
-            colorTable[3] = Color(red: 0, green: 0, blue: 0, alpha: 0)
+            colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 2)!)
+            colorTable.append(Color(red: 0, green: 0, blue: 0, alpha: 0))
         }
         // Calculate pixel colors.
         return decodeDXT1TexelBlock(r, colorTable: colorTable)
@@ -343,49 +339,47 @@ public class DdsReader {
     static func decodeDXT3TexelBlock(_ r: BinaryReader) -> [Color32] {
         // Read compressed pixel alphas.
         var compressedAlphas = [UInt8](); compressedAlphas.reserveCapacity(16)
-        for rowIndex in 0..<4 {
+        for _ in 0..<4 {
             let compressedAlphaRow = Int(r.readLEUInt16())
             for columnIndex in 0..<4 {
                 // Each compressed alpha is 4 bits.
-                compressedAlphas[(4 * rowIndex) + columnIndex] = UInt8((compressedAlphaRow >> (columnIndex * 4)) & 0xF)
+                compressedAlphas.append(UInt8((compressedAlphaRow >> (columnIndex * 4)) & 0xF))
             }
         }
         // Calculate pixel alphas.
         var alphas = [UInt8](); alphas.reserveCapacity(16)
         for i in 0..<16 {
             let alphaPercent = Float(compressedAlphas[i] / 15)
-            alphas[i] = UInt8((alphaPercent * 255).roundedAsInt())
+            alphas.append(UInt8((alphaPercent * 255).roundedAsInt()))
         }
         // Create the color table.
         var colorTable = [Color](); colorTable.reserveCapacity(4)
-        colorTable[0] = Color.color(b565: r.readLEUInt16())
-        colorTable[1] = Color.color(b565: r.readLEUInt16())
-        colorTable[2] = Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)!
-        colorTable[3] = Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)!
+        colorTable.append(Color.color(b565: r.readLEUInt16()))
+        colorTable.append(Color.color(b565: r.readLEUInt16()))
+        colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)!)
+        colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)!)
         // Calculate pixel colors.
         var colors = decodeDXT1TexelBlock(r, colorTable: colorTable)
-        for i in 0..<16 {
-            colors[i].alpha = alphas[i]
-        }
+        for i in 0..<16 { colors[i].alpha = alphas[i] }
         return colors
     }
 
     static func decodeDXT5TexelBlock(_ r: BinaryReader) -> [Color32] {
         // Create the alpha table.
         var alphaTable = [Float](); alphaTable.reserveCapacity(8)
-        alphaTable[0] = Float(r.readByte())
-        alphaTable[1] = Float(r.readByte())
+        alphaTable.append(Float(r.readByte()))
+        alphaTable.append(Float(r.readByte()))
         if alphaTable[0] > alphaTable[1] {
             for i in 0..<6 {
-                alphaTable[2 + i] = Float.lerp(alphaTable[0], alphaTable[1], t: Float(1 + i) / 7)
+                alphaTable.append(Float.lerp(alphaTable[0], alphaTable[1], t: Float(1 + i) / 7))
             }
         }
         else {
             for i in 0..<4 {
-                alphaTable[2 + i] = Float.lerp(alphaTable[0], alphaTable[1], t: Float(1 + i) / 5)
+                alphaTable.append(Float.lerp(alphaTable[0], alphaTable[1], t: Float(1 + i) / 5))
             }
-            alphaTable[6] = 0
-            alphaTable[7] = 255
+            alphaTable.append(0)
+            alphaTable.append(255)
         }
 
         // Read pixel alpha indices.
@@ -395,28 +389,28 @@ public class DdsReader {
         var alphaIndexBytesRow1 = r.readBytes(3) // Take care of little-endianness.
         alphaIndexBytesRow1.reverse() // Take care of little-endianness.
         let bitsPerAlphaIndex = 3
-        alphaIndices[0] = Int(Utils.getBits(21, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[1] = Int(Utils.getBits(18, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[2] = Int(Utils.getBits(15, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[3] = Int(Utils.getBits(12, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[4] = Int(Utils.getBits(9, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[5] = Int(Utils.getBits(6, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[6] = Int(Utils.getBits(3, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[7] = Int(Utils.getBits(0, bitsPerAlphaIndex, alphaIndexBytesRow0))
-        alphaIndices[8] = Int(Utils.getBits(21, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[9] = Int(Utils.getBits(18, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[10] = Int(Utils.getBits(15, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[11] = Int(Utils.getBits(12, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[12] = Int(Utils.getBits(9, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[13] = Int(Utils.getBits(6, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[14] = Int(Utils.getBits(3, bitsPerAlphaIndex, alphaIndexBytesRow1))
-        alphaIndices[15] = Int(Utils.getBits(0, bitsPerAlphaIndex, alphaIndexBytesRow1))
+        alphaIndices.append(Int(Utils.getBits(21, bitsPerAlphaIndex, alphaIndexBytesRow0)))
+        alphaIndices.append(Int(Utils.getBits(18, bitsPerAlphaIndex, alphaIndexBytesRow0)))
+        alphaIndices.append(Int(Utils.getBits(15, bitsPerAlphaIndex, alphaIndexBytesRow0)))
+        alphaIndices.append(Int(Utils.getBits(12, bitsPerAlphaIndex, alphaIndexBytesRow0)))
+        alphaIndices.append(Int(Utils.getBits(9, bitsPerAlphaIndex, alphaIndexBytesRow0)))
+        alphaIndices.append(Int(Utils.getBits(6, bitsPerAlphaIndex, alphaIndexBytesRow0)))
+        alphaIndices.append(Int(Utils.getBits(3, bitsPerAlphaIndex, alphaIndexBytesRow0)))
+        alphaIndices.append(Int(Utils.getBits(0, bitsPerAlphaIndex, alphaIndexBytesRow0)))
+        alphaIndices.append(Int(Utils.getBits(21, bitsPerAlphaIndex, alphaIndexBytesRow1)))
+        alphaIndices.append(Int(Utils.getBits(18, bitsPerAlphaIndex, alphaIndexBytesRow1)))
+        alphaIndices.append(Int(Utils.getBits(15, bitsPerAlphaIndex, alphaIndexBytesRow1)))
+        alphaIndices.append(Int(Utils.getBits(12, bitsPerAlphaIndex, alphaIndexBytesRow1)))
+        alphaIndices.append(Int(Utils.getBits(9, bitsPerAlphaIndex, alphaIndexBytesRow1)))
+        alphaIndices.append(Int(Utils.getBits(6, bitsPerAlphaIndex, alphaIndexBytesRow1)))
+        alphaIndices.append(Int(Utils.getBits(3, bitsPerAlphaIndex, alphaIndexBytesRow1)))
+        alphaIndices.append(Int(Utils.getBits(0, bitsPerAlphaIndex, alphaIndexBytesRow1)))
         // Create the color table.
         var colorTable = [Color](); colorTable.reserveCapacity(4)
-        colorTable[0] = Color.color(b565: r.readLEUInt16())
-        colorTable[1] = Color.color(b565: r.readLEUInt16())
-        colorTable[2] = Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)!
-        colorTable[3] = Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)!
+        colorTable.append(Color.color(b565: r.readLEUInt16()))
+        colorTable.append(Color.color(b565: r.readLEUInt16()))
+        colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)!)
+        colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)!)
         // Calculate pixel colors.
         var colors = decodeDXT1TexelBlock(r, colorTable: colorTable)
         for i in 0..<16 {

@@ -59,7 +59,7 @@ public class CELLRecord: Record, ICellRecord {
             directionalColor = ColorRef(r);
             fogColor = ColorRef(r);
             fogNear = r.readLESingle();
-            guard format == .TES3 else {
+            guard format != .TES3 else {
                 fogFar = 0; directionalFade = 0; fogClipDist = 0; directionalRotationXY = 0; directionalRotationZ = 0
                 fogPow = 0
                 return
@@ -69,7 +69,7 @@ public class CELLRecord: Record, ICellRecord {
             directionalRotationZ = r.readLEInt32()
             directionalFade = r.readLESingle()
             fogClipDist = r.readLESingle()
-            guard format == .TES4 else {
+            guard format != .TES4 else {
                 fogPow = 0
                 return
             }
@@ -172,7 +172,8 @@ public class CELLRecord: Record, ICellRecord {
             case "NAM5": NAM5 = CREFField(r, dataSize)
             // TES4
             case "XCLR":
-                XCLRs = [FMIDField<REGNRecord>](); XCLRs.reserveCapacity(dataSize >> 2); for i in 0..<XCLRs.capacity { XCLRs[i] = FMIDField<REGNRecord>(r, 4) }
+                XCLRs = [FMIDField<REGNRecord>](); let capacity = dataSize >> 2; XCLRs.reserveCapacity(capacity)
+                for _ in 0..<capacity { XCLRs.append(FMIDField<REGNRecord>(r, 4)) }
             case "XCMT": XCMT = BYTEField(r, dataSize)
             case "XCCM": XCCM = FMIDField<CLMTRecord>(r, dataSize)
             case "XCWT": XCWT = FMIDField<WATRRecord>(r, dataSize)

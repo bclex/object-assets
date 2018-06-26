@@ -118,8 +118,7 @@ public class Header: CustomStringConvertible {
     }
 
     static let create:[String : (f: (Header) -> Record, l: (Int) -> Bool)] = [
-        "TES3" : ({x in return TES3Record(x)}, {x in return true})
-         /*
+        "TES3" : ({x in return TES3Record(x)}, {x in return true}),
         "TES4" : ({x in return TES4Record(x)}, {x in return true}),
         // 0
         "LTEX" : ({x in return LTEXRecord(x)}, {x in return x > 0}),
@@ -145,70 +144,69 @@ public class Header: CustomStringConvertible {
         "CREA" : ({x in return CREARecord(x)}, {x in return x > 1}), // && BaseSettings.Game.CreaturesEnabled}),
         "NPC_" : ({x in return NPC_Record(x)}, {x in return x > 1}), // && BaseSettings.Game.NpcsEnabled}),
         // 2
-        "GMST" : ({return GMSTRecord()}, {x in return x > 2}),
-        "GLOB" : ({return GLOBRecord()}, {x in return x > 2}),
-        "SOUN" : ({return SOUNRecord()}, {x in return x > 2}),
-        "REGN" : ({return REGNRecord()}, {x in return x > 2}),
+        "GMST" : ({x in return GMSTRecord(x)}, {x in return x > 2}),
+        "GLOB" : ({x in return GLOBRecord(x)}, {x in return x > 2}),
+        "SOUN" : ({x in return SOUNRecord(x)}, {x in return x > 2}),
+        "REGN" : ({x in return REGNRecord(x)}, {x in return x > 2}),
         // 3
-        "CLAS" : ({return CLASRecord()}, {x in return x > 3}),
-        "SPEL" : ({return SPELRecord()}, {x in return x > 3}),
-        "BODY" : ({return BODYRecord()}, {x in return x > 3}),
-        "PGRD" : ({return PGRDRecord()}, {x in return x > 3}),
-        "INFO" : ({return INFORecord()}, {x in return x > 3}),
-        "DIAL" : ({return DIALRecord()}, {x in return x > 3}),
-        "SNDG" : ({return SNDGRecord()}, {x in return x > 3}),
-        "ENCH" : ({return ENCHRecord()}, {x in return x > 3}),
-        "SCPT" : ({return SCPTRecord()}, {x in return x > 3}),
-        "SKIL" : ({return SKILRecord()}, {x in return x > 3}),
-        "RACE" : ({return RACERecord()}, {x in return x > 3}),
-        "MGEF" : ({return MGEFRecord()}, {x in return x > 3}),
-        "LEVI" : ({return LEVIRecord()}, {x in return x > 3}),
-        "LEVC" : ({return LEVCRecord()}, {x in return x > 3}),
-        "BSGN" : ({return BSGNRecord()}, {x in return x > 3}),
-        "FACT" : ({return FACTRecord()}, {x in return x > 3}),
-        "SSCR" : ({return SSCRRecord()}, {x in return x > 3}),
+        "CLAS" : ({x in return CLASRecord(x)}, {x in return x > 3}),
+        "SPEL" : ({x in return SPELRecord(x)}, {x in return x > 3}),
+        "BODY" : ({x in return BODYRecord(x)}, {x in return x > 3}),
+        "PGRD" : ({x in return PGRDRecord(x)}, {x in return x > 3}),
+        "INFO" : ({x in return INFORecord(x)}, {x in return x > 3}),
+        "DIAL" : ({x in return DIALRecord(x)}, {x in return x > 3}),
+        "SNDG" : ({x in return SNDGRecord(x)}, {x in return x > 3}),
+        "ENCH" : ({x in return ENCHRecord(x)}, {x in return x > 3}),
+        "SCPT" : ({x in return SCPTRecord(x)}, {x in return x > 3}),
+        "SKIL" : ({x in return SKILRecord(x)}, {x in return x > 3}),
+        "RACE" : ({x in return RACERecord(x)}, {x in return x > 3}),
+        "MGEF" : ({x in return MGEFRecord(x)}, {x in return x > 3}),
+        "LEVI" : ({x in return LEVIRecord(x)}, {x in return x > 3}),
+        "LEVC" : ({x in return LEVCRecord(x)}, {x in return x > 3}),
+        "BSGN" : ({x in return BSGNRecord(x)}, {x in return x > 3}),
+        "FACT" : ({x in return FACTRecord(x)}, {x in return x > 3}),
+        "SSCR" : ({x in return SSCRRecord(x)}, {x in return x > 3}),
         // 4 - Oblivion
-        "ACRE" : ({return ACRERecord()}, {x in return x > 4}),
-        "ACHR" : ({return ACHRRecord()}, {x in return x > 4}),
-        "AMMO" : ({return AMMORecord()}, {x in return x > 4}),
-        "ANIO" : ({return ANIORecord()}, {x in return x > 4}),
-        "CLMT" : ({return CLMTRecord()}, {x in return x > 4}),
-        "CSTY" : ({return CSTYRecord()}, {x in return x > 4}),
-        "EFSH" : ({return EFSHRecord()}, {x in return x > 4}),
-        "EYES" : ({return EYESRecord()}, {x in return x > 4}),
-        "FLOR" : ({return FLORRecord()}, {x in return x > 4}),
-        "FURN" : ({return FURNRecord()}, {x in return x > 4}),
-        "GRAS" : ({return GRASRecord()}, {x in return x > 4}),
-        "HAIR" : ({return HAIRRecord()}, {x in return x > 4}),
-        "IDLE" : ({return IDLERecord()}, {x in return x > 4}),
-        "KEYM" : ({return KEYMRecord()}, {x in return x > 4}),
-        "LSCR" : ({return LSCRRecord()}, {x in return x > 4}),
-        "LVLC" : ({return LVLCRecord()}, {x in return x > 4}),
-        "LVLI" : ({return LVLIRecord()}, {x in return x > 4}),
-        "LVSP" : ({return LVSPRecord()}, {x in return x > 4}),
-        "PACK" : ({return PACKRecord()}, {x in return x > 4}),
-        "QUST" : ({return QUSTRecord()}, {x in return x > 4}),
-        "REFR" : ({return REFRRecord()}, {x in return x > 4}),
-        "ROAD" : ({return ROADRecord()}, {x in return x > 4}),
-        "SBSP" : ({return SBSPRecord()}, {x in return x > 4}),
-        "SGST" : ({return SGSTRecord()}, {x in return x > 4}),
-        "SLGM" : ({return SLGMRecord()}, {x in return x > 4}),
-        "TREE" : ({return TREERecord()}, {x in return x > 4}),
-        "WATR" : ({return WATRRecord()}, {x in return x > 4}),
-        "WRLD" : ({return WRLDRecord()}, {x in return x > 4}),
-        "WTHR" : ({return WTHRRecord()}, {x in return x > 4}),
+        "ACRE" : ({x in return ACRERecord(x)}, {x in return x > 4}),
+        "ACHR" : ({x in return ACHRRecord(x)}, {x in return x > 4}),
+        "AMMO" : ({x in return AMMORecord(x)}, {x in return x > 4}),
+        "ANIO" : ({x in return ANIORecord(x)}, {x in return x > 4}),
+        "CLMT" : ({x in return CLMTRecord(x)}, {x in return x > 4}),
+        "CSTY" : ({x in return CSTYRecord(x)}, {x in return x > 4}),
+        "EFSH" : ({x in return EFSHRecord(x)}, {x in return x > 4}),
+        "EYES" : ({x in return EYESRecord(x)}, {x in return x > 4}),
+        "FLOR" : ({x in return FLORRecord(x)}, {x in return x > 4}),
+        "FURN" : ({x in return FURNRecord(x)}, {x in return x > 4}),
+        "GRAS" : ({x in return GRASRecord(x)}, {x in return x > 4}),
+        "HAIR" : ({x in return HAIRRecord(x)}, {x in return x > 4}),
+        "IDLE" : ({x in return IDLERecord(x)}, {x in return x > 4}),
+        "KEYM" : ({x in return KEYMRecord(x)}, {x in return x > 4}),
+        "LSCR" : ({x in return LSCRRecord(x)}, {x in return x > 4}),
+        "LVLC" : ({x in return LVLCRecord(x)}, {x in return x > 4}),
+        "LVLI" : ({x in return LVLIRecord(x)}, {x in return x > 4}),
+        "LVSP" : ({x in return LVSPRecord(x)}, {x in return x > 4}),
+        "PACK" : ({x in return PACKRecord(x)}, {x in return x > 4}),
+        "QUST" : ({x in return QUSTRecord(x)}, {x in return x > 4}),
+        "REFR" : ({x in return REFRRecord(x)}, {x in return x > 4}),
+        "ROAD" : ({x in return ROADRecord(x)}, {x in return x > 4}),
+        "SBSP" : ({x in return SBSPRecord(x)}, {x in return x > 4}),
+        "SGST" : ({x in return SGSTRecord(x)}, {x in return x > 4}),
+        "SLGM" : ({x in return SLGMRecord(x)}, {x in return x > 4}),
+        "TREE" : ({x in return TREERecord(x)}, {x in return x > 4}),
+        "WATR" : ({x in return WATRRecord(x)}, {x in return x > 4}),
+        "WRLD" : ({x in return WRLDRecord(x)}, {x in return x > 4}),
+        "WTHR" : ({x in return WTHRRecord(x)}, {x in return x > 4}),
         // 5 - Skyrim
-        "AACT" : ({return AACTRecord()}, {x in return x > 5}),
-        "ADDN" : ({return ADDNRecord()}, {x in return x > 5}),
-        "ARMA" : ({return ARMARecord()}, {x in return x > 5}),
-        "ARTO" : ({return ARTORecord()}, {x in return x > 5}),
-        "ASPC" : ({return ASPCRecord()}, {x in return x > 5}),
-        "ASTP" : ({return ASTPRecord()}, {x in return x > 5}),
-        "AVIF" : ({return AVIFRecord()}, {x in return x > 5}),
-        "DLBR" : ({return DLBRRecord()}, {x in return x > 5}),
-        "DLVW" : ({return DLVWRecord()}, {x in return x > 5}),
-        "SNDR" : ({return SNDRRecord()}, {x in return x > 5}),
-        */
+        "AACT" : ({x in return AACTRecord(x)}, {x in return x > 5}),
+        "ADDN" : ({x in return ADDNRecord(x)}, {x in return x > 5}),
+        "ARMA" : ({x in return ARMARecord(x)}, {x in return x > 5}),
+        "ARTO" : ({x in return ARTORecord(x)}, {x in return x > 5}),
+        "ASPC" : ({x in return ASPCRecord(x)}, {x in return x > 5}),
+        "ASTP" : ({x in return ASTPRecord(x)}, {x in return x > 5}),
+        "AVIF" : ({x in return AVIFRecord(x)}, {x in return x > 5}),
+        "DLBR" : ({x in return DLBRRecord(x)}, {x in return x > 5}),
+        "DLVW" : ({x in return DLVWRecord(x)}, {x in return x > 5}),
+        "SNDR" : ({x in return SNDRRecord(x)}, {x in return x > 5}),
     ]
 
     // public static bool LoadRecord(string type, byte level) => Create.TryGetValue(type, out RecordType recordType) ? recordType.Load(level) : false;
@@ -247,7 +245,7 @@ public class RecordGroup: CustomStringConvertible {
         headers.append(header)
         let grup = _r.readASCIIString(4)
         _r.baseStream.position -= 4
-        guard grup != "GRUP" else {
+        guard grup == "GRUP" else {
             return
         }
         let recordHeader = Header(_r, for: _format)
@@ -301,7 +299,7 @@ public class RecordGroup: CustomStringConvertible {
         }
         let newDataSize = _r.readLEUInt32()
         let data = _r.readBytes(Int(record.header.dataSize - 4))
-        let newData = data.inflate()!
+        let newData = data.inflate(size: Int(newDataSize))!
         // read record
         record.header.position = 0
         record.header.dataSize = newDataSize

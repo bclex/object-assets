@@ -11,10 +11,8 @@ public class TREERecord: Record {
         public var values: [Int32]
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            values = [Int32](); values.reserveCapacity(dataSize >> 2)
-            for i in values.startIndex..<values.capacity {
-                values[i] = r.readLEInt32()
-            }
+            values = [Int32](); let capacity = dataSize >> 2; values.reserveCapacity(capacity)
+            for _ in 0..<capacity { values.append(r.readLEInt32()) }
         }
     }
 

@@ -8,6 +8,12 @@
 
 import CoreGraphics
 
+public extension UInt8 {
+    init(checkMax value: Int32) {
+        self.init(value != -1 ? value : 255)
+    }
+}
+
 public extension Float {
     public static let rad2Deg = 0.01745329
 

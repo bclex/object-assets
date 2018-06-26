@@ -127,7 +127,7 @@ public class BinaryReader {
                 }
             }
         }
-        return String(data: data, encoding: .utf8)!
+        return String(data: data, encoding: .ascii)!
     }
     
     public func readASCIIMultiString(_ length: Int, bufSize: Int = 64) -> [String] {
@@ -143,7 +143,7 @@ public class BinaryReader {
                 len -= 1
                 c = readByte()
             }
-            list.append(String(bytes: data, encoding: .utf8)!)
+            list.append(String(bytes: data, encoding: .ascii)!)
         }
         return list
     }
@@ -212,7 +212,7 @@ public class BinaryReader {
     public func readLELength32PrefixedASCIIString() -> String {
         let length = readLEUInt32()
         let data = readBytes(Int(length))
-        return String(data: data, encoding: .utf8)!
+        return String(data: data, encoding: .ascii)!
     }
 
     public func readLEVector2() -> Vector2 {

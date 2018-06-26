@@ -147,8 +147,8 @@ public class BsaFile {
         self.filePath = filePath
         _r = BinaryReader(FileBaseStream(path: filePath)!)
         readMetadata()
-        testContainsFile()
-        testLoadFileData()
+        //testContainsFile()
+        //testLoadFileData()
     }
 
     deinit {
@@ -186,25 +186,26 @@ public class BsaFile {
             fileSize -= len
             _r.baseStream.position = file.offset + UInt64(len)
         }
-//        var newFileSize = fileSize
-//        if version == BsaFile.SSE_BSAHEADER_VERSION && file.sizeFlags > 0 && (file.compressed ^ _compressToggle) != 0 {
-//            newFileSize = Int(_r.readLEInt32()) - 4
-//        }
+        var newFileSize = fileSize
+        let bsaCompressed = file.sizeFlags > 0 && (file.compressed ^ _compressToggle) != 0
+        if version == BsaFile.SSE_BSAHEADER_VERSION && bsaCompressed {
+            newFileSize = Int(_r.readLEInt32()) - 4
+        }
         var fileData = _r.readBytes(fileSize)
         // BSA
-        if file.sizeFlags > 0 && (file.compressed ^ _compressToggle) != 0 {
-             var newFileData: Data
-             if version != BsaFile.SSE_BSAHEADER_VERSION {
-                newFileData = fileData.count > 4 ? fileData.inflate(withOffset: 4) ?? Data() : Data()
+        if bsaCompressed {
+            var newFileData: Data
+            if version != BsaFile.SSE_BSAHEADER_VERSION {
+                newFileData = fileData.count > 4 ? fileData.inflate(size: newFileSize, withOffset: 4)! : fileData
             }
             else {
-                newFileData = fileData.lzmaDecompress()!
+                newFileData = fileData.lzmaDecompress(size: newFileSize)!
             }
             fileData = newFileData
         }
         // General BA2
         else if file.packedSize > 0 && file.tex!.chunks == nil {
-            fileData = fileData.inflate()!
+            fileData = fileData.inflate(size: newFileSize)!
         }
         // Fill DDS Header
         else if file.tex?.chunks != nil {
@@ -377,7 +378,7 @@ public class BsaFile {
                     buf.append(curCharAsByte)
                     curCharAsByte = _r.readByte()
                 }
-                let path = String(data: buf, encoding: .utf8)!
+                let path = String(data: buf, encoding: .ascii)!
                 _files.append(FileMetadata(
                     path: path
                 ))
@@ -452,7 +453,7 @@ public class BsaFile {
                     buf.append(curCharAsByte)
                     curCharAsByte = _r.readByte()
                 }
-                _files[i].path = String(data: buf, encoding: .utf8)!
+                _files[i].path = String(data: buf, encoding: .ascii)!
             }
 
             // Read filename hashes

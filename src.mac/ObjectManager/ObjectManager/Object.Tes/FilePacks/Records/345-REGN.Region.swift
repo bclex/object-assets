@@ -158,10 +158,8 @@ public class REGNRecord: Record, IHaveEDID {
         }
 
         func RPLDField(_ r: BinaryReader, _ dataSize: Int) {
-            points = [Vector2](); points.reserveCapacity(dataSize >> 3)
-            for i in points.startIndex..<points.capacity {
-                points[i] = Vector2(dx: CGFloat(r.readLESingle()), dy: CGFloat(r.readLESingle()))
-            }
+            points = [Vector2](); let capacity = dataSize >> 3; points.reserveCapacity(capacity)
+            for _ in 0..<capacity { points.append(Vector2(dx: CGFloat(r.readLESingle()), dy: CGFloat(r.readLESingle()))) }
         }
     }
 
@@ -192,19 +190,19 @@ public class REGNRecord: Record, IHaveEDID {
         case "RPLD": RPLIs.last!.RPLDField(r, dataSize)
         case "RDAT": RDATs.append(RDATField(r, dataSize))
         case "RDOT":
-            var rdot = [RDOTField](); RDATs.last!.RDOTs = rdot; rdot.reserveCapacity(dataSize / 52)
-            for i in 0..<rdot.capacity { rdot[i] = RDOTField(r, dataSize) }
+            var rdot = [RDOTField](); RDATs.last!.RDOTs = rdot; let capacity = dataSize / 52; rdot.reserveCapacity(capacity)
+            for _ in 0..<capacity { rdot.append(RDOTField(r, dataSize)) }
         case "RDMP": RDATs.last!.RDMP = STRVField(r, dataSize)
         case "RDGS":
-            var rdgs = [RDGSField](); RDATs.last!.RDGSs = rdgs; rdgs.reserveCapacity(dataSize / 8)
-            for i in 0..<rdgs.capacity { rdgs[i] = RDGSField(r, dataSize) }
+            var rdgs = [RDGSField](); RDATs.last!.RDGSs = rdgs; let capacity = dataSize / 8; rdgs.reserveCapacity(capacity)
+            for _ in 0..<capacity { rdgs.append(RDGSField(r, dataSize)) }
         case "RDMD": RDATs.last!.RDMD = UI32Field(r, dataSize)
         case "RDSD":
-            var rdsd = [RDSDField](); RDATs.last!.RDSDs = rdsd; rdsd.reserveCapacity(dataSize / 12)
-            for i in 0..<rdsd.capacity { rdsd[i] = RDSDField(r, dataSize, format) }
+            var rdsd = [RDSDField](); RDATs.last!.RDSDs = rdsd; let capacity = dataSize / 15; rdsd.reserveCapacity(capacity)
+            for _ in 0..<capacity { rdsd.append(RDSDField(r, dataSize, format)) }
         case "RDWT":
-            var rdwt = [RDWTField](); RDATs.last!.RDWTs = rdwt; rdwt.reserveCapacity(dataSize / RDWTField.sizeOf(for: format))
-            for i in 0..<rdwt.capacity { rdwt[i] = RDWTField(r, dataSize, format) }
+            var rdwt = [RDWTField](); RDATs.last!.RDWTs = rdwt; let capacity = dataSize / RDWTField.sizeOf(for: format); rdwt.reserveCapacity(capacity)
+            for _ in 0..<capacity { rdwt.append(RDWTField(r, dataSize, format)) }
         default: return false
         }
         return true

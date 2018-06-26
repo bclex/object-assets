@@ -22,7 +22,7 @@ extension BsaFile {
     }
 
     func testLoadFileData() {
-         for file in _files {
+        for file in _files {
             debugPrint(file.path)
             _ = loadFileData(file: file)
         }

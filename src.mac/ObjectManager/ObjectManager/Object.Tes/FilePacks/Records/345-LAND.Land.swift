@@ -9,61 +9,46 @@
 public class LANDRecord: Record {
     // TESX
     public struct VNMLField {
-        public let vertexs: [Vector3] // XYZ 8 bit floats
+        public var vertexs: [Vector3Int] // XYZ 8 bit floats
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            var vertexs = [Vector3](); vertexs.reserveCapacity(dataSize / 3)
-            for i in vertexs.startIndex..<vertexs.capacity {
-                vertexs[i] = Vector3(Int(r.readByte()), Int(r.readByte()), Int(r.readByte()))
-            }
-            self.vertexs = vertexs
+            vertexs = [Vector3Int](); let capacity = dataSize / 3; vertexs.reserveCapacity(capacity)
+            for _ in 0..<capacity { vertexs.append(Vector3Int(Int(r.readByte()), Int(r.readByte()), Int(r.readByte()))) }
         }
     }
 
     public struct VHGTField {
         public let referenceHeight: Float // A height offset for the entire cell. Decreasing this value will shift the entire cell land down.
-        public let heightData: [Int8] // HeightData
+        public var heightData: [Int8] // HeightData
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             referenceHeight = r.readLESingle()
-            var heightData = [Int8](); heightData.reserveCapacity(dataSize - 4 - 3)
-            for i in heightData.startIndex..<heightData.capacity {
-                heightData[i] = r.readSByte()
-            }
-            self.heightData = heightData
+            heightData = [Int8](); let capacity = dataSize - 4 - 3; heightData.reserveCapacity(capacity)
+            for _ in 0..<capacity { heightData.append(r.readSByte()) }
             r.skipBytes(3) // Unused
         }
     }
 
     public struct VCLRField {
-        public let colors: [ColorRef] // 24-bit RGB
+        public var colors: [ColorRef] // 24-bit RGB
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            var colors = [ColorRef](); colors.reserveCapacity(dataSize / 24)
-            for i in colors.startIndex..<colors.capacity {
-                colors[i] = ColorRef(red: r.readByte(), green: r.readByte(), blue: r.readByte())
-            }
-            self.colors = colors
+            colors = [ColorRef](); let capacity = dataSize / 24; colors.reserveCapacity(capacity)
+            for _ in 0..<capacity { colors.append(ColorRef(red: r.readByte(), green: r.readByte(), blue: r.readByte())) }
         }
     }
 
     public struct VTEXField {
-        public let textureIndices: [UInt32]
+        public var textureIndices: [UInt32]
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             guard format != .TES3 else {
-                var textureIndices = [UInt32](); textureIndices.reserveCapacity(dataSize >> 1)
-                for i in textureIndices.startIndex..<textureIndices.capacity {
-                    textureIndices[i] = UInt32(r.readLEUInt16())
-                }
-                self.textureIndices = textureIndices
+                textureIndices = [UInt32](); let capacity = dataSize >> 1; textureIndices.reserveCapacity(capacity)
+                for _ in 0..<capacity { textureIndices.append(UInt32(r.readLEUInt16())) }
                 return
             }
-            var textureIndices = [UInt32](); textureIndices.reserveCapacity(dataSize >> 2)
-            for i in textureIndices.startIndex..<textureIndices.capacity {
-                textureIndices[i] = r.readLEUInt32()
-            }
-            self.textureIndices = textureIndices
+            textureIndices = [UInt32](); let capacity = dataSize >> 2; textureIndices.reserveCapacity(capacity)
+            for _ in 0..<capacity { textureIndices.append(r.readLEUInt32()) }
         }
     }
 
@@ -82,9 +67,7 @@ public class LANDRecord: Record {
         // Low-LOD heightmap (signed chars)
         init(_ r: BinaryReader, _ dataSize: Int) {
             let heightCount = dataSize
-            for _ in 0..<heightCount {
-                _ = r.readByte()
-            }
+            for _ in 0..<heightCount { _ = r.readByte() }
         }
     }
 
@@ -137,7 +120,7 @@ public class LANDRecord: Record {
     public var WNAM: WNAMField! // Unknown byte data.
     // TES4
     public var BTXTs = [BTXTField]() // Base Layer
-    public var ATXTs: [ATXTGroup]! // Alpha Layer
+    public var ATXTs: [ATXTGroup?]! // Alpha Layer
     var _lastATXT: ATXTGroup!
 
     public var GridCoords: Vector2Int { return Vector2Int(Int(INTV!.cellX), Int(INTV!.cellY)) }
@@ -160,11 +143,11 @@ public class LANDRecord: Record {
         // TES4
         case "BTXT": let btxt = BTXTField(r, dataSize); BTXTs[Int(btxt.quadrant)] = btxt
         case "ATXT":
-            if ATXTs == nil { ATXTs = [ATXTGroup](); ATXTs!.reserveCapacity(4) }
+            if ATXTs == nil { ATXTs = [ATXTGroup?](repeating: nil, count: 4) }
             let atxt = BTXTField(r, dataSize); _lastATXT = ATXTGroup(ATXT: atxt); ATXTs![Int(atxt.quadrant)] = _lastATXT
         case "VTXT":
-            var vtxt = [VTXTField](); vtxt.reserveCapacity(dataSize >> 3)
-            for i in 0..<vtxt.capacity { vtxt[i] = VTXTField(r, dataSize) }; _lastATXT.VTXTs = vtxt
+            var vtxt = [VTXTField](); let capacity = dataSize >> 3; vtxt.reserveCapacity(capacity)
+            for _ in 0..<capacity { vtxt.append(VTXTField(r, dataSize)) }; _lastATXT.VTXTs = vtxt
         default: return false
         }
         return true

@@ -168,8 +168,8 @@ public class MGEFRecord: Record, IHaveEDID, IHaveMODL {
         case "MODB": MODL!.MODBField(r, dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
         case "ESCE":
-            ESCEs = [STRVField](); ESCEs.reserveCapacity(dataSize >> 2)
-            for _ in 0..<ESCEs.capacity { ESCEs.append(STRVField(r, 4)) }
+            ESCEs = [STRVField](); let capacity = dataSize >> 2; ESCEs.reserveCapacity(capacity)
+            for _ in 0..<capacity { ESCEs.append(STRVField(r, 4)) }
         default: return false
         }
         return true

@@ -20,7 +20,7 @@ public class BOOKRecord: Record, IHaveEDID, IHaveMODL {
                 weight = r.readLESingle()
                 value = r.readLEInt32()
                 flags = UInt8(r.readLEInt32())
-                teaches = UInt8(r.readLEInt32())
+                teaches = UInt8(checkMax: r.readLEInt32())
                 enchantPts = r.readLEInt32()
                 return
             }

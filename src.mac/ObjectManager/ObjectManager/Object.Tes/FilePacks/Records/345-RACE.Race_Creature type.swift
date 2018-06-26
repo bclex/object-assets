@@ -55,7 +55,7 @@ public class RACERecord: Record {
 
             init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
                 guard format != .TES3 else {
-                    skillId = UInt8(r.readLEInt32())
+                    skillId = UInt8(checkMax: r.readLEInt32())
                     bonus = Int8(r.readLEInt32())
                     return
                 }
@@ -78,17 +78,15 @@ public class RACERecord: Record {
             public var luck: UInt8!
         }
 
-        public let skillBoosts: [SkillBoost] // Skill Boosts
+        public var skillBoosts: [SkillBoost] // Skill Boosts
         public let male = RaceStats()
         public let female = RaceStats()
         public let flags: UInt32 // 1 = Playable 2 = Beast Race
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
-            var skillBoosts = [SkillBoost](); skillBoosts.reserveCapacity(7)
+            skillBoosts = [SkillBoost](); skillBoosts.reserveCapacity(7)
             guard format != .TES3 else {
-                for i in 0..<7 {
-                    skillBoosts[i] = SkillBoost(r, 8, format)
-                }
+                for _ in 0..<7 { skillBoosts.append(SkillBoost(r, 8, format)) }
                 male.strength = UInt8(r.readLEInt32()); female.strength = UInt8(r.readLEInt32())
                 male.intelligence = UInt8(r.readLEInt32()); female.intelligence = UInt8(r.readLEInt32())
                 male.willpower = UInt8(r.readLEInt32()); female.willpower = UInt8(r.readLEInt32())
@@ -100,13 +98,9 @@ public class RACERecord: Record {
                 male.height = r.readLESingle(); female.height = r.readLESingle()
                 male.weight = r.readLESingle(); female.weight = r.readLESingle()
                 flags = r.readLEUInt32()
-                self.skillBoosts = skillBoosts
                 return
             }
-            for i in 0..<7 {
-                skillBoosts[i] = SkillBoost(r, 2, format)
-            }
-            self.skillBoosts = skillBoosts
+            for _ in 0..<7 { skillBoosts.append(SkillBoost(r, 2, format)) }
             r.skipBytes(2) // padding
             male.height = r.readLESingle(); female.height = r.readLESingle()
             male.weight = r.readLESingle(); female.weight = r.readLESingle()

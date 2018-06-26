@@ -38,26 +38,3 @@ public class SequenceUtils {
     }
 }
 
-/*
-public extension RandomAccessCollection where Element: Numeric {
-    public func flip2DSubArrayVertically(offsetBy: Int, rows: Int, bytesPerRow: Int) {
-        assert(offsetBy >= 0 && rows >= 0 && bytesPerRow >= 0 && (offsetBy + (rows * bytesPerRow)) <= self.count)
-        var tmpRow = [Self.Element](); tmpRow.reserveCapacity(bytesPerRow)
-        let lastRowIndex = rows - 1
-        for rowIndex in 0..<(rows / 2) {
-            let otherRowIndex = lastRowIndex - rowIndex
-            let abc = self.index(self.startIndex, offsetBy: 10)
-            let bpr = Self.IndexDistance(bytesPerRow)
-            let rowStartIndex = self.index(self.startIndex, offsetBy: bpr)
-            //let rowStartIndex = self.index(self.startIndex, offsetBy: offsetBy + (rowIndex * bytesPerRow))
-            let rowRange = rowStartIndex..<self.index(rowStartIndex, offsetBy: bytesPerRow)
-            let otherRowStartIndex = self.index(self.startIndex, offsetBy: offsetBy + (otherRowIndex * bytesPerRow))
-            let otherRowRange = otherRowStartIndex..<self.index(otherRowStartIndex, offsetBy: bytesPerRow)
-            //
-            tmpRow = self[otherRowRange] // other -> tmp
-            self[otherRowRange] = self[rowRange] // row -> other
-            self[rowRange] = tmpRow // tmp -> row
-        }
-    }
-}
- */

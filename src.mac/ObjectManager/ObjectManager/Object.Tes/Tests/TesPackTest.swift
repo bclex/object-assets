@@ -14,9 +14,9 @@ public class TesPackTest {
     
     public static func start() {
         //let assetUrl = URL(string: "game://Morrowind/Morrowind.bsa")
-        //let dataUrl = URL(string: "game://Morrowind/Morrowind.esm")
+        let dataUrl = URL(string: "game://Morrowind/Morrowind.esm")
     
-        let assetUrl = URL(string: "game://Oblivion/Oblivion*")
+        //let assetUrl = URL(string: "game://Oblivion/Oblivion*")
         //let dataUrl = URL(string: "game://Oblivion/Oblivion.esm")
         
         //let assetUrl = URL(string: "game://SkyrimVR/Skyrim*")
@@ -29,6 +29,7 @@ public class TesPackTest {
         //let dataUrl = URL(string: "game://Fallout4VR/Fallout4.esm")
         
         let assetManager = AssetManager.getAssetManager(.tes)
-        Asset = assetManager.getAssetPack(assetUrl)
+        //Asset = assetManager.getAssetPack(assetUrl)
+        Data = assetManager.getDataPack(dataUrl)
     }
 }

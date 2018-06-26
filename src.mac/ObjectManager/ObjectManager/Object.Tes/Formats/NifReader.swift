@@ -38,10 +38,8 @@ public class NiReaderUtils
 //    }
 
     public static func readLengthPrefixedRefs32<T>(_ r: BinaryReader) -> [Ref<T>] {
-        var refs = [Ref<T>](); refs.reserveCapacity(Int(r.readLEUInt32()))
-        for i in 0..<refs.capacity {
-            refs[i] = Ref<T>(r)
-        }
+        var refs = [Ref<T>](); let capacity = Int(r.readLEUInt32()); refs.reserveCapacity(capacity)
+        for _ in 0..<capacity { refs.append(Ref<T>(r)) }
         return refs
     }
 
@@ -129,10 +127,8 @@ public class NiFile {
     convenience init(_ r: BinaryReader, name: String) {
         self.init(name: name)
         header = NiHeader(r)
-        blocks = [NiObject](); blocks.reserveCapacity(Int(header.numBlocks))
-        for i in 0..<blocks.capacity {
-            blocks[i] = NiReaderUtils.readNiObject(r)
-        }
+        blocks = [NiObject](); let capacity = Int(header.numBlocks); blocks.reserveCapacity(capacity)
+        for _ in 0..<capacity { blocks.append(NiReaderUtils.readNiObject(r)) }
         footer = NiFooter(r)
     }
 }
@@ -260,6 +256,7 @@ public struct TexCoord {
     public let u: Float
     public let v: Float
 
+    init() { u = 0; v = 0 }
     init(_ r: BinaryReader) {
         u = r.readLESingle()
         v = r.readLESingle()
@@ -280,14 +277,12 @@ public struct Triangle {
 
 public struct MatchGroup {
     public let numVertices: UInt16
-    public let vertexIndices: [UInt16]
+    public var vertexIndices: [UInt16]
 
     init(_ r: BinaryReader) {
         numVertices = r.readLEUInt16()
-        vertexIndices = [UInt16](); vertexIndices.reserveCapacity(Int(numVertices))
-        for i in 0..<vertexIndices.capacity {
-            vertexIndices[i] = r.readLEUInt16();
-        }
+        vertexIndices = [UInt16](); let capacity = Int(numVertices); vertexIndices.reserveCapacity(capacity)
+        for _ in 0..<capacity { vertexIndices.append(r.readLEUInt16()) }
     }
 }
 
@@ -326,17 +321,15 @@ public class Key<T> {
 public class KeyGroup<T> {
     public let numKeys: UInt32
     public let interpolation: KeyType
-    public let keys: [Key<T>]
+    public var keys: [Key<T>]
 
     init(_ r: BinaryReader) {
         numKeys = r.readLEUInt32()
         if numKeys != 0 {
             interpolation = KeyType(rawValue: r.readLEUInt32())!
         }
-        keys = [Key<T>](); keys.reserveCapacity(Int(numKeys))
-        for i in 0..<keys.capacity {
-            keys[i] = Key<T>(r, keyType: interpolation)
-        }
+        keys = [Key<T>](); let capacity = Int(numKeys); keys.reserveCapacity(capacity)
+        for _ in 0..<capacity { keys.append(Key<T>(r, keyType: interpolation)) }
     }
 }
 
@@ -361,17 +354,15 @@ public struct SkinData {
     public let boundingSphereOffset: Vector3
     public let boundingSphereRadius: Float
     public let numVertices: UInt16
-    public let vertexWeights: [SkinWeight]
+    public var vertexWeights: [SkinWeight]
 
     init(_ r: BinaryReader) {
         skinTransform = SkinTransform(r)
         boundingSphereOffset = r.readLEVector3()
         boundingSphereRadius = r.readLESingle()
         numVertices = r.readLEUInt16()
-        vertexWeights = [SkinWeight](); vertexWeights.reserveCapacity(Int(numVertices))
-        for i in 0..<vertexWeights.capacity {
-            vertexWeights[i] = SkinWeight(r)
-        }
+        vertexWeights = [SkinWeight](); let capacity = Int(numVertices); vertexWeights.reserveCapacity(capacity)
+        for _ in 0..<capacity { vertexWeights.append(SkinWeight(r)) }
     }
 }
 
@@ -420,20 +411,16 @@ public struct Particle {
 public struct Morph {
     public let numKeys: UInt32
     public let interpolation: KeyType
-    public let keys: [Key<Float>]
-    public let vectors: [Vector3]
+    public var keys: [Key<Float>]
+    public var vectors: [Vector3]
 
     init(_ r: BinaryReader, numVertices: UInt32) {
         numKeys = r.readLEUInt32()
         interpolation = KeyType(rawValue: r.readLEUInt32())!
-        keys = [Key<Float>](); keys.reserveCapacity(Int(numKeys))
-        for i in 0..<keys.capacity {
-            keys[i] = Key<Float>(r, keyType: interpolation)
-        }
-        vectors = [Vector3](); vectors.reserveCapacity(Int(numVertices))
-        for i in 0..<vectors.capacity {
-            vectors[i] = r.readLEVector3()
-        }
+        keys = [Key<Float>](); var capacity = Int(numKeys); keys.reserveCapacity(capacity)
+        for _ in 0..<capacity { keys.append(Key<Float>(r, keyType: interpolation)) }
+        vectors = [Vector3](); capacity = Int(numVertices); vectors.reserveCapacity(capacity)
+        for _ in 0..<capacity { vectors.append(r.readLEVector3()) }
     }
 }
 
@@ -453,14 +440,12 @@ public struct NiHeader {
 
 public struct NiFooter {
     public let numRoots: UInt32
-    public let roots: [Int32]
+    public var roots: [Int32]
 
     init(_ r: BinaryReader) {
         numRoots = r.readLEUInt32()
-        roots = [Int32](); roots.reserveCapacity(Int(numRoots))
-        for i in 0..<roots.capacity {
-            roots[i] = r.readLEInt32()
-        }
+        roots = [Int32](); let capacity = Int(numRoots); roots.reserveCapacity(capacity)
+        for _ in 0..<capacity { roots.append(r.readLEInt32()) }
     }
 }
 
@@ -556,49 +541,45 @@ public class NiGeometry: NiAVObject {
 public class NiGeometryData: NiObject {
     public let numVertices: UInt16
     public let hasVertices: Bool
-    public let vertices: [Vector3]
+    public var vertices: [Vector3]
     public let hasNormals: Bool
-    public let normals: [Vector3]
+    public var normals: [Vector3]
     public let center: Vector3
     public let radius: Float
     public let hasVertexColors: Bool
-    public let vertexColors: [Color4]
+    public var vertexColors: [Color4]
     public let numUVSets: UInt16
     public let hasUV: Bool
-    public let uvSets: [[TexCoord]]
+    public var uvSets: [[TexCoord]]
 
     override init(_ r: BinaryReader) {
         super.init(r)
         numVertices = r.readLEUInt16()
         hasVertices = r.readLEBool32()
+        let capacity = Int(numVertices)
         if hasVertices {
-            vertices = [Vector3](); vertices.reserveCapacity(Int(numVertices))
-            for i in 0..<vertices.capacity {
-                vertices[i] = r.readLEVector3()
-            }
+            vertices = [Vector3](); vertices.reserveCapacity(capacity)
+            for _ in 0..<capacity { vertices.append(r.readLEVector3()) }
         }
         hasNormals = r.readLEBool32()
         if hasNormals {
-            normals = [Vector3](); normals.reserveCapacity(Int(numVertices))
-            for i in 0..<normals.capacity {
-                normals[i] = r.readLEVector3()
-            }
+            normals = [Vector3](); normals.reserveCapacity(capacity)
+            for _ in 0..<capacity { normals.append(r.readLEVector3()) }
         }
         center = r.readLEVector3()
         radius = r.readLESingle()
         hasVertexColors = r.readLEBool32()
         if hasVertexColors {
-            vertexColors = [Color4](); vertexColors.reserveCapacity(Int(numVertices))
-            for i in 0..<vertexColors.capacity {
-                vertexColors[i] = Color4(r)
-            }
+            vertexColors = [Color4](); vertexColors.reserveCapacity(capacity)
+            for _ in 0..<capacity { vertexColors.append(Color4(r)) }
         }
         numUVSets = r.readLEUInt16()
         hasUV = r.readLEBool32()
         if hasUV {
-            uvSets = [[TexCoord]](); uvSets.reserveCapacity(Int(numUVSets)) //, numVertices)
-            for i in 0..<Int(numUVSets) {
-                for j in 0..<Int(numVertices) {
+            let capacity2 = Int(numUVSets)
+            uvSets = [TexCoord](repeating: [TexCoord](repeating: TexCoord(), count: capacity), count: capacity2)
+            for i in 0..<capacity2 {
+                for j in 0..<capacity {
                     uvSets[i][j] = TexCoord(r)
                 }
             }
@@ -629,22 +610,18 @@ public class NiTriShape: NiTriBasedGeom {
 
 public class NiTriShapeData: NiTriBasedGeomData {
     public let numTrianglePoints: UInt32
-    public let triangles: [Triangle]
+    public var triangles: [Triangle]
     public let numMatchGroups: UInt16
-    public let matchGroups: [MatchGroup]
+    public var matchGroups: [MatchGroup]
 
     override init(_ r: BinaryReader) {
         super.init(r)
         numTrianglePoints = r.readLEUInt32()
-        triangles = [Triangle](); triangles.reserveCapacity(Int(numTriangles))
-        for i in 0..<triangles.capacity {
-            triangles[i] = Triangle(r)
-        }
+        triangles = [Triangle](); var capacity = Int(numTriangles); triangles.reserveCapacity(capacity)
+        for _ in 0..<capacity { triangles.append(Triangle(r)) }
         numMatchGroups = r.readLEUInt16()
-        matchGroups = [MatchGroup](); matchGroups.reserveCapacity(Int(numMatchGroups))
-        for i in 0..<matchGroups.capacity {
-            matchGroups[i] = MatchGroup(r)
-        }
+        matchGroups = [MatchGroup](); capacity = Int(numMatchGroups); matchGroups.reserveCapacity(capacity)
+        for _ in 0..<capacity { matchGroups.append(MatchGroup(r)) }
     }
 }
 
@@ -754,23 +731,21 @@ public class NiShadeProperty: NiProperty {
 
 // Data
 public class NiUVData: NiObject {
-    public let uvGroups: [KeyGroup<Float>]
+    public var uvGroups: [KeyGroup<Float>]
 
     override init(_ r: BinaryReader) {
         super.init(r)
         uvGroups = [KeyGroup<Float>](); uvGroups.reserveCapacity(4)
-        for i in 0..<uvGroups.capacity {
-            uvGroups[i] = KeyGroup<Float>(r);
-        }
+        for _ in 0..<4 { uvGroups.append(KeyGroup<Float>(r)) }
     }
 }
 
 public class NiKeyframeData: NiObject {
     public let numRotationKeys: UInt32
     public let rotationType: KeyType
-    public let quaternionKeys: [QuatKey<Quaternion>]
+    public var quaternionKeys: [QuatKey<Quaternion>]
     public let unknownFloat: Float
-    public let xyzRotations: [KeyGroup<Float>]
+    public var xyzRotations: [KeyGroup<Float>]
     public let translations: KeyGroup<Vector3>
     public let scales: KeyGroup<Float>
 
@@ -780,17 +755,13 @@ public class NiKeyframeData: NiObject {
         if numRotationKeys != 0 {
             rotationType = KeyType(rawValue: r.readLEUInt32())!
             if rotationType != .XYZ_ROTATION_KEY {
-                quaternionKeys = [QuatKey<Quaternion>](); quaternionKeys.reserveCapacity(Int(numRotationKeys))
-                for i in 0..<quaternionKeys.capacity {
-                    quaternionKeys[i] = QuatKey<Quaternion>(r, keyType: rotationType)
-                }
+                quaternionKeys = [QuatKey<Quaternion>](); let capacity = Int(numRotationKeys); quaternionKeys.reserveCapacity(capacity)
+                for _ in 0..<capacity { quaternionKeys.append(QuatKey<Quaternion>(r, keyType: rotationType)) }
             }
             else {
                 unknownFloat = r.readLESingle()
                 xyzRotations = [KeyGroup<Float>](); xyzRotations.reserveCapacity(3)
-                for i in 0..<xyzRotations.capacity {
-                    xyzRotations[i] = KeyGroup<Float>(r)
-                }
+                for _ in 0..<3 { xyzRotations.append(KeyGroup<Float>(r)) }
             }
         }
         translations = KeyGroup<Vector3>(r)
@@ -811,31 +782,27 @@ public class NiMorphData: NiObject {
     public let numMorphs: UInt32
     public let numVertices: UInt32
     public let relativeTargets: UInt8
-    public let morphs: [Morph]
+    public var morphs: [Morph]
 
     override init(_ r: BinaryReader) {
         super.init(r)
         numMorphs = r.readLEUInt32()
         numVertices = r.readLEUInt32()
         relativeTargets = r.readByte()
-        morphs = [Morph](); morphs.reserveCapacity(Int(numMorphs))
-        for i in 0..<morphs.capacity {
-            morphs[i] = Morph(r, numVertices: numVertices)
-        }
+        morphs = [Morph](); let capacity = Int(numMorphs); morphs.reserveCapacity(capacity)
+        for _ in 0..<capacity { morphs.append(Morph(r, numVertices: numVertices)) }
     }
 }
 
 public class NiVisData: NiObject {
     public let numKeys: UInt32
-    public let keys: [Key<UInt8>]
+    public var keys: [Key<UInt8>]
 
     override init(_ r: BinaryReader) {
         super.init(r)
         numKeys = r.readLEUInt32()
-        keys = [Key<UInt8>](); keys.reserveCapacity(Int(numKeys))
-        for i in 0..<keys.capacity {
-            keys[i] = Key<UInt8>(r, keyType: .LINEAR_KEY)
-        }
+        keys = [Key<UInt8>](); let capacity = Int(numKeys); keys.reserveCapacity(capacity)
+        for _ in 0..<capacity { keys.append(Key<UInt8>(r, keyType: .LINEAR_KEY)) }
     }
 }
 
@@ -880,32 +847,28 @@ public class NiStringExtraData: NiExtraData {
 public class NiTextKeyExtraData: NiExtraData {
     public let unknownInt1: UInt32
     public let numTextKeys: UInt32
-    public let textKeys: [Key<String>]
+    public var textKeys: [Key<String>]
 
     override init(_ r: BinaryReader) {
         super.init(r)
         unknownInt1 = r.readLEUInt32()
         numTextKeys = r.readLEUInt32()
-        textKeys = [Key<String>](); textKeys.reserveCapacity(Int(numTextKeys))
-        for i in 0..<textKeys.capacity {
-            textKeys[i] = Key<String>(r, keyType: .LINEAR_KEY)
-        }
+        textKeys = [Key<String>](); let capacity = Int(numTextKeys); textKeys.reserveCapacity(capacity)
+        for _ in 0..<capacity { textKeys.append(Key<String>(r, keyType: .LINEAR_KEY)) }
     }
 }
 
 public class NiVertWeightsExtraData: NiExtraData {
     public let numBytes: UInt32
     public let numVertices: UInt16
-    public let weights: [Float]
+    public var weights: [Float]
 
     override init(_ r: BinaryReader) {
         super.init(r)
         numBytes = r.readLEUInt32()
         numVertices = r.readLEUInt16()
-        weights = [Float](); weights.reserveCapacity(Int(numVertices))
-        for i in 0..<weights.capacity {
-            weights[i] = r.readLESingle()
-        }
+        weights = [Float](); let capacity = Int(numVertices); weights.reserveCapacity(capacity)
+        for _ in 0..<capacity { weights.append(r.readLESingle()) }
     }
 }
 
@@ -917,7 +880,7 @@ public class NiParticlesData: NiGeometryData {
     public let particleRadius: Float
     public let numActive: UInt16
     public let hasSizes: Bool
-    public let sizes: [Float]
+    public var sizes: [Float]
 
     override init(_ r: BinaryReader) {
         super.init(r)
@@ -926,10 +889,8 @@ public class NiParticlesData: NiGeometryData {
         numActive = r.readLEUInt16()
         hasSizes = r.readLEBool32()
         if hasSizes {
-            sizes = [Float](); sizes.reserveCapacity(Int(numVertices))
-            for i in 0..<sizes.capacity {
-                sizes[i] = r.readLESingle()
-            }
+            sizes = [Float](); let capacity = Int(numVertices); sizes.reserveCapacity(capacity)
+            for _ in 0..<capacity { sizes.append(r.readLESingle()) }
         }
     }
 }
@@ -938,16 +899,14 @@ public class NiRotatingParticles: NiParticles { }
 
 public class NiRotatingParticlesData: NiParticlesData {
     public let hasRotations: Bool
-    public let rotations: [Quaternion]
+    public var rotations: [Quaternion]
 
     override init(_ r: BinaryReader) {
         super.init(r)
         hasRotations = r.readLEBool32()
         if hasRotations {
-            rotations = [Quaternion](); rotations.reserveCapacity(Int(numVertices))
-            for i in 0..<rotations.capacity {
-                rotations[i] = r.readLEQuaternionWFirst()
-            }
+            rotations = [Quaternion](); let capacity = Int(numVertices); rotations.reserveCapacity(capacity)
+            for _ in 0..<capacity { rotations.append(r.readLEQuaternionWFirst()) }
         }
     }
 }
@@ -982,7 +941,7 @@ public class NiParticleSystemController: NiTimeController {
     public let unknownShort3: UInt16
     public let numParticles: UInt16
     public let numValid: UInt16
-    public let particles: [Particle]
+    public var particles: [Particle]
     public let unknownLink: Ref<NiObject>
     public let particleExtra: Ref<NiParticleModifier>
     public let unknownLink2: Ref<NiObject>
@@ -1015,10 +974,8 @@ public class NiParticleSystemController: NiTimeController {
         unknownShort3 = r.readLEUInt16()
         numParticles = r.readLEUInt16()
         numValid = r.readLEUInt16()
-        particles = [Particle](); particles.reserveCapacity(Int(numParticles))
-        for i in 0..<particles.capacity {
-            particles[i] = Particle(r)
-        }
+        particles = [Particle](); let capacity = Int(numParticles); particles.reserveCapacity(capacity)
+        for _ in 0..<capacity { particles.append(Particle(r)) }
         unknownLink = Ref<NiObject>(r)
         particleExtra = Ref<NiParticleModifier>(r)
         unknownLink2 = Ref<NiObject>(r)
@@ -1100,15 +1057,13 @@ public class NiParticleGrowFade: NiParticleModifier {
 
 public class NiParticleMeshModifier: NiParticleModifier {
     public let numParticleMeshes: UInt32
-    public let particleMeshes: [Ref<NiAVObject>]
+    public var particleMeshes: [Ref<NiAVObject>]
 
     override init(_ r: BinaryReader) {
         super.init(r)
         numParticleMeshes = r.readLEUInt32()
-        particleMeshes = [Ref<NiAVObject>](); particleMeshes.reserveCapacity(Int(numParticleMeshes))
-        for i in 0..<particleMeshes.capacity {
-            particleMeshes[i] = Ref<NiAVObject>(r)
-        }
+        particleMeshes = [Ref<NiAVObject>](); let capacity = Int(numParticleMeshes); particleMeshes.reserveCapacity(capacity)
+        for _ in 0..<capacity { particleMeshes.append(Ref<NiAVObject>(r)) }
     }
 }
 
@@ -1209,17 +1164,15 @@ public class NiSkinInstance: NiObject {
     public let data: Ref<NiSkinData>
     public let skeletonRoot: Ptr<NiNode>
     public let numBones: UInt32
-    public let bones: [Ptr<NiNode>]
+    public var bones: [Ptr<NiNode>]
 
     override init(_ r: BinaryReader) {
         super.init(r)
         data = Ref<NiSkinData>(r)
         skeletonRoot = Ptr<NiNode>(r)
         numBones = r.readLEUInt32()
-        bones = [Ptr<NiNode>](); bones.reserveCapacity(Int(numBones))
-        for i in 0..<bones.capacity {
-            bones[i] = Ptr<NiNode>(r)
-        }
+        bones = [Ptr<NiNode>](); let capacity = Int(numBones); bones.reserveCapacity(capacity)
+        for _ in 0..<capacity { bones.append(Ptr<NiNode>(r)) }
     }
 }
 
@@ -1227,17 +1180,15 @@ public class NiSkinData: NiObject {
     public let skinTransform: SkinTransform
     public let numBones: UInt32
     public let skinPartition: Ref<NiSkinPartition>
-    public let boneList: [SkinData]
+    public var boneList: [SkinData]
 
     override init(_ r: BinaryReader) {
         super.init(r)
         skinTransform = SkinTransform(r)
         numBones = r.readLEUInt32()
         skinPartition = Ref<NiSkinPartition>(r)
-        boneList = [SkinData](); boneList.reserveCapacity(Int(numBones))
-        for i in 0..<boneList.capacity {
-            boneList[i] = SkinData(r)
-        }
+        boneList = [SkinData](); let capacity = Int(numBones); boneList.reserveCapacity(capacity)
+        for _ in 0..<capacity { boneList.append(SkinData(r)) }
     }
 }
 
@@ -1302,16 +1253,14 @@ public class NiMaterialProperty: NiProperty {
 public class NiMaterialColorController: NiPoint3InterpController { }
 
 public class NiDynamicEffect: NiAVObject {
-    let numAffectedNodeListPointers: UInt32
-    let affectedNodeListPointers: [UInt32]
+    public let numAffectedNodeListPointers: UInt32
+    public var affectedNodeListPointers: [UInt32]
 
     override init(_ r: BinaryReader) {
         super.init(r)
         numAffectedNodeListPointers = r.readLEUInt32()
-        affectedNodeListPointers = [UInt32](); affectedNodeListPointers.reserveCapacity(Int(numAffectedNodeListPointers))
-        for i in 0..<affectedNodeListPointers.capacity {
-            affectedNodeListPointers[i] = r.readLEUInt32()
-        }
+        affectedNodeListPointers = [UInt32](); let capacity = Int(numAffectedNodeListPointers); affectedNodeListPointers.reserveCapacity(capacity)
+        for _ in 0..<capacity { affectedNodeListPointers.append(r.readLEUInt32()) }
     }
 }
 

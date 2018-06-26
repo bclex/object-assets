@@ -12,17 +12,14 @@ public class SKILRecord: Record {
         public let action: Int32
         public let attribute: Int32
         public let specialization: UInt32 // 0 = Combat, 1 = Magic, 2 = Stealth
-        public let useValue: [Float] // The use types for each skill are hard-coded.
+        public var useValue: [Float] // The use types for each skill are hard-coded.
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             action = format == .TES3 ? 0 : r.readLEInt32()
             attribute = r.readLEInt32()
             specialization = r.readLEUInt32()
-            var useValue = [Float](); useValue.reserveCapacity(format == .TES3 ? 4 : 2)
-            for i in useValue.startIndex..<useValue.capacity {
-                useValue[i] = r.readLESingle()
-            }
-            self.useValue = useValue
+            useValue = [Float](); let capacity = format == .TES3 ? 4 : 2; useValue.reserveCapacity(capacity)
+            for _ in 0..<capacity { useValue.append(r.readLESingle()) }
         }
     }
 

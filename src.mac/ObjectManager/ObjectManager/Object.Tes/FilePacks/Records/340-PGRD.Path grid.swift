@@ -65,9 +65,9 @@ public class PGRDRecord: Record {
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             reference = FormId<REFRRecord>(r.readLEUInt32())
-            pointIds = [Int16](); pointIds.reserveCapacity((dataSize - 4) >> 2)
-            for i in pointIds.startIndex..<pointIds.capacity {
-                pointIds[i] = r.readLEInt16()
+            pointIds = [Int16](); let capacity = (dataSize - 4) >> 2; pointIds.reserveCapacity(capacity)
+            for _ in 0..<capacity {
+                pointIds.append(r.readLEInt16())
                 r.skipBytes(2) // Unused (can merge back)
             }
         }
@@ -88,12 +88,18 @@ public class PGRDRecord: Record {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
         case "DATA": DATA = DATAField(r, dataSize, format)
-        case "PGRP": PGRPs = [PGRPField](); PGRPs.reserveCapacity(dataSize >> 4); for i in 0..<PGRPs.capacity { PGRPs[i] = PGRPField(r, 16) }
+        case "PGRP":
+            PGRPs = [PGRPField](); let capacity = dataSize >> 4; PGRPs.reserveCapacity(capacity)
+            for _ in 0..<capacity { PGRPs.append(PGRPField(r, 16)) }
         case "PGRC": PGRC = UNKNField(r, dataSize)
         case "PGAG": PGAG = UNKNField(r, dataSize)
-        case "PGRR": PGRRs = [PGRRField](); PGRRs.reserveCapacity(dataSize >> 2); for i in 0..<PGRRs.capacity { PGRRs[i] = PGRRField(r, 4); }; r.skipBytes(dataSize % 4)
+        case "PGRR":
+            PGRRs = [PGRRField](); let capacity = dataSize >> 2; PGRRs.reserveCapacity(capacity)
+            for _ in 0..<capacity { PGRRs.append(PGRRField(r, 4)) }; r.skipBytes(dataSize % 4)
         case "PGRL": if PGRLs == nil { PGRLs = [PGRLField]() }; PGRLs!.append(PGRLField(r, dataSize))
-        case "PGRI": PGRIs = [PGRIField](); PGRIs.reserveCapacity(dataSize >> 4); for i in 0..<PGRIs.capacity { PGRIs[i] = PGRIField(r, 16) }
+        case "PGRI":
+            PGRIs = [PGRIField](); let capacity = dataSize >> 4; PGRIs.reserveCapacity(capacity)
+            for _ in 0..<capacity { PGRIs.append(PGRIField(r, 16)) }
         default: return false
         }
         return true

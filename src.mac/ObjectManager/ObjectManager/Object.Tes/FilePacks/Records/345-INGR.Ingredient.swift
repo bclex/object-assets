@@ -11,28 +11,19 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
     public struct IRDTField {
         public let weight: Float
         public let value: Int32
-        public let effectId: [Int32] // 0 or -1 means no effect
-        public let skillId: [Int32] // only for Skill related effects, 0 or -1 otherwise
-        public let attributeId: [Int32] // only for Attribute related effects, 0 or -1 otherwise
+        public var effectId: [Int32] // 0 or -1 means no effect
+        public var skillId: [Int32] // only for Skill related effects, 0 or -1 otherwise
+        public var attributeId: [Int32] // only for Attribute related effects, 0 or -1 otherwise
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             weight = r.readLESingle();
             value = r.readLEInt32();
-            var effectId = [Int32](); effectId.reserveCapacity(4)
-            for i in 0..<effectId.capacity {
-                effectId[i] = r.readLEInt32()
-            }
-            self.effectId = effectId
-            var skillId = [Int32](); skillId.reserveCapacity(4)
-            for i in 0..<skillId.capacity {
-                skillId[i] = r.readLEInt32()
-            }
-            self.skillId = skillId
-            var attributeId = [Int32](); attributeId.reserveCapacity(4)
-            for i in attributeId.startIndex..<attributeId.capacity {
-                attributeId[i] = r.readLEInt32()
-            }
-            self.attributeId = attributeId
+            effectId = [Int32](); effectId.reserveCapacity(4)
+            for _ in 0..<4 { effectId.append(r.readLEInt32()) }
+            skillId = [Int32](); skillId.reserveCapacity(4)
+            for _ in 0..<4 { skillId.append(r.readLEInt32()) }
+            attributeId = [Int32](); attributeId.reserveCapacity(4)
+            for _ in 0..<4 { attributeId.append(r.readLEInt32()) }
         }
     }
 
