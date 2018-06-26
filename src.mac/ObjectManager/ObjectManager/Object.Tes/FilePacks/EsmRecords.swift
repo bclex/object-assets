@@ -209,11 +209,12 @@ public class Header: CustomStringConvertible {
         "SNDR" : ({x in return SNDRRecord(x)}, {x in return x > 5}),
     ]
 
-    // public static bool LoadRecord(string type, byte level) => Create.TryGetValue(type, out RecordType recordType) ? recordType.Load(level) : false;
-
-    func createRecord(at position: UInt64) -> Record? {
+    func createRecord(at position: UInt64, level: Int) -> Record? {
         guard let recordType = Header.create[type] else {
             debugPrint("Unsupported ESM record type: \(type)")
+            return nil
+        }
+        guard recordType.l(level) else {
             return nil
         }
         let record = recordType.f(self)
@@ -241,7 +242,7 @@ public class RecordGroup: CustomStringConvertible {
         _level = level
     }
 
-    func addHeader(_ header: Header, mode: Int = 0) {
+    func addHeader(_ header: Header) {
         headers.append(header)
         let grup = _r.readASCIIString(4)
         _r.baseStream.position -= 4
@@ -252,7 +253,7 @@ public class RecordGroup: CustomStringConvertible {
         readGrup(header, recordHeader)
     }
 
-    func readGrup(_ header: Header, _ recordHeader: Header, mode: Int = 0) {
+    func readGrup(_ header: Header, _ recordHeader: Header) {
         let nextPosition = _r.baseStream.position + UInt64(recordHeader.dataSize)
         if groups == nil {
             groups = [RecordGroup]()
@@ -283,7 +284,7 @@ public class RecordGroup: CustomStringConvertible {
                 //group.load()
                 continue
             }
-            guard let record = recordHeader.createRecord(at: _r.baseStream.position) else {
+            guard let record = recordHeader.createRecord(at: _r.baseStream.position, level: _level) else {
                 _r.baseStream.position += UInt64(recordHeader.dataSize)
                 continue
             }

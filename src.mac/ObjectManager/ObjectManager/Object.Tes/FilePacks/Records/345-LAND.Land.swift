@@ -8,7 +8,7 @@
 
 public class LANDRecord: Record {
     // TESX
-    public struct VNMLField {
+    public class VNMLField {
         public var vertexs: [Vector3Int] // XYZ 8 bit floats
 
         init(_ r: BinaryReader, _ dataSize: Int) {
@@ -17,7 +17,7 @@ public class LANDRecord: Record {
         }
     }
 
-    public struct VHGTField {
+    public class VHGTField {
         public let referenceHeight: Float // A height offset for the entire cell. Decreasing this value will shift the entire cell land down.
         public var heightData: [Int8] // HeightData
 
@@ -29,7 +29,7 @@ public class LANDRecord: Record {
         }
     }
 
-    public struct VCLRField {
+    public class VCLRField {
         public var colors: [ColorRef] // 24-bit RGB
 
         init(_ r: BinaryReader, _ dataSize: Int) {
@@ -38,7 +38,7 @@ public class LANDRecord: Record {
         }
     }
 
-    public struct VTEXField {
+    public class VTEXField {
         public var textureIndices: [UInt32]
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
@@ -63,7 +63,7 @@ public class LANDRecord: Record {
         }
     }
 
-    public struct WNAMField {
+    public class WNAMField {
         // Low-LOD heightmap (signed chars)
         init(_ r: BinaryReader, _ dataSize: Int) {
             let heightCount = dataSize

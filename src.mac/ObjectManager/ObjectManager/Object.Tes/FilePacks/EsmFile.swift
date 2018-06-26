@@ -40,7 +40,7 @@ public class EsmFile: CustomStringConvertible {
         self.filePath = filePath.path
         _r = BinaryReader(FileBaseStream(path: self.filePath)!)
         let start = Date()
-        read(level: 0)
+        read(level: 1)
         let endRead = Date()
         debugPrint("Loading: \(endRead.timeIntervalSince(start))")
         //postProcessRecords()
@@ -62,7 +62,7 @@ public class EsmFile: CustomStringConvertible {
         guard (format != .TES3 || rootHeader.type == "TES3") && (format == .TES3 || rootHeader.type == "TES4") else {
             fatalError("\(filePath) record header \(rootHeader.type) is not valid for this \(format)")
         }
-        let rootRecord = rootHeader.createRecord(at: rootHeader.position)!
+        let rootRecord = rootHeader.createRecord(at: rootHeader.position, level: level)!
         rootRecord.read(_r, filePath, for: format)
         // morrowind hack
         guard format != .TES3 else {
@@ -71,7 +71,7 @@ public class EsmFile: CustomStringConvertible {
                 label: "",
                 dataSize: UInt32(_r.baseStream.length - _r.baseStream.position),
                 position: _r.baseStream.position
-            ), mode: 99);
+            ));
             group.load()
             // groups = Dictionary(grouping: group.records, by: { $0.header.type! })
             //     .mapValues {
