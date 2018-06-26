@@ -19,14 +19,11 @@ namespace OA.Tes.FilePacks.Records
                 Weight = r.ReadLESingle();
                 Value = r.ReadLEInt32();
                 EffectId = new int[4];
-                for (var i = 0; i < EffectId.Length; i++)
-                    EffectId[i] = r.ReadLEInt32();
+                for (var i = 0; i < EffectId.Length; i++) EffectId[i] = r.ReadLEInt32();
                 SkillId = new int[4];
-                for (var i = 0; i < SkillId.Length; i++)
-                    SkillId[i] = r.ReadLEInt32();
+                for (var i = 0; i < SkillId.Length; i++) SkillId[i] = r.ReadLEInt32();
                 AttributeId = new int[4];
-                for (var i = 0; i < AttributeId.Length; i++)
-                    AttributeId[i] = r.ReadLEInt32();
+                for (var i = 0; i < AttributeId.Length; i++) AttributeId[i] = r.ReadLEInt32();
             }
         }
 

@@ -13,8 +13,7 @@ namespace OA.Tes.FilePacks.Records
             public VNMLField(UnityBinaryReader r, int dataSize)
             {
                 Vertexs = new Vector3Int[dataSize / 3];
-                for (var i = 0; i < Vertexs.Length; i++)
-                    Vertexs[i] = new Vector3Int(r.ReadByte(), r.ReadByte(), r.ReadByte());
+                for (var i = 0; i < Vertexs.Length; i++) Vertexs[i] = new Vector3Int(r.ReadByte(), r.ReadByte(), r.ReadByte());
             }
         }
 
@@ -27,8 +26,7 @@ namespace OA.Tes.FilePacks.Records
             {
                 ReferenceHeight = r.ReadLESingle();
                 HeightData = new sbyte[dataSize - 4 - 3];
-                for (var i = 0; i < HeightData.Length; i++)
-                    HeightData[i] = r.ReadSByte();
+                for (var i = 0; i < HeightData.Length; i++) HeightData[i] = r.ReadSByte();
                 r.SkipBytes(3); // Unused
             }
         }
@@ -40,8 +38,7 @@ namespace OA.Tes.FilePacks.Records
             public VCLRField(UnityBinaryReader r, int dataSize)
             {
                 Colors = new ColorRef[dataSize / 24];
-                for (var i = 0; i < Colors.Length; i++)
-                    Colors[i] = new ColorRef(r.ReadByte(), r.ReadByte(), r.ReadByte());
+                for (var i = 0; i < Colors.Length; i++) Colors[i] = new ColorRef(r.ReadByte(), r.ReadByte(), r.ReadByte());
             }
         }
 
@@ -54,13 +51,11 @@ namespace OA.Tes.FilePacks.Records
                 if (format == GameFormatId.TES3)
                 {
                     TextureIndices = new uint[dataSize >> 1];
-                    for (var i = 0; i < TextureIndices.Length; i++)
-                        TextureIndices[i] = r.ReadLEUInt16();
+                    for (var i = 0; i < TextureIndices.Length; i++) TextureIndices[i] = r.ReadLEUInt16();
                     return;
                 }
                 TextureIndices = new uint[dataSize >> 2];
-                for (var i = 0; i < TextureIndices.Length; i++)
-                    TextureIndices[i] = r.ReadLEUInt32();
+                for (var i = 0; i < TextureIndices.Length; i++) TextureIndices[i] = r.ReadLEUInt32();
             }
         }
 
@@ -83,10 +78,7 @@ namespace OA.Tes.FilePacks.Records
             public WNAMField(UnityBinaryReader r, int dataSize)
             {
                 var heightCount = dataSize;
-                for (var i = 0; i < heightCount; i++)
-                {
-                    var height = r.ReadByte();
-                }
+                for (var i = 0; i < heightCount; i++) { var height = r.ReadByte(); }
             }
         }
 
@@ -159,8 +151,12 @@ namespace OA.Tes.FilePacks.Records
                 case "WNAM": WNAM = new WNAMField(r, dataSize); return true;
                 // TES4
                 case "BTXT": var btxt = new BTXTField(r, dataSize); BTXTs[btxt.Quadrant] = btxt; return true;
-                case "ATXT": if (ATXTs == null) ATXTs = new ATXTGroup[4]; var atxt = new BTXTField(r, dataSize); _lastATXT = ATXTs[atxt.Quadrant] = new ATXTGroup { ATXT = atxt }; return true;
-                case "VTXT": var vtxt = new VTXTField[dataSize >> 3]; for (var i = 0; i < vtxt.Length; i++) vtxt[i] = new VTXTField(r, dataSize); _lastATXT.VTXTs = vtxt; return true;
+                case "ATXT":
+                    if (ATXTs == null) ATXTs = new ATXTGroup[4];
+                    var atxt = new BTXTField(r, dataSize); _lastATXT = ATXTs[atxt.Quadrant] = new ATXTGroup { ATXT = atxt }; return true;
+                case "VTXT":
+                    var vtxt = new VTXTField[dataSize >> 3];
+                    for (var i = 0; i < vtxt.Length; i++) vtxt[i] = new VTXTField(r, dataSize); _lastATXT.VTXTs = vtxt; return true;
                 default: return false;
             }
         }

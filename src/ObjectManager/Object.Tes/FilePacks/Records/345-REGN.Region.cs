@@ -170,8 +170,7 @@ namespace OA.Tes.FilePacks.Records
             public void RPLDField(UnityBinaryReader r, int dataSize)
             {
                 Points = new Vector2[dataSize >> 3];
-                for (var i = 0; i < Points.Length; i++)
-                    Points[i] = new Vector2(r.ReadLESingle(), r.ReadLESingle());
+                for (var i = 0; i < Points.Length; i++) Points[i] = new Vector2(r.ReadLESingle(), r.ReadLESingle());
             }
         }
 
@@ -203,12 +202,20 @@ namespace OA.Tes.FilePacks.Records
                 case "RPLI": RPLIs.Add(new RPLIField(r, dataSize)); return true;
                 case "RPLD": ArrayUtils.Last(RPLIs).RPLDField(r, dataSize); return true;
                 case "RDAT": RDATs.Add(new RDATField(r, dataSize)); return true;
-                case "RDOT": var rdot = ArrayUtils.Last(RDATs).RDOTs = new RDOTField[dataSize / 52]; for (var i = 0; i < rdot.Length; i++) rdot[i] = new RDOTField(r, dataSize); return true;
+                case "RDOT":
+                    var rdot = ArrayUtils.Last(RDATs).RDOTs = new RDOTField[dataSize / 52];
+                    for (var i = 0; i < rdot.Length; i++) rdot[i] = new RDOTField(r, dataSize); return true;
                 case "RDMP": ArrayUtils.Last(RDATs).RDMP = new STRVField(r, dataSize); return true;
-                case "RDGS": var rdgs = ArrayUtils.Last(RDATs).RDGSs = new RDGSField[dataSize / 8]; for (var i = 0; i < rdgs.Length; i++) rdgs[i] = new RDGSField(r, dataSize); return true;
+                case "RDGS":
+                    var rdgs = ArrayUtils.Last(RDATs).RDGSs = new RDGSField[dataSize / 8];
+                    for (var i = 0; i < rdgs.Length; i++) rdgs[i] = new RDGSField(r, dataSize); return true;
                 case "RDMD": ArrayUtils.Last(RDATs).RDMD = new UI32Field(r, dataSize); return true;
-                case "RDSD": var rdsd = ArrayUtils.Last(RDATs).RDSDs = new RDSDField[dataSize / 12]; for (var i = 0; i < rdsd.Length; i++) rdsd[i] = new RDSDField(r, dataSize, format); return true;
-                case "RDWT": var rdwt = ArrayUtils.Last(RDATs).RDWTs = new RDWTField[dataSize / RDWTField.SizeOf(format)]; for (var i = 0; i < rdwt.Length; i++) rdwt[i] = new RDWTField(r, dataSize, format); return true;
+                case "RDSD":
+                    var rdsd = ArrayUtils.Last(RDATs).RDSDs = new RDSDField[dataSize / 12];
+                    for (var i = 0; i < rdsd.Length; i++) rdsd[i] = new RDSDField(r, dataSize, format); return true;
+                case "RDWT":
+                    var rdwt = ArrayUtils.Last(RDATs).RDWTs = new RDWTField[dataSize / RDWTField.SizeOf(format)];
+                    for (var i = 0; i < rdwt.Length; i++) rdwt[i] = new RDWTField(r, dataSize, format); return true;
                 default: return false;
             }
         }

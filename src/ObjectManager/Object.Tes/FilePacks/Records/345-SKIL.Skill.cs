@@ -18,8 +18,7 @@ namespace OA.Tes.FilePacks.Records
                 Attribute = r.ReadLEInt32();
                 Specialization = r.ReadLEUInt32();
                 UseValue = new float[format == GameFormatId.TES3 ? 4 : 2];
-                for (var i = 0; i < UseValue.Length; i++)
-                    UseValue[i] = r.ReadLESingle();
+                for (var i = 0; i < UseValue.Length; i++) UseValue[i] = r.ReadLESingle();
             }
         }
 

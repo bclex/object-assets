@@ -167,7 +167,9 @@ namespace OA.Tes.FilePacks.Records
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "DATA": DATA = new DATAField(r, dataSize); return true;
-                case "ESCE": ESCEs = new STRVField[dataSize >> 2]; for (var i = 0; i < ESCEs.Length; i++) ESCEs[i] = new STRVField(r, 4); return true;
+                case "ESCE":
+                    ESCEs = new STRVField[dataSize >> 2];
+                    for (var i = 0; i < ESCEs.Length; i++) ESCEs[i] = new STRVField(r, 4); return true;
                 default: return false;
             }
         }
