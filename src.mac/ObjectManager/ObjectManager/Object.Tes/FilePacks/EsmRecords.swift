@@ -123,7 +123,7 @@ public class Header: CustomStringConvertible {
         // 0
         "LTEX" : ({x in return LTEXRecord(x)}, {x in return x > 0}),
         "STAT" : ({x in return STATRecord(x)}, {x in return x > 0}),
-        "CELL" : ({x in return CELLRecord(x)}, {x in return x > 0}),
+        "CELL" : ({x in return CELLRecord(x)}, {x in return x > 1}),
         "LAND" : ({x in return LANDRecord(x)}, {x in return x > 0}),
         // 1
         "DOOR" : ({x in return DOORRecord(x)}, {x in return x > 1}),
@@ -223,8 +223,9 @@ public class Header: CustomStringConvertible {
     }
 }
 
-public class RecordGroup: CustomStringConvertible {
+public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String { return "\(headers.first?.description ?? "none")" }
+    public var debugDescription: String { return description }
     //public string Label => Headers.First.Value.Label
     public var headers = [Header]()
     public var records = [Record]()
@@ -310,8 +311,9 @@ public class RecordGroup: CustomStringConvertible {
     }
 }
 
-public class Record: IRecord, CustomStringConvertible {
+public class Record: IRecord, CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String { return "BASE" }
+    public var debugDescription: String { return description }
     var header: Header
     
     init(_ header: Header) {

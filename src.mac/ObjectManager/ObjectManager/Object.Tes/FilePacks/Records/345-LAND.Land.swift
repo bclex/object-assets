@@ -6,49 +6,69 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
+import Foundation
+
 public class LANDRecord: Record {
     // TESX
     public class VNMLField {
-        public var vertexs: [Vector3Int] // XYZ 8 bit floats
-
+        //public var vertexs: [Vector3Int] // XYZ 8 bit floats
+        public var vertexs: Data
+        
         init(_ r: BinaryReader, _ dataSize: Int) {
-            vertexs = [Vector3Int](); let capacity = dataSize / 3; vertexs.reserveCapacity(capacity)
-            for _ in 0..<capacity { vertexs.append(Vector3Int(Int(r.readByte()), Int(r.readByte()), Int(r.readByte()))) }
+            vertexs = r.readBytes(dataSize)
+//            vertexs = [Vector3Int](); let capacity = dataSize / 3; vertexs.reserveCapacity(capacity)
+//            for _ in 0..<capacity { vertexs.append(Vector3Int(Int(r.readByte()), Int(r.readByte()), Int(r.readByte()))) }
         }
     }
 
     public class VHGTField {
         public let referenceHeight: Float // A height offset for the entire cell. Decreasing this value will shift the entire cell land down.
-        public var heightData: [Int8] // HeightData
+        public var heightData: [Int8] = [] // HeightData
+        //public var heightData: Data // HeightData
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             referenceHeight = r.readLESingle()
-            heightData = [Int8](); let capacity = dataSize - 4 - 3; heightData.reserveCapacity(capacity)
-            for _ in 0..<capacity { heightData.append(r.readSByte()) }
+//            var b = UnsafeMutableRawPointer.allocate(byteCount: dataSize, alignment: 1)
+//            b.storeBytes(of: r.readBytes(dataSize - 4 - 3), as: UInt8)
+            let count = dataSize - 4 - 3
+            r.readBytes(count).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+                let rawPtr = UnsafeRawPointer(ptr)
+                let typedPtr = rawPtr.bindMemory(to: Int8.self, capacity: count)
+                let buffer = UnsafeBufferPointer(start: typedPtr, count: count)
+                self.heightData = Array(buffer)
+            }
+            //heightData = r.readBytes(dataSize - 4 - 3)
+            //heightData = [Int8](); let capacity = dataSize - 4 - 3; heightData.reserveCapacity(capacity)
+            //for _ in 0..<capacity { heightData.append(r.readSByte()) }
+            //for _ in 0..<capacity { _ = r.readSByte() }
             r.skipBytes(3) // Unused
         }
     }
 
     public class VCLRField {
-        public var colors: [ColorRef] // 24-bit RGB
+//        public var colors: [ColorRef] // 24-bit RGB
+        public var colors: Data
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            colors = [ColorRef](); let capacity = dataSize / 24; colors.reserveCapacity(capacity)
-            for _ in 0..<capacity { colors.append(ColorRef(red: r.readByte(), green: r.readByte(), blue: r.readByte())) }
+            colors = r.readBytes(dataSize)
+//            colors = [ColorRef](); let capacity = dataSize / 24; colors.reserveCapacity(capacity)
+//            for _ in 0..<capacity { colors.append(ColorRef(red: r.readByte(), green: r.readByte(), blue: r.readByte())) }
         }
     }
 
     public class VTEXField {
-        public var textureIndices: [UInt32]
+//        public var textureIndices: [UInt32]
+        public var textureIndices: Data
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
-            guard format != .TES3 else {
-                textureIndices = [UInt32](); let capacity = dataSize >> 1; textureIndices.reserveCapacity(capacity)
-                for _ in 0..<capacity { textureIndices.append(UInt32(r.readLEUInt16())) }
-                return
-            }
-            textureIndices = [UInt32](); let capacity = dataSize >> 2; textureIndices.reserveCapacity(capacity)
-            for _ in 0..<capacity { textureIndices.append(r.readLEUInt32()) }
+            textureIndices = r.readBytes(dataSize)
+//            guard format != .TES3 else {
+//                textureIndices = [UInt32](); let capacity = dataSize >> 1; textureIndices.reserveCapacity(capacity)
+//                for _ in 0..<capacity { textureIndices.append(UInt32(r.readLEUInt16())) }
+//                return
+//            }
+//            textureIndices = [UInt32](); let capacity = dataSize >> 2; textureIndices.reserveCapacity(capacity)
+//            for _ in 0..<capacity { textureIndices.append(r.readLEUInt32()) }
         }
     }
 
