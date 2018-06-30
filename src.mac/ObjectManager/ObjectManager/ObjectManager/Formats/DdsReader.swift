@@ -280,7 +280,7 @@ public class DdsReader {
         // Figure out the texture format and load the texture data.
         var hasMipmaps = false
         var ddsMipmapLevelCount = 0
-        var textureFormat = TextureFormat()
+        var textureFormat = TextureFormat(rawValue: 0)
         var bytesPerPixel = 0
         var textureData = Data()
         extractDDSTextureFormatAndData(
@@ -492,13 +492,13 @@ public class DdsReader {
             // BGRA32
             if header.ddspf.dwBBitMask == 0x000000FF && header.ddspf.dwGBitMask == 0x0000FF00 &&
                 header.ddspf.dwRBitMask == 0x00FF0000 && header.ddspf.dwABitMask == 0xFF000000 {
-                textureFormat = kCIFormatBGRA8
+                textureFormat = CIFormat.BGRA8
                 bytesPerPixel = 4
             }
             // ARGB32
             else if header.ddspf.dwABitMask == 0x000000FF && header.ddspf.dwRBitMask == 0x0000FF00 &&
                 header.ddspf.dwGBitMask == 0x00FF0000 && header.ddspf.dwBBitMask == 0xFF000000 {
-                textureFormat = kCIFormatARGB8
+                textureFormat = CIFormat.ARGB8
                 
                 bytesPerPixel = 4
             }
@@ -510,19 +510,19 @@ public class DdsReader {
             r.readRestOfBytes(&textureData, offsetBy: 0)
         }
         else if header.ddspf.dwFourCC == "DXT1" {
-            textureFormat = kCIFormatARGB8
+            textureFormat = CIFormat.ARGB8
             bytesPerPixel = 4
             let compressedTextureData = r.readRestOfBytes()
             textureData = decodeDXT1ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
         }
         else if header.ddspf.dwFourCC == "DXT3" {
-            textureFormat = kCIFormatARGB8
+            textureFormat = CIFormat.ARGB8
             bytesPerPixel = 4
             let compressedTextureData = r.readRestOfBytes()
             textureData = decodeDXT3ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
         }
         else if header.ddspf.dwFourCC == "DXT5" {
-            textureFormat = kCIFormatARGB8
+            textureFormat = CIFormat.ARGB8
             bytesPerPixel = 4
             let compressedTextureData = r.readRestOfBytes()
             textureData = decodeDXT5ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)

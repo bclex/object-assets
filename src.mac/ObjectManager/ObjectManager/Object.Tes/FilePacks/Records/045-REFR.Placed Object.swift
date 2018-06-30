@@ -72,7 +72,7 @@ public class REFRRecord: Record {
     }
 
     public class XMRKGroup: CustomStringConvertible {
-        public var description: String { return "\(FULL)" }
+        public var description: String { return "\(FULL!)" }
         public var FNAM: BYTEField! // Map Flags
         public var FULL: STRVField! // Name
         public var TNAM: BYTEField! // Type
