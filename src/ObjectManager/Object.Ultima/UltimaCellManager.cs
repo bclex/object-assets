@@ -26,7 +26,7 @@ namespace OA.Ultima
             _loadBalancer = loadBalancer;
         }
 
-        public Vector2i GetExteriorCellIndices(Vector3 point) => new Vector2i(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters));
+        public Vector2i GetExteriorCellId(Vector3 point) => new Vector2i(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters));
 
         public InRangeCellInfo StartCreatingExteriorCell(Vector2i cellIndices)
         {
@@ -42,7 +42,7 @@ namespace OA.Ultima
 
         public void UpdateExteriorCells(Vector3 currentPosition, bool immediate = false, int cellRadiusOverride = -1)
         {
-            var cameraCellIndices = GetExteriorCellIndices(currentPosition);
+            var cameraCellIndices = GetExteriorCellId(currentPosition);
 
             var cellRadius = cellRadiusOverride >= 0 ? cellRadiusOverride : _cellRadius;
             var minCellX = cameraCellIndices.x - cellRadius;

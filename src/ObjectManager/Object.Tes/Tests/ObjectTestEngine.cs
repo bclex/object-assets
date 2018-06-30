@@ -18,8 +18,11 @@ namespace OA.Tes
 
         public static void Start()
         {
-            var assetUri = "game://Morrowind/Morrowind.bsa";
-            var dataUri = "game://Morrowind/Morrowind.esm";
+            //var assetUri = "game://Morrowind/Morrowind.bsa";
+            //var dataUri = "game://Morrowind/Morrowind.esm";
+
+            var assetUri = "game://Oblivion/Oblivion*";
+            var dataUri = "game://Oblivion/Oblivion.esm";
 
             var assetManager = AssetManager.GetAssetManager(EngineId.Tes);
             Asset = assetManager.GetAssetPack(assetUri).Result;
@@ -29,6 +32,9 @@ namespace OA.Tes
             // engine
             //Engine.SpawnPlayerOutside(PlayerPrefab, new Vector2i(-2, -9), new Vector3(-137.94f, 2.30f, -1037.6f));
             Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(-137.94f, 2.30f, -1037.6f));
+
+            // engine - oblivion
+            //Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(0, 0, 0));
         }
 
         public static void OnDestroy()

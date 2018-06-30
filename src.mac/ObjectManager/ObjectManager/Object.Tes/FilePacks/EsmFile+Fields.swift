@@ -83,11 +83,11 @@ public struct DATVField: CustomStringConvertible {
 
     init(_ r: BinaryReader, _ dataSize: Int, type: Character) {
         switch type {
-            case "b": valueB = r.readLEInt32() != 0
-            case "i": valueI = r.readLEInt32()
-            case "f": valueF = r.readLESingle()
-            case "s": valueS = r.readASCIIString(dataSize, format: .possibleNullTerminated)
-            default: fatalError("\(type)")
+        case "b": valueB = r.readLEInt32() != 0
+        case "i": valueI = r.readLEInt32()
+        case "f": valueF = r.readLESingle()
+        case "s": valueS = r.readASCIIString(dataSize, format: .possibleNullTerminated)
+        default: fatalError("\(type)")
         }
     }
 }

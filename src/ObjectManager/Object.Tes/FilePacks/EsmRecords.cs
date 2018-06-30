@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 
 // TES3
@@ -76,6 +77,7 @@ namespace OA.Tes.FilePacks
         }
 
         public override string ToString() => $"{Type}:{GroupType}";
+        public Header Parent;
         public string Type; // 4 bytes
         public uint DataSize;
         public HeaderFlags Flags;
@@ -87,8 +89,9 @@ namespace OA.Tes.FilePacks
         public HeaderGroupType GroupType;
 
         public Header() { }
-        public Header(UnityBinaryReader r, GameFormatId format)
+        public Header(UnityBinaryReader r, GameFormatId format, Header parent)
         {
+            Parent = parent;
             Type = r.ReadASCIIString(4);
             if (Type == "GRUP")
             {
@@ -126,13 +129,13 @@ namespace OA.Tes.FilePacks
         struct RecordType
         {
             public Func<Record> F;
-            public Func<byte, bool> L;
+            public Func<int, bool> L;
         }
 
-        static Dictionary<string, RecordType> Create = new Dictionary<string, RecordType>
+        static Dictionary<string, RecordType> CreateMap = new Dictionary<string, RecordType>
         {
-            { "TES3", new RecordType { F = ()=>new TES3Record() }},
-            { "TES4", new RecordType { F = ()=>new TES4Record() }},
+            { "TES3", new RecordType { F = ()=>new TES3Record(), L = x => true }},
+            { "TES4", new RecordType { F = ()=>new TES4Record(), L = x => true }},
             // 0
             { "LTEX", new RecordType { F = ()=>new LTEXRecord(), L = x => x > 0 }},
             { "STAT", new RecordType { F = ()=>new STATRecord(), L = x => x > 0 }},
@@ -222,15 +225,15 @@ namespace OA.Tes.FilePacks
             { "SNDR", new RecordType { F = ()=>new SNDRRecord(), L = x => x > 5 }},
         };
 
-        public static bool LoadRecord(string type, byte level) => Create.TryGetValue(type, out RecordType recordType) ? recordType.L(level) : false;
-
-        public Record CreateRecord(long position)
+        public Record CreateRecord(long position, int recordLevel)
         {
-            if (!Create.TryGetValue(Type, out RecordType recordType))
+            if (!CreateMap.TryGetValue(Type, out RecordType recordType))
             {
                 Utils.Warning($"Unsupported ESM record type: {Type}");
                 return null;
             }
+            if (!recordType.L(recordLevel))
+                return null;
             var record = recordType.F();
             record.Header = this;
             return record;
@@ -247,48 +250,37 @@ namespace OA.Tes.FilePacks
         readonly UnityBinaryReader _r;
         readonly string _filePath;
         readonly GameFormatId _formatId;
-        readonly byte _level;
+        readonly int _recordLevel;
         int _headerSkip;
 
-        public RecordGroup(UnityBinaryReader r, string filePath, GameFormatId format, byte level)
+        public RecordGroup(UnityBinaryReader r, string filePath, GameFormatId format, int recordLevel)
         {
             _r = r;
             _filePath = filePath;
             _formatId = format;
-            _level = level;
+            _recordLevel = recordLevel;
         }
 
-        public void AddHeader(Header header, int mode = 0)
+        public void AddHeader(Header header, int level)
         {
             Headers.AddLast(header);
-            var grup = _r.ReadASCIIString(4);
-            _r.BaseStream.Position -= 4;
-            if (grup != "GRUP")
-                return;
-            var recordHeader = new Header(_r, _formatId);
-            ReadGrup(header, recordHeader);
+            if (header.GroupType == Header.HeaderGroupType.Top)
+                switch (header.Label)
+                {
+                    case "CELL": case "WRLD": Load(); break; // "DIAL"
+                }
         }
 
-        void ReadGrup(Header header, Header recordHeader, int mode = 0)
+        public List<Record> Load()
         {
-            var nextPosition = _r.BaseStream.Position + recordHeader.DataSize;
-            if (Groups == null)
-                Groups = new List<RecordGroup>();
-            var group = new RecordGroup(_r, _filePath, _formatId, _level);
-            group.AddHeader(recordHeader);
-            Groups.Add(group); Console.WriteLine($"Grup: {header.Label}/{group}");
-            _r.BaseStream.Position = nextPosition;
-        }
-
-        public void Load()
-        {
-            if (_headerSkip == Headers.Count) return;
+            if (_headerSkip == Headers.Count) return Records;
             lock (_r)
             {
-                if (_headerSkip == Headers.Count) return;
+                if (_headerSkip == Headers.Count) return Records;
                 foreach (var header in Headers.Skip(_headerSkip))
                     ReadGroup(header);
                 _headerSkip = Headers.Count;
+                return Records;
             }
         }
 
@@ -298,14 +290,15 @@ namespace OA.Tes.FilePacks
             var endPosition = header.Position + header.DataSize;
             while (_r.BaseStream.Position < endPosition)
             {
-                var recordHeader = new Header(_r, _formatId);
+                var recordHeader = new Header(_r, _formatId, header);
                 if (recordHeader.Type == "GRUP")
                 {
-                    ReadGrup(header, recordHeader);
-                    //group.Read();
+                    var group = ReadGRUP(header, recordHeader);
+                    if (recordHeader.GroupType <= Header.HeaderGroupType.InteriorCellBlock || recordHeader.GroupType == Header.HeaderGroupType.ExteriorCellBlock)
+                        group.Load();
                     continue;
                 }
-                var record = recordHeader.CreateRecord(_r.BaseStream.Position);
+                var record = recordHeader.CreateRecord(_r.BaseStream.Position, _recordLevel);
                 if (record == null)
                 {
                     _r.BaseStream.Position += recordHeader.DataSize;
@@ -316,8 +309,31 @@ namespace OA.Tes.FilePacks
             }
         }
 
+        RecordGroup ReadGRUP(Header header, Header recordHeader)
+        {
+            var nextPosition = _r.BaseStream.Position + recordHeader.DataSize;
+            if (Groups == null)
+                Groups = new List<RecordGroup>();
+            var group = new RecordGroup(_r, _filePath, _formatId, _recordLevel);
+            group.AddHeader(recordHeader, 0);
+            Groups.Add(group);
+            _r.BaseStream.Position = nextPosition;
+            // print header path
+            var headerPath = string.Join("/", GetHeaderPath(new List<string>(), header).ToArray());
+            Console.WriteLine($"Grup: {headerPath} {header.GroupType}");
+            return group;   
+        }
+
+        static List<string> GetHeaderPath(List<string> b, Header header)
+        {
+            if (header.Parent != null) GetHeaderPath(b, header.Parent);
+            b.Add(header.GroupType != Header.HeaderGroupType.Top ? BitConverter.ToString(Encoding.ASCII.GetBytes(header.Label)).Replace("-", string.Empty) : header.Label);
+            return b;
+        }
+
         void ReadRecord(Record record, bool compressed)
         {
+            //Console.WriteLine($"Recd: {record.Header.Type}");
             if (!compressed)
             {
                 record.Read(_r, _filePath, _formatId);
@@ -366,7 +382,6 @@ namespace OA.Tes.FilePacks
                 {
                     r.BaseStream.Position = endPosition;
                     continue;
-                    //header.DataSize = (uint)(endPosition - r.BaseStream.Position);
                 }
                 var position = r.BaseStream.Position;
                 if (!CreateField(r, format, fieldHeader.Type, fieldHeader.DataSize))

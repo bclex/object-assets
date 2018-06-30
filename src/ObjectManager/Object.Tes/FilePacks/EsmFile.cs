@@ -16,10 +16,6 @@ namespace OA.Tes.FilePacks
         public string FilePath;
         public GameFormatId Format;
         public Dictionary<string, RecordGroup> Groups;
-        public Dictionary<Type, List<IRecord>> recordsByType;
-        public Dictionary<string, IRecord> objectsByIDString;
-        public Dictionary<Vector2i, CELLRecord> exteriorCELLRecordsByIndices;
-        public Dictionary<Vector2i, LANDRecord> LANDRecordsByIndices;
 
         public EsmFile(string filePath, GameId gameId)
         {
@@ -30,9 +26,9 @@ namespace OA.Tes.FilePacks
             _r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             var watch = new Stopwatch();
             watch.Start();
-            Read(0);
+            Read(1);
             Utils.Info($"Loading: {watch.Elapsed}");
-            //PostProcessRecords();
+            Process();
             watch.Stop();
             GameFormatId GetFormatId()
             {
@@ -73,31 +69,29 @@ namespace OA.Tes.FilePacks
             }
         }
 
-        public List<IRecord> GetRecordsOfType<T>() where T : Record { return recordsByType.TryGetValue(typeof(T), out List<IRecord> records) ? records : null; }
-
-        void Read(byte level)
+        void Read(int recordLevel)
         {
-            var rootHeader = new Header(_r, Format);
+            var rootHeader = new Header(_r, Format, null);
             if ((Format == GameFormatId.TES3 && rootHeader.Type != "TES3") || (Format != GameFormatId.TES3 && rootHeader.Type != "TES4"))
                 throw new FormatException($"{FilePath} record header {rootHeader.Type} is not valid for this {Format}");
-            var rootRecord = rootHeader.CreateRecord(rootHeader.Position);
+            var rootRecord = rootHeader.CreateRecord(rootHeader.Position, recordLevel);
             rootRecord.Read(_r, FilePath, Format);
             // morrowind hack
             if (Format == GameFormatId.TES3)
             {
-                var group = new RecordGroup(_r, FilePath, Format, level);
+                var group = new RecordGroup(_r, FilePath, Format, recordLevel);
                 group.AddHeader(new Header
                 {
                     Label = string.Empty,
                     DataSize = (uint)(_r.BaseStream.Length - _r.BaseStream.Position),
                     Position = _r.BaseStream.Position,
-                }, int.MaxValue);
+                }, 0);
                 group.Load();
                 Groups = group.Records.GroupBy(x => x.Header.Type)
                     .ToDictionary(x => x.Key, x =>
                     {
-                        var s = new RecordGroup(_r, FilePath, Format, level) { Records = x.ToList() };
-                        s.AddHeader(new Header { Label = x.Key });
+                        var s = new RecordGroup(_r, FilePath, Format, recordLevel) { Records = x.ToList() };
+                        s.AddHeader(new Header { Label = x.Key }, 0);
                         return s;
                     });
                 return;
@@ -107,51 +101,18 @@ namespace OA.Tes.FilePacks
             var endPosition = _r.BaseStream.Length;
             while (_r.BaseStream.Position < endPosition)
             {
-                var header = new Header(_r, Format);
+                var header = new Header(_r, Format, null);
                 if (header.Type != "GRUP")
                     throw new InvalidOperationException($"{header.Type} not GRUP");
                 var nextPosition = _r.BaseStream.Position + header.DataSize;
                 if (!Groups.TryGetValue(header.Label, out RecordGroup group))
                 {
-                    group = new RecordGroup(_r, FilePath, Format, level);
+                    group = new RecordGroup(_r, FilePath, Format, recordLevel);
                     Groups.Add(header.Label, group);
                 }
-                group.AddHeader(header); Console.WriteLine($"Read: {group}");
-                //if (group.Label != "CELL" && group.Label != "WRLD")
-                //if (Header.LoadRecord(group.Label, level))
-                //    group.Read();
+                //Console.WriteLine($"Read: {header.Label}");
+                group.AddHeader(header, 0);
                 _r.BaseStream.Position = nextPosition;
-            }
-        }
-
-        void PostProcessRecords()
-        {
-            recordsByType = new Dictionary<Type, List<IRecord>>();
-            objectsByIDString = new Dictionary<string, IRecord>();
-            exteriorCELLRecordsByIndices = new Dictionary<Vector2i, CELLRecord>();
-            LANDRecordsByIndices = new Dictionary<Vector2i, LANDRecord>();
-            foreach (var record in Groups.Values.SelectMany(x => x.Records))
-            {
-                if (record == null)
-                    continue;
-                // Add the record to the list for it's type.
-                var recordType = record.GetType();
-                if (recordsByType.TryGetValue(recordType, out List<IRecord> recordsOfSameType))
-                    recordsOfSameType.Add(record);
-                else
-                {
-                    recordsOfSameType = new List<IRecord> { record };
-                    recordsByType.Add(recordType, recordsOfSameType);
-                }
-                // Add the record to the object dictionary if applicable.
-                if (record is IHaveEDID edid) objectsByIDString.Add(edid.EDID.Value, record);
-                // Add the record to exteriorCELLRecordsByIndices if applicable.
-                if (record is CELLRecord cell)
-                    if (!cell.IsInterior)
-                        exteriorCELLRecordsByIndices[cell.GridCoords] = cell;
-                // Add the record to LANDRecordsByIndices if applicable.
-                if (record is LANDRecord land)
-                    LANDRecordsByIndices[land.GridCoords] = land;
             }
         }
     }

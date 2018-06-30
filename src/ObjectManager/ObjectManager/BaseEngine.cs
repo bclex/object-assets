@@ -102,15 +102,15 @@ namespace OA
         /// <param name="playerPrefab">The player prefab.</param>
         /// <param name="interiorCellName">The name of the desired cell.</param>
         /// <param name="position">The target position of the player.</param>
-        public void SpawnPlayerInside(GameObject playerPrefab, string interiorCellName, Vector3 position)
-        {
-            _currentCell = Data.FindInteriorCellRecord(interiorCellName);
-            Debug.Assert(_currentCell != null);
-            CreatePlayer(playerPrefab, position, out _playerCameraObj);
-            var cellInfo = CellManager.StartCreatingInteriorCell(interiorCellName);
-            LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
-            OnInteriorCell(_currentCell);
-        }
+        //public void SpawnPlayerInside(GameObject playerPrefab, string interiorCellName, Vector3 position)
+        //{
+        //    _currentCell = Data.FindInteriorCellRecord(interiorCellName);
+        //    Debug.Assert(_currentCell != null);
+        //    CreatePlayer(playerPrefab, position, out _playerCameraObj);
+        //    var cellInfo = CellManager.StartCreatingInteriorCell(interiorCellName);
+        //    LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
+        //    OnInteriorCell(_currentCell);
+        //}
 
         /// <summary>
         /// Spawns the player inside using the cell's grid coordinates.
@@ -151,8 +151,8 @@ namespace OA
         /// <param name="position">The target position of the player.</param>
         public void SpawnPlayerOutside(GameObject playerPrefab, Vector3 position)
         {
-            var cellIndices = CellManager.GetExteriorCellIndices(position);
-            _currentCell = Data.FindExteriorCellRecord(cellIndices);
+            var cellId = CellManager.GetExteriorCellId(position);
+            _currentCell = Data.FindExteriorCellRecord(cellId);
             CreatePlayer(playerPrefab, position, out _playerCameraObj);
             CellManager.UpdateExteriorCells(_playerCameraObj.transform.position, true, CellRadiusOnLoad);
             OnExteriorCell(_currentCell);

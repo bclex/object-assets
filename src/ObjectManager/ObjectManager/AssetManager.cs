@@ -29,9 +29,9 @@ namespace OA
 
     public interface IDataPack : IDisposable
     {
-        ICellRecord FindExteriorCellRecord(Vector2i cellIndices);
-        ICellRecord FindInteriorCellRecord(string cellName);
-        ICellRecord FindInteriorCellRecord(Vector2i gridCoords);
+        ICellRecord FindExteriorCellRecord(Vector2i cellId);
+        //ICellRecord FindInteriorCellRecord(string cellId);
+        ICellRecord FindInteriorCellRecord(Vector2i gridId);
     }
 
     public interface IAssetManager

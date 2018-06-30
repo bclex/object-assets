@@ -2,6 +2,7 @@
 using OA.Tes.FilePacks;
 using OA.Tes.FilePacks.Records;
 using System;
+using UnityEngine;
 
 namespace OA.Tes
 {
@@ -17,13 +18,14 @@ namespace OA.Tes
 
         public static void Start()
         {
-            var assetUri = "game://Morrowind/Morrowind.bsa";
-            var dataUri = "game://Morrowind/Morrowind.esm";
+            //var assetUri = "game://Morrowind/Morrowind.bsa";
+            //var dataUri = "game://Morrowind/Morrowind.esm";
+
             //var dataUri = "game://Morrowind/Bloodmoon.esm";
             //var dataUri = "game://Morrowind/Tribunal.esm";
 
             //var assetUri = "game://Oblivion/Oblivion*";
-            //var dataUri = "game://Oblivion/Oblivion.esm";
+            var dataUri = "game://Oblivion/Oblivion.esm";
 
             //var assetUri = "game://SkyrimVR/Skyrim*";
             //var dataUri = "game://SkyrimVR/Skyrim.esm";
@@ -38,16 +40,25 @@ namespace OA.Tes
             //Asset = assetManager.GetAssetPack(assetUri).Result;
             Data = assetManager.GetDataPack(dataUri).Result;
 
+            TestLoadCell(new Vector3(-137.94f, 2.30f, -1037.6f));
             //TestAllCells();
         }
 
-        static void TestAllCells()
+        public static Vector2i GetExteriorCellId(Vector3 point) => new Vector2i(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters));
+    
+        static void TestLoadCell(Vector3 position)
         {
-            foreach (CELLRecord record in ((TesDataPack)Data).GetRecordsOfType<CELLRecord>())
-            {
-                Console.WriteLine(record.EDID.Value);
-            }
+            var cellId = GetExteriorCellId(position);
+            var cell = Data.FindExteriorCellRecord(cellId);
         }
+
+        //static void TestAllCells()
+        //{
+        //    foreach (CELLRecord record in ((TesDataPack)Data).GetRecordsOfType<CELLRecord>())
+        //    {
+        //        Console.WriteLine(record.EDID.Value);
+        //    }
+        //}
 
         public static void OnDestroy()
         {

@@ -15,10 +15,7 @@ public class EsmFile: CustomStringConvertible {
     public let filePath: String
     public let format: GameFormatId
     public var groups: [String : RecordGroup]? = nil
-    // public var recordsByType: [Type : [IRecord]]
     // public var objectsByIDString: [String : IRecord]
-    // public var exteriorCELLRecordsByIndices: [Vector2Int : CELLRecord]
-    // public var LANDRecordsByIndices: [Vector2Int : LANDRecord]
 
     init(_ filePath: URL?, for game: GameId) {
         func getFormatId() -> GameFormatId {
@@ -43,7 +40,7 @@ public class EsmFile: CustomStringConvertible {
         read(level: 1)
         let endRead = Date()
         debugPrint("Loading: \(endRead.timeIntervalSince(start))")
-        //postProcessRecords()
+        //process()
     }
 
     deinit {
@@ -54,8 +51,6 @@ public class EsmFile: CustomStringConvertible {
         _r?.close()
         _r = nil
     }
-
-    // public List<IRecord> GetRecordsOfType<T>() where T : Record { return recordsByType.TryGetValue(typeof(T), out List<IRecord> records) ? records : null; }
 
     func read(level: Int) {
         let rootHeader = Header(_r, for: format)

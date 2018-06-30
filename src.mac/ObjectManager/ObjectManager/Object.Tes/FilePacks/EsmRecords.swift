@@ -117,7 +117,7 @@ public class Header: CustomStringConvertible {
         position = r.baseStream.position
     }
 
-    static let create:[String : (f: (Header) -> Record, l: (Int) -> Bool)] = [
+    static let createMap:[String : (f: (Header) -> Record, l: (Int) -> Bool)] = [
         "TES3" : ({x in return TES3Record(x)}, {x in return true}),
         "TES4" : ({x in return TES4Record(x)}, {x in return true}),
         // 0
@@ -209,12 +209,12 @@ public class Header: CustomStringConvertible {
         "SNDR" : ({x in return SNDRRecord(x)}, {x in return x > 5}),
     ]
 
-    func createRecord(at position: UInt64, level: Int) -> Record? {
-        guard let recordType = Header.create[type] else {
+    func createRecord(at position: UInt64, recordLevel: Int) -> Record? {
+        guard let recordType = Header.createMap[type] else {
             debugPrint("Unsupported ESM record type: \(type)")
             return nil
         }
-        guard recordType.l(level) else {
+        guard recordType.l(recordLevel) else {
             return nil
         }
         let record = recordType.f(self)
@@ -232,46 +232,32 @@ public class RecordGroup: CustomStringConvertible {
     let _r: BinaryReader
     let _filePath: String
     let _format: GameFormatId
-    let _level: Int
+    let _recordLevel: Int
     var _headerSkip = 0
 
-    init(_ r: BinaryReader, _ filePath: String, for format: GameFormatId, level: Int) {
+    init(_ r: BinaryReader, _ filePath: String, for format: GameFormatId, recordLevel: Int) {
         _r = r
         _filePath = filePath
         _format = format
-        _level = level
+        _recordLevel = recordLevel
     }
 
     func addHeader(_ header: Header) {
         headers.append(header)
-        let grup = _r.readASCIIString(4)
-        _r.baseStream.position -= 4
-        guard grup == "GRUP" else {
-            return
+        if header.groupType == .top {
+            switch header.label {
+            case "CELL", "WRLD": load() // "DIAL"
+            }
         }
-        let recordHeader = Header(_r, for: _format)
-        readGrup(header, recordHeader)
     }
 
-    func readGrup(_ header: Header, _ recordHeader: Header) {
-        let nextPosition = _r.baseStream.position + UInt64(recordHeader.dataSize)
-        if groups == nil {
-            groups = [RecordGroup]()
-        }
-        let group = RecordGroup(_r, _filePath, for: _format, level: _level)
-        group.addHeader(recordHeader)
-        groups!.append(group); debugPrint("Grup: \(header.label ?? "unk")/\(group)")
-        _r.baseStream.position = nextPosition
-    }
-
-    public func load() {
-        guard _headerSkip != headers.count else {
-            return
-        }
+    public func load() -> [Record] {
+        guard _headerSkip != headers.count else { return }
         for i in _headerSkip..<headers.endIndex {
             readGroup(headers[i])
         }
         _headerSkip = headers.count
+        return records
     }
 
     func readGroup(_ header: Header) {
@@ -280,11 +266,13 @@ public class RecordGroup: CustomStringConvertible {
         while _r.baseStream.position < endPosition {
             let recordHeader = Header(_r, for: _format)
             guard recordHeader.type != "GRUP" else {
-                readGrup(header, recordHeader)
-                //group.load()
+                let group = readGRUP(header, recordHeader)
+                if recordHeader.groupType <= .HeaderGroupType.InteriorCellBlock || recordHeader.groupType == .HeaderGroupType.ExteriorCellBlock {
+                    group.load()
+                }
                 continue
             }
-            guard let record = recordHeader.createRecord(at: _r.baseStream.position, level: _level) else {
+            guard let record = recordHeader.createRecord(at: _r.baseStream.position, recordLevel: _recordLevel) else {
                 _r.baseStream.position += UInt64(recordHeader.dataSize)
                 continue
             }
@@ -293,7 +281,29 @@ public class RecordGroup: CustomStringConvertible {
         }
     }
 
+    func readGRUP(_ header: Header, _ recordHeader: Header) -> RecordGroup {
+        let nextPosition = _r.baseStream.position + UInt64(recordHeader.dataSize)
+        if groups == nil {
+            groups = [RecordGroup]()
+        }
+        let group = RecordGroup(_r, _filePath, for: _format, recordLevel: _recordLevel)
+        group.addHeader(recordHeader)
+        groups!.append(group);
+        _r.baseStream.position = nextPosition
+        // print header path
+        let path = getHeaderPath(&[String](), header: header).joined(separator: "/")
+        debugPrint("Grup: \(headerPath)/ \(header.groupType)")
+        return group
+    }
+
+    func getHeaderPath(_ b: inout [String], header: Header) -> [String] {
+        if header.parent != nil { getHeaderPath(b, header.parent) }
+        b.append(header.groupType != .top ? header.label : header.label)
+        return b
+    }
+
     func readRecord(_ record: Record, compressed: Bool) {
+        //debugPrint("Recd: \(record.header.type)")
         guard compressed else {
             record.read(_r, _filePath, for: _format)
             return
@@ -337,7 +347,6 @@ public class Record: IRecord, CustomStringConvertible {
             guard fieldHeader.type != "OFST" || header.type != "WRLD" else {
                 r.baseStream.position = endPosition
                 continue
-                //header.DataSize = UInt(endPosition - r.baseStream.position)
             }
             let position = r.baseStream.position
             guard createField(r, for: format, type: fieldHeader.type, dataSize: fieldHeader.dataSize) else {

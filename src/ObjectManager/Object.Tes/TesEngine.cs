@@ -100,14 +100,15 @@ namespace OA.Tes
                 CELLRecord newCell;
                 if (component.doorData.leadsToInteriorCell)
                 {
-                    var cellInfo = CellManager.StartCreatingInteriorCell(component.doorData.doorExitName);
-                    LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
-                    newCell = (CELLRecord)cellInfo.CellRecord;
-                    OnInteriorCell(newCell);
+                    throw new NotImplementedException();
+                    //var cellInfo = CellManager.StartCreatingInteriorCell(component.doorData.doorExitName);
+                    //LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
+                    //newCell = (CELLRecord)cellInfo.CellRecord;
+                    //OnInteriorCell(newCell);
                 }
                 else
                 {
-                    var cellIndices = CellManager.GetExteriorCellIndices(component.doorData.doorExitPos);
+                    var cellIndices = CellManager.GetExteriorCellId(component.doorData.doorExitPos);
                     newCell = (CELLRecord)Data.FindExteriorCellRecord(cellIndices);
                     CellManager.UpdateExteriorCells(_playerCameraObj.transform.position, true, CellRadiusOnLoad);
                     OnExteriorCell(newCell);
@@ -117,25 +118,25 @@ namespace OA.Tes
         }
         #endregion
 
-        public void TestAllCells(string resultsFilePath)
-        {
-            using (var w = new StreamWriter(resultsFilePath))
-                foreach (var record in ((TesDataPack)Data).GetRecordsOfType<CELLRecord>())
-                {
-                    var CELL = (CELLRecord)record;
-                    try
-                    {
-                        var cellInfo = ((TesCellManager)CellManager).StartInstantiatingCell(CELL);
-                        LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
-                        //DestroyImmediate(cellInfo.gameObject);
-                        w.Write("Pass: ");
-                    }
-                    catch (Exception e) { w.Write($"Fail: {e.Message}"); }
-                    if (!CELL.IsInterior)
-                        w.WriteLine(CELL.GridCoords.ToString());
-                    else w.WriteLine(CELL.EDID.Value);
-                    w.Flush();
-                }
-        }
+        //public void TestAllCells(string resultsFilePath)
+        //{
+        //    using (var w = new StreamWriter(resultsFilePath))
+        //        foreach (var record in ((TesDataPack)Data).GetRecordsOfType<CELLRecord>())
+        //        {
+        //            var CELL = (CELLRecord)record;
+        //            try
+        //            {
+        //                var cellInfo = ((TesCellManager)CellManager).StartInstantiatingCell(CELL);
+        //                LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
+        //                //DestroyImmediate(cellInfo.gameObject);
+        //                w.Write("Pass: ");
+        //            }
+        //            catch (Exception e) { w.Write($"Fail: {e.Message}"); }
+        //            if (!CELL.IsInterior)
+        //                w.WriteLine(CELL.GridCoords.ToString());
+        //            else w.WriteLine(CELL.EDID.Value);
+        //            w.Flush();
+        //        }
+        //}
     }
 }

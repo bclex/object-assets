@@ -26,6 +26,7 @@ namespace OA.Tes.FilePacks.Records
             public int GridX;
             public int GridY;
             public uint Flags;
+            public override string ToString() => $"{GridY.ToString("x")}x{GridX.ToString("x")}";
 
             public XCLCField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
@@ -151,6 +152,7 @@ namespace OA.Tes.FilePacks.Records
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
+            //Console.WriteLine($"   {type}");
             if (!InFRMR && type == "FRMR")
                 InFRMR = true;
             if (!InFRMR)
@@ -161,7 +163,7 @@ namespace OA.Tes.FilePacks.Records
                     case "FULL":
                     case "RGNN": FULL = new STRVField(r, dataSize); return true;
                     case "DATA": DATA = new INTVField(r, format == GameFormatId.TES3 ? 4 : dataSize).ToUI16Field(); if (format == GameFormatId.TES3) goto case "XCLC"; return true;
-                    case "XCLC": XCLC = new XCLCField(r, dataSize, format); return true;
+                    case "XCLC": XCLC = new XCLCField(r, dataSize, format); return true; //Console.WriteLine($"{XCLC}");
                     case "XCLL":
                     case "AMBI": XCLL = new XCLLField(r, dataSize, format); return true;
                     case "XCLW":

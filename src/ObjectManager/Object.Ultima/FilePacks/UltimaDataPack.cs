@@ -12,10 +12,10 @@ namespace OA.Ultima.FilePacks
             return FindExteriorCellRecord(cellIndices);
         }
 
-        ICellRecord IDataPack.FindInteriorCellRecord(string cellName)
-        {
-            return FindInteriorCellRecord(cellName);
-        }
+        //ICellRecord IDataPack.FindInteriorCellRecord(string cellName)
+        //{
+        //    return FindInteriorCellRecord(cellName);
+        //}
 
         ICellRecord IDataPack.FindInteriorCellRecord(Vector2i gridCoords)
         {

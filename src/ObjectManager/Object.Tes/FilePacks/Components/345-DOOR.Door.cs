@@ -28,8 +28,7 @@ namespace OA.Tes.FilePacks.Components
         {
             usable = true;
             pickable = false;
-            doorData = new DoorData();
-            doorData.closedRotation = transform.rotation;
+            doorData = new DoorData { closedRotation = transform.rotation };
             doorData.openRotation = doorData.closedRotation * Quaternion.Euler(Vector3.up * 90f);
             doorData.moving = false;
             var DOOR = record as DOORRecord;
@@ -41,7 +40,7 @@ namespace OA.Tes.FilePacks.Components
                 doorData.doorExitName = refObjDataGroup.DNAM.Value;
             if (doorData.leadsToAnotherCell && !doorData.leadsToInteriorCell)
             {
-                var doorExitCell = TesEngine.Instance.Data.FindExteriorCellRecord(TesEngine.Instance.CellManager.GetExteriorCellIndices(doorData.doorExitPos));
+                var doorExitCell = TesEngine.Instance.Data.FindExteriorCellRecord(TesEngine.Instance.CellManager.GetExteriorCellId(doorData.doorExitPos));
                 doorData.doorExitName = doorExitCell != null ? (((CELLRecord)doorExitCell).FULL.Value ?? "Unknown Region") : doorData.doorName;
             }
             if (refObjDataGroup.DODT != null)

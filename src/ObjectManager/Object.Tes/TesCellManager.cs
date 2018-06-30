@@ -27,15 +27,15 @@ namespace OA.Tes
             _loadBalancer = loadBalancer;
         }
 
-        public Vector2i GetExteriorCellIndices(Vector3 point) => new Vector2i(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters));
+        public Vector2i GetExteriorCellId(Vector3 point) => new Vector2i(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters));
 
-        public InRangeCellInfo StartCreatingExteriorCell(Vector2i cellIndices)
+        public InRangeCellInfo StartCreatingExteriorCell(Vector2i cellId)
         {
-            var cell = _data.FindExteriorCellRecord(cellIndices);
+            var cell = _data.FindExteriorCellRecord(cellId);
             if (cell != null)
             {
                 var cellInfo = StartInstantiatingCell(cell);
-                _cellObjects[cellIndices] = cellInfo;
+                _cellObjects[cellId] = cellInfo;
                 return cellInfo;
             }
             return null;
@@ -43,7 +43,7 @@ namespace OA.Tes
 
         public void UpdateExteriorCells(Vector3 currentPosition, bool immediate = false, int cellRadiusOverride = -1)
         {
-            var cameraCellIndices = GetExteriorCellIndices(currentPosition);
+            var cameraCellIndices = GetExteriorCellId(currentPosition);
 
             var cellRadius = cellRadiusOverride >= 0 ? cellRadiusOverride : _cellRadius;
             var minCellX = cameraCellIndices.x - cellRadius;
@@ -97,9 +97,9 @@ namespace OA.Tes
             }
         }
 
-        public InRangeCellInfo StartCreatingInteriorCell(string cellName)
+        public InRangeCellInfo StartCreatingInteriorCell(FormId<CELLRecord> cellId)
         {
-            var cell = _data.FindInteriorCellRecord(cellName);
+            var cell = _data.FindInteriorCellRecord(cellId);
             if (cell != null)
             {
                 var cellInfo = StartInstantiatingCell(cell);
@@ -109,9 +109,9 @@ namespace OA.Tes
             return null;
         }
 
-        public InRangeCellInfo StartCreatingInteriorCell(Vector2i gridCoords)
+        public InRangeCellInfo StartCreatingInteriorCell(Vector2i gridId)
         {
-            var cell = _data.FindInteriorCellRecord(gridCoords);
+            var cell = _data.FindInteriorCellRecord(gridId);
             if (cell != null)
             {
                 var cellInfo = StartInstantiatingCell(cell);
@@ -193,6 +193,7 @@ namespace OA.Tes
 
         private RefCellObjInfo[] GetRefCellObjInfos(CELLRecord cell)
         {
+            if (_data.Format != GameFormatId.TES3) return new RefCellObjInfo[0];
             var refCellObjInfos = new RefCellObjInfo[cell.RefObjs.Count];
             for (var i = 0; i < cell.RefObjs.Count; i++)
             {
@@ -202,7 +203,7 @@ namespace OA.Tes
                 };
                 // Get the record the RefObjDataGroup references.
                 var refObj = (CELLRecord.RefObj)refObjInfo.RefObj;
-                _data.objectsByIDString.TryGetValue(refObj.EDID.Value, out refObjInfo.ReferencedRecord);
+                _data._MANYsById.TryGetValue(refObj.EDID.Value, out refObjInfo.ReferencedRecord);
                 if (refObjInfo.ReferencedRecord != null)
                 {
                     var modelFileName = (refObjInfo.ReferencedRecord is IHaveMODL modl ? modl.MODL.Value : null);

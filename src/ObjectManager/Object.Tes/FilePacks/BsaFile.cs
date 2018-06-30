@@ -118,7 +118,7 @@ namespace OA.Tes.FilePacks
             _r = new UnityBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read));
             ReadMetadata();
             //TestContainsFile();
-            TestLoadFileData();
+            //TestLoadFileData();
         }
 
         void IDisposable.Dispose()

@@ -1,59 +1,92 @@
 ﻿using OA.Core;
 using OA.Tes.FilePacks.Records;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace OA.Tes.FilePacks
 {
     partial class EsmFile
     {
+        // TES3
+        internal Dictionary<string, IRecord> _MANYsById;
+        Dictionary<long, LTEXRecord> _LTEXsById;
+        Dictionary<Vector2i, CELLRecord> _CELLsById;
+        Dictionary<Vector2i, LANDRecord> _LANDsById;
+
+        // TES4
+        public Dictionary<string, LTEXRecord> _ltexsByEid;
+
+        void Process()
+        {
+            if (Format == GameFormatId.TES3)
+            {
+                var groups = new List<Record>[] { Groups.ContainsKey("STAT") ? Groups["STAT"].Load() : null };
+                _MANYsById = groups.SelectMany(x => x).Cast<IHaveEDID>().Where(x => x != null).ToDictionary(x => x.EDID.Value, x => (IRecord)x);
+                _LTEXsById = Groups.ContainsKey("LTEX") ? Groups["LTEX"].Load().Cast<LTEXRecord>().ToDictionary(x => x.INTV.Value) : null;
+                _CELLsById = Groups.ContainsKey("CELL") ? Groups["CELL"].Load().Cast<CELLRecord>().Where(x => !x.IsInterior).ToDictionary(x => x.GridCoords) : null;
+                _LANDsById = Groups.ContainsKey("LAND") ? Groups["LAND"].Load().Cast<LANDRecord>().ToDictionary(x => x.GridCoords) : null;
+                return;
+            }
+            _ltexsByEid = Groups["LTEX"].Load().Cast<LTEXRecord>().ToDictionary(x => x.EDID.Value);
+        }
+
         public LTEXRecord FindLTEXRecord(int index)
         {
-            var records = GetRecordsOfType<LTEXRecord>();
-            LTEXRecord ltex = null;
-            for (int i = 0, l = records.Count; i < l; i++)
+            if (Format == GameFormatId.TES3)
             {
-                ltex = (LTEXRecord)records[i];
-                if (ltex.INTV.Value == index)
-                    return ltex;
+                _LTEXsById.TryGetValue(index, out var ltex);
+                return ltex;
             }
-            return null;
+            throw new NotImplementedException();
         }
 
-        public LANDRecord FindLANDRecord(Vector2i cellIndices)
+        public LANDRecord FindLANDRecord(Vector2i cellId)
         {
-            LANDRecordsByIndices.TryGetValue(cellIndices, out LANDRecord land);
-            return land;
-        }
-
-        public CELLRecord FindExteriorCellRecord(Vector2i cellIndices)
-        {
-            exteriorCELLRecordsByIndices.TryGetValue(cellIndices, out CELLRecord cell);
-            return cell;
-        }
-
-        public CELLRecord FindInteriorCellRecord(string cellName)
-        {
-            var records = GetRecordsOfType<CELLRecord>();
-            CELLRecord cell = null;
-            for (int i = 0, l = records.Count; i < l; i++)
+            if (Format == GameFormatId.TES3)
             {
-                cell = (CELLRecord)records[i];
-                if (cell.EDID.Value == cellName)
-                    return cell;
+                _LANDsById.TryGetValue(cellId, out var land);
+                return land;
             }
-            return null;
+            throw new NotImplementedException();
+        }
+
+        public CELLRecord FindExteriorCellRecord(Vector2i cellId)
+        {
+            if (Format == GameFormatId.TES3)
+            {
+                _CELLsById.TryGetValue(cellId, out var cell);
+                return cell;
+            }
+            throw new NotImplementedException();
+        }
+
+        public CELLRecord FindInteriorCellRecord(FormId<CELLRecord> cellId)
+        {
+            throw new NotImplementedException();
+            //    var records = GetRecordsOfType<CELLRecord>();
+            //    CELLRecord cell = null;
+            //    for (int i = 0, l = records.Count; i < l; i++)
+            //    {
+            //        cell = (CELLRecord)records[i];
+            //        if (cell.EDID.Value == cellName)
+            //            return cell;
+            //    }
+            //    return null;
         }
 
         public CELLRecord FindInteriorCellRecord(Vector2i gridCoords)
         {
-            var records = GetRecordsOfType<CELLRecord>();
-            CELLRecord cell = null;
-            for (int i = 0, l = records.Count; i < l; i++)
-            {
-                cell = (CELLRecord)records[i];
-                if (cell.GridCoords.x == gridCoords.x && cell.GridCoords.y == gridCoords.y)
-                    return cell;
-            }
-            return null;
+            throw new NotImplementedException();
+            //var records = GetRecordsOfType<CELLRecord>();
+            //CELLRecord cell = null;
+            //for (int i = 0, l = records.Count; i < l; i++)
+            //{
+            //    cell = (CELLRecord)records[i];
+            //    if (cell.GridCoords.x == gridCoords.x && cell.GridCoords.y == gridCoords.y)
+            //        return cell;
+            //}
+            //return null;
         }
     }
 }
