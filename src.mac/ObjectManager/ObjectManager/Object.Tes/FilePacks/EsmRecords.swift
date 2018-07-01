@@ -248,6 +248,7 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
         if header.groupType == .top {
             switch header.label {
             case "CELL", "WRLD": load() // "DIAL"
+            default: return
             }
         }
     }
@@ -268,7 +269,7 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
             let recordHeader = Header(_r, for: _format)
             guard recordHeader.type != "GRUP" else {
                 let group = readGRUP(header, recordHeader)
-                if recordHeader.groupType <= .HeaderGroupType.InteriorCellBlock || recordHeader.groupType == .HeaderGroupType.ExteriorCellBlock {
+                if recordHeader.groupType <= .interiorCellBlock || recordHeader.groupType == .exteriorCellBlock {
                     group.load()
                 }
                 continue

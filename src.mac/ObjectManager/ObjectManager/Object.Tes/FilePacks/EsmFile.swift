@@ -15,7 +15,10 @@ public class EsmFile: CustomStringConvertible {
     public let filePath: String
     public let format: GameFormatId
     public var groups: [String : RecordGroup]? = nil
-    // public var objectsByIDString: [String : IRecord]
+    // TES3
+    var _LTEXsById: [Int : LTEXRecord]
+    var _CELLsById: [Vector2Int : CELLRecord]
+    var _LANDsById: [Vector2Int : LANDRecord]
 
     init(_ filePath: URL?, for game: GameId) {
         func getFormatId() -> GameFormatId {
@@ -52,28 +55,28 @@ public class EsmFile: CustomStringConvertible {
         _r = nil
     }
 
-    func read(level: Int) {
+    func read(_ recordLevel: Int) {
         let rootHeader = Header(_r, for: format)
         guard (format != .TES3 || rootHeader.type == "TES3") && (format == .TES3 || rootHeader.type == "TES4") else {
             fatalError("\(filePath) record header \(rootHeader.type) is not valid for this \(format)")
         }
-        let rootRecord = rootHeader.createRecord(at: rootHeader.position, level: level)!
+        let rootRecord = rootHeader.createRecord(at: rootHeader.position, recordLevel: recordLevel)!
         rootRecord.read(_r, filePath, for: format)
         // morrowind hack
         guard format != .TES3 else {
-            let group = RecordGroup(_r, filePath, for: format, level: level)
+            let group = RecordGroup(_r, filePath, for: format, recordLevel: recordLevel)
             group.addHeader(Header(
                 label: "",
                 dataSize: UInt32(_r.baseStream.length - _r.baseStream.position),
                 position: _r.baseStream.position
             ));
             group.load()
-            // groups = Dictionary(grouping: group.records, by: { $0.header.type! })
-            //     .mapValues {
-            //         var s = RecordGroup(_r, filePath, format, level, records: $0 }
-            //         s.addHeader(Header(label: $0.first!header.type! })
-            //         return s
-            //      }
+//            groups = Dictionary(grouping: group.records, by: { $0.header.type! })
+//            .mapValues {
+//                var s = RecordGroup(_r, filePath, format, level, records: $0 }
+//                s.addHeader(Header(label: $0.first!header.type! })
+//                return s
+//            }
             return
         }
         // read groups

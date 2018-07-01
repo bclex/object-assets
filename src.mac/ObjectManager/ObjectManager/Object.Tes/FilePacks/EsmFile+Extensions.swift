@@ -9,11 +9,6 @@
 import Foundation
 
 extension EsmFile {
-    // TES3
-    var _LTEXsById: [Int : LTEXRecord]
-    var _CELLsById: [Vector2Int : CELLRecord]
-    var _LANDsById: [Vector2Int : LANDRecord]
-
     func process() {
         guard format != .TES3 else {
             // _LTEXsById = Groups.ContainsKey("LTEX") ? Groups["LTEX"].Load().Cast<LTEXRecord>().ToDictionary(x => x.INTV.Value) : null;
@@ -25,22 +20,22 @@ extension EsmFile {
         //_ltexsByEid = Groups["LTEX"].Load().Cast<LTEXRecord>().ToDictionary(x => x.EDID.Value)
     }
 
-    func findLTEXRecord(_ index: Int) -> LTEXRecord {
-        if format != .TES3 else {
+    func findLTEXRecord(_ index: Int) -> LTEXRecord? {
+        guard format != .TES3 else {
             return _LTEXsById[index]
         }
         fatalError("NotImplemented")
     }
 
-    func findLANDRecord(_ cellId: Vector2Int) -> LANDRecord {
-        if format != .TES3 else {
+    func findLANDRecord(_ cellId: Vector2Int) -> LANDRecord? {
+        guard format != .TES3 else {
             return _LANDsById[cellId]
         }
         fatalError("NotImplemented")
     }
 
-    func findExteriorCellRecord(_ cellId: Vector2Int) -> CELLRecord {
-        if format != .TES3 else {
+    func findExteriorCellRecord(_ cellId: Vector2Int) -> CELLRecord? {
+        guard format != .TES3 else {
             return _CELLsById[cellId]
         }
         fatalError("NotImplemented")
