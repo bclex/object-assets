@@ -1,4 +1,4 @@
-﻿using OA.Core;
+﻿using UnityEngine;
 
 namespace OA.Ultima.FilePacks
 {
@@ -7,19 +7,6 @@ namespace OA.Ultima.FilePacks
         public UltimaDataPack(uint map)
             : base(map) { }
 
-        ICellRecord IDataPack.FindExteriorCellRecord(Vector2i cellIndices)
-        {
-            return FindExteriorCellRecord(cellIndices);
-        }
-
-        //ICellRecord IDataPack.FindInteriorCellRecord(string cellName)
-        //{
-        //    return FindInteriorCellRecord(cellName);
-        //}
-
-        ICellRecord IDataPack.FindInteriorCellRecord(Vector2i gridCoords)
-        {
-            return FindInteriorCellRecord(gridCoords);
-        }
+        ICellRecord IDataPack.FindCellRecord(Vector3Int cellId) { return FindCellRecord(cellId); }
     }
 }

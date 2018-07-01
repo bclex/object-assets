@@ -1,46 +1,27 @@
-﻿using OA.Core;
-using OA.Ultima.FilePacks.Records;
+﻿using OA.Ultima.FilePacks.Records;
+using UnityEngine;
 
 namespace OA.Ultima.FilePacks
 {
     partial class DataFile
     {
-        public LANDRecord FindLANDRecord(Vector2i cellIndices)
+        public LANDRecord FindLANDRecord(Vector3Int cellId)
         {
-            LANDRecordsByIndices.TryGetValue(cellIndices, out LANDRecord land);
+            _LANDsById.TryGetValue(cellId, out LANDRecord land);
             return land;
         }
 
-        public CELLRecord FindExteriorCellRecord(Vector2i cellIndices)
+        public CELLRecord FindCellRecord(Vector3Int cellId)
         {
-            exteriorCELLRecordsByIndices.TryGetValue(cellIndices, out CELLRecord cell);
+            _CELLsById.TryGetValue(cellId, out CELLRecord cell);
             return cell;
         }
 
-        public CELLRecord FindInteriorCellRecord(string cellName)
+        public CELLRecord FindCellRecordByName(int worldId, int cellId, string cellName)
         {
-            var records = GetRecordsOfType<CELLRecord>();
-            CELLRecord cell = null;
-            for (int i = 0, l = records.Count; i < l; i++)
-            {
-                cell = (CELLRecord)records[i];
-                if (cell.Name == cellName)
-                    return cell;
-            }
             return null;
-        }
-
-        public CELLRecord FindInteriorCellRecord(Vector2i gridCoords)
-        {
-            var records = GetRecordsOfType<CELLRecord>();
-            CELLRecord cell = null;
-            for (int i = 0, l = records.Count; i < l; i++)
-            {
-                cell = (CELLRecord)records[i];
-                if (cell.GridCoords.x == gridCoords.x && cell.GridCoords.y == gridCoords.y)
-                    return cell;
-            }
-            return null;
+            //_CELLsByName.TryGetValue(cellName, out var cell);
+            //return cell;
         }
     }
 }

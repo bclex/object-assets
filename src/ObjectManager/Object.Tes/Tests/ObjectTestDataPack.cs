@@ -40,16 +40,16 @@ namespace OA.Tes
             //Asset = assetManager.GetAssetPack(assetUri).Result;
             Data = assetManager.GetDataPack(dataUri).Result;
 
-            TestLoadCell(new Vector3(-137.94f, 2.30f, -1037.6f));
+            TestLoadCell(new Vector3(0f, 0f, 0f));
             //TestAllCells();
         }
 
-        public static Vector2i GetExteriorCellId(Vector3 point) => new Vector2i(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters));
+        public static Vector3Int GetCellId(Vector3 point, int worldId) => new Vector3Int(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters), worldId);
     
         static void TestLoadCell(Vector3 position)
         {
-            var cellId = GetExteriorCellId(position);
-            var cell = Data.FindExteriorCellRecord(cellId);
+            var cellId = GetCellId(position, 60);
+            var cell = Data.FindCellRecord(cellId);
         }
 
         //static void TestAllCells()

@@ -24,7 +24,7 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
-        public class NAM0Field
+        public struct NAM0Field
         {
             public Vector2 Min;
             public Vector2 Max;
@@ -32,6 +32,7 @@ namespace OA.Tes.FilePacks.Records
             public NAM0Field(UnityBinaryReader r, int dataSize)
             {
                 Min = new Vector2(r.ReadLESingle(), r.ReadLESingle());
+                Max = Vector2.zero;
             }
 
             public void NAM9Field(UnityBinaryReader r, int dataSize)

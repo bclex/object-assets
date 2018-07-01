@@ -35,7 +35,7 @@ namespace OA.Ultima.FilePacks.Records
 
         public string Name => $"{GridX}x{GridY}";
         public bool IsInterior => false;
-        public Vector2i GridCoords => new Vector2i((int)GridX, (int)GridY);
+        public Vector3Int GridId => new Vector3Int((int)GridX, (int)GridY, 0);
         public Color? AmbientLight => null;
 
         public RefObj[] RefObjs;

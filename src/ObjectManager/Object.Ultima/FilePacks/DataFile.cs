@@ -3,6 +3,7 @@ using OA.Ultima.FilePacks.Records;
 using OA.Ultima.Resources;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace OA.Ultima.FilePacks
 {
@@ -23,8 +24,8 @@ namespace OA.Ultima.FilePacks
         public Record[] records;
         public Dictionary<Type, List<IRecord>> recordsByType;
         public Dictionary<string, IRecord> objectsByIDString;
-        public Dictionary<Vector2i, CELLRecord> exteriorCELLRecordsByIndices;
-        public Dictionary<Vector2i, LANDRecord> LANDRecordsByIndices;
+        public Dictionary<Vector3Int, CELLRecord> _CELLsById;
+        public Dictionary<Vector3Int, LANDRecord> _LANDsById;
 
         public DataFile(uint map)
         {
@@ -79,8 +80,8 @@ namespace OA.Ultima.FilePacks
         {
             recordsByType = new Dictionary<Type, List<IRecord>>();
             objectsByIDString = new Dictionary<string, IRecord>();
-            exteriorCELLRecordsByIndices = new Dictionary<Vector2i, CELLRecord>();
-            LANDRecordsByIndices = new Dictionary<Vector2i, LANDRecord>();
+            _CELLsById = new Dictionary<Vector3Int, CELLRecord>();
+            _LANDsById = new Dictionary<Vector3Int, LANDRecord>();
             foreach (var record in records)
             {
                 if (record == null)
@@ -122,11 +123,11 @@ namespace OA.Ultima.FilePacks
                 if (record is CELLRecord cell)
                 {
                     if (!cell.IsInterior)
-                        exteriorCELLRecordsByIndices[cell.GridCoords] = cell;
+                        _CELLsById[cell.GridId] = cell;
                 }
                 // Add the record to LANDRecordsByIndices if applicable.
                 if (record is LANDRecord land)
-                    LANDRecordsByIndices[land.GridCoords] = land;
+                    _LANDsById[land.GridId] = land;
             }
         }
     }

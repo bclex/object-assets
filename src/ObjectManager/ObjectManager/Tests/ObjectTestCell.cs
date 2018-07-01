@@ -41,7 +41,7 @@ namespace OA
             Cursor.SetCursor(Asset.LoadTexture("tx_cursor", 1), Vector2.zero, CursorMode.Auto);
 
             // engine
-            SpawnPlayerOutside(PlayerPrefab, new Vector2i(-2, -9), new Vector3(-137.94f, 2.30f, -1037.6f));
+            SpawnPlayer(PlayerPrefab, new Vector3Int(-2, -9, 0), new Vector3(-137.94f, 2.30f, -1037.6f));
         }
 
         public static void OnDestroy()
@@ -63,7 +63,7 @@ namespace OA
         {
             // The current cell can be null if the player is outside of the defined game world.
             if (_currentCell == null || !_currentCell.IsInterior)
-                CellManager.UpdateExteriorCells(_playerCameraObj.transform.position);
+                CellManager.UpdateCells(_playerCameraObj.transform.position, 0);
             LoadBalancer.RunTasks(DesiredWorkTimePerFrame);
         }
 
@@ -84,12 +84,12 @@ namespace OA
             return player;
         }
 
-        private static void SpawnPlayerOutside(GameObject playerPrefab, Vector2i gridCoords, Vector3 position)
+        private static void SpawnPlayer(GameObject playerPrefab, Vector3Int gridId, Vector3 position)
         {
-            _currentCell = Data.FindExteriorCellRecord(gridCoords);
+            _currentCell = Data.FindCellRecord(gridId);
             Utils.Assert(_currentCell != null);
             CreatePlayer(playerPrefab, position, out _playerCameraObj);
-            var cellInfo = CellManager.StartCreatingExteriorCell(gridCoords);
+            var cellInfo = CellManager.StartCreatingCell(gridId);
             LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
         }
     }

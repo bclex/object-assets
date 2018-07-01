@@ -40,7 +40,7 @@ namespace OA.Tes.FilePacks.Components
                 doorData.doorExitName = refObjDataGroup.DNAM.Value;
             if (doorData.leadsToAnotherCell && !doorData.leadsToInteriorCell)
             {
-                var doorExitCell = TesEngine.Instance.Data.FindExteriorCellRecord(TesEngine.Instance.CellManager.GetExteriorCellId(doorData.doorExitPos));
+                var doorExitCell = BaseEngine.Instance.Data.FindCellRecord(BaseEngine.Instance.CellManager.GetCellId(doorData.doorExitPos, 0));
                 doorData.doorExitName = doorExitCell != null ? (((CELLRecord)doorExitCell).FULL.Value ?? "Unknown Region") : doorData.doorName;
             }
             if (refObjDataGroup.DODT != null)

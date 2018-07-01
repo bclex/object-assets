@@ -35,11 +35,10 @@ namespace OA
 
     public interface ICellManager
     {
-        Vector2i GetExteriorCellId(Vector3 point);
-        InRangeCellInfo StartCreatingExteriorCell(Vector2i cellId);
-        //InRangeCellInfo StartCreatingInteriorCell(FormId<CELLRecord> cellId);
-        InRangeCellInfo StartCreatingInteriorCell(Vector2i gridId);
-        void UpdateExteriorCells(Vector3 currentPosition, bool immediate = false, int cellRadiusOverride = -1);
+        Vector3Int GetCellId(Vector3 point, int worldId);
+        InRangeCellInfo StartCreatingCell(Vector3Int cellId);
+        InRangeCellInfo StartCreatingCellByName(int worldId, int cellId, string cellName);
+        void UpdateCells(Vector3 currentPosition, int worldId, bool immediate = false, int cellRadiusOverride = -1);
         void DestroyAllCells();
     }
 }

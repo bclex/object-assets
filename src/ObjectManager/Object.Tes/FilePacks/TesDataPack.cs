@@ -1,5 +1,6 @@
 ﻿using OA.Core;
 using System.IO;
+using UnityEngine;
 
 namespace OA.Tes.FilePacks
 {
@@ -13,8 +14,7 @@ namespace OA.Tes.FilePacks
             _webPath = webPath;
         }
 
-        ICellRecord IDataPack.FindExteriorCellRecord(Vector2i cellId) { return FindExteriorCellRecord(cellId); }
+        ICellRecord IDataPack.FindCellRecord(Vector3Int cellId) { return FindCellRecord(cellId); }
         //ICellRecord IDataPack.FindInteriorCellRecord(string cellId) { return FindInteriorCellRecord(cellName); }
-        ICellRecord IDataPack.FindInteriorCellRecord(Vector2i gridId) { return FindInteriorCellRecord(gridId); }
     }
 }

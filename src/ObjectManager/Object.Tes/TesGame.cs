@@ -58,7 +58,7 @@ namespace OA.Tes
             }
 
             // Spawn the player.
-            _engine.SpawnPlayerOutside(PlayerPrefab, new Vector2i(-2, -9), new Vector3(-137.94f, 2.30f, -1037.6f));
+            _engine.SpawnPlayer(PlayerPrefab, new Vector3Int(-2, -9, 0), new Vector3(-137.94f, 2.30f, -1037.6f));
         }
 
         void OnDestroy()

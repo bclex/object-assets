@@ -135,7 +135,7 @@ namespace OA.Tes.FilePacks.Records
         public ATXTGroup[] ATXTs; // Alpha Layer
         ATXTGroup _lastATXT;
 
-        public Vector2i GridCoords => new Vector2i(INTV.CellX, INTV.CellY);
+        public Vector3Int GridId => new Vector3Int(INTV.CellX, INTV.CellY, 0);
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {

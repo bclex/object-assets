@@ -1,6 +1,7 @@
 ﻿using OA.Core;
 using OA.Ultima.Data;
 using OA.Ultima.Resources;
+using UnityEngine;
 
 namespace OA.Ultima.FilePacks.Records
 {
@@ -27,10 +28,7 @@ namespace OA.Ultima.FilePacks.Records
             public bool IsImpassible => (Flags & TileFlag.Impassable) != 0;
         }
 
-        public Vector2i GridCoords
-        {
-            get { return new Vector2i((int)GridX, (int)GridY); }
-        }
+        public Vector3Int GridId => new Vector3Int((int)GridX, (int)GridY, 0);
 
         public sbyte[] Heights;
         public Tile[] Tiles;

@@ -183,8 +183,11 @@ namespace OA.Tes.FilePacks
             { "FACT", new RecordType { F = ()=>new FACTRecord(), L = x => x > 3 }},
             { "SSCR", new RecordType { F = ()=>new SSCRRecord(), L = x => x > 3 }},
             // 4 - Oblivion
-            { "ACRE", new RecordType { F = ()=>new ACRERecord(), L = x => x > 4 }},
-            { "ACHR", new RecordType { F = ()=>new ACHRRecord(), L = x => x > 4 }},
+            { "WRLD", new RecordType { F = ()=>new WRLDRecord(), L = x => x > 0 }},
+            { "ACRE", new RecordType { F = ()=>new ACRERecord(), L = x => x > 1 }},
+            { "ACHR", new RecordType { F = ()=>new ACHRRecord(), L = x => x > 1 }},
+            { "REFR", new RecordType { F = ()=>new REFRRecord(), L = x => x > 1 }},
+            //
             { "AMMO", new RecordType { F = ()=>new AMMORecord(), L = x => x > 4 }},
             { "ANIO", new RecordType { F = ()=>new ANIORecord(), L = x => x > 4 }},
             { "CLMT", new RecordType { F = ()=>new CLMTRecord(), L = x => x > 4 }},
@@ -203,14 +206,12 @@ namespace OA.Tes.FilePacks
             { "LVSP", new RecordType { F = ()=>new LVSPRecord(), L = x => x > 4 }},
             { "PACK", new RecordType { F = ()=>new PACKRecord(), L = x => x > 4 }},
             { "QUST", new RecordType { F = ()=>new QUSTRecord(), L = x => x > 4 }},
-            { "REFR", new RecordType { F = ()=>new REFRRecord(), L = x => x > 4 }},
             { "ROAD", new RecordType { F = ()=>new ROADRecord(), L = x => x > 4 }},
             { "SBSP", new RecordType { F = ()=>new SBSPRecord(), L = x => x > 4 }},
             { "SGST", new RecordType { F = ()=>new SGSTRecord(), L = x => x > 4 }},
             { "SLGM", new RecordType { F = ()=>new SLGMRecord(), L = x => x > 4 }},
             { "TREE", new RecordType { F = ()=>new TREERecord(), L = x => x > 4 }},
             { "WATR", new RecordType { F = ()=>new WATRRecord(), L = x => x > 4 }},
-            { "WRLD", new RecordType { F = ()=>new WRLDRecord(), L = x => x > 4 }},
             { "WTHR", new RecordType { F = ()=>new WTHRRecord(), L = x => x > 4 }},
             // 5 - Skyrim
             { "AACT", new RecordType { F = ()=>new AACTRecord(), L = x => x > 5 }},
@@ -294,8 +295,8 @@ namespace OA.Tes.FilePacks
                 if (recordHeader.Type == "GRUP")
                 {
                     var group = ReadGRUP(header, recordHeader);
-                    if (recordHeader.GroupType <= Header.HeaderGroupType.InteriorCellBlock || recordHeader.GroupType == Header.HeaderGroupType.ExteriorCellBlock)
-                        group.Load();
+                    //if (recordHeader.GroupType <= Header.HeaderGroupType.InteriorCellBlock || recordHeader.GroupType == Header.HeaderGroupType.ExteriorCellBlock)
+                    //group.Load();
                     continue;
                 }
                 var record = recordHeader.CreateRecord(_r.BaseStream.Position, _recordLevel);
@@ -320,8 +321,8 @@ namespace OA.Tes.FilePacks
             _r.BaseStream.Position = nextPosition;
             // print header path
             var headerPath = string.Join("/", GetHeaderPath(new List<string>(), header).ToArray());
-            Console.WriteLine($"Grup: {headerPath} {header.GroupType}");
-            return group;   
+            //Console.WriteLine($"Grup: {headerPath} {header.GroupType}");
+            return group;
         }
 
         static List<string> GetHeaderPath(List<string> b, Header header)
@@ -357,6 +358,7 @@ namespace OA.Tes.FilePacks
     public abstract class Record : IRecord
     {
         internal Header Header;
+        public uint Id => Header.FormId;
 
         /// <summary>
         /// Return an uninitialized subrecord to deserialize, or null to skip.

@@ -147,7 +147,7 @@ namespace OA.Tes.FilePacks.Records
         public List<RefObj> RefObjs = new List<RefObj>();
 
         public bool IsInterior => Utils.ContainsBitFlags(DATA.Value, 0x01);
-        public Vector2i GridCoords => new Vector2i(XCLC.Value.GridX, XCLC.Value.GridY);
+        public Vector3Int GridId => new Vector3Int(XCLC.Value.GridX, XCLC.Value.GridY, !IsInterior ? 0 : -1);
         public Color? AmbientLight => XCLL != null ? (Color?)XCLL.Value.AmbientColor.ToColor32() : null;
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)

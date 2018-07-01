@@ -67,6 +67,7 @@ namespace OA
 
         #region Player Spawn
 
+        protected int _currentWorld;
         protected ICellRecord _currentCell;
         protected Transform _playerTransform;
         protected PlayerComponent _playerComponent;
@@ -96,52 +97,21 @@ namespace OA
         }
 
         /// <summary>
-        /// Spawns the player inside. Be carefull, the name of the cell is not the same for each languages.
-        /// Use it with the correct name.
-        /// </summary>
-        /// <param name="playerPrefab">The player prefab.</param>
-        /// <param name="interiorCellName">The name of the desired cell.</param>
-        /// <param name="position">The target position of the player.</param>
-        //public void SpawnPlayerInside(GameObject playerPrefab, string interiorCellName, Vector3 position)
-        //{
-        //    _currentCell = Data.FindInteriorCellRecord(interiorCellName);
-        //    Debug.Assert(_currentCell != null);
-        //    CreatePlayer(playerPrefab, position, out _playerCameraObj);
-        //    var cellInfo = CellManager.StartCreatingInteriorCell(interiorCellName);
-        //    LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
-        //    OnInteriorCell(_currentCell);
-        //}
-
-        /// <summary>
         /// Spawns the player inside using the cell's grid coordinates.
         /// </summary>
         /// <param name="playerPrefab">The player prefab.</param>
-        /// <param name="gridCoords">The grid coordinates.</param>
+        /// <param name="gridId">The grid coordinates.</param>
         /// <param name="position">The target position of the player.</param>
-        public void SpawnPlayerInside(GameObject playerPrefab, Vector2i gridCoords, Vector3 position)
+        public void SpawnPlayer(GameObject playerPrefab, Vector3Int gridId, Vector3 position)
         {
-            _currentCell = Data.FindInteriorCellRecord(gridCoords);
+            _currentWorld = gridId.z;
+            _currentCell = Data.FindCellRecord(gridId);
             Debug.Assert(_currentCell != null);
             CreatePlayer(playerPrefab, position, out _playerCameraObj);
-            var cellInfo = CellManager.StartCreatingInteriorCell(gridCoords);
+            var cellInfo = CellManager.StartCreatingCell(gridId);
             LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
-            OnInteriorCell(_currentCell);
-        }
-
-        /// <summary>
-        /// Spawns the player outside using the cell's grid coordinates.
-        /// </summary>
-        /// <param name="playerPrefab">The player prefab.</param>
-        /// <param name="gridCoords">The grid coordinates.</param>
-        /// <param name="position">The target position of the player.</param>
-        public void SpawnPlayerOutside(GameObject playerPrefab, Vector2i gridCoords, Vector3 position)
-        {
-            _currentCell = Data.FindExteriorCellRecord(gridCoords);
-            Debug.Assert(_currentCell != null);
-            CreatePlayer(playerPrefab, position, out _playerCameraObj);
-            var cellInfo = CellManager.StartCreatingExteriorCell(gridCoords);
-            LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
-            OnExteriorCell(_currentCell);
+            if (gridId.z != -1) OnExteriorCell(_currentCell);
+            else OnInteriorCell(_currentCell);
         }
 
         /// <summary>
@@ -149,12 +119,12 @@ namespace OA
         /// </summary>
         /// <param name="playerPrefab">The player prefab.</param>
         /// <param name="position">The target position of the player.</param>
-        public void SpawnPlayerOutside(GameObject playerPrefab, Vector3 position)
+        public void SpawnPlayerAndUpdate(GameObject playerPrefab, Vector3 position)
         {
-            var cellId = CellManager.GetExteriorCellId(position);
-            _currentCell = Data.FindExteriorCellRecord(cellId);
+            var cellId = CellManager.GetCellId(position, _currentWorld);
+            _currentCell = Data.FindCellRecord(cellId);
             CreatePlayer(playerPrefab, position, out _playerCameraObj);
-            CellManager.UpdateExteriorCells(_playerCameraObj.transform.position, true, CellRadiusOnLoad);
+            CellManager.UpdateCells(_playerCameraObj.transform.position, _currentWorld, true, CellRadiusOnLoad);
             OnExteriorCell(_currentCell);
         }
 
@@ -191,7 +161,7 @@ namespace OA
         {
             // The current cell can be null if the player is outside of the defined game world.
             if (_currentCell == null || !_currentCell.IsInterior)
-                CellManager.UpdateExteriorCells(_playerCameraObj.transform.position);
+                CellManager.UpdateCells(_playerCameraObj.transform.position, _currentWorld);
             LoadBalancer.RunTasks(DesiredWorkTimePerFrame);
         }
     }

@@ -24,9 +24,9 @@ namespace OA.Ultima
             Engine = new UltimaEngine(assetManager, Asset, Data, null);
 
             var scale = ConvertUtils.ExteriorCellSideLengthInMeters;
-            //Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(4 * scale, 20, 25 * scale));
-            //Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(15 * scale, 20, 25 * scale));
-            Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(11 * scale, 10, 29 * scale));
+            //Engine.SpawnPlayerAndUpdate(PlayerPrefab, new Vector3(4 * scale, 20, 25 * scale));
+            //Engine.SpawnPlayerAndUpdate(PlayerPrefab, new Vector3(15 * scale, 20, 25 * scale));
+            Engine.SpawnPlayerAndUpdate(PlayerPrefab, new Vector3(11 * scale, 10, 29 * scale));
         }
 
         public static void OnDestroy()

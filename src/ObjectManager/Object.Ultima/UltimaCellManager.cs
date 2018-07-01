@@ -17,7 +17,7 @@ namespace OA.Ultima
         UltimaAssetPack _asset;
         UltimaDataPack _data;
         TemporalLoadBalancer _loadBalancer;
-        Dictionary<Vector2i, InRangeCellInfo> _cellObjects = new Dictionary<Vector2i, InRangeCellInfo>();
+        Dictionary<Vector3Int, InRangeCellInfo> _cellObjects = new Dictionary<Vector3Int, InRangeCellInfo>();
 
         public UltimaCellManager(UltimaAssetPack asset, UltimaDataPack data, TemporalLoadBalancer loadBalancer)
         {
@@ -26,50 +26,64 @@ namespace OA.Ultima
             _loadBalancer = loadBalancer;
         }
 
-        public Vector2i GetExteriorCellId(Vector3 point) => new Vector2i(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters));
+        public Vector3Int GetCellId(Vector3 point, int world) => new Vector3Int(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters), world);
 
-        public InRangeCellInfo StartCreatingExteriorCell(Vector2i cellIndices)
+        public InRangeCellInfo StartCreatingCell(Vector3Int cellId)
         {
-            var cell = _data.FindExteriorCellRecord(cellIndices);
+            var cell = _data.FindCellRecord(cellId);
             if (cell != null)
             {
                 var cellInfo = StartInstantiatingCell(cell);
-                _cellObjects[cellIndices] = cellInfo;
+                _cellObjects[cellId.z != -1 ? cellId : Vector3Int.zero] = cellInfo;
                 return cellInfo;
             }
             return null;
         }
 
-        public void UpdateExteriorCells(Vector3 currentPosition, bool immediate = false, int cellRadiusOverride = -1)
+        public InRangeCellInfo StartCreatingCellByName(int world, int id, string name)
         {
-            var cameraCellIndices = GetExteriorCellId(currentPosition);
+            if (world != -1)
+                throw new System.ArgumentOutOfRangeException("world");
+            var cell = _data.FindCellRecordByName(world, id, name);
+            if (cell != null)
+            {
+                var cellInfo = StartInstantiatingCell(cell);
+                _cellObjects[Vector3Int.zero] = cellInfo;
+                return cellInfo;
+            }
+            return null;
+        }
+
+        public void UpdateCells(Vector3 currentPosition, int world, bool immediate = false, int cellRadiusOverride = -1)
+        {
+            var cameraCellId = GetCellId(currentPosition, world);
 
             var cellRadius = cellRadiusOverride >= 0 ? cellRadiusOverride : _cellRadius;
-            var minCellX = cameraCellIndices.x - cellRadius;
-            var maxCellX = cameraCellIndices.x + cellRadius;
-            var minCellY = cameraCellIndices.y - cellRadius;
-            var maxCellY = cameraCellIndices.y + cellRadius;
+            var minCellX = cameraCellId.x - cellRadius;
+            var maxCellX = cameraCellId.x + cellRadius;
+            var minCellY = cameraCellId.y - cellRadius;
+            var maxCellY = cameraCellId.y + cellRadius;
 
             // Destroy out of range cells.
-            var outOfRangeCellIndices = new List<Vector2i>();
+            var outOfRangeCellIds = new List<Vector3Int>();
             foreach (var x in _cellObjects)
                 if (x.Key.x < minCellX || x.Key.x > maxCellX || x.Key.y < minCellY || x.Key.y > maxCellY)
-                    outOfRangeCellIndices.Add(x.Key);
-            foreach (var cellIndices in outOfRangeCellIndices)
-                DestroyExteriorCell(cellIndices);
+                    outOfRangeCellIds.Add(x.Key);
+            foreach (var cellId in outOfRangeCellIds)
+                DestroyCell(cellId);
 
             // Create new cells.
             for (var r = 0; r <= cellRadius; r++)
                 for (var x = minCellX; x <= maxCellX; x++)
                     for (var y = minCellY; y <= maxCellY; y++)
                     {
-                        var cellIndices = new Vector2i(x, y);
-                        var cellXDistance = Mathf.Abs(cameraCellIndices.x - cellIndices.x);
-                        var cellYDistance = Mathf.Abs(cameraCellIndices.y - cellIndices.y);
+                        var cellId = new Vector3Int(x, y, world);
+                        var cellXDistance = Mathf.Abs(cameraCellId.x - cellId.x);
+                        var cellYDistance = Mathf.Abs(cameraCellId.y - cellId.y);
                         var cellDistance = Mathf.Max(cellXDistance, cellYDistance);
-                        if (cellDistance == r && !_cellObjects.ContainsKey(cellIndices))
+                        if (cellDistance == r && !_cellObjects.ContainsKey(cellId))
                         {
-                            var cellInfo = StartCreatingExteriorCell(cellIndices);
+                            var cellInfo = StartCreatingCell(cellId);
                             if (cellInfo != null && immediate)
                                 _loadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
                         }
@@ -80,8 +94,8 @@ namespace OA.Ultima
             {
                 var cellIndices = x.Key;
                 var cellInfo = x.Value;
-                var cellXDistance = Mathf.Abs(cameraCellIndices.x - cellIndices.x);
-                var cellYDistance = Mathf.Abs(cameraCellIndices.y - cellIndices.y);
+                var cellXDistance = Mathf.Abs(cameraCellId.x - cellIndices.x);
+                var cellYDistance = Mathf.Abs(cameraCellId.y - cellIndices.y);
                 var cellDistance = Mathf.Max(cellXDistance, cellYDistance);
                 if (cellDistance <= _detailRadius)
                 {
@@ -96,29 +110,6 @@ namespace OA.Ultima
             }
         }
 
-        public InRangeCellInfo StartCreatingInteriorCell(string cellName)
-        {
-            var cell = _data.FindInteriorCellRecord(cellName);
-            if (cell != null)
-            {
-                var cellInfo = StartInstantiatingCell(cell);
-                _cellObjects[Vector2i.zero] = cellInfo;
-                return cellInfo;
-            }
-            return null;
-        }
-
-        public InRangeCellInfo StartCreatingInteriorCell(Vector2i gridCoords)
-        {
-            var cell = _data.FindInteriorCellRecord(gridCoords);
-            if (cell != null)
-            {
-                var cellInfo = StartInstantiatingCell(cell);
-                _cellObjects[Vector2i.zero] = cellInfo;
-                return cellInfo;
-            }
-            return null;
-        }
 
         public InRangeCellInfo StartInstantiatingCell(CELLRecord cell)
         {
@@ -127,8 +118,8 @@ namespace OA.Ultima
             LANDRecord land = null;
             if (!cell.IsInterior)
             {
-                cellObjName = string.Format("cell-{0:00}x{1:00}", cell.GridCoords.x, cell.GridCoords.y);
-                land = _data.FindLANDRecord(cell.GridCoords);
+                cellObjName = string.Format("cell-{0:00}x{1:00}", cell.GridId.x, cell.GridId.y);
+                land = _data.FindLANDRecord(cell.GridId);
             }
             else cellObjName = cell.Name;
             var cellObj = new GameObject(cellObjName) { tag = "Cell" };
@@ -137,6 +128,17 @@ namespace OA.Ultima
             var cellObjectsCreationCoroutine = InstantiateCellObjectsCoroutine(cell, land, cellObj, cellObjectsContainer);
             _loadBalancer.AddTask(cellObjectsCreationCoroutine);
             return new InRangeCellInfo(cellObj, cellObjectsContainer, cell, cellObjectsCreationCoroutine);
+        }
+
+        void DestroyCell(Vector3Int cellId)
+        {
+            if (_cellObjects.TryGetValue(cellId, out InRangeCellInfo cellInfo))
+            {
+                _loadBalancer.CancelTask(cellInfo.ObjectsCreationCoroutine);
+                Object.Destroy(cellInfo.GameObject);
+                _cellObjects.Remove(cellId);
+            }
+            else Utils.Error("Tried to destroy a cell that isn't created.");
         }
 
         public void DestroyAllCells()
@@ -152,7 +154,7 @@ namespace OA.Ultima
         /// <summary>
         /// A coroutine that instantiates the terrain for, and all objects in, a cell.
         /// </summary>
-        private IEnumerator InstantiateCellObjectsCoroutine(CELLRecord cell, LANDRecord land, GameObject cellObj, GameObject cellObjectsContainer)
+        IEnumerator InstantiateCellObjectsCoroutine(CELLRecord cell, LANDRecord land, GameObject cellObj, GameObject cellObjectsContainer)
         {
             cell.Read();
             // Start pre-loading all required textures for the terrain.
@@ -192,7 +194,7 @@ namespace OA.Ultima
             }
         }
 
-        private RefCellObjInfo[] GetRefCellObjInfos(CELLRecord cell)
+        RefCellObjInfo[] GetRefCellObjInfos(CELLRecord cell)
         {
             var refCellObjInfos = new RefCellObjInfo[cell.RefObjs.Length];
             for (var i = 0; i < cell.RefObjs.Length; i++)
@@ -219,7 +221,7 @@ namespace OA.Ultima
         /// <summary>
         /// Instantiates an object in a cell. Called by InstantiateCellObjectsCoroutine after the object's assets have been pre-loaded.
         /// </summary>
-        private void InstantiateCellObject(CELLRecord cell, GameObject parent, RefCellObjInfo refCellObjInfo)
+        void InstantiateCellObject(CELLRecord cell, GameObject parent, RefCellObjInfo refCellObjInfo)
         {
             if (refCellObjInfo.ReferencedRecord != null)
             {
@@ -268,7 +270,7 @@ namespace OA.Ultima
             else Utils.Log("Unknown Object: " + ((CELLRecord.RefObj)refCellObjInfo.RefObj).Name);
         }
 
-        private GameObject InstantiateLight(LIGHRecord LIGH, bool indoors)
+        GameObject InstantiateLight(LIGHRecord LIGH, bool indoors)
         {
             var game = UltimaSettings.Game;
             var lightObj = new GameObject("Light") { isStatic = true };
@@ -286,7 +288,7 @@ namespace OA.Ultima
         /// <summary>
         /// Finishes initializing an instantiated cell object.
         /// </summary>
-        private void PostProcessInstantiatedCellObject(GameObject gameObject, RefCellObjInfo refCellObjInfo)
+        void PostProcessInstantiatedCellObject(GameObject gameObject, RefCellObjInfo refCellObjInfo)
         {
             var refObj = (CELLRecord.RefObj)refCellObjInfo.RefObj;
             // Handle object transforms.
@@ -317,7 +319,7 @@ namespace OA.Ultima
             //ProcessObjectType<NPC_Record>(tagTarget, refCellObjInfo, "NPC");
         }
 
-        private void ProcessObjectType<RecordType>(GameObject gameObject, RefCellObjInfo info, string tag) where RecordType : Record
+        void ProcessObjectType<RecordType>(GameObject gameObject, RefCellObjInfo info, string tag) where RecordType : Record
         {
             var record = info.ReferencedRecord;
             if (record is RecordType)
@@ -331,7 +333,7 @@ namespace OA.Ultima
             }
         }
 
-        private List<string> GetLANDTextureFilePaths(LANDRecord land)
+        List<string> GetLANDTextureFilePaths(LANDRecord land)
         {
             // Don't return anything if the LAND doesn't have data.
             if (land.Tiles == null) return null;
@@ -348,7 +350,7 @@ namespace OA.Ultima
         /// <summary>
         /// Creates terrain representing a LAND record.
         /// </summary>
-        private IEnumerator InstantiateLANDCoroutine(LANDRecord land, GameObject parent)
+        IEnumerator InstantiateLANDCoroutine(LANDRecord land, GameObject parent)
         {
             Debug.Assert(land != null);
             // Don't create anything if the LAND doesn't have data.
@@ -424,23 +426,12 @@ namespace OA.Ultima
             yield return null;
             // Create the terrain.
             var heightRange = maxHeight - minHeight;
-            var terrainPosition = new Vector3(ConvertUtils.ExteriorCellSideLengthInMeters * land.GridCoords.x, minHeight / ConvertUtils.MeterInUnits, ConvertUtils.ExteriorCellSideLengthInMeters * land.GridCoords.y);
+            var terrainPosition = new Vector3(ConvertUtils.ExteriorCellSideLengthInMeters * land.GridId.x, minHeight / ConvertUtils.MeterInUnits, ConvertUtils.ExteriorCellSideLengthInMeters * land.GridId.y);
             var heightSampleDistance = ConvertUtils.ExteriorCellSideLengthInMeters / LAND_SIDELENGTH;
             var terrain = GameObjectUtils.CreateTerrain(0, heights, heightRange / ConvertUtils.MeterInUnits, heightSampleDistance, splatPrototypes, alphaMap, terrainPosition);
             terrain.GetComponent<Terrain>().materialType = Terrain.MaterialType.BuiltInLegacyDiffuse;
             terrain.transform.parent = parent.transform;
             terrain.isStatic = true;
-        }
-
-        private void DestroyExteriorCell(Vector2i indices)
-        {
-            if (_cellObjects.TryGetValue(indices, out InRangeCellInfo cellInfo))
-            {
-                _loadBalancer.CancelTask(cellInfo.ObjectsCreationCoroutine);
-                Object.Destroy(cellInfo.GameObject);
-                _cellObjects.Remove(indices);
-            }
-            else Utils.Error("Tried to destroy a cell that isn't created.");
         }
     }
 }

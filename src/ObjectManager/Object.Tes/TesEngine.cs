@@ -100,17 +100,16 @@ namespace OA.Tes
                 CELLRecord newCell;
                 if (component.doorData.leadsToInteriorCell)
                 {
-                    throw new NotImplementedException();
-                    //var cellInfo = CellManager.StartCreatingInteriorCell(component.doorData.doorExitName);
-                    //LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
-                    //newCell = (CELLRecord)cellInfo.CellRecord;
-                    //OnInteriorCell(newCell);
+                    var cellInfo = CellManager.StartCreatingCellByName(-1, 0, component.doorData.doorExitName);
+                    LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
+                    newCell = (CELLRecord)cellInfo.CellRecord;
+                    OnInteriorCell(newCell);
                 }
                 else
                 {
-                    var cellIndices = CellManager.GetExteriorCellId(component.doorData.doorExitPos);
-                    newCell = (CELLRecord)Data.FindExteriorCellRecord(cellIndices);
-                    CellManager.UpdateExteriorCells(_playerCameraObj.transform.position, true, CellRadiusOnLoad);
+                    var cellId = CellManager.GetCellId(component.doorData.doorExitPos, _currentWorld);
+                    newCell = (CELLRecord)Data.FindCellRecord(cellId);
+                    CellManager.UpdateCells(_playerCameraObj.transform.position, _currentWorld, true, CellRadiusOnLoad);
                     OnExteriorCell(newCell);
                 }
                 _currentCell = newCell;
