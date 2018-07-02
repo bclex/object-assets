@@ -1,8 +1,27 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace OA.Core
 {
+    public class ByteArrayComparer : IEqualityComparer<byte[]>
+    {
+        public static ByteArrayComparer Default = new ByteArrayComparer();
+
+        public bool Equals(byte[] left, byte[] right)
+        {
+            return (left == null || right == null ? left == right : left.SequenceEqual(right));
+        }
+
+        public int GetHashCode(byte[] key)
+        {
+            if (key == null)
+                throw new ArgumentNullException("key");
+            return key.Sum(b => b);
+        }
+    }
+
     public static class Utils
     {
         public static bool InUnity = false;

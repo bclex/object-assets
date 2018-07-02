@@ -85,7 +85,7 @@ namespace OA.Tes.FilePacks
         public uint FormId;
         public long Position;
         // group
-        public string Label;
+        public byte[] Label;
         public HeaderGroupType GroupType;
 
         public Header() { }
@@ -96,7 +96,7 @@ namespace OA.Tes.FilePacks
             if (Type == "GRUP")
             {
                 DataSize = (uint)(r.ReadLEUInt32() - (format == GameFormatId.TES4 ? 20 : 24));
-                Label = r.ReadASCIIString(4);
+                Label = r.ReadBytes(4);
                 GroupType = (HeaderGroupType)r.ReadLEInt32();
                 r.ReadLEUInt32(); // stamp | stamp + uknown
                 if (format != GameFormatId.TES4)
@@ -243,11 +243,12 @@ namespace OA.Tes.FilePacks
 
     public class RecordGroup
     {
-        public string Label => Headers.First.Value.Label;
+        public byte[] Label => Headers.First.Value.Label;
         public override string ToString() => Headers.First.Value.ToString();
         public LinkedList<Header> Headers = new LinkedList<Header>();
         public List<Record> Records = new List<Record>();
         public List<RecordGroup> Groups;
+        public Dictionary<byte[], RecordGroup[]> GroupsByLabel;
         readonly UnityBinaryReader _r;
         readonly string _filePath;
         readonly GameFormatId _formatId;
@@ -264,9 +265,10 @@ namespace OA.Tes.FilePacks
 
         public void AddHeader(Header header, int level)
         {
+            //Console.WriteLine($"Read: {header.Label}");
             Headers.AddLast(header);
             if (header.GroupType == Header.HeaderGroupType.Top)
-                switch (header.Label)
+                switch (Encoding.ASCII.GetString(header.Label))
                 {
                     case "CELL": case "WRLD": Load(); break; // "DIAL"
                 }
@@ -308,6 +310,7 @@ namespace OA.Tes.FilePacks
                 ReadRecord(record, recordHeader.Compressed);
                 Records.Add(record);
             }
+            GroupsByLabel = Groups != null ? Groups.GroupBy(x => x.Label).ToDictionary(x => x.Key, x => x.ToArray(), ByteArrayComparer.Default) : null;
         }
 
         RecordGroup ReadGRUP(Header header, Header recordHeader)
@@ -321,20 +324,20 @@ namespace OA.Tes.FilePacks
             _r.BaseStream.Position = nextPosition;
             // print header path
             var headerPath = string.Join("/", GetHeaderPath(new List<string>(), header).ToArray());
-            //Console.WriteLine($"Grup: {headerPath} {header.GroupType}");
+            Console.WriteLine($"Grup: {headerPath} {header.GroupType}");
             return group;
         }
 
         static List<string> GetHeaderPath(List<string> b, Header header)
         {
             if (header.Parent != null) GetHeaderPath(b, header.Parent);
-            b.Add(header.GroupType != Header.HeaderGroupType.Top ? BitConverter.ToString(Encoding.ASCII.GetBytes(header.Label)).Replace("-", string.Empty) : header.Label);
+            b.Add(header.GroupType != Header.HeaderGroupType.Top ? BitConverter.ToString(header.Label).Replace("-", string.Empty) : Encoding.ASCII.GetString(header.Label));
             return b;
         }
 
         void ReadRecord(Record record, bool compressed)
         {
-            //Console.WriteLine($"Recd: {record.Header.Type}");
+            Console.WriteLine($"Recd: {record.Header.Type}");
             if (!compressed)
             {
                 record.Read(_r, _filePath, _formatId);

@@ -1,10 +1,10 @@
 ﻿using OA.Core;
-using OA.Tes.FilePacks.Records;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace OA.Tes.FilePacks
 {
@@ -82,7 +82,7 @@ namespace OA.Tes.FilePacks
                 var group = new RecordGroup(_r, FilePath, Format, recordLevel);
                 group.AddHeader(new Header
                 {
-                    Label = string.Empty,
+                    Label = null,
                     DataSize = (uint)(_r.BaseStream.Length - _r.BaseStream.Position),
                     Position = _r.BaseStream.Position,
                 }, 0);
@@ -91,7 +91,7 @@ namespace OA.Tes.FilePacks
                     .ToDictionary(x => x.Key, x =>
                     {
                         var s = new RecordGroup(_r, FilePath, Format, recordLevel) { Records = x.ToList() };
-                        s.AddHeader(new Header { Label = x.Key }, 0);
+                        s.AddHeader(new Header { Label = Encoding.ASCII.GetBytes(x.Key) }, 0);
                         return s;
                     });
                 return;
@@ -105,12 +105,12 @@ namespace OA.Tes.FilePacks
                 if (header.Type != "GRUP")
                     throw new InvalidOperationException($"{header.Type} not GRUP");
                 var nextPosition = _r.BaseStream.Position + header.DataSize;
-                if (!Groups.TryGetValue(header.Label, out RecordGroup group))
+                var label = Encoding.ASCII.GetString(header.Label);
+                if (!Groups.TryGetValue(label, out RecordGroup group))
                 {
                     group = new RecordGroup(_r, FilePath, Format, recordLevel);
-                    Groups.Add(header.Label, group);
+                    Groups.Add(label, group);
                 }
-                //Console.WriteLine($"Read: {header.Label}");
                 group.AddHeader(header, 0);
                 _r.BaseStream.Position = nextPosition;
             }

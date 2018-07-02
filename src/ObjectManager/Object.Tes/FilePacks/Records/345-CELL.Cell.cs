@@ -26,7 +26,7 @@ namespace OA.Tes.FilePacks.Records
             public int GridX;
             public int GridY;
             public uint Flags;
-            public override string ToString() => $"{GridY.ToString("x")}x{GridX.ToString("x")}";
+            public override string ToString() => $"{GridX.ToString("x")}x{GridY.ToString("x")}";
 
             public XCLCField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
@@ -124,7 +124,7 @@ namespace OA.Tes.FilePacks.Records
             public IN32Field? INDX; // Unknown
         }
 
-        public override string ToString() => $"CELL: {FULL.Value}";
+        public override string ToString() => $"CELL: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID. Can be an empty string for exterior cells in which case the region name is used instead.
         public STRVField FULL; // Full Name / TES3:RGNN - Region name
         public UI16Field DATA; // Flags
