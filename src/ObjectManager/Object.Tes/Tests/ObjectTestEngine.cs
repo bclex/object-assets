@@ -31,10 +31,10 @@ namespace OA.Tes
 
             // engine
             //Engine.SpawnPlayer(PlayerPrefab, new Vector3Int(-2, -9), new Vector3(-137.94f, 2.30f, -1037.6f));
-            Engine.SpawnPlayerAndUpdate(PlayerPrefab, new Vector3(-137.94f, 2.30f, -1037.6f));
+            //Engine.SpawnPlayerAndUpdate(PlayerPrefab, new Vector3(-137.94f, 2.30f, -1037.6f));
 
             // engine - oblivion
-            //Engine.SpawnPlayerOutside(PlayerPrefab, new Vector3(0, 0, 0));
+            Engine.SpawnPlayer(PlayerPrefab, new Vector3Int(0, 0, 60), new Vector3(0, 0, 0));
         }
 
         public static void OnDestroy()

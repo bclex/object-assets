@@ -26,7 +26,7 @@ namespace OA.Tes.FilePacks.Records
             public int GridX;
             public int GridY;
             public uint Flags;
-            public override string ToString() => $"{GridX.ToString("x")}x{GridY.ToString("x")}";
+            public override string ToString() => $"{GridX}x{GridY}";
 
             public XCLCField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
@@ -147,7 +147,7 @@ namespace OA.Tes.FilePacks.Records
         public List<RefObj> RefObjs = new List<RefObj>();
 
         public bool IsInterior => Utils.ContainsBitFlags(DATA.Value, 0x01);
-        public Vector3Int GridId => new Vector3Int(XCLC.Value.GridX, XCLC.Value.GridY, !IsInterior ? 0 : -1);
+        public Vector3Int GridId; // => new Vector3Int(XCLC.Value.GridX, XCLC.Value.GridY, !IsInterior ? 0 : -1);
         public Color? AmbientLight => XCLL != null ? (Color?)XCLL.Value.AmbientColor.ToColor32() : null;
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)

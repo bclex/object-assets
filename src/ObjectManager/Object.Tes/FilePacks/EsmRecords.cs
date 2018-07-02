@@ -241,7 +241,7 @@ namespace OA.Tes.FilePacks
         }
     }
 
-    public class RecordGroup
+    public partial class RecordGroup
     {
         public byte[] Label => Headers.First.Value.Label;
         public override string ToString() => Headers.First.Value.ToString();

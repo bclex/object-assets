@@ -40,16 +40,22 @@ namespace OA.Tes
             //Asset = assetManager.GetAssetPack(assetUri).Result;
             Data = assetManager.GetDataPack(dataUri).Result;
 
-            TestLoadCell(new Vector3(0f, 0f, 0f));
+            TestLoadCell(new Vector3(((-2 << 8) + 1) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, ((-1 << 8) + 1) * ConvertUtils.ExteriorCellSideLengthInMeters));
+            TestLoadCell(new Vector3((((-2 << 8)) + (+1 << 4)) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, (-2 << 8) * ConvertUtils.ExteriorCellSideLengthInMeters));
+            //TestLoadCell(new Vector3((-1 << 4) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, (-1 << 4) * ConvertUtils.ExteriorCellSideLengthInMeters));
+            //TestLoadCell(new Vector3(0 * ConvertUtils.ExteriorCellSideLengthInMeters, 0, 0 * ConvertUtils.ExteriorCellSideLengthInMeters));
+            //TestLoadCell(new Vector3((1 << 4) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, (1 << 4) * ConvertUtils.ExteriorCellSideLengthInMeters));
+            //TestLoadCell(new Vector3((1 << 8) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, (1 << 8) * ConvertUtils.ExteriorCellSideLengthInMeters));
             //TestAllCells();
         }
 
         public static Vector3Int GetCellId(Vector3 point, int worldId) => new Vector3Int(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters), worldId);
-    
+
         static void TestLoadCell(Vector3 position)
         {
             var cellId = GetCellId(position, 60);
             var cell = Data.FindCellRecord(cellId);
+            //var land = ((TesDataPack)Data).FindLANDRecord(cellId);
         }
 
         //static void TestAllCells()
