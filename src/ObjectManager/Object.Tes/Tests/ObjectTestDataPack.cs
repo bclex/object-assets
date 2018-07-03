@@ -40,12 +40,11 @@ namespace OA.Tes
             //Asset = assetManager.GetAssetPack(assetUri).Result;
             Data = assetManager.GetDataPack(dataUri).Result;
 
-            TestLoadCell(new Vector3(((-2 << 8) + 1) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, ((-1 << 8) + 1) * ConvertUtils.ExteriorCellSideLengthInMeters));
-            TestLoadCell(new Vector3((((-2 << 8)) + (+1 << 4)) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, (-2 << 8) * ConvertUtils.ExteriorCellSideLengthInMeters));
-            //TestLoadCell(new Vector3((-1 << 4) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, (-1 << 4) * ConvertUtils.ExteriorCellSideLengthInMeters));
-            //TestLoadCell(new Vector3(0 * ConvertUtils.ExteriorCellSideLengthInMeters, 0, 0 * ConvertUtils.ExteriorCellSideLengthInMeters));
-            //TestLoadCell(new Vector3((1 << 4) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, (1 << 4) * ConvertUtils.ExteriorCellSideLengthInMeters));
-            //TestLoadCell(new Vector3((1 << 8) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, (1 << 8) * ConvertUtils.ExteriorCellSideLengthInMeters));
+            //TestLoadCell(new Vector3(((-2 << 5) + 1) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, ((-1 << 5) + 1) * ConvertUtils.ExteriorCellSideLengthInMeters));
+            //TestLoadCell(new Vector3((-1 << 3) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, (-1 << 3) * ConvertUtils.ExteriorCellSideLengthInMeters));
+            TestLoadCell(new Vector3(0 * ConvertUtils.ExteriorCellSideLengthInMeters, 0, 0 * ConvertUtils.ExteriorCellSideLengthInMeters));
+            //TestLoadCell(new Vector3((1 << 3) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, (1 << 3) * ConvertUtils.ExteriorCellSideLengthInMeters));
+            //TestLoadCell(new Vector3((1 << 5) * ConvertUtils.ExteriorCellSideLengthInMeters, 0, (1 << 5) * ConvertUtils.ExteriorCellSideLengthInMeters));
             //TestAllCells();
         }
 
@@ -55,7 +54,7 @@ namespace OA.Tes
         {
             var cellId = GetCellId(position, 60);
             var cell = Data.FindCellRecord(cellId);
-            //var land = ((TesDataPack)Data).FindLANDRecord(cellId);
+            var land = ((TesDataPack)Data).FindLANDRecord(cellId);
         }
 
         //static void TestAllCells()

@@ -274,20 +274,20 @@ namespace OA.Tes.FilePacks
                 }
         }
 
-        public List<Record> Load()
+        public List<Record> Load(bool loadAll = false)
         {
             if (_headerSkip == Headers.Count) return Records;
             lock (_r)
             {
                 if (_headerSkip == Headers.Count) return Records;
                 foreach (var header in Headers.Skip(_headerSkip))
-                    ReadGroup(header);
+                    ReadGroup(header, loadAll);
                 _headerSkip = Headers.Count;
                 return Records;
             }
         }
 
-        void ReadGroup(Header header)
+        void ReadGroup(Header header, bool loadAll)
         {
             _r.BaseStream.Position = header.Position;
             var endPosition = header.Position + header.DataSize;
@@ -297,8 +297,8 @@ namespace OA.Tes.FilePacks
                 if (recordHeader.Type == "GRUP")
                 {
                     var group = ReadGRUP(header, recordHeader);
-                    //if (recordHeader.GroupType <= Header.HeaderGroupType.InteriorCellBlock || recordHeader.GroupType == Header.HeaderGroupType.ExteriorCellBlock)
-                    //group.Load();
+                    if (loadAll)
+                        group.Load(loadAll);
                     continue;
                 }
                 var record = recordHeader.CreateRecord(_r.BaseStream.Position, _recordLevel);
@@ -310,7 +310,7 @@ namespace OA.Tes.FilePacks
                 ReadRecord(record, recordHeader.Compressed);
                 Records.Add(record);
             }
-            GroupsByLabel = Groups != null ? Groups.GroupBy(x => x.Label).ToDictionary(x => x.Key, x => x.ToArray(), ByteArrayComparer.Default) : null;
+            GroupsByLabel = Groups?.GroupBy(x => x.Label, ByteArrayComparer.Default).ToDictionary(x => x.Key, x => x.ToArray(), ByteArrayComparer.Default);
         }
 
         RecordGroup ReadGRUP(Header header, Header recordHeader)

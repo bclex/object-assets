@@ -62,7 +62,12 @@ namespace OA.Tes.FilePacks
                 _LANDsById.TryGetValue(cellId, out var land);
                 return land;
             }
-            throw new NotImplementedException();
+            var world = _WRLDsById[(uint)cellId.z];
+            foreach (var wrld in world.Item2)
+                foreach (var cellBlock in wrld.EnsureWrldAndCell(cellId))
+                    if (cellBlock.LANDsById.TryGetValue(cellId, out var land))
+                        return land;
+            return null;
         }
 
         public CELLRecord FindCellRecord(Vector3Int cellId)
@@ -78,44 +83,6 @@ namespace OA.Tes.FilePacks
                     if (cellBlock.CELLsById.TryGetValue(cellId, out var cell))
                         return cell;
             return null;
-
-            /*
-            var world = _WRLDsById[(uint)cellId.z];
-            var cellBlockX = (short)cellId.x >> 8;
-            var cellBlockY = (short)cellId.y >> 8;
-            var cellBlockId = new byte[4];
-            Buffer.BlockCopy(BitConverter.GetBytes(cellBlockY), 0, cellBlockId, 0, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(cellBlockX), 0, cellBlockId, 2, 2);
-            foreach (var wrld in world.Item2)
-            {
-                wrld.Load();
-                if (wrld.GroupsByLabel.TryGetValue(cellBlockId, out var cellBlock))
-                {
-                    var cellSubBlockX = ((ushort)cellId.x >> 6) % 4;
-                    var cellSubBlockY = ((ushort)cellId.y >> 6) % 4;
-                    var cellSubBlockId = new byte[4];
-                    Buffer.BlockCopy(BitConverter.GetBytes(cellSubBlockY), 0, cellSubBlockId, 0, 2);
-                    Buffer.BlockCopy(BitConverter.GetBytes(cellSubBlockX), 0, cellSubBlockId, 2, 2);
-                    foreach (var i1 in cellBlock)
-                    {
-                        i1.Load();
-                        if (i1.GroupsByLabel.TryGetValue(cellSubBlockId, out var cellSubBlock))
-                        {
-                            var cellX = (ushort)cellId.x % 64;
-                            var cellY = (ushort)cellId.y % 64;
-                            foreach (var i2 in cellSubBlock)
-                            {
-                                i2.Load();
-                                var cell = i2.Records.Cast<CELLRecord>().SingleOrDefault(x => x.XCLC.Value.GridX == cellX && x.XCLC.Value.GridY == cellY);
-                                return cell;
-                            }
-                            return null;
-                        }
-                    }
-                }
-            }
-            return null;
-            */
         }
 
         public CELLRecord FindCellRecordByName(int worldId, int cellId, string cellName)
@@ -133,11 +100,12 @@ namespace OA.Tes.FilePacks
     {
         internal HashSet<byte[]> _ensureCELLsByLabel;
         internal Dictionary<Vector3Int, CELLRecord> CELLsById;
+        internal Dictionary<Vector3Int, LANDRecord> LANDsById;
 
         public RecordGroup[] EnsureWrldAndCell(Vector3Int cellId)
         {
-            var cellBlockX = (short)(cellId.x >> 8);
-            var cellBlockY = (short)(cellId.y >> 8);
+            var cellBlockX = (short)(cellId.x >> 5);
+            var cellBlockY = (short)(cellId.y >> 5);
             var cellBlockId = new byte[4];
             Buffer.BlockCopy(BitConverter.GetBytes(cellBlockY), 0, cellBlockId, 0, 2);
             Buffer.BlockCopy(BitConverter.GetBytes(cellBlockX), 0, cellBlockId, 2, 2);
@@ -147,12 +115,15 @@ namespace OA.Tes.FilePacks
             return null;
         }
 
+        //  = nxn[nbits] + 4x4[2bits] + 8x8[3bit]
         public RecordGroup EnsureCell(Vector3Int cellId)
         {
             if (_ensureCELLsByLabel == null)
                 _ensureCELLsByLabel = new HashSet<byte[]>(ByteArrayComparer.Default);
-            var cellSubBlockX = (short)(cellId.x >> 6);
-            var cellSubBlockY = (short)(cellId.y >> 6);
+            var cellBlockX = (short)(cellId.x >> 5);
+            var cellBlockY = (short)(cellId.y >> 5);
+            var cellSubBlockX = (short)(cellId.x >> 3);
+            var cellSubBlockY = (short)(cellId.y >> 3);
             var cellSubBlockId = new byte[4];
             Buffer.BlockCopy(BitConverter.GetBytes(cellSubBlockY), 0, cellSubBlockId, 0, 2);
             Buffer.BlockCopy(BitConverter.GetBytes(cellSubBlockX), 0, cellSubBlockId, 2, 2);
@@ -161,19 +132,28 @@ namespace OA.Tes.FilePacks
             Load();
             if (CELLsById == null)
                 CELLsById = new Dictionary<Vector3Int, CELLRecord>();
-            var cellBlockX = (short)(cellId.x >> 8);
-            var cellBlockY = (short)(cellId.y >> 8);
-            var cellBaseX = (cellBlockX << 8) + (cellSubBlockX << 6);
-            var cellBaseY = (cellBlockY << 8) + (cellSubBlockY << 6);
-            var cellBaseZ = cellId.z;
+            if (LANDsById == null && cellId.z >= 0)
+                LANDsById = new Dictionary<Vector3Int, LANDRecord>();
             if (GroupsByLabel.TryGetValue(cellSubBlockId, out var cellSubBlocks))
             {
+                // find cell
                 var cellSubBlock = cellSubBlocks.Single();
-                cellSubBlock.Load();
+                cellSubBlock.Load(true);
                 foreach (var cell in cellSubBlock.Records.Cast<CELLRecord>())
                 {
-                    cell.GridId = new Vector3Int(cellBaseX + cell.XCLC.Value.GridX, cellBaseY + cell.XCLC.Value.GridY, !cell.IsInterior ? cellBaseZ : -1);
+                    cell.GridId = new Vector3Int(cell.XCLC.Value.GridX, cell.XCLC.Value.GridY, !cell.IsInterior ? cellId.z : -1);
                     CELLsById.Add(cell.GridId, cell);
+                    // find children
+                    if (cellSubBlock.GroupsByLabel.TryGetValue(BitConverter.GetBytes(cell.Id), out var cellChildren))
+                    {
+                        var cellChild = cellChildren.Single();
+                        var cellTemporaryChildren = cellChild.Groups.Single(x => x.Headers.First().GroupType == Header.HeaderGroupType.CellTemporaryChildren);
+                        foreach (var land in cellTemporaryChildren.Records.Cast<LANDRecord>())
+                        {
+                            land.GridId = new Vector3Int(cell.XCLC.Value.GridX, cell.XCLC.Value.GridY, !cell.IsInterior ? cellId.z : -1);
+                            LANDsById.Add(land.GridId, land);
+                        }
+                    }
                 }
                 _ensureCELLsByLabel.Add(cellSubBlockId);
                 return this;
