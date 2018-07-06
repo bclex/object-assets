@@ -85,13 +85,13 @@ namespace OA.Tes.FilePacks
                     Label = null,
                     DataSize = (uint)(_r.BaseStream.Length - _r.BaseStream.Position),
                     Position = _r.BaseStream.Position,
-                }, 0);
+                });
                 group.Load();
                 Groups = group.Records.GroupBy(x => x.Header.Type)
                     .ToDictionary(x => x.Key, x =>
                     {
                         var s = new RecordGroup(_r, FilePath, Format, recordLevel) { Records = x.ToList() };
-                        s.AddHeader(new Header { Label = Encoding.ASCII.GetBytes(x.Key) }, 0);
+                        s.AddHeader(new Header { Label = Encoding.ASCII.GetBytes(x.Key) });
                         return s;
                     });
                 return;
@@ -111,7 +111,7 @@ namespace OA.Tes.FilePacks
                     group = new RecordGroup(_r, FilePath, Format, recordLevel);
                     Groups.Add(label, group);
                 }
-                group.AddHeader(header, 0);
+                group.AddHeader(header);
                 _r.BaseStream.Position = nextPosition;
             }
         }

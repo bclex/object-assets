@@ -23,10 +23,10 @@ namespace OA.Tes.FilePacks.Records
 
         public struct XCLCField
         {
+            public override string ToString() => $"{GridX}x{GridY}";
             public int GridX;
             public int GridY;
             public uint Flags;
-            public override string ToString() => $"{GridX}x{GridY}";
 
             public XCLCField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {

@@ -147,6 +147,23 @@ public class BinaryReader {
         }
         return list
     }
+
+    public func readT<T>(_ length: Int) -> T {
+        return baseStream.readData(ofLength: length).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+            let rawPtr = UnsafeRawPointer(ptr)
+            return rawPtr.load(as: T.self)
+        }
+    }
+    
+    public func readTArray<T>(_ length: Int, count: Int) -> [T] {
+        return baseStream.readData(ofLength: length).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+            let rawPtr = UnsafeRawPointer(ptr)
+            let typedPtr = rawPtr.bindMemory(to: T.self, capacity: count)
+            let buffer = UnsafeBufferPointer(start: typedPtr, count: count)
+            return Array(buffer)
+        }
+    }
+    
     
     // MARK: A
     // https://stackoverflow.com/questions/41574498/how-to-use-unsafemutablerawpointer-to-fill-an-array

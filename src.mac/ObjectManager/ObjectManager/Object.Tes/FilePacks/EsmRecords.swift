@@ -59,6 +59,7 @@ public class Header: CustomStringConvertible {
     }
 
     public var description: String { return "\(type):\(groupType ?? .top)" }
+    public let parent: Header?
     public let type: String // 4 bytes
     public var dataSize: UInt32
     public let flags: Flags
@@ -66,10 +67,11 @@ public class Header: CustomStringConvertible {
     public let formId: UInt32
     public var position: UInt64
     // group
-    public let label: String?
+    public let label: Data?
     public let groupType: GroupType?
 
-    init(label: String, dataSize: UInt32, position: UInt64) {
+    init(label: Data?, dataSize: UInt32, position: UInt64) {
+        parent = nil
         type = ""
         self.dataSize = dataSize
         flags = Flags(rawValue: 0)
@@ -78,11 +80,12 @@ public class Header: CustomStringConvertible {
         self.label = label
         groupType = nil
     }
-    init(_ r: BinaryReader, for format: GameFormatId) {
+    init(_ r: BinaryReader, for format: GameFormatId, parent: Header?) {
+        self.parent = parent
         type = r.readASCIIString(4)
         if type == "GRUP" {
             dataSize = r.readLEUInt32() - (format == .TES4 ? 20 : 24)
-            label = r.readASCIIString(4)
+            label = r.readBytes(4)
             groupType = GroupType(rawValue: r.readLEInt32())!
             _ = r.readLEUInt32() // stamp | stamp + uknown
             if format != .TES4 {
@@ -123,7 +126,7 @@ public class Header: CustomStringConvertible {
         // 0
         "LTEX" : ({x in return LTEXRecord(x)}, {x in return x > 0}),
         "STAT" : ({x in return STATRecord(x)}, {x in return x > 0}),
-        "CELL" : ({x in return CELLRecord(x)}, {x in return x > 1}),
+        "CELL" : ({x in return CELLRecord(x)}, {x in return x > 0}),
         "LAND" : ({x in return LANDRecord(x)}, {x in return x > 0}),
         // 1
         "DOOR" : ({x in return DOORRecord(x)}, {x in return x > 1}),
@@ -167,8 +170,11 @@ public class Header: CustomStringConvertible {
         "FACT" : ({x in return FACTRecord(x)}, {x in return x > 3}),
         "SSCR" : ({x in return SSCRRecord(x)}, {x in return x > 3}),
         // 4 - Oblivion
-        "ACRE" : ({x in return ACRERecord(x)}, {x in return x > 4}),
-        "ACHR" : ({x in return ACHRRecord(x)}, {x in return x > 4}),
+        "WRLD" : ({x in return WRLDRecord(x)}, {x in return x > 0}),
+        "ACRE" : ({x in return ACRERecord(x)}, {x in return x > 1}),
+        "ACHR" : ({x in return ACHRRecord(x)}, {x in return x > 1}),
+        "REFR" : ({x in return REFRRecord(x)}, {x in return x > 1}),
+        //
         "AMMO" : ({x in return AMMORecord(x)}, {x in return x > 4}),
         "ANIO" : ({x in return ANIORecord(x)}, {x in return x > 4}),
         "CLMT" : ({x in return CLMTRecord(x)}, {x in return x > 4}),
@@ -187,14 +193,12 @@ public class Header: CustomStringConvertible {
         "LVSP" : ({x in return LVSPRecord(x)}, {x in return x > 4}),
         "PACK" : ({x in return PACKRecord(x)}, {x in return x > 4}),
         "QUST" : ({x in return QUSTRecord(x)}, {x in return x > 4}),
-        "REFR" : ({x in return REFRRecord(x)}, {x in return x > 4}),
         "ROAD" : ({x in return ROADRecord(x)}, {x in return x > 4}),
         "SBSP" : ({x in return SBSPRecord(x)}, {x in return x > 4}),
         "SGST" : ({x in return SGSTRecord(x)}, {x in return x > 4}),
         "SLGM" : ({x in return SLGMRecord(x)}, {x in return x > 4}),
         "TREE" : ({x in return TREERecord(x)}, {x in return x > 4}),
         "WATR" : ({x in return WATRRecord(x)}, {x in return x > 4}),
-        "WRLD" : ({x in return WRLDRecord(x)}, {x in return x > 4}),
         "WTHR" : ({x in return WTHRRecord(x)}, {x in return x > 4}),
         // 5 - Skyrim
         "AACT" : ({x in return AACTRecord(x)}, {x in return x > 5}),
@@ -242,35 +246,43 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
         _format = format
         _recordLevel = recordLevel
     }
+    convenience init(_ r: BinaryReader, _ filePath: String, for format: GameFormatId, recordLevel: Int, label: String, records: [Record]) {
+        self.init(r, filePath, for: format, recordLevel: recordLevel)
+        self.records = records
+        headers.append(Header(label: Data(label.utf8), dataSize: 0, position: 0))
+        _headerSkip = headers.count
+    }
 
     func addHeader(_ header: Header) {
+        //debugPrint("Read: \(header.label!)")
         headers.append(header)
         if header.groupType == .top {
-            switch header.label {
+            switch String(data: header.label!, encoding: .ascii) {
             case "CELL", "WRLD": load() // "DIAL"
             default: return
             }
         }
     }
 
-    public func load() -> [Record] {
-        guard _headerSkip != headers.count else { return }
+    @discardableResult
+    public func load(loadAll: Bool = false) -> [Record] {
+        guard _headerSkip != headers.count else { return records }
         for i in _headerSkip..<headers.endIndex {
-            readGroup(headers[i])
+            readGroup(header: headers[i], loadAll: loadAll)
         }
         _headerSkip = headers.count
         return records
     }
 
-    func readGroup(_ header: Header) {
+    func readGroup(header: Header, loadAll: Bool) {
         _r.baseStream.position = header.position
         let endPosition = header.position + UInt64(header.dataSize)
         while _r.baseStream.position < endPosition {
-            let recordHeader = Header(_r, for: _format)
+            let recordHeader = Header(_r, for: _format, parent: header)
             guard recordHeader.type != "GRUP" else {
-                let group = readGRUP(header, recordHeader)
-                if recordHeader.groupType <= .interiorCellBlock || recordHeader.groupType == .exteriorCellBlock {
-                    group.load()
+                let group = readGRUP(header: header, recordHeader: recordHeader)
+                if loadAll {
+                    group.load(loadAll: loadAll)
                 }
                 continue
             }
@@ -283,7 +295,7 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
         }
     }
 
-    func readGRUP(_ header: Header, _ recordHeader: Header) -> RecordGroup {
+    func readGRUP(header: Header, recordHeader: Header) -> RecordGroup {
         let nextPosition = _r.baseStream.position + UInt64(recordHeader.dataSize)
         if groups == nil {
             groups = [RecordGroup]()
@@ -293,15 +305,16 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
         groups!.append(group);
         _r.baseStream.position = nextPosition
         // print header path
-        let path = getHeaderPath(&[String](), header: header).joined(separator: "/")
-        debugPrint("Grup: \(headerPath)/ \(header.groupType)")
+        var headerPath = [String](); getHeaderPath(&headerPath, header: header)
+        debugPrint("Grup: \(headerPath.joined(separator: "/"))/ \(header.groupType ?? .top)")
         return group
     }
 
-    func getHeaderPath(_ b: inout [String], header: Header) -> [String] {
-        if header.parent != nil { getHeaderPath(b, header.parent) }
-        b.append(header.groupType != .top ? header.label : header.label)
-        return b
+    func getHeaderPath(_ b: inout [String], header: Header) {
+        if header.parent != nil { getHeaderPath(&b, header: header.parent!) }
+        b.append((header.groupType != .top ?
+            String(data: header.label!, encoding: .ascii) :
+            String(data: header.label!, encoding: .ascii))!)
     }
 
     func readRecord(_ record: Record, compressed: Bool) {

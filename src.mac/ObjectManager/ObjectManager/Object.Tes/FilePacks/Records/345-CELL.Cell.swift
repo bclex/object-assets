@@ -29,6 +29,7 @@ public class CELLRecord: Record, ICellRecord {
     }
 
     public struct XCLCField {
+        public var description: String { return "\(gridX)x\(gridY)" }
         public let gridX: Int32
         public let gridY: Int32
         public let flags: UInt32
@@ -147,7 +148,7 @@ public class CELLRecord: Record, ICellRecord {
     public var RefObjs = [RefObj]()
 
     public var isInterior: Bool { return Utils.containsBitFlags(UInt(DATA.value), 0x01) }
-    public var gridCoords: Vector2Int { return Vector2Int(Int(XCLC!.gridX), Int(XCLC!.gridY)) }
+    public var gridId: Vector3Int!
     public var ambientLight: CGColor? { return XCLL != nil ? XCLL!.ambientColor.toColor32 : nil }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
@@ -161,9 +162,11 @@ public class CELLRecord: Record, ICellRecord {
             case "FULL",
                  "RGNN": FULL = STRVField(r, dataSize)
             case "DATA": DATA = INTVField(r, format == .TES3 ? 4 : dataSize).toUI16Field; if format == .TES3 { fallthrough }
-            case "XCLC": XCLC = XCLCField(r, dataSize, format)
+            case "XCLC":
+                XCLC = XCLCField(r, dataSize, format) //r.readT(dataSize) //
             case "XCLL",
-                 "AMBI": XCLL = XCLLField(r, dataSize, format)
+                 "AMBI":
+                XCLL = r.readT(dataSize); debugPrint("\(XCLL)") //XCLLField(r, dataSize, format); debugPrint("\(XCLL)")
             case "XCLW",
                  "WHGT": XCLW = FLTVField(r, dataSize)
             // TES3

@@ -19,7 +19,7 @@ public struct Vector2Int {
     }
 }
 
-public struct Vector3Int {
+public struct Vector3Int: Hashable {
     public let x: Int
     public let y: Int
     public let z: Int

@@ -11,30 +11,46 @@ import Foundation
 extension EsmFile {
     func process() {
         guard format != .TES3 else {
-            // _LTEXsById = Groups.ContainsKey("LTEX") ? Groups["LTEX"].Load().Cast<LTEXRecord>().ToDictionary(x => x.INTV.Value) : null;
-            // _CELLsById = Groups.ContainsKey("CELL") ? Groups["CELL"].Load().Cast<CELLRecord>().Where(x => !x.IsInterior).ToDictionary(x => x.GridCoords) : null;
-            // _LANDsById = Groups.ContainsKey("LAND") ? Groups["LAND"].Load().Cast<LANDRecord>().ToDictionary(x => x.GridCoords) : null;
+            let manyGroups = [groups!["STAT"]?.load(), nil]
+            _MANYsById = Dictionary(uniqueKeysWithValues: manyGroups.compactMap { $0 }.flatMap { $0 }.compactMap { $0 as? IHaveEDID }
+                .map { (key: $0.EDID.value, value: $0 as! Record) })
+            _LTEXsById = Dictionary(uniqueKeysWithValues: groups!["LTEX"]!.load().map { $0 as! LTEXRecord }
+                .map { (key: $0.INTV.value, value: $0) })
+            let lands = groups!["LAND"]!.load().map { $0 as! LANDRecord }
+            for land in lands {
+                land.gridId = Vector3Int(Int(land.INTV.cellX), Int(land.INTV.cellY), 0)
+            }
+            _LANDsById = Dictionary(uniqueKeysWithValues: lands
+                .map { (key: $0.gridId, value: $0) })
+            let cells = groups!["CELL"]!.load().map { $0 as! CELLRecord }
+            for cell in cells {
+                cell.gridId = Vector3Int(Int(cell.XCLC!.gridX), Int(cell.XCLC!.gridY), !cell.isInterior ? 0 : -1)
+            }
+            _CELLsById = Dictionary(uniqueKeysWithValues: cells.filter { !$0.isInterior }
+                .map { (key: $0.gridId, value: $0) })
+            _CELLsByName = Dictionary(uniqueKeysWithValues: cells.filter { $0.isInterior }
+                .map { (key: $0.EDID.value, value: $0) })
             return
         }
         fatalError("NotImplemented")
         //_ltexsByEid = Groups["LTEX"].Load().Cast<LTEXRecord>().ToDictionary(x => x.EDID.Value)
     }
 
-    func findLTEXRecord(_ index: Int) -> LTEXRecord? {
+    func findLTEXRecord(_ index: Int64) -> LTEXRecord? {
         guard format != .TES3 else {
             return _LTEXsById[index]
         }
         fatalError("NotImplemented")
     }
 
-    func findLANDRecord(_ cellId: Vector2Int) -> LANDRecord? {
+    func findLANDRecord(_ cellId: Vector3Int) -> LANDRecord? {
         guard format != .TES3 else {
             return _LANDsById[cellId]
         }
         fatalError("NotImplemented")
     }
 
-    func findExteriorCellRecord(_ cellId: Vector2Int) -> CELLRecord? {
+    func findCellRecord(_ cellId: Vector3Int) -> CELLRecord? {
         guard format != .TES3 else {
             return _CELLsById[cellId]
         }

@@ -263,7 +263,7 @@ namespace OA.Tes.FilePacks
             _recordLevel = recordLevel;
         }
 
-        public void AddHeader(Header header, int level)
+        public void AddHeader(Header header)
         {
             //Console.WriteLine($"Read: {header.Label}");
             Headers.AddLast(header);

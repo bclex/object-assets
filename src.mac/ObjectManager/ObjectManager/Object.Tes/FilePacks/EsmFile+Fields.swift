@@ -93,58 +93,53 @@ public struct DATVField: CustomStringConvertible {
 }
 
 public struct FLTVField: CustomStringConvertible {
-    public var description: String { return "\(value)" }
-    public let value: Float
-
-    init(_ r: BinaryReader, _ dataSize: Int) {
-        value = r.readLESingle()
-    }
+    public var description: String { return "\(value!)" }
+    public let value: Float!
+//    init(_ r: BinaryReader, _ dataSize: Int) {
+//        value = r.readLESingle()
+//    }
 }
 
 public struct BYTEField: CustomStringConvertible {
-    public var description: String { return "\(value)" }
-    public let value: UInt8
-
-    init(_ r: BinaryReader, _ dataSize: Int) {
-        value = r.readByte()
-    }
+    public var description: String { return "\(value!)" }
+    public let value: UInt8!
+//    init(_ r: BinaryReader, _ dataSize: Int) {
+//        value = r.readByte()
+//    }
 }
 
 public struct IN16Field: CustomStringConvertible {
-    public var description: String { return "\(value)" }
-    public let value: Int16
-
-    init(_ r: BinaryReader, _ dataSize: Int) {
-        value = r.readLEInt16()
-    }
+    public var description: String { return "\(value!)" }
+    public let value: Int16!
+//    init(_ r: BinaryReader, _ dataSize: Int) {
+//        value = r.readLEInt16()
+//    }
 }
 
 public struct UI16Field: CustomStringConvertible {
-    public var description: String { return "\(value)" }
-    public let value: UInt16
+    public var description: String { return "\(value!)" }
+    public let value: UInt16!
 
     init(value: UInt16) { self.value = value }
-    init(_ r: BinaryReader, _ dataSize: Int) {
-        value = r.readLEUInt16();
-    }
+//    init(_ r: BinaryReader, _ dataSize: Int) {
+//        value = r.readLEUInt16();
+//    }
 }
 
 public struct IN32Field: CustomStringConvertible {
-    public var description: String { return "\(value)" }
-    public let value: Int32
-
-    init(_ r: BinaryReader, _ dataSize: Int) {
-        value = r.readLEInt32()
-    }
+    public var description: String { return "\(value!)" }
+    public let value: Int32!
+//    init(_ r: BinaryReader, _ dataSize: Int) {
+//        value = r.readLEInt32()
+//    }
 }
 
 public struct UI32Field: CustomStringConvertible {
-    public var description: String { return "\(value)" }
-    public let value: UInt32
-
-    init(_ r: BinaryReader, _ dataSize: Int) {
-        value = r.readLEUInt32()
-    }
+    public var description: String { return "\(value!)" }
+    public let value: UInt32!
+//    init(_ r: BinaryReader, _ dataSize: Int) {
+//        value = r.readLEUInt32()
+//    }
 }
 
 public struct FormId<TRecord>: CustomStringConvertible {
@@ -187,11 +182,11 @@ public struct FMID2Field<TRecord>: CustomStringConvertible {
 
 public struct ColorRef: CustomStringConvertible {
     public static let empty = ColorRef(red: 0, green: 0, blue: 0)
-    public var description: String { return "\(red):\(green):\(blue)" }
-    public let red: UInt8
-    public let green: UInt8
-    public let blue: UInt8
-    public let nullByte: UInt8
+    public var description: String { return "\(red!):\(green!):\(blue!)" }
+    public let red: UInt8!
+    public let green: UInt8!
+    public let blue: UInt8!
+    public let nullByte: UInt8!
 
     init(red: UInt8, green: UInt8, blue: UInt8, nullByte: UInt8 = 255) {
         self.red = red
@@ -200,23 +195,23 @@ public struct ColorRef: CustomStringConvertible {
         self.nullByte = nullByte
     }
 
-    init(_ r: BinaryReader) {
-        red = r.readByte()
-        green = r.readByte()
-        blue = r.readByte()
-        nullByte = r.readByte()
-    }
+//    init(_ r: BinaryReader) {
+//        red = r.readByte()
+//        green = r.readByte()
+//        blue = r.readByte()
+//        nullByte = r.readByte()
+//    }
 
     public var toColor32: CGColor { return CGColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: 255) }
 }
 
 public struct CREFField: CustomStringConvertible {
-    public var description: String { return "\(color)" }
-    public let color: ColorRef
+    public var description: String { return "\(color!)" }
+    public let color: ColorRef!
 
-    init(_ r: BinaryReader, _ dataSize: Int) {
-        color = ColorRef(r)
-    }
+//    init(_ r: BinaryReader, _ dataSize: Int) {
+//        color = ColorRef(r)
+//    }
 }
 
 public struct CNTOField: CustomStringConvertible {
@@ -245,11 +240,11 @@ public struct BYTVField: CustomStringConvertible {
     }
 }
 
-public struct UNKNField: CustomStringConvertible {
-    public var description: String { return "UNKN" }
-    public let value: Data
-
-    init(_ r: BinaryReader, _ dataSize: Int) {
-        value = r.readBytes(dataSize)
-    }
-}
+//public struct UNKNField: CustomStringConvertible {
+//    public var description: String { return "UNKN" }
+//    public let value: Data
+//
+//    init(_ r: BinaryReader, _ dataSize: Int) {
+//        value = r.readBytes(dataSize)
+//    }
+//}

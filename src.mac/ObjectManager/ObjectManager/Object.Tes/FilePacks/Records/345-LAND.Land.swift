@@ -23,24 +23,18 @@ public class LANDRecord: Record {
 
     public class VHGTField {
         public let referenceHeight: Float // A height offset for the entire cell. Decreasing this value will shift the entire cell land down.
-        public var heightData: [Int8] = [] // HeightData
-        //public var heightData: Data // HeightData
+        public var heightData = [Int8]() // HeightData
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             referenceHeight = r.readLESingle()
-//            var b = UnsafeMutableRawPointer.allocate(byteCount: dataSize, alignment: 1)
-//            b.storeBytes(of: r.readBytes(dataSize - 4 - 3), as: UInt8)
             let count = dataSize - 4 - 3
-            r.readBytes(count).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
-                let rawPtr = UnsafeRawPointer(ptr)
-                let typedPtr = rawPtr.bindMemory(to: Int8.self, capacity: count)
-                let buffer = UnsafeBufferPointer(start: typedPtr, count: count)
-                self.heightData = Array(buffer)
-            }
-            //heightData = r.readBytes(dataSize - 4 - 3)
-            //heightData = [Int8](); let capacity = dataSize - 4 - 3; heightData.reserveCapacity(capacity)
-            //for _ in 0..<capacity { heightData.append(r.readSByte()) }
-            //for _ in 0..<capacity { _ = r.readSByte() }
+            self.heightData = r.readTArray(count, count: count)
+//            r.readBytes(count).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+//                let rawPtr = UnsafeRawPointer(ptr)
+//                let typedPtr = rawPtr.bindMemory(to: Int8.self, capacity: count)
+//                let buffer = UnsafeBufferPointer(start: typedPtr, count: count)
+//                self.heightData = Array(buffer)
+//            }
             r.skipBytes(3) // Unused
         }
     }
@@ -143,7 +137,7 @@ public class LANDRecord: Record {
     public var ATXTs: [ATXTGroup?]! // Alpha Layer
     var _lastATXT: ATXTGroup!
 
-    public var GridCoords: Vector2Int { return Vector2Int(Int(INTV!.cellX), Int(INTV!.cellY)) }
+    public var gridId: Vector3Int!
 
     override init(_ header: Header) {
         BTXTs.reserveCapacity(4)

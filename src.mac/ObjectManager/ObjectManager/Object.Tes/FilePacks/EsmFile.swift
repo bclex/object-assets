@@ -16,9 +16,11 @@ public class EsmFile: CustomStringConvertible {
     public let format: GameFormatId
     public var groups: [String : RecordGroup]? = nil
     // TES3
-    var _LTEXsById: [Int : LTEXRecord]
-    var _CELLsById: [Vector2Int : CELLRecord]
-    var _LANDsById: [Vector2Int : LANDRecord]
+    var _MANYsById: [String : Record]!
+    var _LTEXsById: [Int64 : LTEXRecord]!
+    var _LANDsById: [Vector3Int : LANDRecord]!
+    var _CELLsById: [Vector3Int : CELLRecord]!
+    var _CELLsByName: [String : CELLRecord]!
 
     init(_ filePath: URL?, for game: GameId) {
         func getFormatId() -> GameFormatId {
@@ -40,10 +42,10 @@ public class EsmFile: CustomStringConvertible {
         self.filePath = filePath.path
         _r = BinaryReader(FileBaseStream(path: self.filePath)!)
         let start = Date()
-        read(level: 1)
+        read(recordLevel: 1)
         let endRead = Date()
         debugPrint("Loading: \(endRead.timeIntervalSince(start))")
-        //process()
+        process()
     }
 
     deinit {
@@ -55,8 +57,8 @@ public class EsmFile: CustomStringConvertible {
         _r = nil
     }
 
-    func read(_ recordLevel: Int) {
-        let rootHeader = Header(_r, for: format)
+    func read(recordLevel: Int) {
+        let rootHeader = Header(_r, for: format, parent: nil)
         guard (format != .TES3 || rootHeader.type == "TES3") && (format == .TES3 || rootHeader.type == "TES4") else {
             fatalError("\(filePath) record header \(rootHeader.type) is not valid for this \(format)")
         }
@@ -66,65 +68,33 @@ public class EsmFile: CustomStringConvertible {
         guard format != .TES3 else {
             let group = RecordGroup(_r, filePath, for: format, recordLevel: recordLevel)
             group.addHeader(Header(
-                label: "",
+                label: nil,
                 dataSize: UInt32(_r.baseStream.length - _r.baseStream.position),
                 position: _r.baseStream.position
             ));
             group.load()
-//            groups = Dictionary(grouping: group.records, by: { $0.header.type! })
-//            .mapValues {
-//                var s = RecordGroup(_r, filePath, format, level, records: $0 }
-//                s.addHeader(Header(label: $0.first!header.type! })
-//                return s
-//            }
+            groups = Dictionary(uniqueKeysWithValues:
+                Dictionary(grouping: group.records) { $0.header.type }.map { x -> (key: String, value: RecordGroup) in
+                    (key: x.key, value: RecordGroup(_r, filePath, for: format, recordLevel: recordLevel, label: x.key, records: x.value)) })
             return
         }
         // read groups
         groups = [String : RecordGroup]()
         let endPosition = _r.baseStream.length
         while _r.baseStream.position < endPosition {
-            let header = Header(_r, for: format)
+            let header = Header(_r, for: format, parent: nil)
             guard header.type == "GRUP" else {
                 fatalError("\(header.type) not GRUP")
             }
             let nextPosition = _r.baseStream.position + UInt64(header.dataSize)
-            var group = groups![header.label!]
+            let label = String(data: header.label!, encoding: .ascii)!
+            var group = groups![label]
             if group == nil {
-                group = RecordGroup(_r, filePath, for: format, level: level)
-                groups![header.label!] = group
+                group = RecordGroup(_r, filePath, for: format, recordLevel: recordLevel)
+                groups![label] = group
             }
-            group!.addHeader(header); debugPrint("Read: \(group!)")
+            group!.addHeader(header)
             _r.baseStream.position = nextPosition
         }
-    }
-
-    func postProcessRecords() {
-        // recordsByType = new Dictionary<Type, List<IRecord>>();
-        // objectsByIDString = new Dictionary<string, IRecord>();
-        // exteriorCELLRecordsByIndices = new Dictionary<Vector2i, CELLRecord>();
-        // LANDRecordsByIndices = new Dictionary<Vector2i, LANDRecord>();
-        // foreach (var record in Groups.Values.SelectMany(x => x.Records))
-        // {
-        //     if (record == null)
-        //         continue;
-        //     // Add the record to the list for it's type.
-        //     var recordType = record.GetType();
-        //     if (recordsByType.TryGetValue(recordType, out List<IRecord> recordsOfSameType))
-        //         recordsOfSameType.Add(record);
-        //     else
-        //     {
-        //         recordsOfSameType = new List<IRecord> { record };
-        //         recordsByType.Add(recordType, recordsOfSameType);
-        //     }
-        //     // Add the record to the object dictionary if applicable.
-        //     if (record is IHaveEDID edid) objectsByIDString.Add(edid.EDID.Value, record);
-        //     // Add the record to exteriorCELLRecordsByIndices if applicable.
-        //     if (record is CELLRecord cell)
-        //         if (!cell.IsInterior)
-        //             exteriorCELLRecordsByIndices[cell.GridCoords] = cell;
-        //     // Add the record to LANDRecordsByIndices if applicable.
-        //     if (record is LANDRecord land)
-        //         LANDRecordsByIndices[land.GridCoords] = land;
-        // }
     }
 }
