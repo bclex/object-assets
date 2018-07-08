@@ -60,10 +60,10 @@ public class WRLDRecord: Record {
         case "NAM2": NAM2 = FMIDField<WATRRecord>(r, dataSize)
         case "ICON": ICON = FILEField(r, dataSize)
         case "MNAM": MNAM = MNAMField(r, dataSize)
-        case "DATA": DATA = BYTEField(r, dataSize)
+        case "DATA": DATA = r.readT(dataSize)
         case "NAM0": NAM0 = NAM0Field(r, dataSize)
         case "NAM9": NAM0.NAM9Field(r, dataSize)
-        case "SNAM": SNAM = UI32Field(r, dataSize)
+        case "SNAM": SNAM = r.readT(dataSize)
         case "OFST": r.skipBytes(dataSize)
         default: return false
         }

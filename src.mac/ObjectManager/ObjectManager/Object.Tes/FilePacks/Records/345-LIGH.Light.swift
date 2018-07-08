@@ -42,7 +42,7 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
                 value = r.readLEInt32()
                 time = r.readLEInt32()
                 radius = r.readLEInt32()
-                lightColor = ColorRef(r)
+                lightColor = r.readT(dataSize)
                 flags = r.readLEInt32()
                 falloffExponent = 1
                 fov = 90
@@ -50,7 +50,7 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
             }
             time = r.readLEInt32()
             radius = r.readLEInt32()
-            lightColor = ColorRef(r)
+            lightColor = r.readT(dataSize)
             flags = r.readLEInt32()
             if dataSize == 32 {
                 falloffExponent = r.readLESingle()
@@ -81,7 +81,7 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
         case "FULL": FULL = STRVField(r, dataSize)
-        case "FNAM": if format != .TES3 { FNAM = FLTVField(r, dataSize) } else { FULL = STRVField(r, dataSize) }
+        case "FNAM": if format != .TES3 { FNAM = r.readT(dataSize) } else { FULL = STRVField(r, dataSize) }
         case "DATA",
              "LHDT": DATA = DATAField(r, dataSize, format)
         case "SCPT": SCPT = STRVField(r, dataSize)

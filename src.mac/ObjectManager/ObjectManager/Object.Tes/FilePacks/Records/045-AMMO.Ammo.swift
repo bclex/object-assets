@@ -41,7 +41,7 @@ public class AMMORecord: Record, IHaveEDID, IHaveMODL {
         case "FULL": FULL = STRVField(r, dataSize)
         case "ICON": ICON = FILEField(r, dataSize)
         case "ENAM": ENAM = FMIDField<ENCHRecord>(r, dataSize)
-        case "ANAM": ANAM = IN16Field(r, dataSize)
+        case "ANAM": ANAM = r.readT(dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
         default: return false
         }

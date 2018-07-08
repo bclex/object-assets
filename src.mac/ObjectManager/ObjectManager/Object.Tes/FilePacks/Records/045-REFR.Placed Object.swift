@@ -111,30 +111,30 @@ public class REFRRecord: Record {
         case "DATA": DATA = DATAField(r, dataSize)
         case "XLOC": XLOC = XLOCField(r, dataSize)
         case "XOWN": if XOWNs == nil { XOWNs = [CELLRecord.XOWNGroup]() }; XOWNs!.append(CELLRecord.XOWNGroup(XOWN: FMIDField<Record>(r, dataSize)))
-        case "XRNK": XOWNs!.last!.XRNK = IN32Field(r, dataSize)
+        case "XRNK": XOWNs!.last!.XRNK = r.readT(dataSize)
         case "XGLB": XOWNs!.last!.XGLB = FMIDField<Record>(r, dataSize)
         case "XESP": XESP = XESPField(r, dataSize)
         case "XTRG": XTRG = FMIDField<Record>(r, dataSize)
         case "XSED": XSED = XSEDField(r, dataSize)
         case "XLOD": XLOD = BYTVField(r, dataSize)
-        case "XCHG": XCHG = FLTVField(r, dataSize)
-        case "XHLT": XCHG = FLTVField(r, dataSize)
+        case "XCHG": XCHG = r.readT(dataSize)
+        case "XHLT": XCHG = r.readT(dataSize)
         case "XPCI": XPCI = FMIDField<CELLRecord>(r, dataSize); _nextFull = 1
         case "FULL":
             if _nextFull == 1 { XPCI!.add(name: r.readASCIIString(dataSize)) }
             else if _nextFull == 2 { XMRKs!.last!.FULL = STRVField(r, dataSize) }
             _nextFull = 0
-        case "XLCM": XLCM = IN32Field(r, dataSize)
+        case "XLCM": XLCM = r.readT(dataSize)
         case "XRTM": XRTM = FMIDField<REFRRecord>(r, dataSize)
-        case "XACT": XACT = UI32Field(r, dataSize)
-        case "XCNT": XCNT = IN32Field(r, dataSize)
+        case "XACT": XACT = r.readT(dataSize)
+        case "XCNT": XCNT = r.readT(dataSize)
         case "XMRK": if XMRKs == nil { XMRKs = [XMRKGroup]() }; XMRKs!.append(XMRKGroup()); _nextFull = 2
-        case "FNAM": XMRKs!.last!.FNAM = BYTEField(r, dataSize)
-        case "TNAM": XMRKs!.last!.TNAM = BYTEField(r, dataSize); r.skipBytes(1)
+        case "FNAM": XMRKs!.last!.FNAM = r.readT(dataSize)
+        case "TNAM": XMRKs!.last!.TNAM = r.readT(dataSize); r.skipBytes(1)
         case "ONAM": break
         case "XRGD": XRGD = BYTVField(r, dataSize)
-        case "XSCL": XSCL = FLTVField(r, dataSize)
-        case "XSOL": XSOL = BYTEField(r, dataSize)
+        case "XSCL": XSCL = r.readT(dataSize)
+        case "XSOL": XSOL = r.readT(dataSize)
         default: return false
         }
         return true

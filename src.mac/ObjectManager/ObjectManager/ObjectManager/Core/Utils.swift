@@ -19,6 +19,34 @@ public typealias Matrix4x4 = SCNMatrix4
 public typealias Quaternion = SCNQuaternion
 
 public class Utils {
+    public static func bytes<T>(of value: T) -> [UInt8] {
+        var value = value
+        let size = MemoryLayout<T>.size
+        return withUnsafePointer(to: &value, {
+            $0.withMemoryRebound(to: UInt8.self, capacity: size, { Array(UnsafeBufferPointer(start: $0, count: size)) })
+        })
+    }
+    
+    public static func hexString<T>(of value: T) -> String {
+        return hexString(bytes: bytes(of: value))
+    }
+    public static func hexString<Seq: Sequence>(bytes: Seq, limit: Int? = nil, separator: String = " ") -> String
+        where Seq.Iterator.Element == UInt8 {
+            let spacesInterval = 8
+            var result = ""
+            for (index, byte) in bytes.enumerated() {
+                if let limit = limit, index >= limit {
+                    result.append("...")
+                    break
+                }
+                if index > 0 && index % spacesInterval == 0 {
+                    result.append(separator)
+                }
+                result.append(String(format: "%02x", byte))
+            }
+            return result
+    }
+    
     public static func containsBitFlags(_ bits: UInt, _ args: UInt...) -> Bool {
         var flagBits: UInt = 0
         for arg in args {

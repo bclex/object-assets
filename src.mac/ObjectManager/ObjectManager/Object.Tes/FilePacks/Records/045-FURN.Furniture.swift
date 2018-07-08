@@ -22,7 +22,7 @@ public class FURNRecord: Record, IHaveEDID, IHaveMODL {
         case "MODT": MODL!.MODTField(r, dataSize)
         case "FULL": FULL = STRVField(r, dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
-        case "MNAM": MNAM = IN32Field(r, dataSize)
+        case "MNAM": MNAM = r.readT(dataSize)
         default: return false
         }
         return true

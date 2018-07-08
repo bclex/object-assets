@@ -146,7 +146,7 @@ public class LANDRecord: Record {
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "DATA": DATA = IN32Field(r, dataSize)
+        case "DATA": DATA = r.readT(dataSize)
         case "VNML": VNML = VNMLField(r, dataSize)
         case "VHGT": VHGT = VHGTField(r, dataSize)
         case "VCLR": VCLR = VNMLField(r, dataSize)

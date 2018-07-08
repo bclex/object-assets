@@ -83,7 +83,7 @@ public class WTHRRecord: Record, IHaveEDID, IHaveMODL {
             thunderLightning_endFadeOut = r.readByte()
             thunderLightning_frequency = r.readByte()
             weatherClassification = r.readByte()
-            lightningColor = ColorRef(red: r.readByte(), green: r.readByte(), blue: r.readByte(), nullByte: 255)
+            lightningColor = ColorRef(red: r.readByte(), green: r.readByte(), blue: r.readByte(), null: 255)
         }
     }
 

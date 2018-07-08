@@ -76,7 +76,7 @@ public class ARMORecord: Record, IHaveEDID, IHaveMODL {
         case "CNAM": INDXs.last!.CNAM = STRVField(r, dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         case "ENAM": ENAM = FMIDField<ENCHRecord>(r, dataSize)
-        case "BMDT": BMDT = UI32Field(r, dataSize)
+        case "BMDT": BMDT = r.readT(dataSize)
         case "MOD2": MOD2 = MODLGroup(r, dataSize)
         case "MO2B": MOD2?.MODBField(r, dataSize)
         case "MO2T": MOD2?.MODTField(r, dataSize)
@@ -87,7 +87,7 @@ public class ARMORecord: Record, IHaveEDID, IHaveMODL {
         case "MO4B": MOD4?.MODBField(r, dataSize)
         case "MO4T": MOD4?.MODTField(r, dataSize)
         case "ICO2": ICO2 = FILEField(r, dataSize)
-        case "ANAM": ANAM = IN16Field(r, dataSize)
+        case "ANAM": ANAM = r.readT(dataSize)
         default: return false
         }
         return true

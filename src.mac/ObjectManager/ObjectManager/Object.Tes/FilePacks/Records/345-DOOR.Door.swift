@@ -24,7 +24,7 @@ public class DOORRecord: Record, IHaveEDID, IHaveMODL {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize)
         case "FULL": FULL = STRVField(r, dataSize)
-        case "FNAM": if format != .TES3 { FNAM = BYTEField(r, dataSize) } else { FULL = STRVField(r, dataSize) }
+        case "FNAM": if format != .TES3 { FNAM = r.readT(dataSize) } else { FULL = STRVField(r, dataSize) }
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
         case "MODT": MODL!.MODTField(r, dataSize)

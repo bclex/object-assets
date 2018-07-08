@@ -11,8 +11,8 @@ import CoreGraphics
 import SceneKit
 
 public protocol ICellRecord : IRecord {
-    var isInterior: Bool {get}
-    var ambientLight: CGColor? {get}
+    //var isInterior: Bool {get}
+    //var ambientLight: CGColor? {get}
 }
 
 public class InRangeCellInfo {

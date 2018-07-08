@@ -9,7 +9,7 @@
 public class FACTRecord: Record {
     // TESX
     public class RNAMGroup: CustomStringConvertible {
-        public var description: String { return "FACT: \(RNAM.value):\(MNAM.value)" }
+        public var description: String { return "FACT: \(RNAM!):\(MNAM.value)" }
         public var RNAM: IN32Field! // rank
         public var MNAM: STRVField! // male
         public var FNAM: STRVField! // female
@@ -70,8 +70,8 @@ public class FACTRecord: Record {
         case "FULL": FNAM = STRVField(r, dataSize)
         case "XNAM": XNAM = XNAMField(r, dataSize, format)
         case "DATA": DATA = INTVField(r, dataSize)
-        case "CNAM": CNAM = UI32Field(r, dataSize)
-        case "RNAM": RNAMs.append(RNAMGroup(RNAM: IN32Field(r, dataSize)))
+        case "CNAM": CNAM = r.readT(dataSize)
+        case "RNAM": RNAMs.append(RNAMGroup(RNAM: r.readT(dataSize)))
         case "MNAM": RNAMs.last!.MNAM = STRVField(r, dataSize)
         case "FNAM": RNAMs.last!.FNAM = STRVField(r, dataSize)
         case "INAM": RNAMs.last!.INAM = STRVField(r, dataSize)

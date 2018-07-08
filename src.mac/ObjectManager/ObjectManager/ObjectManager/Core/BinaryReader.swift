@@ -149,6 +149,9 @@ public class BinaryReader {
     }
 
     public func readT<T>(_ length: Int) -> T {
+        guard T.self != String.self else {
+            return String() as! T
+        }
         return baseStream.readData(ofLength: length).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
             let rawPtr = UnsafeRawPointer(ptr)
             return rawPtr.load(as: T.self)

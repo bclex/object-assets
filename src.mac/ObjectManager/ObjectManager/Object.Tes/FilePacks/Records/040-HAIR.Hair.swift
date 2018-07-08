@@ -21,7 +21,7 @@ public class HAIRRecord: Record, IHaveEDID, IHaveMODL {
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
         case "ICON": ICON = FILEField(r, dataSize)
-        case "DATA": DATA = BYTEField(r, dataSize)
+        case "DATA": DATA = r.readT(dataSize)
         default: return false
         }
         return true

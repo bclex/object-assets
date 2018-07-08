@@ -30,7 +30,7 @@ public class ACHRRecord: Record {
         case "XESP": XESP = REFRRecord.XESPField(r, dataSize)
         case "XMRC": XMRC = FMIDField<REFRRecord>(r, dataSize)
         case "XHRS": XHRS = FMIDField<ACRERecord>(r, dataSize)
-        case "XSCL": XSCL = FLTVField(r, dataSize)
+        case "XSCL": XSCL = r.readT(dataSize)
         case "XRGD": XRGD = BYTVField(r, dataSize)
         default: return false;
         }

@@ -19,9 +19,9 @@ public class WATRRecord: Record {
         public var scrollYSpeed: Float = 0
         public var fogDistance_nearPlane: Float = 0
         public var fogDistance_farPlane: Float = 0
-        public var shallowColor: ColorRef = ColorRef.empty
-        public var deepColor: ColorRef = ColorRef.empty
-        public var reflectionColor: ColorRef = ColorRef.empty
+        public var shallowColor: ColorRef = ColorRef_empty
+        public var deepColor: ColorRef = ColorRef_empty
+        public var reflectionColor: ColorRef = ColorRef_empty
         public var textureBlend: UInt8 = 0
         public var rainSimulator_force: Float = 0
         public var rainSimulator_velocity: Float = 0
@@ -55,9 +55,9 @@ public class WATRRecord: Record {
                 return
             }
             fogDistance_farPlane = r.readLESingle()
-            shallowColor = ColorRef(r)
-            deepColor = ColorRef(r)
-            reflectionColor = ColorRef(r)
+            shallowColor = r.readT(dataSize)
+            deepColor = r.readT(dataSize)
+            reflectionColor = r.readT(dataSize)
             textureBlend = r.readByte()
             r.skipBytes(3) // Unused
             guard dataSize != 62 else {
@@ -108,8 +108,8 @@ public class WATRRecord: Record {
         switch type {
             case "EDID": EDID = STRVField(r, dataSize)
             case "TNAM": TNAM = STRVField(r, dataSize)
-            case "ANAM": ANAM = BYTEField(r, dataSize)
-            case "FNAM": FNAM = BYTEField(r, dataSize)
+            case "ANAM": ANAM = r.readT(dataSize)
+            case "FNAM": FNAM = r.readT(dataSize)
             case "MNAM": MNAM = STRVField(r, dataSize)
             case "SNAM": SNAM = FMIDField<SOUNRecord>(r, dataSize)
             case "DATA": DATA = DATAField(r, dataSize)

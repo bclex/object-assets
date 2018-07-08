@@ -25,7 +25,7 @@ public class DIALRecord: Record {
         case "EDID",
              "NAME": EDID = STRVField(r, dataSize); DIALRecord.lastRecord = self
         case "FULL": FULL = STRVField(r, dataSize)
-        case "DATA": DATA = BYTEField(r, dataSize)
+        case "DATA": DATA = r.readT(dataSize)
         case "QSTI",
              "QSTR": if QSTIs == nil { QSTIs = [FMIDField<QUSTRecord>]() }; QSTIs?.append(FMIDField<QUSTRecord>(r, dataSize))
         default: return false

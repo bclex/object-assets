@@ -39,7 +39,7 @@ public class LTEXRecord: Record, IHaveEDID {
              "DATA": ICON = FILEField(r, dataSize)
         // TES4
         case "HNAM": HNAM = HNAMField(r, dataSize)
-        case "SNAM": SNAM = BYTEField(r, dataSize)
+        case "SNAM": SNAM = r.readT(dataSize)
         case "GNAM": GNAMs.append(FMIDField<GRASRecord>(r, dataSize))
         default: return false
         }

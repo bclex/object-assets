@@ -23,7 +23,7 @@ public class SNDGRecord: Record {
         }
         switch type {
         case "NAME": EDID = STRVField(r, dataSize)
-        case "DATA": DATA = IN32Field(r, dataSize)
+        case "DATA": DATA = r.readT(dataSize)
         case "SNAM": SNAM = STRVField(r, dataSize)
         case "CNAM": CNAM = STRVField(r, dataSize)
         default: return false

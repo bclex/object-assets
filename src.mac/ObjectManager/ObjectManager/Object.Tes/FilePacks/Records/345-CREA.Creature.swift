@@ -217,7 +217,7 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "FNAM": FNAM = STRVField(r, dataSize)
         case "NPDT": NPDT = NPDTField(r, dataSize)
-        case "FLAG": FLAG = IN32Field(r, dataSize)
+        case "FLAG": FLAG = r.readT(dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         case "NPCO": NPCO = CNTOField(r, dataSize, for: format)
         case "AIDT": AIDT = AIDTField(r, dataSize)
@@ -226,7 +226,7 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
         case "AI_F": AI_F = AI_FField(r, dataSize)
         case "AI_E": AI_E = AI_FField(r, dataSize)
         case "AI_A": AI_A = AI_AField(r, dataSize)
-        case "XSCL": XSCL = FLTVField(r, dataSize)
+        case "XSCL": XSCL = r.readT(dataSize)
         case "CNAM": CNAM = STRVField(r, dataSize)
         case "NPCS": NPCSs.append(STRVField(r, dataSize, format: .zeroPadded))
         default: return false

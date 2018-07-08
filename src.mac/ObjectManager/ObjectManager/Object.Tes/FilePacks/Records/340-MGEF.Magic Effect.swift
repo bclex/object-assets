@@ -21,7 +21,7 @@ public class MGEFRecord: Record, IHaveEDID, IHaveMODL {
             spellSchool = r.readLEInt32()
             baseCost = r.readLESingle()
             flags = r.readLEInt32()
-            color = ColorRef(red: UInt8(r.readLEInt32()), green: UInt8(r.readLEInt32()), blue: UInt8(r.readLEInt32()))
+            color = ColorRef(red: UInt8(r.readLEInt32()), green: UInt8(r.readLEInt32()), blue: UInt8(r.readLEInt32()), null: 255)
             speedX = r.readLESingle()
             sizeX = r.readLESingle()
             sizeCap = r.readLESingle()

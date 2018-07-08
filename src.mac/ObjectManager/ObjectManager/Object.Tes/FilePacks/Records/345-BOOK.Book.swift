@@ -61,7 +61,7 @@ public class BOOKRecord: Record, IHaveEDID, IHaveMODL {
         case "DESC",
              "TEXT": DESC = STRVField(r, dataSize)
         case "ENAM": ENAM = FMIDField<ENCHRecord>(r, dataSize)
-        case "ANAM": ANAM = IN16Field(r, dataSize)
+        case "ANAM": ANAM = r.readT(dataSize)
         default: return false
         }
         return true

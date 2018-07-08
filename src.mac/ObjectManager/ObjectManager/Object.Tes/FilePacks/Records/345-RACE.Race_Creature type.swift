@@ -212,9 +212,9 @@ public class RACERecord: Record {
                 case "SPLO": SPLOs.append(STRVField(r, dataSize))
                 case "VNAM": VNAM = FMID2Field<RACERecord>(r, dataSize)
                 case "DNAM": DNAM = FMID2Field<HAIRRecord>(r, dataSize)
-                case "CNAM": CNAM = BYTEField(r, dataSize)
-                case "PNAM": PNAM = FLTVField(r, dataSize)
-                case "UNAM": UNAM = FLTVField(r, dataSize)
+                case "CNAM": CNAM = r.readT(dataSize)
+                case "PNAM": PNAM = r.readT(dataSize)
+                case "UNAM": UNAM = r.readT(dataSize)
                 case "XNAM": XNAM = UNKNField(r, dataSize)
                 case "ATTR": DATA.ATTRField(r, dataSize)
                 case "NAM0": _nameState += 1
@@ -222,7 +222,7 @@ public class RACERecord: Record {
                 }
             case 1: // Face Data
                 switch type {
-                case "INDX": faceParts.append(FacePartGroup(INDX: UI32Field(r, dataSize)))
+                case "INDX": faceParts.append(FacePartGroup(INDX: r.readT(dataSize)))
                 case "MODL": faceParts.last!.MODL = MODLGroup(r, dataSize)
                 case "ICON": faceParts.last!.ICON = FILEField(r, dataSize)
                 case "MODB": faceParts.last!.MODL.MODBField(r, dataSize)
@@ -234,8 +234,8 @@ public class RACERecord: Record {
                 case "MNAM": _genderState = 0
                 case "FNAM": _genderState = 1
                 case "MODL": bodys[_genderState].MODL = FILEField(r, dataSize)
-                case "MODB": bodys[_genderState].MODB = FLTVField(r, dataSize)
-                case "INDX": bodys[_genderState].bodyParts.append(BodyPartGroup(INDX: UI32Field(r, dataSize)))
+                case "MODB": bodys[_genderState].MODB = r.readT(dataSize)
+                case "INDX": bodys[_genderState].bodyParts.append(BodyPartGroup(INDX: r.readT(dataSize)))
                 case "ICON": bodys[_genderState].bodyParts.last!.ICON = FILEField(r, dataSize)
                 case "HNAM": _nameState += 1
                 default: return false

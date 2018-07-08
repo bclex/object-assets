@@ -18,7 +18,7 @@ public class EYESRecord: Record {
         case "EDID": EDID = STRVField(r, dataSize)
         case "FULL": FULL = STRVField(r, dataSize)
         case "ICON": ICON = FILEField(r, dataSize)
-        case "DATA": DATA = BYTEField(r, dataSize)
+        case "DATA": DATA = r.readT(dataSize)
         default: return false
         }
         return true

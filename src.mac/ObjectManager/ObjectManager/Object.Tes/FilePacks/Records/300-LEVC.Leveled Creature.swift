@@ -22,11 +22,11 @@ public class LEVCRecord: Record {
         }
         switch type {
         case "NAME": EDID = STRVField(r, dataSize)
-        case "DATA": DATA = IN32Field(r, dataSize)
-        case "NNAM": NNAM = BYTEField(r, dataSize)
-        case "INDX": INDX = IN32Field(r, dataSize)
+        case "DATA": DATA = r.readT(dataSize)
+        case "NNAM": NNAM = r.readT(dataSize)
+        case "INDX": INDX = r.readT(dataSize)
         case "CNAM": CNAMs.append(STRVField(r, dataSize))
-        case "INTV": INTVs.append(IN16Field(r, dataSize))
+        case "INTV": INTVs.append(r.readT(dataSize))
         default: return false
         }
         return true

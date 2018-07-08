@@ -34,9 +34,9 @@ public class LVLIRecord: Record {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = STRVField(r, dataSize)
-        case "LVLD": LVLD = r.readT(dataSize) //BYTEField(r, dataSize)
-        case "LVLF": LVLF = BYTEField(r, dataSize)
-        case "DATA": DATA = BYTEField(r, dataSize)
+        case "LVLD": LVLD = r.readT(dataSize)
+        case "LVLF": LVLF = r.readT(dataSize)
+        case "DATA": DATA = r.readT(dataSize)
         case "LVLO": LVLOs.append(LVLOField(r, dataSize))
         default: return false
         }

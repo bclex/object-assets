@@ -38,8 +38,8 @@ public class TES4Record: Record {
         case "MAST": if MASTs == nil { MASTs = [STRVField]() }; MASTs!.append(STRVField(r, dataSize))
         case "DATA": if DATAs == nil { DATAs = [INTVField]() }; DATAs!.append(INTVField(r, dataSize))
         case "ONAM": ONAM = UNKNField(r, dataSize)
-        case "INTV": INTV = IN32Field(r, dataSize)
-        case "INCC": INCC = IN32Field(r, dataSize)
+        case "INTV": INTV = r.readT(dataSize)
+        case "INCC": INCC = r.readT(dataSize)
         default: return false
         }
         return true

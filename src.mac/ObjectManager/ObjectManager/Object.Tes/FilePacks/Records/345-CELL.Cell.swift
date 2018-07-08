@@ -56,10 +56,14 @@ public class CELLRecord: Record, ICellRecord {
         public let fogPow: Float
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
-            ambientColor = ColorRef(r);
-            directionalColor = ColorRef(r);
-            fogColor = ColorRef(r);
-            fogNear = r.readLESingle();
+            var abc: BYTEField = r.readT(dataSize) //BYTEField(r, dataSize)
+            debugPrint("\(MemoryLayout<BYTEField>.size)x\(MemoryLayout<BYTEField>.stride): \(abc)")
+            debugPrint(Utils.hexString(of: abc))
+            
+            ambientColor = r.readT(dataSize)
+            directionalColor = r.readT(dataSize)
+            fogColor = r.readT(dataSize)
+            fogNear = r.readLESingle()
             guard format != .TES3 else {
                 fogFar = 0; directionalFade = 0; fogClipDist = 0; directionalRotationXY = 0; directionalRotationZ = 0
                 fogPow = 0
@@ -147,9 +151,9 @@ public class CELLRecord: Record, ICellRecord {
     public var InFRMR = false
     public var RefObjs = [RefObj]()
 
-    public var isInterior: Bool { return Utils.containsBitFlags(UInt(DATA.value), 0x01) }
+    public var isInterior: Bool { return Utils.containsBitFlags(UInt(DATA), 0x01) }
     public var gridId: Vector3Int!
-    public var ambientLight: CGColor? { return XCLL != nil ? XCLL!.ambientColor.toColor32 : nil }
+    //public var ambientLight: CGColor? { return XCLL != nil ? XCLL!.ambientColor.toColor32 : nil }
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if !InFRMR && type == "FRMR" {
@@ -165,23 +169,23 @@ public class CELLRecord: Record, ICellRecord {
             case "XCLC":
                 XCLC = XCLCField(r, dataSize, format) //r.readT(dataSize) //
             case "XCLL",
-                 "AMBI":
-                XCLL = r.readT(dataSize); debugPrint("\(XCLL)") //XCLLField(r, dataSize, format); debugPrint("\(XCLL)")
+                 "AMBI": XCLL = XCLLField(r, dataSize, format) //r.readT(dataSize)
+                debugPrint("\(XCLL!)") //X; debugPrint("\(XCLL)")
             case "XCLW",
-                 "WHGT": XCLW = FLTVField(r, dataSize)
+                 "WHGT": XCLW = r.readT(dataSize)
             // TES3
-            case "NAM0": NAM0 = UI32Field(r, dataSize)
+            case "NAM0": NAM0 = r.readT(dataSize)
             case "INTV": INTV = INTVField(r, dataSize)
-            case "NAM5": NAM5 = CREFField(r, dataSize)
+            case "NAM5": NAM5 = r.readT(dataSize)
             // TES4
             case "XCLR":
                 XCLRs = [FMIDField<REGNRecord>](); let capacity = dataSize >> 2; XCLRs.reserveCapacity(capacity)
                 for _ in 0..<capacity { XCLRs.append(FMIDField<REGNRecord>(r, 4)) }
-            case "XCMT": XCMT = BYTEField(r, dataSize)
+            case "XCMT": XCMT = r.readT(dataSize)
             case "XCCM": XCCM = FMIDField<CLMTRecord>(r, dataSize)
             case "XCWT": XCWT = FMIDField<WATRRecord>(r, dataSize)
             case "XOWN": XOWNs.append(XOWNGroup(XOWN: FMIDField<Record>(r, dataSize)))
-            case "XRNK": XOWNs.last!.XRNK = IN32Field(r, dataSize)
+            case "XRNK": XOWNs.last!.XRNK = r.readT(dataSize)
             case "XGLB": XOWNs.last!.XGLB = FMIDField<Record>(r, dataSize)
             default: return false
             }
@@ -191,26 +195,26 @@ public class CELLRecord: Record, ICellRecord {
         else {
             switch type {
             // RefObjDataGroup sub-records
-            case "FRMR": RefObjs.append(RefObj()); RefObjs.last!.FRMR = UI32Field(r, dataSize)
+            case "FRMR": RefObjs.append(RefObj()); RefObjs.last!.FRMR = r.readT(dataSize)
             case "NAME": RefObjs.last!.EDID = STRVField(r, dataSize)
-            case "XSCL": RefObjs.last!.XSCL = FLTVField(r, dataSize)
+            case "XSCL": RefObjs.last!.XSCL = r.readT(dataSize)
             case "DODT": RefObjs.last!.DODT = RefObj.XYZAField(r, dataSize)
             case "DNAM": RefObjs.last!.DNAM = STRVField(r, dataSize)
-            case "FLTV": RefObjs.last!.FLTV = FLTVField(r, dataSize)
+            case "FLTV": RefObjs.last!.FLTV = r.readT(dataSize)
             case "KNAM": RefObjs.last!.KNAM = STRVField(r, dataSize)
             case "TNAM": RefObjs.last!.TNAM = STRVField(r, dataSize)
-            case "UNAM": RefObjs.last!.UNAM = BYTEField(r, dataSize)
+            case "UNAM": RefObjs.last!.UNAM = r.readT(dataSize)
             case "ANAM": RefObjs.last!.ANAM = STRVField(r, dataSize)
             case "BNAM": RefObjs.last!.BNAM = STRVField(r, dataSize)
-            case "INTV": RefObjs.last!.INTV = IN32Field(r, dataSize)
-            case "NAM9": RefObjs.last!.NAM9 = UI32Field(r, dataSize)
+            case "INTV": RefObjs.last!.INTV = r.readT(dataSize)
+            case "NAM9": RefObjs.last!.NAM9 = r.readT(dataSize)
             case "XSOL": RefObjs.last!.XSOL = STRVField(r, dataSize)
             case "DATA": RefObjs.last!.DATA = RefObj.XYZAField(r, dataSize)
             //
             case "CNAM": RefObjs.last!.CNAM = STRVField(r, dataSize)
-            case "NAM0": RefObjs.last!.NAM0 = UI32Field(r, dataSize)
-            case "XCHG": RefObjs.last!.XCHG = IN32Field(r, dataSize)
-            case "INDX": RefObjs.last!.INDX = IN32Field(r, dataSize)
+            case "NAM0": RefObjs.last!.NAM0 = r.readT(dataSize)
+            case "XCHG": RefObjs.last!.XCHG = r.readT(dataSize)
+            case "INDX": RefObjs.last!.INDX = r.readT(dataSize)
             default: return false
             }
             return true
