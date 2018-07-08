@@ -28,18 +28,10 @@ public class CELLRecord: Record, ICellRecord {
         }
     }
 
-    public struct XCLCField {
-        public var description: String { return "\(gridX)x\(gridY)" }
-        public let gridX: Int32
-        public let gridY: Int32
-        public let flags: UInt32
-
-        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
-            gridX = r.readLEInt32()
-            gridY = r.readLEInt32()
-            flags = format == .TES5 ? r.readLEUInt32() : 0
-        }
-    }
+    public typealias XCLCField = (
+        gridX: Int32,
+        gridY: Int32,
+        flags: UInt32)
 
     public struct XCLLField {
         public let ambientColor: ColorRef
@@ -56,10 +48,6 @@ public class CELLRecord: Record, ICellRecord {
         public let fogPow: Float
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
-            var abc: BYTEField = r.readT(dataSize) //BYTEField(r, dataSize)
-            debugPrint("\(MemoryLayout<BYTEField>.size)x\(MemoryLayout<BYTEField>.stride): \(abc)")
-            debugPrint(Utils.hexString(of: abc))
-            
             ambientColor = r.readT(dataSize)
             directionalColor = r.readT(dataSize)
             fogColor = r.readT(dataSize)
@@ -162,12 +150,17 @@ public class CELLRecord: Record, ICellRecord {
         if !InFRMR {
             switch type {
             case "EDID",
-                 "NAME": EDID = STRVField(r, dataSize)
+                 "NAME":
+                
+                var abc: STRVField = r.readT(dataSize) //BYTEField(r, dataSize)
+                debugPrint("\(MemoryLayout<STRVField>.size)x\(MemoryLayout<STRVField>.stride): \(abc)")
+                debugPrint(Utils.hexString(of: abc))
+                
+                EDID = STRVField(r, dataSize)
             case "FULL",
                  "RGNN": FULL = STRVField(r, dataSize)
             case "DATA": DATA = INTVField(r, format == .TES3 ? 4 : dataSize).toUI16Field; if format == .TES3 { fallthrough }
-            case "XCLC":
-                XCLC = XCLCField(r, dataSize, format) //r.readT(dataSize) //
+            case "XCLC": XCLC = r.readT(format != .TES3 ? dataSize : 8) //debugPrint("\(XCLC!)")
             case "XCLL",
                  "AMBI": XCLL = XCLLField(r, dataSize, format) //r.readT(dataSize)
                 debugPrint("\(XCLL!)") //X; debugPrint("\(XCLL)")
