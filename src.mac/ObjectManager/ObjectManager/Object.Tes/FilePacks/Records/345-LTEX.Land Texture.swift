@@ -7,19 +7,12 @@
 //
 
 public class LTEXRecord: Record, IHaveEDID {
-    public struct HNAMField
-    {
-        public let materialType: UInt8
-        public let friction: UInt8
-        public let restitution: UInt8
-        
-        init(_ r: BinaryReader, _ dataSize: Int) {
-            materialType = r.readByte()
-            friction = r.readByte()
-            restitution = r.readByte()
-        }
-    }
-
+    public typealias HNAMField = (
+        materialType: UInt8,
+        friction: UInt8,
+        restitution: UInt8
+    )
+    
     public override var description: String { return "LTEX: \(EDID)" }
     public var EDID: STRVField = STRVField_empty // Editor ID
     public var ICON: FILEField! // Texture
@@ -38,9 +31,10 @@ public class LTEXRecord: Record, IHaveEDID {
         case "ICON",
              "DATA": ICON = r.readSTRV(dataSize)
         // TES4
-        case "HNAM": HNAM = HNAMField(r, dataSize)
+        case "HNAM": HNAM = r.readT(dataSize)
         case "SNAM": SNAM = r.readT(dataSize)
-        case "GNAM": GNAMs.append(FMIDField<GRASRecord>(r, dataSize))
+        case "GNAM":
+            GNAMs.append(FMIDField<GRASRecord>(r, dataSize))
         default: return false
         }
         return true

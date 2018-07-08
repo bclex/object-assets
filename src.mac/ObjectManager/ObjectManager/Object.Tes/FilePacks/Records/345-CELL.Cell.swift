@@ -33,42 +33,20 @@ public class CELLRecord: Record, ICellRecord {
         gridY: Int32,
         flags: UInt32)
 
-    public struct XCLLField {
-        public let ambientColor: ColorRef
-        public let directionalColor: ColorRef //: SunlightColor
-        public let fogColor: ColorRef
-        public let fogNear: Float //: FogDensity
+    public typealias XCLLField = (
+        ambientColor: ColorRef,
+        directionalColor: ColorRef, //: SunlightColor
+        fogColor: ColorRef,
+        fogNear: Float, //: FogDensity
         // TES4
-        public let fogFar: Float
-        public let directionalRotationXY: Int32
-        public let directionalRotationZ: Int32
-        public let directionalFade: Float
-        public let fogClipDist: Float
+        fogFar: Float,
+        directionalRotationXY: Int32,
+        directionalRotationZ: Int32,
+        directionalFade: Float,
+        fogClipDist: Float,
         // TES5
-        public let fogPow: Float
-
-        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
-            ambientColor = r.readT(dataSize)
-            directionalColor = r.readT(dataSize)
-            fogColor = r.readT(dataSize)
-            fogNear = r.readLESingle()
-            guard format != .TES3 else {
-                fogFar = 0; directionalFade = 0; fogClipDist = 0; directionalRotationXY = 0; directionalRotationZ = 0
-                fogPow = 0
-                return
-            }
-            fogFar = r.readLESingle()
-            directionalRotationXY = r.readLEInt32()
-            directionalRotationZ = r.readLEInt32()
-            directionalFade = r.readLESingle()
-            fogClipDist = r.readLESingle()
-            guard format != .TES4 else {
-                fogPow = 0
-                return
-            }
-            fogPow = r.readLESingle()
-        }
-    }
+        fogPow: Float
+    )
 
     public class XOWNGroup {
         public var XOWN: FMIDField<Record>
@@ -81,15 +59,10 @@ public class CELLRecord: Record, ICellRecord {
     }
 
     public class RefObj: CustomStringConvertible {
-        public struct XYZAField {
-            public let position: Vector3
-            public let eulerAngles: Vector3
-
-            init(_ r: BinaryReader, _ dataSize: Int) {
-                position = r.readLEVector3()
-                eulerAngles = r.readLEVector3()
-            }
-        }
+        public typealias XYZAField = (
+            position: Vector3Float,
+            eulerAngles: Vector3Float
+        )
 
         public var FRMR: UI32Field? = nil // Object Index (starts at 1)
         // This is used to uniquely identify objects in the cell. For files the index starts at 1 and is incremented for each object added. For modified
@@ -138,30 +111,31 @@ public class CELLRecord: Record, ICellRecord {
     // Referenced Object Data Grouping
     public var InFRMR = false
     public var RefObjs = [RefObj]()
+    var _lastRef: RefObj!
 
     public var isInterior: Bool { return Utils.containsBitFlags(UInt(DATA), 0x01) }
     public var gridId: Vector3Int!
     //public var ambientLight: CGColor? { return XCLL != nil ? XCLL!.ambientColor.toColor32 : nil }
 
+    //                var abc: STRVField = r.readT(dataSize) //BYTEField(r, dataSize)
+    //                debugPrint("\(MemoryLayout<STRVField>.size)x\(MemoryLayout<STRVField>.stride): \(abc)")
+    //                debugPrint(Utils.hexString(of: abc))
+    
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if !InFRMR && type == "FRMR" {
             InFRMR = true
         }
         if !InFRMR {
+            return false
             switch type {
             case "EDID",
-                 "NAME":
-//                var abc: STRVField = r.readT(dataSize) //BYTEField(r, dataSize)
-//                debugPrint("\(MemoryLayout<STRVField>.size)x\(MemoryLayout<STRVField>.stride): \(abc)")
-//                debugPrint(Utils.hexString(of: abc))
-                EDID = r.readSTRV(dataSize)
+                 "NAME": EDID = r.readSTRV(dataSize)
             case "FULL",
                  "RGNN": FULL = r.readSTRV(dataSize)
             case "DATA": DATA = UI16Field(r.readINTV(format == .TES3 ? 4 : dataSize)); if format == .TES3 { fallthrough }
             case "XCLC": XCLC = r.readT(format != .TES3 ? dataSize : 8) //debugPrint("\(XCLC!)")
             case "XCLL",
-                 "AMBI": XCLL = XCLLField(r, dataSize, format) //r.readT(dataSize)
-                debugPrint("\(XCLL!)") //X; debugPrint("\(XCLL)")
+                 "AMBI": XCLL = r.readT(dataSize)
             case "XCLW",
                  "WHGT": XCLW = r.readT(dataSize)
             // TES3
@@ -169,15 +143,15 @@ public class CELLRecord: Record, ICellRecord {
             case "INTV": INTV = r.readINTV(dataSize)
             case "NAM5": NAM5 = r.readT(dataSize)
             // TES4
-            case "XCLR":
-                XCLRs = [FMIDField<REGNRecord>](); let capacity = dataSize >> 2; XCLRs.reserveCapacity(capacity)
-                for _ in 0..<capacity { XCLRs.append(FMIDField<REGNRecord>(r, 4)) }
-            case "XCMT": XCMT = r.readT(dataSize)
-            case "XCCM": XCCM = FMIDField<CLMTRecord>(r, dataSize)
-            case "XCWT": XCWT = FMIDField<WATRRecord>(r, dataSize)
-            case "XOWN": XOWNs.append(XOWNGroup(XOWN: FMIDField<Record>(r, dataSize)))
-            case "XRNK": XOWNs.last!.XRNK = r.readT(dataSize)
-            case "XGLB": XOWNs.last!.XGLB = FMIDField<Record>(r, dataSize)
+//            case "XCLR":
+//                XCLRs = [FMIDField<REGNRecord>](); let capacity = dataSize >> 2; XCLRs.reserveCapacity(capacity)
+//                for _ in 0..<capacity { XCLRs.append(FMIDField<REGNRecord>(r, 4)) }
+//            case "XCMT": XCMT = r.readT(dataSize)
+//            case "XCCM": XCCM = FMIDField<CLMTRecord>(r, dataSize)
+//            case "XCWT": XCWT = FMIDField<WATRRecord>(r, dataSize)
+//            case "XOWN": XOWNs.append(XOWNGroup(XOWN: FMIDField<Record>(r, dataSize)))
+//            case "XRNK": XOWNs.last!.XRNK = r.readT(dataSize)
+//            case "XGLB": XOWNs.last!.XGLB = FMIDField<Record>(r, dataSize)
             default: return false
             }
             return true
@@ -186,26 +160,27 @@ public class CELLRecord: Record, ICellRecord {
         else {
             switch type {
             // RefObjDataGroup sub-records
-            case "FRMR": RefObjs.append(RefObj()); RefObjs.last!.FRMR = r.readT(dataSize)
-            case "NAME": RefObjs.last!.EDID = r.readSTRV(dataSize)
-            case "XSCL": RefObjs.last!.XSCL = r.readT(dataSize)
-            case "DODT": RefObjs.last!.DODT = RefObj.XYZAField(r, dataSize)
-            case "DNAM": RefObjs.last!.DNAM = r.readSTRV(dataSize)
-            case "FLTV": RefObjs.last!.FLTV = r.readT(dataSize)
-            case "KNAM": RefObjs.last!.KNAM = r.readSTRV(dataSize)
-            case "TNAM": RefObjs.last!.TNAM = r.readSTRV(dataSize)
-            case "UNAM": RefObjs.last!.UNAM = r.readT(dataSize)
-            case "ANAM": RefObjs.last!.ANAM = r.readSTRV(dataSize)
-            case "BNAM": RefObjs.last!.BNAM = r.readSTRV(dataSize)
-            case "INTV": RefObjs.last!.INTV = r.readT(dataSize)
-            case "NAM9": RefObjs.last!.NAM9 = r.readT(dataSize)
-            case "XSOL": RefObjs.last!.XSOL = r.readSTRV(dataSize)
-            case "DATA": RefObjs.last!.DATA = RefObj.XYZAField(r, dataSize)
-            //
-            case "CNAM": RefObjs.last!.CNAM = r.readSTRV(dataSize)
-            case "NAM0": RefObjs.last!.NAM0 = r.readT(dataSize)
-            case "XCHG": RefObjs.last!.XCHG = r.readT(dataSize)
-            case "INDX": RefObjs.last!.INDX = r.readT(dataSize)
+            case "FRMR":
+                _lastRef = RefObj(); RefObjs.append(_lastRef)
+                _lastRef.FRMR = r.readT(dataSize)
+            case "NAME": _lastRef.EDID = r.readSTRV(dataSize)
+            case "XSCL": _lastRef.XSCL = r.readT(dataSize)
+            case "DODT": _lastRef.DODT = r.readT(dataSize)
+            case "DNAM": _lastRef.DNAM = r.readSTRV(dataSize)
+            case "FLTV": _lastRef.FLTV = r.readT(dataSize)
+            case "KNAM": _lastRef.KNAM = r.readSTRV(dataSize)
+            case "TNAM": _lastRef.TNAM = r.readSTRV(dataSize)
+            case "UNAM": _lastRef.UNAM = r.readT(dataSize)
+            case "ANAM": _lastRef.ANAM = r.readSTRV(dataSize)
+            case "BNAM": _lastRef.BNAM = r.readSTRV(dataSize)
+            case "INTV": _lastRef.INTV = r.readT(dataSize)
+            case "NAM9": _lastRef.NAM9 = r.readT(dataSize)
+            case "XSOL": _lastRef.XSOL = r.readSTRV(dataSize)
+            case "DATA": _lastRef.DATA = r.readT(dataSize)
+            case "CNAM": _lastRef.CNAM = r.readSTRV(dataSize)
+            case "NAM0": _lastRef.NAM0 = r.readT(dataSize)
+            case "XCHG": _lastRef.XCHG = r.readT(dataSize)
+            case "INDX": _lastRef.INDX = r.readT(dataSize)
             default: return false
             }
             return true

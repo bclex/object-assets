@@ -10,105 +10,73 @@ import Foundation
 
 public class LANDRecord: Record {
     // TESX
-    public class VNMLField {
-        //public var vertexs: [Vector3Int] // XYZ 8 bit floats
-        public var vertexs: Data
+    public struct VNMLField {
+        public var vertexs: [Vector3Int8] // XYZ 8 bit floats
         
         init(_ r: BinaryReader, _ dataSize: Int) {
-            vertexs = r.readBytes(dataSize)
-//            vertexs = [Vector3Int](); let capacity = dataSize / 3; vertexs.reserveCapacity(capacity)
-//            for _ in 0..<capacity { vertexs.append(Vector3Int(Int(r.readByte()), Int(r.readByte()), Int(r.readByte()))) }
+            vertexs = r.readTArray(dataSize, count: dataSize / 3)
         }
     }
 
-    public class VHGTField {
+    public struct VHGTField {
         public let referenceHeight: Float // A height offset for the entire cell. Decreasing this value will shift the entire cell land down.
         public var heightData = [Int8]() // HeightData
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             referenceHeight = r.readLESingle()
             let count = dataSize - 4 - 3
-            self.heightData = r.readTArray(count, count: count)
-//            r.readBytes(count).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
-//                let rawPtr = UnsafeRawPointer(ptr)
-//                let typedPtr = rawPtr.bindMemory(to: Int8.self, capacity: count)
-//                let buffer = UnsafeBufferPointer(start: typedPtr, count: count)
-//                self.heightData = Array(buffer)
-//            }
+            heightData = r.readTArray(count, count: count)
             r.skipBytes(3) // Unused
         }
     }
 
-    public class VCLRField {
-//        public var colors: [ColorRef] // 24-bit RGB
-        public var colors: Data
+    public struct VCLRField {
+        public var colors: [ColorRef3] // 24-bit RGB
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            colors = r.readBytes(dataSize)
-//            colors = [ColorRef](); let capacity = dataSize / 24; colors.reserveCapacity(capacity)
-//            for _ in 0..<capacity { colors.append(ColorRef(red: r.readByte(), green: r.readByte(), blue: r.readByte())) }
+            colors = r.readTArray(dataSize, count: dataSize / 24)
         }
     }
 
-    public class VTEXField {
-//        public var textureIndices: [UInt32]
-        public var textureIndices: Data
+    public struct VTEXField {
+        public var textureIndicesT3: [UInt16]!
+        public var textureIndices: [UInt32]!
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
-            textureIndices = r.readBytes(dataSize)
-//            guard format != .TES3 else {
-//                textureIndices = [UInt32](); let capacity = dataSize >> 1; textureIndices.reserveCapacity(capacity)
-//                for _ in 0..<capacity { textureIndices.append(UInt32(r.readLEUInt16())) }
-//                return
-//            }
-//            textureIndices = [UInt32](); let capacity = dataSize >> 2; textureIndices.reserveCapacity(capacity)
-//            for _ in 0..<capacity { textureIndices.append(r.readLEUInt32()) }
+            guard format != .TES3 else {
+                textureIndicesT3 = r.readTArray(dataSize, count: dataSize >> 1)
+                return
+            }
+            textureIndices = r.readTArray(dataSize, count: dataSize >> 2)
         }
     }
 
     // TES3
-    public struct CORDField: CustomStringConvertible {
-        public var description: String { return "\(cellX), \(cellY)" }
-        public var cellX: Int32, cellY: Int32
+    public typealias CORDField = (
+        cellX: Int32,
+        cellY: Int32
+    )
 
-        init(_ r: BinaryReader, _ dataSize: Int) {
-            cellX = r.readLEInt32()
-            cellY = r.readLEInt32()
-        }
-    }
-
-    public class WNAMField {
+    public struct WNAMField {
         // Low-LOD heightmap (signed chars)
         init(_ r: BinaryReader, _ dataSize: Int) {
-            let heightCount = dataSize
-            for _ in 0..<heightCount { _ = r.readByte() }
+            r.skipBytes(dataSize)
         }
     }
 
     // TES4
-    public struct BTXTField {
-        public let texture: UInt32
-        public let quadrant: UInt8
-        public let layer: Int16
+    public typealias BTXTField = (
+        texture: UInt32,
+        quadrant: UInt8,
+        pad01: UInt8,
+        layer: Int16
+    )
 
-        init(_ r: BinaryReader, _ dataSize: Int) {
-            texture = r.readLEUInt32()
-            quadrant = r.readByte()
-            _ = r.readByte() // Unused
-            layer = r.readLEInt16()
-        }
-    }
-
-    public struct VTXTField {
-        public let position: UInt16
-        public let opacity: Float
-
-        init(_ r: BinaryReader, _ dataSize: Int) {
-            position = r.readLEUInt16()
-            r.skipBytes(2) // Unused
-            opacity = r.readLESingle()
-        }
-    }
+    public typealias VTXTField = (
+        position: UInt16,
+        pad01: UInt16,
+        opacity: Float
+    )
 
     public class ATXTGroup {
         public let ATXT: BTXTField
@@ -152,16 +120,15 @@ public class LANDRecord: Record {
         case "VCLR": VCLR = VNMLField(r, dataSize)
         case "VTEX": VTEX = VTEXField(r, dataSize, format)
         // TES3
-        case "INTV": INTV = CORDField(r, dataSize)
+        case "INTV": INTV = r.readT(dataSize)
         case "WNAM": WNAM = WNAMField(r, dataSize)
         // TES4
-        case "BTXT": let btxt = BTXTField(r, dataSize); BTXTs[Int(btxt.quadrant)] = btxt
+        case "BTXT":
+            let btxt: BTXTField = r.readT(dataSize); BTXTs[Int(btxt.quadrant)] = btxt
         case "ATXT":
             if ATXTs == nil { ATXTs = [ATXTGroup?](repeating: nil, count: 4) }
-            let atxt = BTXTField(r, dataSize); _lastATXT = ATXTGroup(ATXT: atxt); ATXTs![Int(atxt.quadrant)] = _lastATXT
-        case "VTXT":
-            var vtxt = [VTXTField](); let capacity = dataSize >> 3; vtxt.reserveCapacity(capacity)
-            for _ in 0..<capacity { vtxt.append(VTXTField(r, dataSize)) }; _lastATXT.VTXTs = vtxt
+            let atxt: BTXTField = r.readT(dataSize); _lastATXT = ATXTGroup(ATXT: atxt); ATXTs![Int(atxt.quadrant)] = _lastATXT
+        case "VTXT": _lastATXT.VTXTs = r.readTArray(dataSize, count: dataSize >> 3)
         default: return false
         }
         return true

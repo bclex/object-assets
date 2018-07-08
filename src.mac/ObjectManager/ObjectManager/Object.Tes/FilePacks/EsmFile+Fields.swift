@@ -50,6 +50,7 @@ public struct FormId<TRecord>: CustomStringConvertible {
 public let ColorRef_empty = ColorRef(red: 0, green: 0, blue: 0, null: 0)
 public func ColorRef_toColor32(v: ColorRef) -> CGColor { return CGColor(red: CGFloat(v.red), green: CGFloat(v.green), blue: CGFloat(v.blue), alpha: 255) }
 public typealias ColorRef = (red: UInt8, green: UInt8, blue: UInt8, null: UInt8)
+public typealias ColorRef3 = (red: UInt8, green: UInt8, blue: UInt8)
 
 
 public let STRVField_empty = STRVField("")

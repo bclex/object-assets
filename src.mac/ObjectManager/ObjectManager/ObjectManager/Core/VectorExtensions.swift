@@ -31,6 +31,9 @@ public struct Vector3Int: Hashable {
     }
 }
 
+public typealias Vector3Float = (x: Float, y: Float, z: Float)
+public typealias Vector3Int8 = (x: UInt8, y: UInt8, z: UInt8)
+
 extension Vector3 {
     static func + (vector: Vector3, scalar: Float) -> Vector3 {
         return Vector3(vector.x + CGFloat(scalar), vector.y + CGFloat(scalar), vector.z + CGFloat(scalar))
