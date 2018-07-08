@@ -172,14 +172,33 @@ public class BinaryReader {
         return readBytes(length)
     }
     
-    public func readT<T>(_ length: Int) -> T {
-        return baseStream.readData(ofLength: length).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
-            let rawPtr = UnsafeRawPointer(ptr)
-            return rawPtr.load(as: T.self)
-        }
+    func isOptional(_ instance: Any) -> Bool {
+        let mirror = Mirror(reflecting: instance)
+        return mirror.displayStyle == .optional
     }
     
-    public func readTArray<T>(_ length: Int, count: Int) -> [T] {
+    public func readO<T: ExpressibleByNilLiteral>(_ length: Int) -> T {
+        return readT(length)
+    }
+    
+    public func readT<T>(_ length: Int) -> T {
+        return baseStream.readData(ofLength: length).withUnsafeBytes { (ptr: UnsafePointer<T>) -> T in
+//            guard !isOptional(ptr.pointee) else {
+//                fatalError("Not supported")
+//            }
+            return ptr.pointee
+        }
+//        return baseStream.readData(ofLength: length).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+//            let rawPtr = UnsafeRawPointer(ptr)
+//            return rawPtr.load(as: T.self)
+//        }
+//        return baseStream.readData(ofLength: length).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+//            let rawPtr = UnsafeRawPointer(ptr)
+//            return rawPtr.bindMemory(to: T.self, capacity: 1).pointee
+//        }
+    }
+    
+    public func readOArray<T>(_ length: Int, count: Int) -> [T] {
         return baseStream.readData(ofLength: length).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
             let rawPtr = UnsafeRawPointer(ptr)
             let typedPtr = rawPtr.bindMemory(to: T.self, capacity: count)

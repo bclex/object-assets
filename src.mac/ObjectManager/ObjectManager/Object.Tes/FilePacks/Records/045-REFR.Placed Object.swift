@@ -111,30 +111,30 @@ public class REFRRecord: Record {
         case "DATA": DATA = DATAField(r, dataSize)
         case "XLOC": XLOC = XLOCField(r, dataSize)
         case "XOWN": if XOWNs == nil { XOWNs = [CELLRecord.XOWNGroup]() }; XOWNs!.append(CELLRecord.XOWNGroup(XOWN: FMIDField<Record>(r, dataSize)))
-        case "XRNK": XOWNs!.last!.XRNK = r.readT(dataSize)
+        case "XRNK": XOWNs!.last!.XRNK = r.readO(dataSize)
         case "XGLB": XOWNs!.last!.XGLB = FMIDField<Record>(r, dataSize)
         case "XESP": XESP = XESPField(r, dataSize)
         case "XTRG": XTRG = FMIDField<Record>(r, dataSize)
         case "XSED": XSED = XSEDField(r, dataSize)
         case "XLOD": XLOD = r.readBYTV(dataSize)
-        case "XCHG": XCHG = r.readT(dataSize)
-        case "XHLT": XCHG = r.readT(dataSize)
+        case "XCHG": XCHG = r.readO(dataSize)
+        case "XHLT": XCHG = r.readO(dataSize)
         case "XPCI": XPCI = FMIDField<CELLRecord>(r, dataSize); _nextFull = 1
         case "FULL":
             if _nextFull == 1 { XPCI!.add(name: r.readASCIIString(dataSize)) }
             else if _nextFull == 2 { XMRKs!.last!.FULL = r.readSTRV(dataSize) }
             _nextFull = 0
-        case "XLCM": XLCM = r.readT(dataSize)
+        case "XLCM": XLCM = r.readO(dataSize)
         case "XRTM": XRTM = FMIDField<REFRRecord>(r, dataSize)
-        case "XACT": XACT = r.readT(dataSize)
-        case "XCNT": XCNT = r.readT(dataSize)
+        case "XACT": XACT = r.readO(dataSize)
+        case "XCNT": XCNT = r.readO(dataSize)
         case "XMRK": if XMRKs == nil { XMRKs = [XMRKGroup]() }; XMRKs!.append(XMRKGroup()); _nextFull = 2
-        case "FNAM": XMRKs!.last!.FNAM = r.readT(dataSize)
-        case "TNAM": XMRKs!.last!.TNAM = r.readT(dataSize); r.skipBytes(1)
+        case "FNAM": XMRKs!.last!.FNAM = r.readO(dataSize)
+        case "TNAM": XMRKs!.last!.TNAM = r.readO(dataSize); r.skipBytes(1)
         case "ONAM": break
         case "XRGD": XRGD = r.readBYTV(dataSize)
-        case "XSCL": XSCL = r.readT(dataSize)
-        case "XSOL": XSOL = r.readT(dataSize)
+        case "XSCL": XSCL = r.readO(dataSize)
+        case "XSOL": XSOL = r.readO(dataSize)
         default: return false
         }
         return true

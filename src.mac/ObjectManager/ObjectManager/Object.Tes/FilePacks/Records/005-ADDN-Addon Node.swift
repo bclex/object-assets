@@ -14,7 +14,7 @@ public class ADDNRecord: Record {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = r.readSTRV(dataSize)
-        case "CNAME": CNAME = r.readT(dataSize)
+        case "CNAME": CNAME = r.readO(dataSize)
         default: return false
         }
         return true

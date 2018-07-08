@@ -38,7 +38,7 @@ public class SKILRecord: Record {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = r.readSTRV(dataSize)
-        case "INDX": INDX = r.readT(dataSize)
+        case "INDX": INDX = r.readO(dataSize)
         case "DATA",
              "SKDT": DATA = DATAField(r, dataSize, format)
         case "DESC": DESC = r.readSTRV(dataSize)

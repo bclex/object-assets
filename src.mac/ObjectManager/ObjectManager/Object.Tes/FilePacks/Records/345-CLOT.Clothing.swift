@@ -81,7 +81,7 @@ public class CLOTRecord: Record, IHaveEDID, IHaveMODL {
         case "CNAM": INDXs.last!.CNAM = r.readSTRV(dataSize)
         case "ENAM": ENAM = r.readSTRV(dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
-        case "BMDT": BMDT = r.readT(dataSize)
+        case "BMDT": BMDT = r.readO(dataSize)
         case "MOD2": MOD2 = MODLGroup(r, dataSize)
         case "MO2B": MOD2.MODBField(r, dataSize)
         case "MO2T": MOD2.MODTField(r, dataSize)
@@ -92,7 +92,7 @@ public class CLOTRecord: Record, IHaveEDID, IHaveMODL {
         case "MO4B": MOD4.MODBField(r, dataSize)
         case "MO4T": MOD4.MODTField(r, dataSize)
         case "ICO2": ICO2 = r.readSTRV(dataSize)
-        case "ANAM": ANAM = r.readT(dataSize)
+        case "ANAM": ANAM = r.readO(dataSize)
         default: return false
         }
         return true

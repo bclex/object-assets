@@ -212,9 +212,9 @@ public class RACERecord: Record {
                 case "SPLO": SPLOs.append(r.readSTRV(dataSize))
                 case "VNAM": VNAM = FMID2Field<RACERecord>(r, dataSize)
                 case "DNAM": DNAM = FMID2Field<HAIRRecord>(r, dataSize)
-                case "CNAM": CNAM = r.readT(dataSize)
-                case "PNAM": PNAM = r.readT(dataSize)
-                case "UNAM": UNAM = r.readT(dataSize)
+                case "CNAM": CNAM = r.readO(dataSize)
+                case "PNAM": PNAM = r.readO(dataSize)
+                case "UNAM": UNAM = r.readO(dataSize)
                 case "XNAM": XNAM = r.readBYTV(dataSize)
                 case "ATTR": DATA.ATTRField(r, dataSize)
                 case "NAM0": _nameState += 1
@@ -234,7 +234,7 @@ public class RACERecord: Record {
                 case "MNAM": _genderState = 0
                 case "FNAM": _genderState = 1
                 case "MODL": bodys[_genderState].MODL = r.readSTRV(dataSize)
-                case "MODB": bodys[_genderState].MODB = r.readT(dataSize)
+                case "MODB": bodys[_genderState].MODB = r.readO(dataSize)
                 case "INDX": bodys[_genderState].bodyParts.append(BodyPartGroup(INDX: r.readT(dataSize)))
                 case "ICON": bodys[_genderState].bodyParts.last!.ICON = r.readSTRV(dataSize)
                 case "HNAM": _nameState += 1

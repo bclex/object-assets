@@ -23,7 +23,7 @@ public class SNDGRecord: Record {
         }
         switch type {
         case "NAME": EDID = r.readSTRV(dataSize)
-        case "DATA": DATA = r.readT(dataSize)
+        case "DATA": DATA = r.readO(dataSize)
         case "SNAM": SNAM = r.readSTRV(dataSize)
         case "CNAM": CNAM = r.readSTRV(dataSize)
         default: return false

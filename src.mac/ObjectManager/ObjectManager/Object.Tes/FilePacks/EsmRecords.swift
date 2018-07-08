@@ -124,10 +124,10 @@ public class Header: CustomStringConvertible {
         "TES3" : ({x in return TES3Record(x)}, {x in return true}),
         "TES4" : ({x in return TES4Record(x)}, {x in return true}),
         // 0
-        "LTEX" : ({x in return LTEXRecord(x)}, {x in return x > 10}),
-        "STAT" : ({x in return STATRecord(x)}, {x in return x > 10}),
+        "LTEX" : ({x in return LTEXRecord(x)}, {x in return x > 0}),
+        "STAT" : ({x in return STATRecord(x)}, {x in return x > 0}),
         "CELL" : ({x in return CELLRecord(x)}, {x in return x > 0}),
-        "LAND" : ({x in return LANDRecord(x)}, {x in return x > 10}),
+        "LAND" : ({x in return LANDRecord(x)}, {x in return x > 0}),
         // 1
         "DOOR" : ({x in return DOORRecord(x)}, {x in return x > 1}),
         "MISC" : ({x in return MISCRecord(x)}, {x in return x > 1}),

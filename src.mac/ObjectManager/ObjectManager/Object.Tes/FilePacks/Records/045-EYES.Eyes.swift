@@ -18,7 +18,7 @@ public class EYESRecord: Record {
         case "EDID": EDID = r.readSTRV(dataSize)
         case "FULL": FULL = r.readSTRV(dataSize)
         case "ICON": ICON = r.readSTRV(dataSize)
-        case "DATA": DATA = r.readT(dataSize)
+        case "DATA": DATA = r.readO(dataSize)
         default: return false
         }
         return true

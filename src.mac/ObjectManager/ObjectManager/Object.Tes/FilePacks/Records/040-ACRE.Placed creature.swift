@@ -23,10 +23,10 @@ public class ACRERecord: Record {
         case "DATA": DATA = REFRRecord.DATAField(r, dataSize)
         case "XOWN":
             if XOWNs == nil { XOWNs = [CELLRecord.XOWNGroup]() }; XOWNs!.append(CELLRecord.XOWNGroup(XOWN: FMIDField<Record>(r, dataSize)))
-        case "XRNK": XOWNs!.last!.XRNK = r.readT(dataSize)
+        case "XRNK": XOWNs!.last!.XRNK = r.readO(dataSize)
         case "XGLB": XOWNs!.last!.XGLB = FMIDField<Record>(r, dataSize)
         case "XESP": XESP = REFRRecord.XESPField(r, dataSize)
-        case "XSCL": XSCL = r.readT(dataSize)
+        case "XSCL": XSCL = r.readO(dataSize)
         case "XRGD": XRGD = r.readBYTV(dataSize)
         default: return false
         }
