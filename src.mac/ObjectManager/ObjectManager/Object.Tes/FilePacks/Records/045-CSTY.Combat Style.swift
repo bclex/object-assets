@@ -159,13 +159,13 @@ public class CSTYRecord: Record {
     }
 
     public override var description: String { return "CSTY: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var CSTD: CSTDField! // Standard
     public var CSAD: CSADField! // Advanced
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
         case "CSTD": CSTD = CSTDField(r, dataSize)
         case "CSAD": CSAD = CSADField(r, dataSize)
         default: return false

@@ -109,7 +109,7 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
     }
 
     public override var description: String { return "NPC_: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var FULL: STRVField! // NPC name
     public var MODL: MODLGroup? = nil // Animation
     public var RNAM: STRVField! // Race Name
@@ -136,29 +136,29 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize)
+             "NAME": EDID = r.readSTRV(dataSize)
         case "FULL",
-             "FNAM": FULL = STRVField(r, dataSize)
+             "FNAM": FULL = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
-        case "RNAM": RNAM = STRVField(r, dataSize)
-        case "ANAM": ANAM = STRVField(r, dataSize)
-        case "BNAM": BNAM = STRVField(r, dataSize)
-        case "CNAM": CNAM = STRVField(r, dataSize)
-        case "KNAM": KNAM = STRVField(r, dataSize)
+        case "RNAM": RNAM = r.readSTRV(dataSize)
+        case "ANAM": ANAM = r.readSTRV(dataSize)
+        case "BNAM": BNAM = r.readSTRV(dataSize)
+        case "CNAM": CNAM = r.readSTRV(dataSize)
+        case "KNAM": KNAM = r.readSTRV(dataSize)
         case "NPDT": NPDT = NPDTField(r, dataSize)
-        case "FLAG": FLAG = INTVField(r, dataSize)
+        case "FLAG": FLAG = r.readINTV(dataSize)
         case "NPCO": NPCOs.append(CNTOField(r, dataSize, for: format))
-        case "NPCS": NPCSs.append(STRVField(r, dataSize, format: .zeroPadded))
+        case "NPCS": NPCSs.append(r.readSTRV(dataSize, format: .zeroPadded))
         case "AIDT": AIDT = CREARecord.AIDTField(r, dataSize)
         case "AI_W": AI_W = CREARecord.AI_WField(r, dataSize)
         case "AI_T": AI_T = CREARecord.AI_TField(r, dataSize)
         case "AI_F": AI_F = CREARecord.AI_FField(r, dataSize)
         case "AI_E": AI_E = CREARecord.AI_FField(r, dataSize)
-        case "CNDT": CNDT = STRVField(r, dataSize)
+        case "CNDT": CNDT = r.readSTRV(dataSize)
         case "AI_A": AI_A = CREARecord.AI_AField(r, dataSize)
         case "DODT": DODT = DODTField(r, dataSize)
-        case "DNAM": DNAM = STRVField(r, dataSize)
+        case "DNAM": DNAM = r.readSTRV(dataSize)
         case "XSCL": XSCL = r.readT(dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         default: return false

@@ -22,7 +22,7 @@ public class BODYRecord: Record {
     }
 
     public override var description: String { return "BODY: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var MODL: MODLGroup? = nil // NIF Model
     public var FNAM: STRVField! // Body name
     public var BYDT: BYDTField!
@@ -32,9 +32,9 @@ public class BODYRecord: Record {
             return false
         }
         switch type {
-        case "NAME": EDID = STRVField(r, dataSize)
+        case "NAME": EDID = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "FNAM": FNAM = STRVField(r, dataSize)
+        case "FNAM": FNAM = r.readSTRV(dataSize)
         case "BYDT": BYDT = BYDTField(r, dataSize)
         default: return false
         }

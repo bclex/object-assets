@@ -8,7 +8,7 @@
 
 public class SSCRRecord: Record {
     public override var description: String { return "SSCR: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var DATA: STRVField! // Digits
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
@@ -16,8 +16,8 @@ public class SSCRRecord: Record {
             return false
         }
         switch type {
-        case "NAME": EDID = STRVField(r, dataSize)
-        case "DATA": DATA = STRVField(r, dataSize)
+        case "NAME": EDID = r.readSTRV(dataSize)
+        case "DATA": DATA = r.readSTRV(dataSize)
         default: return false
         }
         return true

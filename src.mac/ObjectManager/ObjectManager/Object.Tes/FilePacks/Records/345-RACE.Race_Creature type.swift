@@ -162,7 +162,7 @@ public class RACERecord: Record {
     }
 
     public override var description: String { return "RACE: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var FULL: STRVField! // Race name
     public var DESC: STRVField! // Race description
     public var SPLOs = [STRVField]() // NPCs: Special power/ability name
@@ -192,11 +192,11 @@ public class RACERecord: Record {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
             switch type {
-            case "NAME": EDID = STRVField(r, dataSize)
-            case "FNAM": FULL = STRVField(r, dataSize)
+            case "NAME": EDID = r.readSTRV(dataSize)
+            case "FNAM": FULL = r.readSTRV(dataSize)
             case "RADT": DATA = DATAField(r, dataSize, format)
-            case "NPCS": SPLOs.append(STRVField(r, dataSize))
-            case "DESC": DESC = STRVField(r, dataSize)
+            case "NPCS": SPLOs.append(r.readSTRV(dataSize))
+            case "DESC": DESC = r.readSTRV(dataSize)
             default: return false
             }
             return true
@@ -205,17 +205,17 @@ public class RACERecord: Record {
             switch _nameState {
             case 0:
                 switch type {
-                case "EDID": EDID = STRVField(r, dataSize)
-                case "FULL": FULL = STRVField(r, dataSize)
-                case "DESC": DESC = STRVField(r, dataSize)
+                case "EDID": EDID = r.readSTRV(dataSize)
+                case "FULL": FULL = r.readSTRV(dataSize)
+                case "DESC": DESC = r.readSTRV(dataSize)
                 case "DATA": DATA = DATAField(r, dataSize, format)
-                case "SPLO": SPLOs.append(STRVField(r, dataSize))
+                case "SPLO": SPLOs.append(r.readSTRV(dataSize))
                 case "VNAM": VNAM = FMID2Field<RACERecord>(r, dataSize)
                 case "DNAM": DNAM = FMID2Field<HAIRRecord>(r, dataSize)
                 case "CNAM": CNAM = r.readT(dataSize)
                 case "PNAM": PNAM = r.readT(dataSize)
                 case "UNAM": UNAM = r.readT(dataSize)
-                case "XNAM": XNAM = UNKNField(r, dataSize)
+                case "XNAM": XNAM = r.readBYTV(dataSize)
                 case "ATTR": DATA.ATTRField(r, dataSize)
                 case "NAM0": _nameState += 1
                 default: return false
@@ -224,7 +224,7 @@ public class RACERecord: Record {
                 switch type {
                 case "INDX": faceParts.append(FacePartGroup(INDX: r.readT(dataSize)))
                 case "MODL": faceParts.last!.MODL = MODLGroup(r, dataSize)
-                case "ICON": faceParts.last!.ICON = FILEField(r, dataSize)
+                case "ICON": faceParts.last!.ICON = r.readSTRV(dataSize)
                 case "MODB": faceParts.last!.MODL.MODBField(r, dataSize)
                 case "NAM1": _nameState += 1
                 default: return false
@@ -233,10 +233,10 @@ public class RACERecord: Record {
                 switch type {
                 case "MNAM": _genderState = 0
                 case "FNAM": _genderState = 1
-                case "MODL": bodys[_genderState].MODL = FILEField(r, dataSize)
+                case "MODL": bodys[_genderState].MODL = r.readSTRV(dataSize)
                 case "MODB": bodys[_genderState].MODB = r.readT(dataSize)
                 case "INDX": bodys[_genderState].bodyParts.append(BodyPartGroup(INDX: r.readT(dataSize)))
-                case "ICON": bodys[_genderState].bodyParts.last!.ICON = FILEField(r, dataSize)
+                case "ICON": bodys[_genderState].bodyParts.last!.ICON = r.readSTRV(dataSize)
                 case "HNAM": _nameState += 1
                 default: return false
                 }
@@ -248,10 +248,10 @@ public class RACERecord: Record {
                 switch type {
                 case "HNAM": for _ in 0..<(dataSize >> 2) { HNAMs.append(FMIDField<HAIRRecord>(r, 4)) }
                 case "ENAM": for _ in 0..<(dataSize >> 2) { ENAMs.append(FMIDField<EYESRecord>(r, 4)) }
-                case "FGGS": FGGS = BYTVField(r, dataSize)
-                case "FGGA": FGGA = BYTVField(r, dataSize)
-                case "FGTS": FGTS = BYTVField(r, dataSize)
-                case "SNAM": SNAM = UNKNField(r, dataSize)
+                case "FGGS": FGGS = r.readBYTV(dataSize)
+                case "FGGA": FGGA = r.readBYTV(dataSize)
+                case "FGTS": FGTS = r.readBYTV(dataSize)
+                case "SNAM": SNAM = r.readBYTV(dataSize)
                 default: return false
                 }
             default: return false

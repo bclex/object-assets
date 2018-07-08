@@ -52,7 +52,7 @@ public class ALCHRecord: Record, IHaveEDID, IHaveMODL {
     }
 
     public override var description: String { return "ALCH: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var MODL: MODLGroup? = nil // Model
     public var FULL: STRVField! // Item Name
     public var DATA: DATAField! // Alchemy Data
@@ -66,17 +66,17 @@ public class ALCHRecord: Record, IHaveEDID, IHaveMODL {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize)
+             "NAME": EDID = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
         case "MODT": MODL!.MODTField(r, dataSize)
-        case "FULL": if SCITs.count == 0 { FULL = STRVField(r, dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
-        case "FNAM": FULL = STRVField(r, dataSize)
+        case "FULL": if SCITs.count == 0 { FULL = r.readSTRV(dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
+        case "FNAM": FULL = r.readSTRV(dataSize)
         case "DATA",
              "ALDT": DATA = DATAField(r, dataSize, format)
         case "ENAM": ENAM = ENAMField(r, dataSize)
         case "ICON",
-             "TEXT": ICON = FILEField(r, dataSize)
+             "TEXT": ICON = r.readSTRV(dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         //
         case "ENIT": DATA.ENITField(r, dataSize)

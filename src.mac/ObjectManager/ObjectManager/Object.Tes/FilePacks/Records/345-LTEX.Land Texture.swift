@@ -21,7 +21,7 @@ public class LTEXRecord: Record, IHaveEDID {
     }
 
     public override var description: String { return "LTEX: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var ICON: FILEField! // Texture
     // TES3
     public var INTV: INTVField!
@@ -33,10 +33,10 @@ public class LTEXRecord: Record, IHaveEDID {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize)
-        case "INTV": INTV = INTVField(r, dataSize)
+             "NAME": EDID = r.readSTRV(dataSize)
+        case "INTV": INTV = r.readINTV(dataSize)
         case "ICON",
-             "DATA": ICON = FILEField(r, dataSize)
+             "DATA": ICON = r.readSTRV(dataSize)
         // TES4
         case "HNAM": HNAM = HNAMField(r, dataSize)
         case "SNAM": SNAM = r.readT(dataSize)

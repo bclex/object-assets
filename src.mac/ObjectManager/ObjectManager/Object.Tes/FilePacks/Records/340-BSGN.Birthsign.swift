@@ -8,7 +8,7 @@
 
 public class BSGNRecord: Record {
     public override var description: String { return "BSGN: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var FULL: STRVField! // Sign name
     public var ICON: FILEField! // Texture
     public var DESC: STRVField! // Description
@@ -18,14 +18,14 @@ public class BSGNRecord: Record {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize)
+             "NAME": EDID = r.readSTRV(dataSize)
         case "FULL",
-             "FNAM": FULL = STRVField(r, dataSize)
+             "FNAM": FULL = r.readSTRV(dataSize)
         case "ICON",
-             "TNAM": ICON = FILEField(r, dataSize)
-        case "DESC": DESC = STRVField(r, dataSize)
+             "TNAM": ICON = r.readSTRV(dataSize)
+        case "DESC": DESC = r.readSTRV(dataSize)
         case "SPLO": if SPLOs == nil { SPLOs = [FMIDField<Record>]() }; SPLOs?.append(FMIDField<Record>(r, dataSize))
-        case "NPCS": if NPCSs == nil { NPCSs = [STRVField]() }; NPCSs?.append(STRVField(r, dataSize))
+        case "NPCS": if NPCSs == nil { NPCSs = [STRVField]() }; NPCSs?.append(r.readSTRV(dataSize))
         default: return false
         }
         return true

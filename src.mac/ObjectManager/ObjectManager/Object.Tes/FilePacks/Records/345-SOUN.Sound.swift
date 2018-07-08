@@ -56,15 +56,15 @@ public class SOUNRecord: Record, IHaveEDID {
     }
 
     public override var description: String { return "SOUN: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var FNAM: FILEField! // Sound Filename (relative to Sounds\)
     public var DATA: DATAField! // Sound Data
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize)
-        case "FNAM": FNAM = FILEField(r, dataSize)
+             "NAME": EDID = r.readSTRV(dataSize)
+        case "FNAM": FNAM = r.readSTRV(dataSize)
         case "SNDX": DATA = DATAField(r, dataSize, format)
         case "SNDD": DATA = DATAField(r, dataSize, format)
         case "DATA": DATA = DATAField(r, dataSize, format)

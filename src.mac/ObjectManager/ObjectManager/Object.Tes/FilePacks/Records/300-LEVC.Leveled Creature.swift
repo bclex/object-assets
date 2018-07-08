@@ -8,7 +8,7 @@
 
 public class LEVCRecord: Record {
     public override var description: String { return "LEVC: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var DATA: IN32Field! // List data - 1 = Calc from all levels <= PC level
     public var NNAM: BYTEField! // Chance None?
     public var INDX: IN32Field! // Number of items in list
@@ -21,11 +21,11 @@ public class LEVCRecord: Record {
             return false
         }
         switch type {
-        case "NAME": EDID = STRVField(r, dataSize)
+        case "NAME": EDID = r.readSTRV(dataSize)
         case "DATA": DATA = r.readT(dataSize)
         case "NNAM": NNAM = r.readT(dataSize)
         case "INDX": INDX = r.readT(dataSize)
-        case "CNAM": CNAMs.append(STRVField(r, dataSize))
+        case "CNAM": CNAMs.append(r.readSTRV(dataSize))
         case "INTV": INTVs.append(r.readT(dataSize))
         default: return false
         }

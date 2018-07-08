@@ -9,7 +9,7 @@
 public class FACTRecord: Record {
     // TESX
     public class RNAMGroup: CustomStringConvertible {
-        public var description: String { return "FACT: \(RNAM!):\(MNAM.value)" }
+        public var description: String { return "FACT: \(RNAM!):\(MNAM ?? "")" }
         public var RNAM: IN32Field! // rank
         public var MNAM: STRVField! // male
         public var FNAM: STRVField! // female
@@ -41,7 +41,7 @@ public class FACTRecord: Record {
     }
 
     public override var description: String { return "FACT: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var FNAM: STRVField! // Faction name
     public var RNAMs = [RNAMGroup]() // Rank Name
     public var FADT: FADTField! // Faction data
@@ -55,26 +55,26 @@ public class FACTRecord: Record {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
             switch type {
-            case "NAME": EDID = STRVField(r, dataSize)
-            case "FNAM": FNAM = STRVField(r, dataSize)
-            case "RNAM": RNAMs.append(RNAMGroup(MNAM: STRVField(r, dataSize)))
+            case "NAME": EDID = r.readSTRV(dataSize)
+            case "FNAM": FNAM = r.readSTRV(dataSize)
+            case "RNAM": RNAMs.append(RNAMGroup(MNAM: r.readSTRV(dataSize)))
             case "FADT": FADT = FADTField(r, dataSize)
-            case "ANAM": ANAMs.append(STRVField(r, dataSize))
-            case "INTV": INTVs.append(INTVField(r, dataSize))
+            case "ANAM": ANAMs.append(r.readSTRV(dataSize))
+            case "INTV": INTVs.append(r.readINTV(dataSize))
             default: return false
             }
             return true
         }
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
-        case "FULL": FNAM = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
+        case "FULL": FNAM = r.readSTRV(dataSize)
         case "XNAM": XNAM = XNAMField(r, dataSize, format)
-        case "DATA": DATA = INTVField(r, dataSize)
+        case "DATA": DATA = r.readINTV(dataSize)
         case "CNAM": CNAM = r.readT(dataSize)
         case "RNAM": RNAMs.append(RNAMGroup(RNAM: r.readT(dataSize)))
-        case "MNAM": RNAMs.last!.MNAM = STRVField(r, dataSize)
-        case "FNAM": RNAMs.last!.FNAM = STRVField(r, dataSize)
-        case "INAM": RNAMs.last!.INAM = STRVField(r, dataSize)
+        case "MNAM": RNAMs.last!.MNAM = r.readSTRV(dataSize)
+        case "FNAM": RNAMs.last!.FNAM = r.readSTRV(dataSize)
+        case "INAM": RNAMs.last!.INAM = r.readSTRV(dataSize)
         default: return false
         }
         return true

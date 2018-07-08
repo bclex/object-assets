@@ -20,12 +20,12 @@ public class SBSPRecord: Record {
     }
 
     public override var description: String { return "SBSP: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var DNAM: DNAMField!
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
         case "DNAM": DNAM = DNAMField(r, dataSize)
         default: return false
         }

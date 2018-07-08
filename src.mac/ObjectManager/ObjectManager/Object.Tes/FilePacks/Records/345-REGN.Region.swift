@@ -164,7 +164,7 @@ public class REGNRecord: Record, IHaveEDID {
     }
 
     public override var description: String { return "REGN: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var ICON: STRVField! // Icon / Sleep creature
     public var WNAM: FMIDField<WRLDRecord>! // Worldspace - Region name
     public var RCLR: CREFField! // Map Color (COLORREF)
@@ -177,12 +177,12 @@ public class REGNRecord: Record, IHaveEDID {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize)
+             "NAME": EDID = r.readSTRV(dataSize)
         case "WNAM",
              "FNAM": WNAM = FMIDField<WRLDRecord>(r, dataSize)
         case "WEAT": WEAT = WEATField(r, dataSize)
         case "ICON",
-             "BNAM": ICON = STRVField(r, dataSize)
+             "BNAM": ICON = r.readSTRV(dataSize)
         case "RCLR",
              "CNAM": RCLR = r.readT(dataSize)
         case "SNAM": RDATs.append(RDATField(RDSDs: [RDSDField(r, dataSize, format)]))
@@ -192,7 +192,7 @@ public class REGNRecord: Record, IHaveEDID {
         case "RDOT":
             var rdot = [RDOTField](); RDATs.last!.RDOTs = rdot; let capacity = dataSize / 52; rdot.reserveCapacity(capacity)
             for _ in 0..<capacity { rdot.append(RDOTField(r, dataSize)) }
-        case "RDMP": RDATs.last!.RDMP = STRVField(r, dataSize)
+        case "RDMP": RDATs.last!.RDMP = r.readSTRV(dataSize)
         case "RDGS":
             var rdgs = [RDGSField](); RDATs.last!.RDGSs = rdgs; let capacity = dataSize / 8; rdgs.reserveCapacity(capacity)
             for _ in 0..<capacity { rdgs.append(RDGSField(r, dataSize)) }

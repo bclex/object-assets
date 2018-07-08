@@ -79,7 +79,7 @@ public class REFRRecord: Record {
     }
 
     public override var description: String { return "REFR: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var NAME: FMIDField<Record>! // Base
     public var XTEL: XTELField? = nil// Teleport Destination (optional)
     public var DATA: DATAField! // Position/Rotation
@@ -105,7 +105,7 @@ public class REFRRecord: Record {
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
         case "NAME": NAME = FMIDField<Record>(r, dataSize)
         case "XTEL": XTEL = XTELField(r, dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
@@ -116,13 +116,13 @@ public class REFRRecord: Record {
         case "XESP": XESP = XESPField(r, dataSize)
         case "XTRG": XTRG = FMIDField<Record>(r, dataSize)
         case "XSED": XSED = XSEDField(r, dataSize)
-        case "XLOD": XLOD = BYTVField(r, dataSize)
+        case "XLOD": XLOD = r.readBYTV(dataSize)
         case "XCHG": XCHG = r.readT(dataSize)
         case "XHLT": XCHG = r.readT(dataSize)
         case "XPCI": XPCI = FMIDField<CELLRecord>(r, dataSize); _nextFull = 1
         case "FULL":
             if _nextFull == 1 { XPCI!.add(name: r.readASCIIString(dataSize)) }
-            else if _nextFull == 2 { XMRKs!.last!.FULL = STRVField(r, dataSize) }
+            else if _nextFull == 2 { XMRKs!.last!.FULL = r.readSTRV(dataSize) }
             _nextFull = 0
         case "XLCM": XLCM = r.readT(dataSize)
         case "XRTM": XRTM = FMIDField<REFRRecord>(r, dataSize)
@@ -132,7 +132,7 @@ public class REFRRecord: Record {
         case "FNAM": XMRKs!.last!.FNAM = r.readT(dataSize)
         case "TNAM": XMRKs!.last!.TNAM = r.readT(dataSize); r.skipBytes(1)
         case "ONAM": break
-        case "XRGD": XRGD = BYTVField(r, dataSize)
+        case "XRGD": XRGD = r.readBYTV(dataSize)
         case "XSCL": XSCL = r.readT(dataSize)
         case "XSOL": XSOL = r.readT(dataSize)
         default: return false

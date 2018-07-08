@@ -24,7 +24,7 @@ public class SKILRecord: Record {
     }
 
     public override var description: String { return "SKIL: \(INDX!):\(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var INDX: IN32Field! // Skill ID
     public var DATA: DATAField! // Skill Data
     public var DESC: STRVField! // Skill description
@@ -37,16 +37,16 @@ public class SKILRecord: Record {
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
         case "INDX": INDX = r.readT(dataSize)
         case "DATA",
              "SKDT": DATA = DATAField(r, dataSize, format)
-        case "DESC": DESC = STRVField(r, dataSize)
-        case "ICON": ICON = FILEField(r, dataSize)
-        case "ANAM": ANAM = STRVField(r, dataSize)
-        case "JNAM": JNAM = STRVField(r, dataSize)
-        case "ENAM": ENAM = STRVField(r, dataSize)
-        case "MNAM": MNAM = STRVField(r, dataSize)
+        case "DESC": DESC = r.readSTRV(dataSize)
+        case "ICON": ICON = r.readSTRV(dataSize)
+        case "ANAM": ANAM = r.readSTRV(dataSize)
+        case "JNAM": JNAM = r.readSTRV(dataSize)
+        case "ENAM": ENAM = r.readSTRV(dataSize)
+        case "MNAM": MNAM = r.readSTRV(dataSize)
         default: return false
         }
         return true

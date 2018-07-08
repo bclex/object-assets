@@ -23,7 +23,7 @@ public class CLASRecord: Record {
     }
 
     public override var description: String { return "CLAS: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty   // Editor ID
+    public var EDID: STRVField = STRVField_empty   // Editor ID
     public var FULL: STRVField!  // Name
     public var DESC: STRVField!  // Description
     public var ICON: STRVField? = nil // Icon (Optional)
@@ -32,19 +32,19 @@ public class CLASRecord: Record {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
             switch type {
-            case "NAME": EDID = STRVField(r, dataSize)
-            case "FNAM": FULL = STRVField(r, dataSize)
+            case "NAME": EDID = r.readSTRV(dataSize)
+            case "FNAM": FULL = r.readSTRV(dataSize)
             case "CLDT": r.skipBytes(dataSize)
-            case "DESC": DESC = STRVField(r, dataSize)
+            case "DESC": DESC = r.readSTRV(dataSize)
             default: return false
             }
             return true
         }
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
-        case "FULL": FULL = STRVField(r, dataSize)
-        case "DESC": DESC = STRVField(r, dataSize)
-        case "ICON": ICON = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
+        case "FULL": FULL = r.readSTRV(dataSize)
+        case "DESC": DESC = r.readSTRV(dataSize)
+        case "ICON": ICON = r.readSTRV(dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
         default: return false
         }

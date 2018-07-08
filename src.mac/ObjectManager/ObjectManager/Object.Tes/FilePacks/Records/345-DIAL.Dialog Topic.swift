@@ -14,7 +14,7 @@ public class DIALRecord: Record {
     }
 
     public override var description: String { return "DIAL: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var FULL: STRVField! // Dialogue Name
     public var DATA: BYTEField! // Dialogue Type
     public var QSTIs: [FMIDField<QUSTRecord>]? = nil // Quests (optional)
@@ -23,8 +23,8 @@ public class DIALRecord: Record {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize); DIALRecord.lastRecord = self
-        case "FULL": FULL = STRVField(r, dataSize)
+             "NAME": EDID = r.readSTRV(dataSize); DIALRecord.lastRecord = self
+        case "FULL": FULL = r.readSTRV(dataSize)
         case "DATA": DATA = r.readT(dataSize)
         case "QSTI",
              "QSTR": if QSTIs == nil { QSTIs = [FMIDField<QUSTRecord>]() }; QSTIs?.append(FMIDField<QUSTRecord>(r, dataSize))

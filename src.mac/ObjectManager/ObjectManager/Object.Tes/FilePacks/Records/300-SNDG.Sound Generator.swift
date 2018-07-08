@@ -12,7 +12,7 @@ public class SNDGRecord: Record {
     }
 
     public override var description: String { return "SNDG: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var DATA: IN32Field! // Sound Type Data
     public var SNAM: STRVField! // Sound ID
     public var CNAM: STRVField? = nil// Creature name (optional)
@@ -22,10 +22,10 @@ public class SNDGRecord: Record {
             return false
         }
         switch type {
-        case "NAME": EDID = STRVField(r, dataSize)
+        case "NAME": EDID = r.readSTRV(dataSize)
         case "DATA": DATA = r.readT(dataSize)
-        case "SNAM": SNAM = STRVField(r, dataSize)
-        case "CNAM": CNAM = STRVField(r, dataSize)
+        case "SNAM": SNAM = r.readSTRV(dataSize)
+        case "CNAM": CNAM = r.readSTRV(dataSize)
         default: return false
         }
         return true

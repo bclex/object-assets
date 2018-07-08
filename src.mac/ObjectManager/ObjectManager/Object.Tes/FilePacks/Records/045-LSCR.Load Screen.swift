@@ -22,16 +22,16 @@ public class LSCRRecord: Record {
     }
 
     public override var description: String { return "LSCR: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var ICON: FILEField! // Icon
     public var DESC: STRVField! // Description
     public var LNAMs: [LNAMField]! // LoadForm
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
-        case "ICON": ICON = FILEField(r, dataSize)
-        case "DESC": DESC = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
+        case "ICON": ICON = r.readSTRV(dataSize)
+        case "DESC": DESC = r.readSTRV(dataSize)
         case "LNAM": if LNAMs == nil { LNAMs = [LNAMField]() }; LNAMs.append(LNAMField(r, dataSize))
         default: return false
         }

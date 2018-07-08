@@ -27,7 +27,7 @@ public class MISCRecord: Record, IHaveEDID, IHaveMODL {
     }
 
     public override var description: String { return "MISC: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var MODL: MODLGroup? = nil // Model
     public var FULL: STRVField! // Item Name
     public var DATA: DATAField! // Misc Item Data
@@ -39,16 +39,16 @@ public class MISCRecord: Record, IHaveEDID, IHaveMODL {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize)
+             "NAME": EDID = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
         case "MODT": MODL!.MODTField(r, dataSize)
         case "FULL",
-             "FNAM": FULL = STRVField(r, dataSize)
+             "FNAM": FULL = r.readSTRV(dataSize)
         case "DATA",
              "MCDT": DATA = DATAField(r, dataSize, format)
         case "ICON",
-             "ITEX": ICON = FILEField(r, dataSize)
+             "ITEX": ICON = r.readSTRV(dataSize)
         case "ENAM": ENAM = FMIDField<ENCHRecord>(r, dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         default: return false

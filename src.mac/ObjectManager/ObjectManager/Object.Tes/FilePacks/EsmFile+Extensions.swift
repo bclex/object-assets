@@ -13,9 +13,9 @@ extension EsmFile {
         guard format != .TES3 else {
             let manyGroups = [groups!["STAT"]?.load(), nil]
             _MANYsById = Dictionary(uniqueKeysWithValues: manyGroups.compactMap { $0 }.flatMap { $0 }.compactMap { $0 as? IHaveEDID }
-                .map { (key: $0.EDID.value, value: $0 as! Record) })
+                .map { (key: $0.EDID, value: $0 as! Record) })
             _LTEXsById = Dictionary(uniqueKeysWithValues: groups!["LTEX"]!.load().map { $0 as! LTEXRecord }
-                .map { (key: $0.INTV.value, value: $0) })
+                .map { (key: $0.INTV, value: $0) })
             let lands = groups!["LAND"]!.load().map { $0 as! LANDRecord }
             for land in lands {
                 land.gridId = Vector3Int(Int(land.INTV.cellX), Int(land.INTV.cellY), 0)
@@ -29,7 +29,7 @@ extension EsmFile {
             _CELLsById = Dictionary(uniqueKeysWithValues: cells.filter { !$0.isInterior }
                 .map { (key: $0.gridId, value: $0) })
             _CELLsByName = Dictionary(uniqueKeysWithValues: cells.filter { $0.isInterior }
-                .map { (key: $0.EDID.value, value: $0) })
+                .map { (key: $0.EDID, value: $0) })
             return
         }
         fatalError("NotImplemented")

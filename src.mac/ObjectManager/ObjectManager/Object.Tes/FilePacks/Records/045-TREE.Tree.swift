@@ -49,7 +49,7 @@ public class TREERecord: Record {
     }
 
     public override var description: String { return "TREE: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var MODL: MODLGroup? = nil // Model
     public var ICON: FILEField! // Leaf Texture
     public var SNAM: SNAMField! // SpeedTree Seeds, array of ints
@@ -58,11 +58,11 @@ public class TREERecord: Record {
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
         case "MODT": MODL!.MODTField(r, dataSize)
-        case "ICON": ICON = FILEField(r, dataSize)
+        case "ICON": ICON = r.readSTRV(dataSize)
         case "SNAM": SNAM = SNAMField(r, dataSize)
         case "CNAM": CNAM = CNAMField(r, dataSize)
         case "BNAM": BNAM = BNAMField(r, dataSize)

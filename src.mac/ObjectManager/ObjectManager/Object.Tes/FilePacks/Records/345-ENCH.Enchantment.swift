@@ -90,7 +90,7 @@ public class ENCHRecord: Record {
     }
 
     public override var description: String { return "ENCH: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var FULL: STRVField! // Enchant name
     public var ENIT: ENITField! // Enchant Data
     public var EFITs = [EFITField]() // Effect Data
@@ -100,8 +100,8 @@ public class ENCHRecord: Record {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize)
-        case "FULL": if SCITs.count == 0 { FULL = STRVField(r, dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
+             "NAME": EDID = r.readSTRV(dataSize)
+        case "FULL": if SCITs.count == 0 { FULL = r.readSTRV(dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
         case "ENIT",
              "ENDT": ENIT = ENITField(r, dataSize, format)
         case "EFID": r.skipBytes(dataSize)

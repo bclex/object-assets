@@ -148,10 +148,32 @@ public class BinaryReader {
         return list
     }
 
-    public func readT<T>(_ length: Int) -> T {
-        guard T.self != STRVField.self else {
-            return String() as! T
+    public func readINTV<T>(_ length: Int) -> T {
+        switch length {
+        case 1: return Int64(readByte()) as! T
+        case 2: return Int64(readLEInt16()) as! T
+        case 4: return Int64(readLEInt32()) as! T
+        case 8: return Int64(readLEInt64()) as! T
+        default: fatalError("Tried to read an INTV subrecord with an unsupported size (\(length))")
         }
+    }
+    
+//    public func readDATV<T>(_ length: Int) -> T {
+//        return (b: Bool? = nil, i: Int32? = nil, f: Float? = nil, s: String? = nil) as! T
+//    }
+    
+    public func readSTRV<T>(_ length: Int, format: ASCIIFormat = .possibleNullTerminated) -> T {
+        return readASCIIString(length, format: format) as! T
+    }
+    
+    public func readBYTV<T>(_ length: Int) -> T {
+        return readBytes(length) as! T
+    }
+    
+    public func readT<T>(_ length: Int) -> T {
+//        guard T.self != STRVField.self else {
+//            return String() as! T
+//        }
         return baseStream.readData(ofLength: length).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
             let rawPtr = UnsafeRawPointer(ptr)
             return rawPtr.load(as: T.self)

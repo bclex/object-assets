@@ -40,7 +40,7 @@ public class WRLDRecord: Record {
     }
 
     public override var description: String { return "WRLD: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var FULL: STRVField!
     public var WNAM: FMIDField<WRLDRecord>? = nil // Parent Worldspace
     public var CNAM: FMIDField<CLMTRecord>? = nil // Climate
@@ -53,12 +53,12 @@ public class WRLDRecord: Record {
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
-        case "FULL": FULL = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
+        case "FULL": FULL = r.readSTRV(dataSize)
         case "WNAM": WNAM = FMIDField<WRLDRecord>(r, dataSize)
         case "CNAM": CNAM = FMIDField<CLMTRecord>(r, dataSize)
         case "NAM2": NAM2 = FMIDField<WATRRecord>(r, dataSize)
-        case "ICON": ICON = FILEField(r, dataSize)
+        case "ICON": ICON = r.readSTRV(dataSize)
         case "MNAM": MNAM = MNAMField(r, dataSize)
         case "DATA": DATA = r.readT(dataSize)
         case "NAM0": NAM0 = NAM0Field(r, dataSize)

@@ -27,7 +27,7 @@ public class SPELRecord: Record {
     }
 
     public override var description: String { return "SPEL: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var FULL: STRVField! // Spell name
     public var SPIT: SPITField! // Spell data
     public var EFITs = [ENCHRecord.EFITField]() // Effect Data
@@ -37,9 +37,9 @@ public class SPELRecord: Record {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize)
-        case "FULL": if SCITs.count == 0 { FULL = STRVField(r, dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
-        case "FNAM": FULL = STRVField(r, dataSize)
+             "NAME": EDID = r.readSTRV(dataSize)
+        case "FULL": if SCITs.count == 0 { FULL = r.readSTRV(dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
+        case "FNAM": FULL = r.readSTRV(dataSize)
         case "SPIT",
              "SPDT": SPIT = SPITField(r, dataSize, format)
         case "EFID": r.skipBytes(dataSize)

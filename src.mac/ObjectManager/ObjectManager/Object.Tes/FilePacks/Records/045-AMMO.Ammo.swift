@@ -24,7 +24,7 @@ public class AMMORecord: Record, IHaveEDID, IHaveMODL {
     }
 
     public override var description: String { return "AMMO: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var MODL: MODLGroup? = nil // Model
     public var FULL: STRVField! // Item Name
     public var ICON: FILEField? = nil// Male Icon (optional)
@@ -34,12 +34,12 @@ public class AMMORecord: Record, IHaveEDID, IHaveMODL {
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
         case "MODT": MODL!.MODTField(r, dataSize)
-        case "FULL": FULL = STRVField(r, dataSize)
-        case "ICON": ICON = FILEField(r, dataSize)
+        case "FULL": FULL = r.readSTRV(dataSize)
+        case "ICON": ICON = r.readSTRV(dataSize)
         case "ENAM": ENAM = FMIDField<ENCHRecord>(r, dataSize)
         case "ANAM": ANAM = r.readT(dataSize)
         case "DATA": DATA = DATAField(r, dataSize)

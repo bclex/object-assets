@@ -34,8 +34,8 @@ public class TES3Record: Record {
         }
         switch type {
         case "HEDR": HEDR = HEDRField(r, dataSize)
-        case "MAST": if MASTs == nil { MASTs = [STRVField]() }; MASTs!.append(STRVField(r, dataSize))
-        case "DATA": if DATAs == nil { DATAs = [INTVField]() }; DATAs!.append(INTVField(r, dataSize))
+        case "MAST": if MASTs == nil { MASTs = [STRVField]() }; MASTs!.append(r.readSTRV(dataSize))
+        case "DATA": if DATAs == nil { DATAs = [INTVField]() }; DATAs!.append(r.readINTV(dataSize))
         default: return false
         }
         return true

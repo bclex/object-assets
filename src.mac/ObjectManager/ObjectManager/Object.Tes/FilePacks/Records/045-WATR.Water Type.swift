@@ -95,7 +95,7 @@ public class WATRRecord: Record {
     }
 
     public override var description: String { return "WATR: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var TNAM: STRVField! // Texture
     public var ANAM: BYTEField! // Opacity
     public var FNAM: BYTEField! // Flags
@@ -106,11 +106,11 @@ public class WATRRecord: Record {
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-            case "EDID": EDID = STRVField(r, dataSize)
-            case "TNAM": TNAM = STRVField(r, dataSize)
+            case "EDID": EDID = r.readSTRV(dataSize)
+            case "TNAM": TNAM = r.readSTRV(dataSize)
             case "ANAM": ANAM = r.readT(dataSize)
             case "FNAM": FNAM = r.readT(dataSize)
-            case "MNAM": MNAM = STRVField(r, dataSize)
+            case "MNAM": MNAM = r.readSTRV(dataSize)
             case "SNAM": SNAM = FMIDField<SOUNRecord>(r, dataSize)
             case "DATA": DATA = DATAField(r, dataSize)
             case "GNAM": GNAM = GNAMField(r, dataSize)

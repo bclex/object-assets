@@ -8,16 +8,16 @@
 
 public class EYESRecord: Record {
     public override var description: String { return "EYES: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var FULL: STRVField!
     public var ICON: FILEField!
     public var DATA: BYTEField! // Playable
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
-        case "FULL": FULL = STRVField(r, dataSize)
-        case "ICON": ICON = FILEField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
+        case "FULL": FULL = r.readSTRV(dataSize)
+        case "ICON": ICON = r.readSTRV(dataSize)
         case "DATA": DATA = r.readT(dataSize)
         default: return false
         }

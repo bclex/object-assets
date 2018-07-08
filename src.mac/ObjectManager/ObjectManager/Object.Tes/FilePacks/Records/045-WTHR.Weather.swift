@@ -98,7 +98,7 @@ public class WTHRRecord: Record, IHaveEDID, IHaveMODL {
     }
 
     public override var description: String { return "WTHR: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var MODL: MODLGroup? = nil // Model
     public var CNAM: FILEField! // Lower Cloud Layer
     public var DNAM: FILEField! // Upper Cloud Layer
@@ -110,12 +110,12 @@ public class WTHRRecord: Record, IHaveEDID, IHaveMODL {
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
-        case "CNAM": CNAM = FILEField(r, dataSize)
-        case "DNAM": DNAM = FILEField(r, dataSize)
-        case "NAM0": NAM0 = BYTVField(r, dataSize)
+        case "CNAM": CNAM = r.readSTRV(dataSize)
+        case "DNAM": DNAM = r.readSTRV(dataSize)
+        case "NAM0": NAM0 = r.readBYTV(dataSize)
         case "FNAM": FNAM = FNAMField(r, dataSize)
         case "HNAM": HNAM = HNAMField(r, dataSize)
         case "DATA": DATA = DATAField(r, dataSize)

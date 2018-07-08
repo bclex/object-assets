@@ -191,7 +191,7 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
     }
 
     public override var description: String { return "CREA: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var MODL: MODLGroup? = nil // NIF Model
     public var FNAM: STRVField! // Creature name
     public var NPDT: NPDTField! // Creature data
@@ -213,9 +213,9 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
             return false
         }
         switch type {
-        case "NAME": EDID = STRVField(r, dataSize)
+        case "NAME": EDID = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "FNAM": FNAM = STRVField(r, dataSize)
+        case "FNAM": FNAM = r.readSTRV(dataSize)
         case "NPDT": NPDT = NPDTField(r, dataSize)
         case "FLAG": FLAG = r.readT(dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
@@ -227,8 +227,8 @@ public class CREARecord: Record, IHaveEDID, IHaveMODL {
         case "AI_E": AI_E = AI_FField(r, dataSize)
         case "AI_A": AI_A = AI_AField(r, dataSize)
         case "XSCL": XSCL = r.readT(dataSize)
-        case "CNAM": CNAM = STRVField(r, dataSize)
-        case "NPCS": NPCSs.append(STRVField(r, dataSize, format: .zeroPadded))
+        case "CNAM": CNAM = r.readSTRV(dataSize)
+        case "NPCS": NPCSs.append(r.readSTRV(dataSize, format: .zeroPadded))
         default: return false
         }
         return true

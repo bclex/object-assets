@@ -8,7 +8,7 @@
 
 public class LEVIRecord: Record {
     public override var description: String { return "LEVI: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var DATA: IN32Field! // List data - 1 = Calc from all levels <= PC level, 2 = Calc for each item
     public var NNAM: BYTEField! // Chance None?
     public var INDX: IN32Field! // Number of items in list
@@ -21,11 +21,11 @@ public class LEVIRecord: Record {
             return false
         }
         switch type {
-        case "NAME": EDID = STRVField(r, dataSize)
+        case "NAME": EDID = r.readSTRV(dataSize)
         case "DATA": DATA = r.readT(dataSize)
         case "NNAM": NNAM = r.readT(dataSize)
         case "INDX": INDX = r.readT(dataSize)
-        case "INAM": INAMs.append(STRVField(r, dataSize))
+        case "INAM": INAMs.append(r.readSTRV(dataSize))
         case "INTV": INTVs.append(r.readT(dataSize))
         default: return false
         }

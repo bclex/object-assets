@@ -35,51 +35,40 @@ public class MODLGroup: CustomStringConvertible {
     }
 }
 
-public struct STRVField: CustomStringConvertible {
-    public static let empty = STRVField(value: "")
-    public var description: String { return "\(value)" }
-    public let value: String
-
-    init(value: String) {
-        self.value = value
-    }
-    init(_ r: BinaryReader, _ dataSize: Int, format: ASCIIFormat = .possibleNullTerminated) {
-        value = r.readASCIIString(dataSize, format: format)
-    }
-}
-
-public struct FILEField: CustomStringConvertible {
-    public var description: String { return "\(value)" }
-    public let value: String
-
-    init(_ r: BinaryReader, _ dataSize: Int) {
-        value = r.readASCIIString(dataSize, format: .possibleNullTerminated)
-    }
-}
-
-public struct INTVField: CustomStringConvertible {
-    public var description: String { return "\(value)" }
-    public let value: Int64
-
-    init(_ r: BinaryReader, _ dataSize: Int) {
-        switch dataSize {
-            case 1: value = Int64(r.readByte())
-            case 2: value = Int64(r.readLEInt16())
-            case 4: value = Int64(r.readLEInt32())
-            case 8: value = Int64(r.readLEInt64())
-            default: fatalError("Tried to read an INTV subrecord with an unsupported size (\(dataSize))")
-        }
-    }
+public struct FormId<TRecord>: CustomStringConvertible {
+    public var description: String { return "\(type):\(name ?? "none")\(id ?? 0)" }
+    public let id: UInt32?
+    public let name: String?
+    public var type: String { let r = "\(TRecord.self)"; return String(r[r.startIndex..<r.index(r.startIndex, offsetBy: 4)])  }
     
-    public var toUI16Field: UI16Field { return UI16Field(UInt16(value)) }
+    init(_ id: UInt32) { self.id = id ; name = nil }
+    init(_ name: String) { id = 0 ; self.name = name }
+    init(_ id: UInt32, _ name: String) { self.id = id; self.name = name }
+    func adding(name: String) -> FormId<TRecord> { return FormId<TRecord>(id!, name) }
 }
+
+public let ColorRef_empty = ColorRef(red: 0, green: 0, blue: 0, null: 0)
+public func ColorRef_toColor32(v: ColorRef) -> CGColor { return CGColor(red: CGFloat(v.red), green: CGFloat(v.green), blue: CGFloat(v.blue), alpha: 255) }
+public typealias ColorRef = (red: UInt8, green: UInt8, blue: UInt8, null: UInt8)
+
+
+public let STRVField_empty = STRVField("")
+public typealias STRVField = (String)
+public typealias FILEField = (String)
+public typealias INTVField = (Int64)
+
+//public typealias DATVField = (
+//    b: Bool?,
+//    i: Int32?,
+//    f: Float?,
+//    s: String?)
 
 public struct DATVField: CustomStringConvertible {
     public var description: String { return "DATV" }
-    public var valueB : Bool? = nil
-    public var valueI : Int32? = nil
-    public var valueF : Float? = nil
-    public var valueS : String? = nil
+    public var valueB: Bool? = nil
+    public var valueI: Int32? = nil
+    public var valueF: Float? = nil
+    public var valueS: String? = nil
 
     init(_ r: BinaryReader, _ dataSize: Int, type: Character) {
         switch type {
@@ -98,18 +87,6 @@ public typealias IN16Field = (Int16)
 public typealias UI16Field = (UInt16)
 public typealias IN32Field = (Int32)
 public typealias UI32Field = (UInt32)
-
-public struct FormId<TRecord>: CustomStringConvertible {
-    public var description: String { return "\(type):\(name ?? "none")\(id ?? 0)" }
-    public let id: UInt32?
-    public let name: String?
-    public var type: String { let r = "\(TRecord.self)"; return String(r[r.startIndex..<r.index(r.startIndex, offsetBy: 4)])  }
-
-    init(_ id: UInt32) { self.id = id ; name = nil }
-    init(_ name: String) { id = 0 ; self.name = name }
-    init(_ id: UInt32, _ name: String) { self.id = id; self.name = name }
-    func adding(name: String) -> FormId<TRecord> { return FormId<TRecord>(id!, name) }
-}
 
 public struct FMIDField<TRecord>: CustomStringConvertible {
     public var description: String { return "\(value)" }
@@ -137,11 +114,6 @@ public struct FMID2Field<TRecord>: CustomStringConvertible {
     }
 }
 
-public let ColorRef_empty = ColorRef(red: 0, green: 0, blue: 0, null: 0)
-public func ColorRef_toColor32(v: ColorRef) -> CGColor { return CGColor(red: CGFloat(v.red), green: CGFloat(v.green), blue: CGFloat(v.blue), alpha: 255) }
-public typealias ColorRef = (red: UInt8, green: UInt8, blue: UInt8, null: UInt8)
-
-
 public typealias CREFField = (ColorRef)
 
 public struct CNTOField: CustomStringConvertible {
@@ -161,20 +133,5 @@ public struct CNTOField: CustomStringConvertible {
     }
 }
 
-public struct BYTVField: CustomStringConvertible {
-    public var description: String { return "BYTS" }
-    public let value: Data
-
-    init(_ r: BinaryReader, _ dataSize: Int) {
-        value = r.readBytes(dataSize);
-    }
-}
-
-public struct UNKNField: CustomStringConvertible {
-    public var description: String { return "UNKN" }
-    public let value: Data
-
-    init(_ r: BinaryReader, _ dataSize: Int) {
-        value = r.readBytes(dataSize)
-    }
-}
+public typealias BYTVField = (Data)
+public typealias UNKNField = (Data)

@@ -118,7 +118,7 @@ public class MGEFRecord: Record, IHaveEDID, IHaveMODL {
     }
 
     public override var description: String { return "MGEF: \(INDX!):\(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var DESC: STRVField! // Description
     // TES3
     public var INDX: INTVField! // The Effect ID (0 to 137)
@@ -142,34 +142,34 @@ public class MGEFRecord: Record, IHaveEDID, IHaveMODL {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
             switch type {
-            case "INDX": INDX = INTVField(r, dataSize)
+            case "INDX": INDX = r.readINTV(dataSize)
             case "MEDT": MEDT = MEDTField(r, dataSize)
-            case "ITEX": ICON = FILEField(r, dataSize)
-            case "PTEX": PTEX = STRVField(r, dataSize)
-            case "CVFX": CVFX = STRVField(r, dataSize)
-            case "BVFX": BVFX = STRVField(r, dataSize)
-            case "HVFX": HVFX = STRVField(r, dataSize)
-            case "AVFX": AVFX = STRVField(r, dataSize)
-            case "DESC": DESC = STRVField(r, dataSize)
-            case "CSND": CSND = STRVField(r, dataSize)
-            case "BSND": BSND = STRVField(r, dataSize)
-            case "HSND": HSND = STRVField(r, dataSize)
-            case "ASND": ASND = STRVField(r, dataSize)
+            case "ITEX": ICON = r.readSTRV(dataSize)
+            case "PTEX": PTEX = r.readSTRV(dataSize)
+            case "CVFX": CVFX = r.readSTRV(dataSize)
+            case "BVFX": BVFX = r.readSTRV(dataSize)
+            case "HVFX": HVFX = r.readSTRV(dataSize)
+            case "AVFX": AVFX = r.readSTRV(dataSize)
+            case "DESC": DESC = r.readSTRV(dataSize)
+            case "CSND": CSND = r.readSTRV(dataSize)
+            case "BSND": BSND = r.readSTRV(dataSize)
+            case "HSND": HSND = r.readSTRV(dataSize)
+            case "ASND": ASND = r.readSTRV(dataSize)
             default: return false
             }
             return true
         }
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
-        case "FULL": FULL = STRVField(r, dataSize)
-        case "DESC": DESC = STRVField(r, dataSize)
-        case "ICON": ICON = FILEField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
+        case "FULL": FULL = r.readSTRV(dataSize)
+        case "DESC": DESC = r.readSTRV(dataSize)
+        case "ICON": ICON = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
         case "ESCE":
             ESCEs = [STRVField](); let capacity = dataSize >> 2; ESCEs.reserveCapacity(capacity)
-            for _ in 0..<capacity { ESCEs.append(STRVField(r, 4)) }
+            for _ in 0..<capacity { ESCEs.append(r.readSTRV(4)) }
         default: return false
         }
         return true

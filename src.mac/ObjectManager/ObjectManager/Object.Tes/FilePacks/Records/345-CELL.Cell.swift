@@ -95,7 +95,7 @@ public class CELLRecord: Record, ICellRecord {
         // This is used to uniquely identify objects in the cell. For files the index starts at 1 and is incremented for each object added. For modified
         // objects the index is kept the same.
         public var description: String { return "CREF: \(EDID)" }
-        public var EDID: STRVField = STRVField.empty // Object ID
+        public var EDID: STRVField = STRVField_empty // Object ID
         public var XSCL: FLTVField? = nil // Scale (Static)
         public var DELE: IN32Field? = nil // Indicates that the reference is deleted.
         public var DODT: XYZAField? = nil // XYZ Pos, XYZ Rotation of exit
@@ -118,7 +118,7 @@ public class CELLRecord: Record, ICellRecord {
     }
 
     public override var description: String { return "CELL: \(FULL!)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID. Can be an empty string for exterior cells in which case the region name is used instead.
+    public var EDID: STRVField = STRVField_empty  // Editor ID. Can be an empty string for exterior cells in which case the region name is used instead.
     public var FULL: STRVField! // Full Name / TES3:RGNN - Region name
     public var DATA: UI16Field! // Flags
     public var XCLC: XCLCField? = nil // Cell Data (only used for exterior cells)
@@ -151,15 +151,13 @@ public class CELLRecord: Record, ICellRecord {
             switch type {
             case "EDID",
                  "NAME":
-                
-                var abc: STRVField = r.readT(dataSize) //BYTEField(r, dataSize)
-                debugPrint("\(MemoryLayout<STRVField>.size)x\(MemoryLayout<STRVField>.stride): \(abc)")
-                debugPrint(Utils.hexString(of: abc))
-                
-                EDID = STRVField(r, dataSize)
+//                var abc: STRVField = r.readT(dataSize) //BYTEField(r, dataSize)
+//                debugPrint("\(MemoryLayout<STRVField>.size)x\(MemoryLayout<STRVField>.stride): \(abc)")
+//                debugPrint(Utils.hexString(of: abc))
+                EDID = r.readSTRV(dataSize)
             case "FULL",
-                 "RGNN": FULL = STRVField(r, dataSize)
-            case "DATA": DATA = INTVField(r, format == .TES3 ? 4 : dataSize).toUI16Field; if format == .TES3 { fallthrough }
+                 "RGNN": FULL = r.readSTRV(dataSize)
+            case "DATA": DATA = UI16Field(r.readINTV(format == .TES3 ? 4 : dataSize)); if format == .TES3 { fallthrough }
             case "XCLC": XCLC = r.readT(format != .TES3 ? dataSize : 8) //debugPrint("\(XCLC!)")
             case "XCLL",
                  "AMBI": XCLL = XCLLField(r, dataSize, format) //r.readT(dataSize)
@@ -168,7 +166,7 @@ public class CELLRecord: Record, ICellRecord {
                  "WHGT": XCLW = r.readT(dataSize)
             // TES3
             case "NAM0": NAM0 = r.readT(dataSize)
-            case "INTV": INTV = INTVField(r, dataSize)
+            case "INTV": INTV = r.readINTV(dataSize)
             case "NAM5": NAM5 = r.readT(dataSize)
             // TES4
             case "XCLR":
@@ -189,22 +187,22 @@ public class CELLRecord: Record, ICellRecord {
             switch type {
             // RefObjDataGroup sub-records
             case "FRMR": RefObjs.append(RefObj()); RefObjs.last!.FRMR = r.readT(dataSize)
-            case "NAME": RefObjs.last!.EDID = STRVField(r, dataSize)
+            case "NAME": RefObjs.last!.EDID = r.readSTRV(dataSize)
             case "XSCL": RefObjs.last!.XSCL = r.readT(dataSize)
             case "DODT": RefObjs.last!.DODT = RefObj.XYZAField(r, dataSize)
-            case "DNAM": RefObjs.last!.DNAM = STRVField(r, dataSize)
+            case "DNAM": RefObjs.last!.DNAM = r.readSTRV(dataSize)
             case "FLTV": RefObjs.last!.FLTV = r.readT(dataSize)
-            case "KNAM": RefObjs.last!.KNAM = STRVField(r, dataSize)
-            case "TNAM": RefObjs.last!.TNAM = STRVField(r, dataSize)
+            case "KNAM": RefObjs.last!.KNAM = r.readSTRV(dataSize)
+            case "TNAM": RefObjs.last!.TNAM = r.readSTRV(dataSize)
             case "UNAM": RefObjs.last!.UNAM = r.readT(dataSize)
-            case "ANAM": RefObjs.last!.ANAM = STRVField(r, dataSize)
-            case "BNAM": RefObjs.last!.BNAM = STRVField(r, dataSize)
+            case "ANAM": RefObjs.last!.ANAM = r.readSTRV(dataSize)
+            case "BNAM": RefObjs.last!.BNAM = r.readSTRV(dataSize)
             case "INTV": RefObjs.last!.INTV = r.readT(dataSize)
             case "NAM9": RefObjs.last!.NAM9 = r.readT(dataSize)
-            case "XSOL": RefObjs.last!.XSOL = STRVField(r, dataSize)
+            case "XSOL": RefObjs.last!.XSOL = r.readSTRV(dataSize)
             case "DATA": RefObjs.last!.DATA = RefObj.XYZAField(r, dataSize)
             //
-            case "CNAM": RefObjs.last!.CNAM = STRVField(r, dataSize)
+            case "CNAM": RefObjs.last!.CNAM = r.readSTRV(dataSize)
             case "NAM0": RefObjs.last!.NAM0 = r.readT(dataSize)
             case "XCHG": RefObjs.last!.XCHG = r.readT(dataSize)
             case "INDX": RefObjs.last!.INDX = r.readT(dataSize)

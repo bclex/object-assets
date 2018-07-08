@@ -16,7 +16,7 @@ public class ROADRecord: Record {
         case "PGRP":
             PGRPs = [PGRDRecord.PGRPField](); let capacity = dataSize >> 4; PGRPs.reserveCapacity(capacity)
             for _ in 0..<capacity { PGRPs.append(PGRDRecord.PGRPField(r, dataSize)) }
-        case "PGRR": PGRR = UNKNField(r, dataSize)
+        case "PGRR": PGRR = r.readBYTV(dataSize)
         default: return false
         }
         return true

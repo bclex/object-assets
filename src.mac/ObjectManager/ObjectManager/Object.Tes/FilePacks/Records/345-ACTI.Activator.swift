@@ -8,7 +8,7 @@
 
 public class ACTIRecord: Record, IHaveEDID, IHaveMODL {
     public override var description: String { return "ACTI: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var MODL: MODLGroup? = nil // Model Name
     public var MODB: FLTVField! // Model Bounds
     public var MODT: BYTVField! // Texture Files Hashes
@@ -20,12 +20,12 @@ public class ACTIRecord: Record, IHaveEDID, IHaveMODL {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize)
+             "NAME": EDID = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
         case "MODT": MODL!.MODTField(r, dataSize)
         case "FULL",
-             "FNAM": FULL = STRVField(r, dataSize)
+             "FNAM": FULL = r.readSTRV(dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         case "SNAM": SNAM = FMIDField<SOUNRecord>(r, dataSize)
         default: return false

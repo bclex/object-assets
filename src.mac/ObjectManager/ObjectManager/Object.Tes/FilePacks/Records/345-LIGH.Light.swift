@@ -66,7 +66,7 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
     }
 
     public override var description: String { return "LIGH: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var MODL: MODLGroup? = nil // Model
     public var FULL: STRVField? = nil // Item Name (optional)
     public var DATA: DATAField!  // Light Data
@@ -79,15 +79,15 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize)
-        case "FULL": FULL = STRVField(r, dataSize)
-        case "FNAM": if format != .TES3 { FNAM = r.readT(dataSize) } else { FULL = STRVField(r, dataSize) }
+             "NAME": EDID = r.readSTRV(dataSize)
+        case "FULL": FULL = r.readSTRV(dataSize)
+        case "FNAM": if format != .TES3 { FNAM = r.readT(dataSize) } else { FULL = r.readSTRV(dataSize) }
         case "DATA",
              "LHDT": DATA = DATAField(r, dataSize, format)
-        case "SCPT": SCPT = STRVField(r, dataSize)
+        case "SCPT": SCPT = r.readSTRV(dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         case "ICON",
-             "ITEX": ICON = FILEField(r, dataSize)
+             "ITEX": ICON = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
         case "MODT": MODL!.MODTField(r, dataSize)

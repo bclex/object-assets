@@ -8,13 +8,13 @@
 
 public class GMSTRecord: Record, IHaveEDID {
     public override var description: String { return "GMST: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var DATA: DATVField! // Data
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if format == .TES3 {
             switch type {
-            case "NAME": EDID = STRVField(r, dataSize)
+            case "NAME": EDID = r.readSTRV(dataSize)
             case "STRV": DATA = DATVField(r, dataSize, type: "s")
             case "INTV": DATA = DATVField(r, dataSize, type: "i")
             case "FLTV": DATA = DATVField(r, dataSize, type: "f")
@@ -24,8 +24,8 @@ public class GMSTRecord: Record, IHaveEDID {
         }
         switch (type)
         {
-        case "EDID": EDID = STRVField(r, dataSize)
-        case "DATA": DATA = DATVField(r, dataSize, type: EDID.value.first!)
+        case "EDID": EDID = r.readSTRV(dataSize)
+        case "DATA": DATA = DATVField(r, dataSize, type: EDID.first!)
         default: return false
         }
         return true

@@ -44,7 +44,7 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
     }
 
     public override var description: String { return "INGR: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var MODL: MODLGroup? = nil // Model Name
     public var FULL: STRVField! // Item Name
     public var IRDT: IRDTField! // Ingrediant Data //: TES3
@@ -58,16 +58,16 @@ public class INGRRecord: Record, IHaveEDID, IHaveMODL {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize)
+             "NAME": EDID = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
         case "MODT": MODL!.MODTField(r, dataSize)
-        case "FULL": if SCITs.count == 0 { FULL = STRVField(r, dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
-        case "FNAM": FULL = STRVField(r, dataSize)
+        case "FULL": if SCITs.count == 0 { FULL = r.readSTRV(dataSize) } else { SCITs.last!.FULLField(r, dataSize) }
+        case "FNAM": FULL = r.readSTRV(dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
         case "IRDT": IRDT = IRDTField(r, dataSize)
         case "ICON",
-             "ITEX": ICON = FILEField(r, dataSize)
+             "ITEX": ICON = r.readSTRV(dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
             //
         case "ENIT": DATA.ENITField(r, dataSize)

@@ -22,7 +22,7 @@ public class REPARecord: Record, IHaveEDID, IHaveMODL {
     }
 
     public override var description: String { return "REPA: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var MODL: MODLGroup? = nil // Model Name
     public var FNAM: STRVField! // Item Name
     public var RIDT: RIDTField! // Repair Data
@@ -34,11 +34,11 @@ public class REPARecord: Record, IHaveEDID, IHaveMODL {
             return false
         }
         switch type {
-        case "NAME": EDID = STRVField(r, dataSize)
+        case "NAME": EDID = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
-        case "FNAM": FNAM = STRVField(r, dataSize)
+        case "FNAM": FNAM = r.readSTRV(dataSize)
         case "RIDT": RIDT = RIDTField(r, dataSize)
-        case "ITEX": ICON = FILEField(r, dataSize)
+        case "ITEX": ICON = r.readSTRV(dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         default: return false
         }

@@ -122,8 +122,8 @@ public class SCPTRecord: Record {
         }
     }
 
-    public override var description: String { return "SCPT: \(!EDID.value.isEmpty ? EDID.value : SCHD.name)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public override var description: String { return "SCPT: \(!EDID.isEmpty ? EDID : SCHD.name)" }
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var SCDA: BYTVField! // Compiled Script
     public var SCTX: STRVField! // Script Source
     // TES3
@@ -136,12 +136,12 @@ public class SCPTRecord: Record {
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
         case "SCHD": SCHD = SCHDField(r, dataSize)
         case "SCVR": if format != .TES3 { SLSDs.last!.SCVRField(r, dataSize) } else { SCHD.SCVRField(r, dataSize) }
         case "SCDA",
-             "SCDT": SCDA = BYTVField(r, dataSize)
-        case "SCTX": SCTX = STRVField(r, dataSize)
+             "SCDT": SCDA = r.readBYTV(dataSize)
+        case "SCTX": SCTX = r.readSTRV(dataSize)
         // TES4
         case "SCHR": SCHR = SCHRField(r, dataSize)
         case "SLSD": SLSDs.append(SLSDField(r, dataSize))

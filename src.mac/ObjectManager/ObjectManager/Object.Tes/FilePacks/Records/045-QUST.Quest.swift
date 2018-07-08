@@ -18,7 +18,7 @@ public class QUSTRecord: Record {
     }
 
     public override var description: String { return "QUST: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var FULL: STRVField!  // Item Name
     public var ICON: FILEField!  // Icon
     public var DATA: DATAField!  // Icon
@@ -30,9 +30,9 @@ public class QUSTRecord: Record {
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
-        case "FULL": FULL = STRVField(r, dataSize)
-        case "ICON": ICON = FILEField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
+        case "FULL": FULL = r.readSTRV(dataSize)
+        case "ICON": ICON = r.readSTRV(dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         case "CTDA": r.skipBytes(dataSize)
@@ -41,8 +41,8 @@ public class QUSTRecord: Record {
         case "CNAM": r.skipBytes(dataSize)
         case "QSTA": r.skipBytes(dataSize)
         case "SCHR": SCHR = SCPTRecord.SCHRField(r, dataSize)
-        case "SCDA": SCDA = BYTVField(r, dataSize)
-        case "SCTX": SCTX = STRVField(r, dataSize)
+        case "SCDA": SCDA = r.readBYTV(dataSize)
+        case "SCTX": SCTX = r.readSTRV(dataSize)
         case "SCRO": SCROs.append(FMIDField<Record>(r, dataSize))
         default: return false
         }

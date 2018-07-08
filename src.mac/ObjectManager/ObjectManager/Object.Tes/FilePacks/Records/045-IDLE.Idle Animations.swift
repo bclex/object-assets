@@ -8,7 +8,7 @@
 
 public class IDLERecord: Record, IHaveEDID, IHaveMODL {
     public override var description: String { return "IDLE: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var MODL: MODLGroup? = nil
     public var CTDAs = [SCPTRecord.CTDAField]() // Conditions
     public var ANAM: BYTEField!
@@ -16,7 +16,7 @@ public class IDLERecord: Record, IHaveEDID, IHaveMODL {
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
         case "CTDA",

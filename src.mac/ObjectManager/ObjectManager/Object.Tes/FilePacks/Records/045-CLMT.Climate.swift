@@ -36,7 +36,7 @@ public class CLMTRecord: Record, IHaveEDID, IHaveMODL {
     }
 
     public override var description: String { return "CLMT: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var MODL: MODLGroup? = nil // Model
     public var FNAM: FILEField! // Sun Texture
     public var GNAM: FILEField! // Sun Glare Texture
@@ -45,11 +45,11 @@ public class CLMTRecord: Record, IHaveEDID, IHaveMODL {
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
-        case "FNAM": FNAM = FILEField(r, dataSize)
-        case "GNAM": GNAM = FILEField(r, dataSize)
+        case "FNAM": FNAM = r.readSTRV(dataSize)
+        case "GNAM": GNAM = r.readSTRV(dataSize)
         case "WLST": for _ in 0..<(dataSize >> 3) { WLSTs.append(WLSTField(r, dataSize)) }
         case "TNAM": TNAM = TNAMField(r, dataSize)
         default: return false

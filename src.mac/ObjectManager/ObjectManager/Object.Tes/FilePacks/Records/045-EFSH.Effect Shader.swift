@@ -130,16 +130,16 @@ public class EFSHRecord: Record {
     }
 
     public override var description: String { return "EFSH: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty // Editor ID
+    public var EDID: STRVField = STRVField_empty // Editor ID
     public var ICON: FILEField! // Fill Texture
     public var ICO2: FILEField! // Particle Shader Texture
     public var DATA: DATAField! // Data
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "EDID": EDID = STRVField(r, dataSize)
-        case "ICON": ICON = FILEField(r, dataSize)
-        case "ICO2": ICO2 = FILEField(r, dataSize)
+        case "EDID": EDID = r.readSTRV(dataSize)
+        case "ICON": ICON = r.readSTRV(dataSize)
+        case "ICO2": ICO2 = r.readSTRV(dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
         default: return false
         }

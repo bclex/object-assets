@@ -8,7 +8,7 @@
 
 public class DOORRecord: Record, IHaveEDID, IHaveMODL {
     public override var description: String { return "DOOR: \(EDID)" }
-    public var EDID: STRVField = STRVField.empty  // Editor ID
+    public var EDID: STRVField = STRVField_empty  // Editor ID
     public var FULL: STRVField! // Door name
     public var MODL: MODLGroup? = nil // NIF model filename
     public var SCRI: FMIDField<SCPTRecord>? = nil // Script (optional)
@@ -22,9 +22,9 @@ public class DOORRecord: Record, IHaveEDID, IHaveMODL {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID",
-             "NAME": EDID = STRVField(r, dataSize)
-        case "FULL": FULL = STRVField(r, dataSize)
-        case "FNAM": if format != .TES3 { FNAM = r.readT(dataSize) } else { FULL = STRVField(r, dataSize) }
+             "NAME": EDID = r.readSTRV(dataSize)
+        case "FULL": FULL = r.readSTRV(dataSize)
+        case "FNAM": if format != .TES3 { FNAM = r.readT(dataSize) } else { FULL = r.readSTRV(dataSize) }
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
         case "MODT": MODL!.MODTField(r, dataSize)
