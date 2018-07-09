@@ -15,9 +15,9 @@ public class GMSTRecord: Record, IHaveEDID {
         if format == .TES3 {
             switch type {
             case "NAME": EDID = r.readSTRV(dataSize)
-            case "STRV": DATA = DATVField(r, dataSize, type: "s")
-            case "INTV": DATA = DATVField(r, dataSize, type: "i")
-            case "FLTV": DATA = DATVField(r, dataSize, type: "f")
+            case "STRV": DATA = r.readDATV(dataSize, type: "s")
+            case "INTV": DATA = r.readDATV(dataSize, type: "i")
+            case "FLTV": DATA = r.readDATV(dataSize, type: "f")
             default: return false
             }
             return true
@@ -25,7 +25,7 @@ public class GMSTRecord: Record, IHaveEDID {
         switch (type)
         {
         case "EDID": EDID = r.readSTRV(dataSize)
-        case "DATA": DATA = DATVField(r, dataSize, type: EDID.first!)
+        case "DATA": DATA = r.readDATV(dataSize, type: EDID.first!)
         default: return false
         }
         return true

@@ -19,9 +19,9 @@ public class WATRRecord: Record {
         public var scrollYSpeed: Float = 0
         public var fogDistance_nearPlane: Float = 0
         public var fogDistance_farPlane: Float = 0
-        public var shallowColor: ColorRef = ColorRef_empty
-        public var deepColor: ColorRef = ColorRef_empty
-        public var reflectionColor: ColorRef = ColorRef_empty
+        public var shallowColor: ColorRef4 = ColorRef4_empty
+        public var deepColor: ColorRef4 = ColorRef4_empty
+        public var reflectionColor: ColorRef4 = ColorRef4_empty
         public var textureBlend: UInt8 = 0
         public var rainSimulator_force: Float = 0
         public var rainSimulator_velocity: Float = 0

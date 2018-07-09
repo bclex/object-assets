@@ -30,7 +30,7 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
         public let value: Int32
         public let time: Int32
         public let radius: Int32
-        public let lightColor: ColorRef
+        public let lightColor: ColorRef4
         public let flags: Int32
         // TES4
         public let falloffExponent: Float

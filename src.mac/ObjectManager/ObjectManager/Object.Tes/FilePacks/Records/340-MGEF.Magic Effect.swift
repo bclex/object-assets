@@ -12,7 +12,7 @@ public class MGEFRecord: Record, IHaveEDID, IHaveMODL {
         public let spellSchool: Int32 // 0 = Alteration, 1 = Conjuration, 2 = Destruction, 3 = Illusion, 4 = Mysticism, 5 = Restoration
         public let baseCost: Float
         public let flags: Int32 // 0x0200 = Spellmaking, 0x0400 = Enchanting, 0x0800 = Negative
-        public let color: ColorRef
+        public let color: ColorRef4
         public let speedX: Float
         public let sizeX: Float
         public let sizeCap: Float
@@ -21,7 +21,7 @@ public class MGEFRecord: Record, IHaveEDID, IHaveMODL {
             spellSchool = r.readLEInt32()
             baseCost = r.readLESingle()
             flags = r.readLEInt32()
-            color = ColorRef(red: UInt8(r.readLEInt32()), green: UInt8(r.readLEInt32()), blue: UInt8(r.readLEInt32()), null: 255)
+            color = ColorRef4(red: UInt8(r.readLEInt32()), green: UInt8(r.readLEInt32()), blue: UInt8(r.readLEInt32()), null: 255)
             speedX = r.readLESingle()
             sizeX = r.readLESingle()
             sizeCap = r.readLESingle()
@@ -69,53 +69,53 @@ public class MGEFRecord: Record, IHaveEDID, IHaveMODL {
         }
     }
 
-    public class DATAField {
-        public let flags: UInt32
-        public let baseCost: Float
-        public let assocItem: Int32
-        public let magicSchool: Int32
-        public let resistValue: Int32
-        public let counterEffectCount: UInt16 // Must be updated automatically when ESCE length changes!
-        public let light: FormId<LIGHRecord>
-        public let projectileSpeed: Float
-        public let effectShader: FormId<EFSHRecord>
-        public var enchantEffect: FormId<EFSHRecord>? = nil
-        public var castingSound: FormId<SOUNRecord>? = nil
-        public var boltSound: FormId<SOUNRecord>? = nil
-        public var hitSound: FormId<SOUNRecord>? = nil
-        public var areaSound: FormId<SOUNRecord>? = nil
-        public var constantEffectEnchantmentFactor: Float = 0
-        public var constantEffectBarterFactor: Float = 0
+    public typealias DATAField = (
+        flags: UInt32,
+        baseCost: Float,
+        assocItem: Int32,
+        magicSchool: Int32,
+        resistValue: Int32,
+        counterEffectCount: UInt16, // Must be updated automatically when ESCE length changes!
+        light: FormId32<LIGHRecord>,
+        projectileSpeed: Float,
+        effectShader: FormId32<EFSHRecord>,
+        enchantEffect: FormId32<EFSHRecord>,
+        castingSound: FormId32<SOUNRecord>,
+        boltSound: FormId32<SOUNRecord>,
+        hitSound: FormId32<SOUNRecord>,
+        areaSound: FormId32<SOUNRecord>,
+        constantEffectEnchantmentFactor: Float,
+        constantEffectBarterFactor: Float
+    )
 
-        init(_ r: BinaryReader, _ dataSize: Int) {
-            flags = r.readLEUInt32()
-            baseCost = r.readLESingle()
-            assocItem = r.readLEInt32()
-            //wbUnion('Assoc. Item', wbMGEFFAssocItemDecider, [
-            //  wbFormIDCk('Unused', [NULL]),
-            //  wbFormIDCk('Assoc. Weapon', [WEAP]),
-            //  wbFormIDCk('Assoc. Armor', [ARMO, NULL{?}]),
-            //  wbFormIDCk('Assoc. Creature', [CREA, LVLC, NPC_]),
-            //  wbInteger('Assoc. Actor Value', itS32, wbActorValueEnum)
-            magicSchool = r.readLEInt32()
-            resistValue = r.readLEInt32()
-            counterEffectCount = r.readLEUInt16()
-            r.skipBytes(2) // Unused
-            light = FormId<LIGHRecord>(r.readLEUInt32())
-            projectileSpeed = r.readLESingle()
-            effectShader = FormId<EFSHRecord>(r.readLEUInt32())
-            guard dataSize != 36 else {
-                return
-            }
-            enchantEffect = FormId<EFSHRecord>(r.readLEUInt32())
-            castingSound = FormId<SOUNRecord>(r.readLEUInt32())
-            boltSound = FormId<SOUNRecord>(r.readLEUInt32())
-            hitSound = FormId<SOUNRecord>(r.readLEUInt32())
-            areaSound = FormId<SOUNRecord>(r.readLEUInt32())
-            constantEffectEnchantmentFactor = r.readLESingle()
-            constantEffectBarterFactor = r.readLESingle()
-        }
-    }
+//        init(_ r: BinaryReader, _ dataSize: Int) {
+//            flags = r.readLEUInt32()
+//            baseCost = r.readLESingle()
+//            assocItem = r.readLEInt32()
+//            //wbUnion('Assoc. Item', wbMGEFFAssocItemDecider, [
+//            //  wbFormIDCk('Unused', [NULL]),
+//            //  wbFormIDCk('Assoc. Weapon', [WEAP]),
+//            //  wbFormIDCk('Assoc. Armor', [ARMO, NULL{?}]),
+//            //  wbFormIDCk('Assoc. Creature', [CREA, LVLC, NPC_]),
+//            //  wbInteger('Assoc. Actor Value', itS32, wbActorValueEnum)
+//            magicSchool = r.readLEInt32()
+//            resistValue = r.readLEInt32()
+//            counterEffectCount = r.readLEUInt16()
+//            r.skipBytes(2) // Unused
+//            light = FormId<LIGHRecord>(r.readLEUInt32())
+//            projectileSpeed = r.readLESingle()
+//            effectShader = FormId<EFSHRecord>(r.readLEUInt32())
+//            guard dataSize != 36 else {
+//                return
+//            }
+//            enchantEffect = FormId<EFSHRecord>(r.readLEUInt32())
+//            castingSound = FormId<SOUNRecord>(r.readLEUInt32())
+//            boltSound = FormId<SOUNRecord>(r.readLEUInt32())
+//            hitSound = FormId<SOUNRecord>(r.readLEUInt32())
+//            areaSound = FormId<SOUNRecord>(r.readLEUInt32())
+//            constantEffectEnchantmentFactor = r.readLESingle()
+//            constantEffectBarterFactor = r.readLESingle()
+//        }
 
     public override var description: String { return "MGEF: \(INDX!):\(EDID)" }
     public var EDID: STRVField = STRVField_empty  // Editor ID
@@ -166,7 +166,7 @@ public class MGEFRecord: Record, IHaveEDID, IHaveMODL {
         case "ICON": ICON = r.readSTRV(dataSize)
         case "MODL": MODL = MODLGroup(r, dataSize)
         case "MODB": MODL!.MODBField(r, dataSize)
-        case "DATA": DATA = DATAField(r, dataSize)
+        case "DATA": DATA = r.readT(dataSize)
         case "ESCE":
             ESCEs = [STRVField](); let capacity = dataSize >> 2; ESCEs.reserveCapacity(capacity)
             for _ in 0..<capacity { ESCEs.append(r.readSTRV(4)) }

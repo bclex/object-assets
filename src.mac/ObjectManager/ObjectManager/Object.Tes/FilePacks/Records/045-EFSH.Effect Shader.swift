@@ -12,7 +12,7 @@ public class EFSHRecord: Record {
         public let membraneShader_sourceBlendMode: UInt32
         public let membraneShader_blendOperation: UInt32
         public let membraneShader_ztestFunction: UInt32
-        public let fillTextureEffect_color: ColorRef
+        public let fillTextureEffect_color: ColorRef4
         public let fillTextureEffect_alphaFadeInTime: Float
         public let fillTextureEffect_fullAlphaTime: Float
         public let fillTextureEffect_alphaFadeOutTime: Float
@@ -22,7 +22,7 @@ public class EFSHRecord: Record {
         public let fillTextureEffect_textureAnimationSpeed_u: Float
         public let fillTextureEffect_textureAnimationSpeed_v: Float
         public let edgeEffect_fallOff: Float
-        public let edgeEffect_color: ColorRef
+        public let edgeEffect_color: ColorRef4
         public let edgeEffect_alphaFadeInTime: Float
         public let edgeEffect_fullAlphaTime: Float
         public let edgeEffect_alphaFadeOutTime: Float
@@ -55,9 +55,9 @@ public class EFSHRecord: Record {
         public var particleShader_scaleKey2: Float? = nil
         public var particleShader_scaleKey1Time: Float? = nil
         public var particleShader_scaleKey2Time: Float? = nil
-        public var colorKey1_color: ColorRef? = nil
-        public var colorKey2_color: ColorRef? = nil
-        public var colorKey3_color: ColorRef? = nil
+        public var colorKey1_color: ColorRef4? = nil
+        public var colorKey2_color: ColorRef4? = nil
+        public var colorKey3_color: ColorRef4? = nil
         public var colorKey1_colorAlpha: Float? = nil
         public var colorKey2_colorAlpha: Float? = nil
         public var colorKey3_colorAlpha: Float? = nil

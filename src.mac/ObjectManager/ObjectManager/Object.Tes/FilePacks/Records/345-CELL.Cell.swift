@@ -34,9 +34,9 @@ public class CELLRecord: Record, ICellRecord {
         flags: UInt32)
 
     public typealias XCLLField = (
-        ambientColor: ColorRef,
-        directionalColor: ColorRef, //: SunlightColor
-        fogColor: ColorRef,
+        ambientColor: ColorRef4,
+        directionalColor: ColorRef4, //: SunlightColor
+        fogColor: ColorRef4,
         fogNear: Float, //: FogDensity
         // TES4
         fogFar: Float,

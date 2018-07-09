@@ -18,8 +18,8 @@ public class SKILRecord: Record {
             action = format == .TES3 ? 0 : r.readLEInt32()
             attribute = r.readLEInt32()
             specialization = r.readLEUInt32()
-            useValue = [Float](); let capacity = format == .TES3 ? 4 : 2; useValue.reserveCapacity(capacity)
-            for _ in 0..<capacity { useValue.append(r.readLESingle()) }
+            let useValueCount = format == .TES3 ? 4 : 2
+            useValue = r.readTArray(useValueCount << 2, count: useValueCount)
         }
     }
 

@@ -160,9 +160,15 @@ public class BinaryReader {
         }
     }
     
-//    public func readDATV<T>(_ length: Int) -> (b: Bool?, i: Int32?, f: Float?, s: String?) {
-//        return (b: nil, i: Int32? = nil, f: Float? = nil, s: String? = nil) as! T
-//    }
+    public func readDATV(_ length: Int, type: Character) -> (b: Bool?, i: Int32?, f: Float?, s: String?) {
+        switch type {
+        case "b": return (b: readLEInt32() != 0, i: nil, f: nil, s: nil)
+        case "i": return (b: nil, i: readLEInt32(), f: nil, s: nil)
+        case "f": return (b: nil, i: nil, f: readLESingle(), s: nil)
+        case "s": return (b: nil, i: nil, f: nil, s: readASCIIString(length))
+        default: fatalError("\(type)")
+        }
+    }
     
     public func readSTRV(_ length: Int, format: ASCIIFormat = .possibleNullTerminated) -> String {
         return readASCIIString(length, format: format)
@@ -170,11 +176,6 @@ public class BinaryReader {
     
     public func readBYTV(_ length: Int) -> Data {
         return readBytes(length)
-    }
-    
-    func isOptional(_ instance: Any) -> Bool {
-        let mirror = Mirror(reflecting: instance)
-        return mirror.displayStyle == .optional
     }
     
     public func readT<T: ExpressibleByNilLiteral>(_ length: Int) -> T {

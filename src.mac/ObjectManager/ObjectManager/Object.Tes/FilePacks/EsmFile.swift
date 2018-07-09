@@ -42,7 +42,7 @@ public class EsmFile: CustomStringConvertible {
         self.filePath = filePath.path
         _r = BinaryReader(FileBaseStream(path: self.filePath)!)
         let start = Date()
-        read(recordLevel: 1)
+        read(recordLevel: 10)
         let endRead = Date()
         debugPrint("Loading: \(endRead.timeIntervalSince(start))")
         process()

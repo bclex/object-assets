@@ -27,18 +27,12 @@ public class FACTRecord: Record {
     }
 
     // TES4
-    public struct XNAMField: CustomStringConvertible {
-        public var description: String { return "FACT: \(formId)" }
-        public let formId: Int32
-        public let mod: Int32
-        public let combat: Int32
-
-        init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
-            formId = r.readLEInt32()
-            mod = r.readLEInt32()
-            combat = format == .TES5 ? r.readLEInt32() : 0 // 0 - Neutral, 1 - Enemy, 2 - Ally, 3 - Friend
-        }
-    }
+    public typealias XNAMField = (
+        formId: Int32,
+        mod: Int32,
+        // TES5
+        combat: Int32 // 0 - Neutral, 1 - Enemy, 2 - Ally, 3 - Friend
+    )
 
     public override var description: String { return "FACT: \(EDID)" }
     public var EDID: STRVField = STRVField_empty // Editor ID
@@ -68,7 +62,7 @@ public class FACTRecord: Record {
         switch type {
         case "EDID": EDID = r.readSTRV(dataSize)
         case "FULL": FNAM = r.readSTRV(dataSize)
-        case "XNAM": XNAM = XNAMField(r, dataSize, format)
+        case "XNAM": XNAM = r.readT(dataSize)
         case "DATA": DATA = r.readINTV(dataSize)
         case "CNAM": CNAM = r.readT(dataSize)
         case "RNAM": RNAMs.append(RNAMGroup(RNAM: r.readT(dataSize)))

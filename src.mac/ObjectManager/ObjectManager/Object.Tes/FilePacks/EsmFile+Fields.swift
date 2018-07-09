@@ -35,6 +35,10 @@ public class MODLGroup: CustomStringConvertible {
     }
 }
 
+public struct FormId32<TRecord> {
+    public let id: UInt32
+}
+
 public struct FormId<TRecord>: CustomStringConvertible {
     public var description: String { return "\(type):\(name ?? "none")\(id ?? 0)" }
     public let id: UInt32?
@@ -47,9 +51,9 @@ public struct FormId<TRecord>: CustomStringConvertible {
     func adding(name: String) -> FormId<TRecord> { return FormId<TRecord>(id!, name) }
 }
 
-public let ColorRef_empty = ColorRef(red: 0, green: 0, blue: 0, null: 0)
-public func ColorRef_toColor32(v: ColorRef) -> CGColor { return CGColor(red: CGFloat(v.red), green: CGFloat(v.green), blue: CGFloat(v.blue), alpha: 255) }
-public typealias ColorRef = (red: UInt8, green: UInt8, blue: UInt8, null: UInt8)
+public let ColorRef4_empty = ColorRef4(red: 0, green: 0, blue: 0, null: 0)
+public func ColorRef4_toColor32(v: ColorRef4) -> CGColor { return CGColor(red: CGFloat(v.red), green: CGFloat(v.green), blue: CGFloat(v.blue), alpha: 255) }
+public typealias ColorRef4 = (red: UInt8, green: UInt8, blue: UInt8, null: UInt8)
 public typealias ColorRef3 = (red: UInt8, green: UInt8, blue: UInt8)
 
 
@@ -57,31 +61,7 @@ public let STRVField_empty = STRVField("")
 public typealias STRVField = (String)
 public typealias FILEField = (String)
 public typealias INTVField = (Int64)
-
-//public typealias DATVField = (
-//    b: Bool?,
-//    i: Int32?,
-//    f: Float?,
-//    s: String?)
-
-public struct DATVField: CustomStringConvertible {
-    public var description: String { return "DATV" }
-    public var valueB: Bool? = nil
-    public var valueI: Int32? = nil
-    public var valueF: Float? = nil
-    public var valueS: String? = nil
-
-    init(_ r: BinaryReader, _ dataSize: Int, type: Character) {
-        switch type {
-        case "b": valueB = r.readLEInt32() != 0
-        case "i": valueI = r.readLEInt32()
-        case "f": valueF = r.readLESingle()
-        case "s": valueS = r.readASCIIString(dataSize, format: .possibleNullTerminated)
-        default: fatalError("\(type)")
-        }
-    }
-}
-
+public typealias DATVField = (b: Bool?, i: Int32?, f: Float?, s: String?)
 public typealias FLTVField = (Float)
 public typealias BYTEField = (UInt8)
 public typealias IN16Field = (Int16)
@@ -115,7 +95,7 @@ public struct FMID2Field<TRecord>: CustomStringConvertible {
     }
 }
 
-public typealias CREFField = (ColorRef)
+public typealias CREFField = (ColorRef4)
 
 public struct CNTOField: CustomStringConvertible {
     public var description: String { return "\(item)" }

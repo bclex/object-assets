@@ -54,7 +54,7 @@ public class REGNRecord: Record, IHaveEDID {
         public let sinkVariance: Float
         public let sizeVariance: Float
         public let angleVariance: Vector3Int
-        public let vertexShading: ColorRef // RGB + Shading radius (0 - 200) %
+        public let vertexShading: ColorRef4 // RGB + Shading radius (0 - 200) %
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             object = FormId<Record>(r.readLEUInt32())
@@ -122,32 +122,17 @@ public class REGNRecord: Record, IHaveEDID {
     }
 
     // TES3
-    public struct WEATField {
-        public let clear: UInt8
-        public let cloudy: UInt8
-        public let foggy: UInt8
-        public let overcast: UInt8
-        public let rain: UInt8
-        public let thunder: UInt8
-        public let ash: UInt8
-        public let blight: UInt8
-
-        init(_ r: BinaryReader, _ dataSize: Int) {
-            clear = r.readByte()
-            cloudy = r.readByte()
-            foggy = r.readByte()
-            overcast = r.readByte()
-            rain = r.readByte()
-            thunder = r.readByte()
-            ash = r.readByte()
-            blight = r.readByte()
-            // v1.3 ESM files add 2 bytes to WEAT subrecords.
-            if dataSize == 10 {
-                r.skipBytes(2)
-            }
-        }
-    }
-
+    public typealias WEATField = (
+        clear: UInt8,
+        cloudy: UInt8,
+        foggy: UInt8,
+        overcast: UInt8,
+        rain: UInt8,
+        thunder: UInt8,
+        ash: UInt8,
+        blight: UInt8
+    )
+    
     // TES4
     public class RPLIField {
         public let edgeFalloff: UInt32 // (World Units)
@@ -180,7 +165,7 @@ public class REGNRecord: Record, IHaveEDID {
              "NAME": EDID = r.readSTRV(dataSize)
         case "WNAM",
              "FNAM": WNAM = FMIDField<WRLDRecord>(r, dataSize)
-        case "WEAT": WEAT = WEATField(r, dataSize)
+        case "WEAT": WEAT = r.readT(dataSize)
         case "ICON",
              "BNAM": ICON = r.readSTRV(dataSize)
         case "RCLR",

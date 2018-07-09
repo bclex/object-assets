@@ -68,7 +68,7 @@ public class WTHRRecord: Record, IHaveEDID, IHaveMODL {
         public let thunderLightning_endFadeOut: UInt8
         public let thunderLightning_frequency: UInt8
         public let weatherClassification: UInt8
-        public let lightningColor: ColorRef
+        public let lightningColor: ColorRef4
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             windSpeed = r.readByte()
@@ -83,7 +83,7 @@ public class WTHRRecord: Record, IHaveEDID, IHaveMODL {
             thunderLightning_endFadeOut = r.readByte()
             thunderLightning_frequency = r.readByte()
             weatherClassification = r.readByte()
-            lightningColor = ColorRef(red: r.readByte(), green: r.readByte(), blue: r.readByte(), null: 255)
+            lightningColor = ColorRef4(red: r.readByte(), green: r.readByte(), blue: r.readByte(), null: 255)
         }
     }
 
