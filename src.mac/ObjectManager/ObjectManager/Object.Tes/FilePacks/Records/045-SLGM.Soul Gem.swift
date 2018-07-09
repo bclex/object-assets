@@ -37,8 +37,8 @@ public class SLGMRecord: Record, IHaveEDID, IHaveMODL {
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         case "DATA": DATA = DATAField(r, dataSize)
         case "ICON": ICON = r.readSTRV(dataSize)
-        case "SOUL": SOUL = r.readO(dataSize)
-        case "SLCP": SLCP = r.readO(dataSize)
+        case "SOUL": SOUL = r.readT(dataSize)
+        case "SLCP": SLCP = r.readT(dataSize)
         default: return false
         }
         return true

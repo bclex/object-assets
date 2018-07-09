@@ -16,8 +16,8 @@ public class GLOBRecord: Record, IHaveEDID {
         switch type {
         case "EDID",
              "NAME": EDID = r.readSTRV(dataSize)
-        case "FNAM": FNAM = r.readO(dataSize)
-        case "FLTV": FLTV = r.readO(dataSize)
+        case "FNAM": FNAM = r.readT(dataSize)
+        case "FLTV": FLTV = r.readT(dataSize)
         default: return false
         }
         return true

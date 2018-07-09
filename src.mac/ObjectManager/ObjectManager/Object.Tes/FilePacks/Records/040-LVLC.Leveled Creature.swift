@@ -18,8 +18,8 @@ public class LVLCRecord: Record {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = r.readSTRV(dataSize)
-        case "LVLD": LVLD = r.readO(dataSize)
-        case "LVLF": LVLF = r.readO(dataSize)
+        case "LVLD": LVLD = r.readT(dataSize)
+        case "LVLF": LVLF = r.readT(dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         case "TNAM": TNAM = FMIDField<CREARecord>(r, dataSize)
         case "LVLO": LVLOs.append(LVLIRecord.LVLOField(r, dataSize))

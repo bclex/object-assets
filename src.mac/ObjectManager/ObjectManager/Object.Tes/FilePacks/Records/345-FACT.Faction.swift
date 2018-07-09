@@ -70,7 +70,7 @@ public class FACTRecord: Record {
         case "FULL": FNAM = r.readSTRV(dataSize)
         case "XNAM": XNAM = XNAMField(r, dataSize, format)
         case "DATA": DATA = r.readINTV(dataSize)
-        case "CNAM": CNAM = r.readO(dataSize)
+        case "CNAM": CNAM = r.readT(dataSize)
         case "RNAM": RNAMs.append(RNAMGroup(RNAM: r.readT(dataSize)))
         case "MNAM": RNAMs.last!.MNAM = r.readSTRV(dataSize)
         case "FNAM": RNAMs.last!.FNAM = r.readSTRV(dataSize)

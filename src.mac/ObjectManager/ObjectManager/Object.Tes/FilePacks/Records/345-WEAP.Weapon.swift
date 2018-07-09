@@ -85,7 +85,7 @@ public class WEAPRecord: Record, IHaveEDID, IHaveMODL {
              "ITEX": ICON = r.readSTRV(dataSize)
         case "ENAM": ENAM = FMIDField<ENCHRecord>(r, dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
-        case "ANAM": ANAM = r.readO(dataSize)
+        case "ANAM": ANAM = r.readT(dataSize)
         default: return false
         }
         return true

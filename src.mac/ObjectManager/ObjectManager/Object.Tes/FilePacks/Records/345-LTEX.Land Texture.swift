@@ -31,8 +31,8 @@ public class LTEXRecord: Record, IHaveEDID {
         case "ICON",
              "DATA": ICON = r.readSTRV(dataSize)
         // TES4
-        case "HNAM": HNAM = r.readO(dataSize)
-        case "SNAM": SNAM = r.readO(dataSize)
+        case "HNAM": HNAM = r.readT(dataSize)
+        case "SNAM": SNAM = r.readT(dataSize)
         case "GNAM":
             GNAMs.append(FMIDField<GRASRecord>(r, dataSize))
         default: return false

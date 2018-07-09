@@ -22,9 +22,9 @@ public class LEVCRecord: Record {
         }
         switch type {
         case "NAME": EDID = r.readSTRV(dataSize)
-        case "DATA": DATA = r.readO(dataSize)
-        case "NNAM": NNAM = r.readO(dataSize)
-        case "INDX": INDX = r.readO(dataSize)
+        case "DATA": DATA = r.readT(dataSize)
+        case "NNAM": NNAM = r.readT(dataSize)
+        case "INDX": INDX = r.readT(dataSize)
         case "CNAM": CNAMs.append(r.readSTRV(dataSize))
         case "INTV": INTVs.append(r.readT(dataSize))
         default: return false

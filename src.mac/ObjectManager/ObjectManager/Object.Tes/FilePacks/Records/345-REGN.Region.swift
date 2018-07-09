@@ -184,7 +184,7 @@ public class REGNRecord: Record, IHaveEDID {
         case "ICON",
              "BNAM": ICON = r.readSTRV(dataSize)
         case "RCLR",
-             "CNAM": RCLR = r.readO(dataSize)
+             "CNAM": RCLR = r.readT(dataSize)
         case "SNAM": RDATs.append(RDATField(RDSDs: [RDSDField(r, dataSize, format)]))
         case "RPLI": RPLIs.append(RPLIField(r, dataSize))
         case "RPLD": RPLIs.last!.RPLDField(r, dataSize)
@@ -196,7 +196,7 @@ public class REGNRecord: Record, IHaveEDID {
         case "RDGS":
             var rdgs = [RDGSField](); RDATs.last!.RDGSs = rdgs; let capacity = dataSize / 8; rdgs.reserveCapacity(capacity)
             for _ in 0..<capacity { rdgs.append(RDGSField(r, dataSize)) }
-        case "RDMD": RDATs.last!.RDMD = r.readO(dataSize)
+        case "RDMD": RDATs.last!.RDMD = r.readT(dataSize)
         case "RDSD":
             var rdsd = [RDSDField](); RDATs.last!.RDSDs = rdsd; let capacity = dataSize / 15; rdsd.reserveCapacity(capacity)
             for _ in 0..<capacity { rdsd.append(RDSDField(r, dataSize, format)) }

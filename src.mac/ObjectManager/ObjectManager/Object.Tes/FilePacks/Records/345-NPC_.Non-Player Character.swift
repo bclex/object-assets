@@ -159,7 +159,7 @@ public class NPC_Record: Record, IHaveEDID, IHaveMODL {
         case "AI_A": AI_A = CREARecord.AI_AField(r, dataSize)
         case "DODT": DODT = DODTField(r, dataSize)
         case "DNAM": DNAM = r.readSTRV(dataSize)
-        case "XSCL": XSCL = r.readO(dataSize)
+        case "XSCL": XSCL = r.readT(dataSize)
         case "SCRI": SCRI = FMIDField<SCPTRecord>(r, dataSize)
         default: return false
         }

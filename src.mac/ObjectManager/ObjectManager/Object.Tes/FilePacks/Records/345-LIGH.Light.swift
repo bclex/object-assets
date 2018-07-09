@@ -81,7 +81,7 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
         case "EDID",
              "NAME": EDID = r.readSTRV(dataSize)
         case "FULL": FULL = r.readSTRV(dataSize)
-        case "FNAM": if format != .TES3 { FNAM = r.readO(dataSize) } else { FULL = r.readSTRV(dataSize) }
+        case "FNAM": if format != .TES3 { FNAM = r.readT(dataSize) } else { FULL = r.readSTRV(dataSize) }
         case "DATA",
              "LHDT": DATA = DATAField(r, dataSize, format)
         case "SCPT": SCPT = r.readSTRV(dataSize)

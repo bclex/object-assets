@@ -16,8 +16,8 @@ public class LVSPRecord: Record {
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
         case "EDID": EDID = r.readSTRV(dataSize)
-        case "LVLD": LVLD = r.readO(dataSize)
-        case "LVLF": LVLF = r.readO(dataSize)
+        case "LVLD": LVLD = r.readT(dataSize)
+        case "LVLF": LVLF = r.readT(dataSize)
         case "LVLO": LVLOs.append(LVLIRecord.LVLOField(r, dataSize))
         default: return false
         }

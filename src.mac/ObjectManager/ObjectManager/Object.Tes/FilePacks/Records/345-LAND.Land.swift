@@ -14,7 +14,7 @@ public class LANDRecord: Record {
         public var vertexs: [Vector3Int8] // XYZ 8 bit floats
         
         init(_ r: BinaryReader, _ dataSize: Int) {
-            vertexs = r.readOArray(dataSize, count: dataSize / 3)
+            vertexs = r.readTArray(dataSize, count: dataSize / 3)
         }
     }
 
@@ -25,7 +25,7 @@ public class LANDRecord: Record {
         init(_ r: BinaryReader, _ dataSize: Int) {
             referenceHeight = r.readLESingle()
             let count = dataSize - 4 - 3
-            heightData = r.readOArray(count, count: count)
+            heightData = r.readTArray(count, count: count)
             r.skipBytes(3) // Unused
         }
     }
@@ -34,7 +34,7 @@ public class LANDRecord: Record {
         public var colors: [ColorRef3] // 24-bit RGB
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            colors = r.readOArray(dataSize, count: dataSize / 24)
+            colors = r.readTArray(dataSize, count: dataSize / 24)
         }
     }
 
@@ -44,10 +44,10 @@ public class LANDRecord: Record {
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             guard format != .TES3 else {
-                textureIndicesT3 = r.readOArray(dataSize, count: dataSize >> 1)
+                textureIndicesT3 = r.readTArray(dataSize, count: dataSize >> 1)
                 return
             }
-            textureIndices = r.readOArray(dataSize, count: dataSize >> 2)
+            textureIndices = r.readTArray(dataSize, count: dataSize >> 2)
         }
     }
 
@@ -114,16 +114,13 @@ public class LANDRecord: Record {
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "DATA": DATA = r.readO(dataSize)
+        case "DATA": DATA = r.readT(dataSize)
         case "VNML": VNML = VNMLField(r, dataSize)
         case "VHGT": VHGT = VHGTField(r, dataSize)
         case "VCLR": VCLR = VNMLField(r, dataSize)
         case "VTEX": VTEX = VTEXField(r, dataSize, format)
         // TES3
-        case "INTV":
-            INTV = r.readO(dataSize)
-            debugPrint(INTV)
-            debugPrint(INTV.cellX)
+        case "INTV": INTV = r.readT(dataSize)
         case "WNAM": WNAM = WNAMField(r, dataSize)
         // TES4
         case "BTXT":
@@ -131,7 +128,7 @@ public class LANDRecord: Record {
         case "ATXT":
             if ATXTs == nil { ATXTs = [ATXTGroup?](repeating: nil, count: 4) }
             let atxt: BTXTField = r.readT(dataSize); _lastATXT = ATXTGroup(ATXT: atxt); ATXTs![Int(atxt.quadrant)] = _lastATXT
-        case "VTXT": _lastATXT.VTXTs = r.readOArray(dataSize, count: dataSize >> 3)
+        case "VTXT": _lastATXT.VTXTs = r.readTArray(dataSize, count: dataSize >> 3)
         default: return false
         }
         return true

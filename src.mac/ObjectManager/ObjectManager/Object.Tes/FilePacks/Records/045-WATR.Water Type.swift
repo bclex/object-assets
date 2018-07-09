@@ -108,8 +108,8 @@ public class WATRRecord: Record {
         switch type {
             case "EDID": EDID = r.readSTRV(dataSize)
             case "TNAM": TNAM = r.readSTRV(dataSize)
-            case "ANAM": ANAM = r.readO(dataSize)
-            case "FNAM": FNAM = r.readO(dataSize)
+            case "ANAM": ANAM = r.readT(dataSize)
+            case "FNAM": FNAM = r.readT(dataSize)
             case "MNAM": MNAM = r.readSTRV(dataSize)
             case "SNAM": SNAM = FMIDField<SOUNRecord>(r, dataSize)
             case "DATA": DATA = DATAField(r, dataSize)
