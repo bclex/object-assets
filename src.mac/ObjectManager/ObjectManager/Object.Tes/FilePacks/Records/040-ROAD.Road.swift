@@ -13,9 +13,7 @@ public class ROADRecord: Record {
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "PGRP":
-            PGRPs = [PGRDRecord.PGRPField](); let capacity = dataSize >> 4; PGRPs.reserveCapacity(capacity)
-            for _ in 0..<capacity { PGRPs.append(PGRDRecord.PGRPField(r, dataSize)) }
+        case "PGRP": PGRPs = r.readTArray(dataSize, count: dataSize >> 4)
         case "PGRR": PGRR = r.readBYTV(dataSize)
         default: return false
         }

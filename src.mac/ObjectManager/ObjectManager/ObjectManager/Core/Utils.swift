@@ -14,7 +14,7 @@ public typealias Color = CGColor
 public typealias Texture2D = NSImage
 public typealias TextureFormat = CIFormat
 public typealias Vector2 = CGVector
-public typealias Vector3 = SCNVector3
+//public typealias Vector3 = SCNVector3
 public typealias Matrix4x4 = SCNMatrix4
 public typealias Quaternion = SCNQuaternion
 

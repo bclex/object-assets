@@ -27,37 +27,23 @@ public class PGRDRecord: Record {
         }
     }
 
-    public struct PGRPField {
-        public let point: Vector3
-        public let connections: UInt8
+    public typealias PGRPField = (
+        point: Vector3Float,
+        connections: UInt8,
+        pad01: UInt8,
+        pad02: UInt16
+    )
 
-        init(_ r: BinaryReader, _ dataSize: Int) {
-            point = Vector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
-            connections = r.readByte()
-            r.skipBytes(3) // Unused
-        }
-    }
+    public typealias PGRRField = (
+        startPointId: Int16,
+        endPointId: Int16
+    )
 
-    public struct PGRRField {
-        public let startPointId: Int16
-        public let endPointId: Int16
-
-        init(_ r: BinaryReader, _ dataSize: Int) {
-            startPointId = r.readLEInt16()
-            endPointId = r.readLEInt16()
-        }
-    }
-
-    public struct PGRIField {
-        public let pointId: Int16
-        public let foreignNode: Vector3
-
-        init(_ r: BinaryReader, _ dataSize: Int) {
-            pointId = r.readLEInt16()
-            r.skipBytes(2) // Unused (can merge back)
-            foreignNode = Vector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
-        }
-    }
+    public typealias PGRIField = (
+        pointId: Int16,
+        pad02: UInt16,
+        foreignNode: Vector3Float
+    )
 
     public struct PGRLField {
         public let reference: FormId<REFRRecord>
@@ -88,18 +74,12 @@ public class PGRDRecord: Record {
         case "EDID",
              "NAME": EDID = r.readSTRV(dataSize)
         case "DATA": DATA = DATAField(r, dataSize, format)
-        case "PGRP":
-            PGRPs = [PGRPField](); let capacity = dataSize >> 4; PGRPs.reserveCapacity(capacity)
-            for _ in 0..<capacity { PGRPs.append(PGRPField(r, 16)) }
+        case "PGRP": PGRPs = r.readTArray(dataSize, count: dataSize >> 4)
         case "PGRC": PGRC = r.readBYTV(dataSize)
         case "PGAG": PGAG = r.readBYTV(dataSize)
-        case "PGRR":
-            PGRRs = [PGRRField](); let capacity = dataSize >> 2; PGRRs.reserveCapacity(capacity)
-            for _ in 0..<capacity { PGRRs.append(PGRRField(r, 4)) }; r.skipBytes(dataSize % 4)
+        case "PGRR": PGRRs = r.readTArray(dataSize, count: dataSize >> 2) //r.skipBytes(dataSize % 4)
         case "PGRL": if PGRLs == nil { PGRLs = [PGRLField]() }; PGRLs!.append(PGRLField(r, dataSize))
-        case "PGRI":
-            PGRIs = [PGRIField](); let capacity = dataSize >> 4; PGRIs.reserveCapacity(capacity)
-            for _ in 0..<capacity { PGRIs.append(PGRIField(r, 16)) }
+        case "PGRI": PGRIs = r.readTArray(dataSize, count: dataSize >> 4)
         default: return false
         }
         return true

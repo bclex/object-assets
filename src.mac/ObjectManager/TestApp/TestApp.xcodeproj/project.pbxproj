@@ -8,10 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		5415F72C20BC885D008A8E78 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F72B20BC885D008A8E78 /* AppDelegate.swift */; };
-		5415F72E20BC885D008A8E78 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F72D20BC885D008A8E78 /* GameViewController.swift */; };
 		5415F73020BC885D008A8E78 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 5415F72F20BC885D008A8E78 /* art.scnassets */; };
 		5415F73220BC885D008A8E78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5415F73120BC885D008A8E78 /* Assets.xcassets */; };
 		5415F73520BC885D008A8E78 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5415F73320BC885D008A8E78 /* Main.storyboard */; };
+		542BBD6920F9111700B6466C /* terrainColors.png in Resources */ = {isa = PBXBuildFile; fileRef = 542BBD6820F9111700B6466C /* terrainColors.png */; };
+		542BBD7820F91A7C00B6466C /* GameViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F72D20BC885D008A8E78 /* GameViewController2.swift */; };
+		542BBD7A20F91B9B00B6466C /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542BBD6420F9110B00B6466C /* Game.swift */; };
+		542BBD7C20F91C1300B6466C /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542BBD6320F9110B00B6466C /* CameraController.swift */; };
+		542BBD7D20F91EF000B6466C /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542BBD6220F9110B00B6466C /* GameView.swift */; };
+		542BBD7E20F91EFE00B6466C /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542BBD6A20F9127A00B6466C /* GameViewController.swift */; };
 		54FD13A720BC9E2A003D3138 /* ObjectManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54FD13A620BC9E2A003D3138 /* ObjectManager.framework */; };
 		54FD13A820BC9E2A003D3138 /* ObjectManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 54FD13A620BC9E2A003D3138 /* ObjectManager.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -33,12 +38,17 @@
 /* Begin PBXFileReference section */
 		5415F72820BC885D008A8E78 /* TestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5415F72B20BC885D008A8E78 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		5415F72D20BC885D008A8E78 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		5415F72D20BC885D008A8E78 /* GameViewController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController2.swift; sourceTree = "<group>"; };
 		5415F72F20BC885D008A8E78 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		5415F73120BC885D008A8E78 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5415F73420BC885D008A8E78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5415F73620BC885D008A8E78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5415F73720BC885D008A8E78 /* TestApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestApp.entitlements; sourceTree = "<group>"; };
+		542BBD6220F9110B00B6466C /* GameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		542BBD6320F9110B00B6466C /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
+		542BBD6420F9110B00B6466C /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		542BBD6820F9111700B6466C /* terrainColors.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = terrainColors.png; sourceTree = "<group>"; };
+		542BBD6A20F9127A00B6466C /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		54FD13A620BC9E2A003D3138 /* ObjectManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ObjectManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -75,8 +85,13 @@
 		5415F72A20BC885D008A8E78 /* TestApp */ = {
 			isa = PBXGroup;
 			children = (
+				542BBD6820F9111700B6466C /* terrainColors.png */,
+				542BBD6320F9110B00B6466C /* CameraController.swift */,
+				542BBD6420F9110B00B6466C /* Game.swift */,
+				542BBD6220F9110B00B6466C /* GameView.swift */,
 				5415F72B20BC885D008A8E78 /* AppDelegate.swift */,
-				5415F72D20BC885D008A8E78 /* GameViewController.swift */,
+				5415F72D20BC885D008A8E78 /* GameViewController2.swift */,
+				542BBD6A20F9127A00B6466C /* GameViewController.swift */,
 				5415F72F20BC885D008A8E78 /* art.scnassets */,
 				5415F73120BC885D008A8E78 /* Assets.xcassets */,
 				5415F73320BC885D008A8E78 /* Main.storyboard */,
@@ -162,6 +177,7 @@
 				5415F73520BC885D008A8E78 /* Main.storyboard in Resources */,
 				5415F73220BC885D008A8E78 /* Assets.xcassets in Resources */,
 				5415F73020BC885D008A8E78 /* art.scnassets in Resources */,
+				542BBD6920F9111700B6466C /* terrainColors.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,8 +188,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5415F72E20BC885D008A8E78 /* GameViewController.swift in Sources */,
 				5415F72C20BC885D008A8E78 /* AppDelegate.swift in Sources */,
+				542BBD7A20F91B9B00B6466C /* Game.swift in Sources */,
+				542BBD7C20F91C1300B6466C /* CameraController.swift in Sources */,
+				542BBD7820F91A7C00B6466C /* GameViewController2.swift in Sources */,
+				542BBD7E20F91EFE00B6466C /* GameViewController.swift in Sources */,
+				542BBD7D20F91EF000B6466C /* GameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
