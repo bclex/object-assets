@@ -11,14 +11,15 @@ import QuartzCore
 import ObjectManager
 
 class GameViewController: NSViewController {
-
-    @IBOutlet weak var gameView: GameView!
     var game = Game()
 
     override func awakeFromNib() {
         let world = SCNScene()
 
         // set the scene to the view
+        guard let gameView = self.view as? GameView else {
+            return
+        }
         gameView.scene = world
         gameView.cameraNode = CameraController.createController(world)
         gameView.allowsCameraControl = true
