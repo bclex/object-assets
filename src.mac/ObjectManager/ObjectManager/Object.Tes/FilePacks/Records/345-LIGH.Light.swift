@@ -42,7 +42,7 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
                 value = r.readLEInt32()
                 time = r.readLEInt32()
                 radius = r.readLEInt32()
-                lightColor = r.readT(dataSize)
+                lightColor = r.readT(4)
                 flags = r.readLEInt32()
                 falloffExponent = 1
                 fov = 90
@@ -50,7 +50,7 @@ public class LIGHRecord: Record, IHaveEDID, IHaveMODL {
             }
             time = r.readLEInt32()
             radius = r.readLEInt32()
-            lightColor = r.readT(dataSize)
+            lightColor = r.readT(4)
             flags = r.readLEInt32()
             if dataSize == 32 {
                 falloffExponent = r.readLESingle()

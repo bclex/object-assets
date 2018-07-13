@@ -130,7 +130,7 @@ public class REFRRecord: Record {
         case "XCNT": XCNT = r.readT(dataSize)
         case "XMRK": if XMRKs == nil { XMRKs = [XMRKGroup]() }; XMRKs!.append(XMRKGroup()); _nextFull = 2
         case "FNAM": XMRKs!.last!.FNAM = r.readT(dataSize)
-        case "TNAM": XMRKs!.last!.TNAM = r.readT(dataSize); r.skipBytes(1)
+        case "TNAM": XMRKs!.last!.TNAM = r.readT(dataSize) //; r.skipBytes(1)
         case "ONAM": break
         case "XRGD": XRGD = r.readBYTV(dataSize)
         case "XSCL": XSCL = r.readT(dataSize)
