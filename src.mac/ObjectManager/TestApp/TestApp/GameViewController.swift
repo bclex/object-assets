@@ -11,6 +11,7 @@ import QuartzCore
 import ObjectManager
 
 class GameViewController: NSViewController {
+//    @IBOutlet weak var gameView: GameView!
     var game = Game()
 
     override func awakeFromNib() {
@@ -20,6 +21,7 @@ class GameViewController: NSViewController {
         guard let gameView = self.view as? GameView else {
             return
         }
+        gameView.delegate = self
         gameView.scene = world
         gameView.cameraNode = CameraController.createController(world)
         gameView.allowsCameraControl = true
@@ -35,5 +37,10 @@ class GameViewController: NSViewController {
         game.createRandomMap()
         let tNode = TerrainNode(map: game.map)
         gameView.scene?.rootNode.addChildNode(tNode)
+    }
+}
+
+extension GameViewController: SCNSceneRendererDelegate {
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
     }
 }

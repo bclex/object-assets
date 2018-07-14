@@ -27,7 +27,6 @@ class GameView: SCNView {
         delta.y = 0
         controller.lookPoint = controller.lookPoint + (delta)
         controller.moveCamera(delta)
-
     }
 
     override func scrollWheel(with theEvent: NSEvent) {
