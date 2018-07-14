@@ -116,10 +116,6 @@ public class CELLRecord: Record, ICellRecord {
     public var isInterior: Bool { return Utils.containsBitFlags(UInt(DATA), 0x01) }
     public var gridId: Vector3Int!
     //public var ambientLight: CGColor? { return XCLL != nil ? XCLL!.ambientColor.toColor32 : nil }
-
-    //                var abc: STRVField = r.readT(dataSize) //BYTEField(r, dataSize)
-    //                debugPrint("\(MemoryLayout<STRVField>.size)x\(MemoryLayout<STRVField>.stride): \(abc)")
-    //                debugPrint(Utils.hexString(of: abc))
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         if !InFRMR && type == "FRMR" {

@@ -274,6 +274,7 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
         return records
     }
 
+    static var cellsLoaded = 0
     func readGroup(header: Header, loadAll: Bool) {
         _r.baseStream.position = header.position
         let endPosition = header.position + UInt64(header.dataSize)
@@ -286,12 +287,20 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
                 }
                 continue
             }
+            // HACK to limit cells loading
+            if recordHeader.type == "CELL" && RecordGroup.cellsLoaded > 10 {
+                _r.baseStream.position += UInt64(recordHeader.dataSize)
+                continue
+            }
             guard let record = recordHeader.createRecord(at: _r.baseStream.position, recordLevel: _recordLevel) else {
                 _r.baseStream.position += UInt64(recordHeader.dataSize)
                 continue
             }
             readRecord(record, compressed: recordHeader.compressed)
             records.append(record)
+            if recordHeader.type == "CELL" {
+                RecordGroup.cellsLoaded += 1
+            }
         }
     }
 

@@ -14,6 +14,9 @@ public class TesEngineTest: GameSegment {
     var Data: IDataPack? = nil
     var Engine: BaseEngine!
     
+    public init() {
+    }
+    
     public func start() {
         let assetUrl = URL(string: "game://Morrowind/Morrowind.bsa")
         let dataUrl = URL(string: "game://Morrowind/Morrowind.esm")

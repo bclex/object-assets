@@ -13,11 +13,24 @@ import ObjectManager
 class GameViewController: NSViewController {
 //    @IBOutlet weak var gameView: GameView!
     var game = Game()
-    var segments = [GameSegment]()
+    var segments = [TesEngineTest()]
 
+    override func viewDidLoad() {
+        for segment in segments {
+            segment.start()
+        }
+    }
+    
+    func close() {
+        for segment in segments {
+            segment.onDestroy()
+        }
+        segments.removeAll()
+    }
+    
     override func awakeFromNib() {
         let world = SCNScene()
-
+        
         // set the scene to the view
         guard let gameView = self.view as? GameView else {
             return
@@ -43,5 +56,8 @@ class GameViewController: NSViewController {
 
 extension GameViewController: SCNSceneRendererDelegate {
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        for segment in segments {
+            segment.update()
+        }
     }
 }
