@@ -19,6 +19,7 @@ public struct Vector3Int: Hashable {
     public let x: Int
     public let y: Int
     public let z: Int
+    public static let zero = Vector3Int(0, 0, 0)
     
     init(_ x: Int, _ y: Int, _ z: Int) {
         self.x = x

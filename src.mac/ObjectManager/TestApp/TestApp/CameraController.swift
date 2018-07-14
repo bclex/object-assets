@@ -32,7 +32,7 @@ class CameraController: NSObject {
         camera = SCNCamera()
         camera.automaticallyAdjustsZRange = true
         cameraNode = SCNNode()
-        cameraNode.position = Vector3(x: 0, y:50, z: 75)
+        cameraNode.position = Vector3(x: 0, y: 50, z: 75)
         cameraNode.camera = camera
         cameraNode.constraints = [SCNLookAtConstraint(target: lookNode)]
         scene.rootNode.addChildNode(cameraNode)

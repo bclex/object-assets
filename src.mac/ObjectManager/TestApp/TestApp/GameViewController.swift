@@ -13,6 +13,7 @@ import ObjectManager
 class GameViewController: NSViewController {
 //    @IBOutlet weak var gameView: GameView!
     var game = Game()
+    var segments = [GameSegment]()
 
     override func awakeFromNib() {
         let world = SCNScene()

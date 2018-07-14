@@ -27,6 +27,7 @@ public struct CoTask: Equatable {
 public class TemporalLoadBalancer {
     var _tasks = [CoTask]()
 
+    @discardableResult
     public func addTask(taskCoroutine: CoTask) -> CoTask {
         _tasks.append(taskCoroutine)
         return taskCoroutine

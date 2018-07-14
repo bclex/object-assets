@@ -13,4 +13,8 @@ public class TesDataPack: EsmFile, IDataPack {
         let fileManager = FileManager.default
         super.init(filePath != nil && fileManager.fileExists(atPath: filePath!.path) ? filePath : nil, for: game)
     }
+    
+    public func findCellRecord(_ cellId: Vector3Int) -> ICellRecord? {
+        return super.findCellRecord(cellId: cellId)
+    }
 }

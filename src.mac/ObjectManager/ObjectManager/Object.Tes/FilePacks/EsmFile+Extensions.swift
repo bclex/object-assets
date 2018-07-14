@@ -36,23 +36,30 @@ extension EsmFile {
         //_ltexsByEid = Groups["LTEX"].Load().Cast<LTEXRecord>().ToDictionary(x => x.EDID.Value)
     }
 
-    func findLTEXRecord(_ index: Int64) -> LTEXRecord? {
+    func findLTEXRecord(index: Int64) -> LTEXRecord? {
         guard format != .TES3 else {
             return _LTEXsById[index]
         }
         fatalError("NotImplemented")
     }
 
-    func findLANDRecord(_ cellId: Vector3Int) -> LANDRecord? {
+    func findLANDRecord(cellId: Vector3Int) -> LANDRecord? {
         guard format != .TES3 else {
             return _LANDsById[cellId]
         }
         fatalError("NotImplemented")
     }
 
-    func findCellRecord(_ cellId: Vector3Int) -> CELLRecord? {
+    public func findCellRecord(cellId: Vector3Int) -> CELLRecord? {
         guard format != .TES3 else {
             return _CELLsById[cellId]
+        }
+        fatalError("NotImplemented")
+    }
+    
+    public func findCellRecordByName(world: Int, cellId: Int, cellName: String) -> CELLRecord? {
+        guard format != .TES3 else {
+            return _CELLsByName[cellName]
         }
         fatalError("NotImplemented")
     }

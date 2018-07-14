@@ -16,6 +16,7 @@ public protocol IRecord {
 }
 
 public protocol IAssetPack {
+    func close()
     func loadTextureInfoAsync(texturePath: String) -> Task<Texture2DInfo?>
     func loadTexture(texturePath: String, method: Int) -> Texture2D
     func preloadTextureAsync(texturePath: String)
@@ -25,6 +26,8 @@ public protocol IAssetPack {
 }
 
 public protocol IDataPack {
+    func close()
+    func findCellRecord(_ cellId: Vector3Int) -> ICellRecord?
 }
 
 public protocol IAssetManager {

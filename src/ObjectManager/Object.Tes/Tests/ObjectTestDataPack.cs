@@ -48,7 +48,7 @@ namespace OA.Tes
             //TestAllCells();
         }
 
-        public static Vector3Int GetCellId(Vector3 point, int worldId) => new Vector3Int(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters), worldId);
+        public static Vector3Int GetCellId(Vector3 point, int world) => new Vector3Int(Mathf.FloorToInt(point.x / ConvertUtils.ExteriorCellSideLengthInMeters), Mathf.FloorToInt(point.z / ConvertUtils.ExteriorCellSideLengthInMeters), world);
 
         static void TestLoadCell(Vector3 position)
         {

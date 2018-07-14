@@ -85,7 +85,7 @@ namespace OA.Tes.FilePacks
             return null;
         }
 
-        public CELLRecord FindCellRecordByName(int worldId, int cellId, string cellName)
+        public CELLRecord FindCellRecordByName(int world, int cellId, string cellName)
         {
             if (Format == GameFormatId.TES3)
             {

@@ -11,17 +11,17 @@ import CoreGraphics
 import SceneKit
 
 public protocol ICellRecord : IRecord {
-    //var isInterior: Bool {get}
+    var isInterior: Bool {get}
     //var ambientLight: CGColor? {get}
 }
 
 public class InRangeCellInfo {
-    var gameObject: SCNNode
-    var objectsContainerGameObject: SCNNode
+    var gameObject: GameObject
+    var objectsContainerGameObject: GameObject
     var cellRecord: ICellRecord
-    var objectsCreationCoroutine: AnyIterator<Any>
+    var objectsCreationCoroutine: CoTask
     
-    init(gameObject: SCNNode, objectsContainerGameObject: SCNNode, cellRecord: ICellRecord, objectsCreationCoroutine: AnyIterator<Any>) {
+    init(gameObject: GameObject, objectsContainerGameObject: GameObject, cellRecord: ICellRecord, objectsCreationCoroutine: CoTask) {
         self.gameObject = gameObject
         self.objectsContainerGameObject = objectsContainerGameObject
         self.cellRecord = cellRecord
@@ -42,10 +42,9 @@ public class RefCellObjInfo {
 }
 
 public protocol ICellManager {
-    //func getExteriorCellIndices(point: Vector3) -> Vector2
-    //func startCreatingExteriorCell(cellIndices: Vector2) -> InRangeCellInfo
-    //func startCreatingInteriorCell(cellName: String) -> InRangeCellInfo
-    //func startCreatingInteriorCell(gridCoords: Vector2) -> InRangeCellInfo
-    //func updateExteriorCells(currentPosition: Vector3, immediate: Bool, cellRadiusOverride: Int)
-    //func destroyAllCells()
+    func getCellId(point: Vector3, world: Int) -> Vector3Int
+    func startCreatingCell(cellId: Vector3Int) -> InRangeCellInfo?
+    func startCreatingCellByName(world: Int, cellId: Int, cellName: String) -> InRangeCellInfo?
+    func updateCells(currentPosition: Vector3, world: Int, immediate: Bool, cellRadiusOverride: Int)
+    func destroyAllCells()
 }

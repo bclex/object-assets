@@ -10,6 +10,9 @@
 		540B163320BC8CCF0058D516 /* TemporalLoadBalancer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540B163220BC8CCF0058D516 /* TemporalLoadBalancer.swift */; };
 		5415F74920BC8906008A8E78 /* BinaryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F74820BC8906008A8E78 /* BinaryReader.swift */; };
 		5415F74B20BC8931008A8E78 /* AssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F74A20BC8931008A8E78 /* AssetManager.swift */; };
+		5426497820F9902F00228506 /* GameSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5426497620F9902F00228506 /* GameSegment.swift */; };
+		5426497A20F990DF00228506 /* TesEngineTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5426497920F990DF00228506 /* TesEngineTest.swift */; };
+		5426497B20F9934500228506 /* BaseEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FF120C61E3900C68B25 /* BaseEngine.swift */; };
 		542BBD7220F912E400B6466C /* TerrainGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542BBD6C20F912E400B6466C /* TerrainGenerator.swift */; };
 		542BBD7320F912E400B6466C /* Utils2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542BBD6D20F912E400B6466C /* Utils2.swift */; };
 		542BBD7420F912E400B6466C /* TerrainNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542BBD6E20F912E400B6466C /* TerrainNode.swift */; };
@@ -169,6 +172,8 @@
 		5415F76B20BC8BCA008A8E78 /* EsmFile+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EsmFile+Extensions.swift"; sourceTree = "<group>"; };
 		5415F76D20BC8BDA008A8E78 /* BsaMultiFile+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BsaMultiFile+Extensions.swift"; sourceTree = "<group>"; };
 		5415F76F20BC8BE5008A8E78 /* BsaFile+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BsaFile+Extensions.swift"; sourceTree = "<group>"; };
+		5426497620F9902F00228506 /* GameSegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSegment.swift; sourceTree = "<group>"; };
+		5426497920F990DF00228506 /* TesEngineTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesEngineTest.swift; sourceTree = "<group>"; };
 		542BBD6C20F912E400B6466C /* TerrainGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainGenerator.swift; sourceTree = "<group>"; };
 		542BBD6D20F912E400B6466C /* Utils2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils2.swift; sourceTree = "<group>"; };
 		542BBD6E20F912E400B6466C /* TerrainNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainNode.swift; sourceTree = "<group>"; };
@@ -394,6 +399,7 @@
 		540B163420BC8E370058D516 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				5426497920F990DF00228506 /* TesEngineTest.swift */,
 				540B163520BC8E5E0058D516 /* TesPackTest.swift */,
 			);
 			path = Tests;
@@ -448,7 +454,6 @@
 				54FD3E5820CF892A0010D58E /* TextureUtils.swift */,
 				54FD3E5920CF892A0010D58E /* Utils.swift */,
 				542BBD6D20F912E400B6466C /* Utils2.swift */,
-				54A08FFC20C7824C00C68B25 /* GameObject.swift */,
 				54AEEF1320BE51B700560590 /* DataExtensions.swift */,
 				540B163220BC8CCF0058D516 /* TemporalLoadBalancer.swift */,
 				54A08FEA20C4FACD00C68B25 /* Texture2DInfo.swift */,
@@ -512,7 +517,9 @@
 		542BBD6020F9105B00B6466C /* SceneKit */ = {
 			isa = PBXGroup;
 			children = (
+				54A08FFC20C7824C00C68B25 /* GameObject.swift */,
 				542BBD7020F912E400B6466C /* Map.swift */,
+				5426497620F9902F00228506 /* GameSegment.swift */,
 				542BBD7120F912E400B6466C /* MapNode.swift */,
 				542BBD6C20F912E400B6466C /* TerrainGenerator.swift */,
 				542BBD6E20F912E400B6466C /* TerrainNode.swift */,
@@ -691,6 +698,7 @@
 				F3970C5E20D5FEF000D8E205 /* 345-GMST.Game Setting.swift in Sources */,
 				F3970C1820D5EB2500D8E205 /* TesCellManager.swift in Sources */,
 				F3970C3B20D5F3EC00D8E205 /* 045-QUST.Quest.swift in Sources */,
+				5426497A20F990DF00228506 /* TesEngineTest.swift in Sources */,
 				F38DF06F20D570D200873AA4 /* VectorExtensions.swift in Sources */,
 				F3970C6920D6058300D8E205 /* 345-SKIL.Skill.swift in Sources */,
 				54AEEF1420BE51B700560590 /* DataExtensions.swift in Sources */,
@@ -753,6 +761,7 @@
 				F3970C6C20D6068200D8E205 /* 345-STAT.Static.swift in Sources */,
 				54FD3E5E20CF892A0010D58E /* TextureUtils.swift in Sources */,
 				54A1257220D719A1001AC968 /* GameSettings.swift in Sources */,
+				5426497B20F9934500228506 /* BaseEngine.swift in Sources */,
 				F3970C3920D5F39D00D8E205 /* 045-LSCR.Load Screen.swift in Sources */,
 				F3970C2020D5EE9000D8E205 /* 005-ASPC.Acoustic Space.swift in Sources */,
 				F3970C3A20D5F3A900D8E205 /* 045-PACK.AI Package.swift in Sources */,
@@ -764,6 +773,7 @@
 				F3970C5D20D5FEDA00D8E205 /* 345-GLOB.Global.swift in Sources */,
 				F3970C3D20D5F4B700D8E205 /* 045-SLGM.Soul Gem.swift in Sources */,
 				F3970C2320D5EE9400D8E205 /* 005-DLBR.Dialog Branch.swift in Sources */,
+				5426497820F9902F00228506 /* GameSegment.swift in Sources */,
 				F3970C3220D5F04A00D8E205 /* 045-CSTY.Combat Style.swift in Sources */,
 				F3970C5A20D5FDEE00D8E205 /* 345-DOOR.Door.swift in Sources */,
 				54A1257320D719A1001AC968 /* BaseSettings.swift in Sources */,
