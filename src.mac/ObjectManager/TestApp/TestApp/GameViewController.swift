@@ -16,19 +16,6 @@ class GameViewController: NSViewController {
     var segments = [TesEngineTest()]
 
     override func viewDidLoad() {
-        for segment in segments {
-            segment.start()
-        }
-    }
-    
-    func close() {
-        for segment in segments {
-            segment.onDestroy()
-        }
-        segments.removeAll()
-    }
-    
-    override func awakeFromNib() {
         let world = SCNScene()
         
         // set the scene to the view
@@ -41,16 +28,28 @@ class GameViewController: NSViewController {
         gameView.allowsCameraControl = true
         gameView.autoenablesDefaultLighting = true
         gameView.allowsCameraControl = false
-
+        
         // show statistics such as fps and timing information
         gameView.showsStatistics = true
-
+        
         // configure the view
         gameView.backgroundColor = NSColor(calibratedRed: 0, green: 0, blue: 1, alpha: 0)
-
+        
         game.createRandomMap()
         let tNode = TerrainNode(map: game.map)
         gameView.scene?.rootNode.addChildNode(tNode)
+        
+        let player = gameView.cameraNode!.cameraNode
+        for segment in segments {
+            segment.start(player: player)
+        }
+    }
+    
+    override func viewDidDisappear() {
+        for segment in segments {
+            segment.onDestroy()
+        }
+        segments.removeAll()
     }
 }
 

@@ -94,7 +94,7 @@ public class LANDRecord: Record {
     // is vertical(Z), Red the X direction and Green the Y direction.Note that
     // the y-direction of the data is from the bottom up.
     public var VNML: VNMLField!
-    public var VHGT: VHGTField! // Height data
+    public var VHGT: VHGTField? = nil // Height data
     public var VCLR: VNMLField? = nil // Vertex color array, looks like another RBG image 65x65 pixels in size. (Optional)
     public var VTEX: VTEXField? = nil // A 16x16 array of short texture indices. (Optional)
     // TES3
@@ -116,7 +116,8 @@ public class LANDRecord: Record {
         switch type {
         case "DATA": DATA = r.readT(dataSize)
         case "VNML": VNML = VNMLField(r, dataSize)
-        case "VHGT": VHGT = VHGTField(r, dataSize)
+        case "VHGT":
+            VHGT = VHGTField(r, dataSize)
         case "VCLR": VCLR = VNMLField(r, dataSize)
         case "VTEX": VTEX = VTEXField(r, dataSize, format)
         // TES3

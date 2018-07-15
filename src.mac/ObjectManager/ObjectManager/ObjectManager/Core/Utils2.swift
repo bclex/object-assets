@@ -49,16 +49,17 @@ public struct Float3: CustomDebugStringConvertible, CustomStringConvertible {
     }
     public var x, y, z: GLfloat
     public var description: String {
-            return "[X:\(x) Y:\(y) Z:\(z)]"
+        return "[X:\(x) Y:\(y) Z:\(z)]"
     }
     public var debugDescription: String {
-            return description
+        return description
     }
-
 }
+
 struct Float2 {
     var s, t: GLfloat
 }
+
 struct Vertex {
     var position: Float3
     var normal: Float3
@@ -179,19 +180,15 @@ public func calculateVectorNormal(_ A: SCNVector3, B: SCNVector3, C: SCNVector3)
     let AB = A - B
     let CB = C - B
     var cross = AB.cross(CB)
-
     cross = cross.normalized
     return cross
-
 }
 
 public func calculateVectorNormal(_ A: Float3, B: Float3, C: Float3) -> Float3 {
     let AB =  Vector3(from:B, to:A)
     let CB = Vector3(from: B, to:C)
     var cross = AB.cross(CB)
-
     cross = cross.normalized
     return cross.toFloat3()
-
 }
 // swiftlint:enable variable_name

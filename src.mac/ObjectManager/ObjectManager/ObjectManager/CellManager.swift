@@ -31,10 +31,10 @@ public class InRangeCellInfo {
 
 public class RefCellObjInfo {
     var refObj: Any
-    var referencedRecord: IRecord
-    var modelFilePath: String
+    var referencedRecord: IRecord?
+    var modelFilePath: String?
     
-    init(refObj: Any, referencedRecord: IRecord, modelFilePath: String) {
+    init(refObj: Any, referencedRecord: IRecord? = nil, modelFilePath: String? = nil) {
         self.refObj = refObj
         self.referencedRecord = referencedRecord
         self.modelFilePath = modelFilePath

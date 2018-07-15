@@ -109,8 +109,8 @@ public class CELLRecord: Record, ICellRecord {
     public var XOWNs = [XOWNGroup]() // Ownership
 
     // Referenced Object Data Grouping
-    public var InFRMR = false
-    public var RefObjs = [RefObj]()
+    public var inFRMR = false
+    public var refObjs = [RefObj]()
     var _lastRef: RefObj!
 
     public var isInterior: Bool { return Utils.containsBitFlags(UInt(DATA), 0x01) }
@@ -118,10 +118,10 @@ public class CELLRecord: Record, ICellRecord {
     //public var ambientLight: CGColor? { return XCLL != nil ? XCLL!.ambientColor.toColor32 : nil }
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
-        if !InFRMR && type == "FRMR" {
-            InFRMR = true
+        if !inFRMR && type == "FRMR" {
+            inFRMR = true
         }
-        if !InFRMR {
+        if !inFRMR {
             switch type {
             case "EDID",
                  "NAME": EDID = r.readSTRV(dataSize)
@@ -156,7 +156,7 @@ public class CELLRecord: Record, ICellRecord {
             switch type {
             // RefObjDataGroup sub-records
             case "FRMR":
-                _lastRef = RefObj(); RefObjs.append(_lastRef)
+                _lastRef = RefObj(); refObjs.append(_lastRef)
                 _lastRef.FRMR = r.readT(dataSize)
             case "NAME": _lastRef.EDID = r.readSTRV(dataSize)
             case "XSCL": _lastRef.XSCL = r.readT(dataSize)

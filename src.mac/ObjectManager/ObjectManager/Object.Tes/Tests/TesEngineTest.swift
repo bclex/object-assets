@@ -17,7 +17,7 @@ public class TesEngineTest: GameSegment {
     public init() {
     }
     
-    public func start() {
+    public func start(player: GameObject) {
         let assetUrl = URL(string: "game://Morrowind/Morrowind.bsa")
         let dataUrl = URL(string: "game://Morrowind/Morrowind.esm")
     
@@ -26,6 +26,12 @@ public class TesEngineTest: GameSegment {
         Data = assetManager.getDataPack(dataUrl)
         
         Engine = BaseEngine(assetManager: assetManager, asset: Asset!, data: Data!)
+//        Engine.spawnPlayer(player: player, gridId: Vector3Int(-2, -9, 0), position: Vector3(-137.94, 2.30, -1037.6))
+        
+        let newX = 23 * ConvertUtils.exteriorCellSideLengthInMeters
+        let newZ = 5 * ConvertUtils.exteriorCellSideLengthInMeters
+        Engine.spawnPlayer(player: player, position: Vector3(newX, 2.30, newZ))
+        
     }
     
     public func onDestroy() {

@@ -19,6 +19,19 @@ public extension Sequence where Element: FloatingPoint {
     }
 }
 
+public extension Sequence where Iterator.Element == [Float] {
+    public func getExtrema() -> (min: Float, max: Float) {
+        var extrema = (min: Float.infinity, max: -Float.infinity)
+        for (_, element) in self.enumerated() {
+            for element2 in element {
+                extrema.min = Swift.min(extrema.min, element2)
+                extrema.max = Swift.max(extrema.max, element2)
+            }
+        }
+        return extrema
+    }
+}
+
 public class SequenceUtils {
     public static func flip2DSubArrayVertically(_ data: inout Data, offsetBy: Int, rows: Int, bytesPerRow: Int) {
         assert(offsetBy >= 0 && rows >= 0 && bytesPerRow >= 0 && (offsetBy + (rows * bytesPerRow)) <= data.count)

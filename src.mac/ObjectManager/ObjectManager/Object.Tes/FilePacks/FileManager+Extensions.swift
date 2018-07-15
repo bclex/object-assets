@@ -32,7 +32,7 @@ extension FileManager {
             debugPrint("Game: \(key)")
             return r
         }
-        debugPrint("TES Installation(s):")
+        //debugPrint("TES Installation(s):")
         let documentsURL = try! fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         for x in _knownkeys {
             let url = documentsURL.appendingPathComponent(x.value)
@@ -53,8 +53,7 @@ extension FileManager {
         return fileExists(atPath: url.path) ? url : nil
     }
 
-    public func getFilePaths(searchPattern: String, for game: GameId) -> [URL]?
-    {
+    public func getFilePaths(searchPattern: String, for game: GameId) -> [URL]? {
         guard let fileDirectory = FileManager._fileDirectories[game] else {
             return nil
         }

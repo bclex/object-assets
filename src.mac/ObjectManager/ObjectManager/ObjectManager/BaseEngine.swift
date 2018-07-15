@@ -32,40 +32,41 @@ public class BaseEngine {
 
     // MARK: Player Spawn
 
-    var _currentWorld: Int!
+    var _currentWorld = 0
     var _currentCell: ICellRecord? = nil
-    // var _playerTransform: Transform 
-    // var _playerComponent: PlayerComponent
-    var _playerCameraObj: GameObject!
+    var _playerCamera: GameObject? = nil
 
     @discardableResult
-    func createPlayer(playerPrefab: GameObject, position: Vector3, playerCamera: inout GameObject) -> GameObject {
-        let player = GameObject.find(withTag: "Player")
-        if player == nil {
-//            player = GameObject.instantiate(playerPrefab)
-//            player!.name = "Player"
-        }
-        player!.position = position
-        
-//         _playerTransform = player.GetComponent<Transform>()
-//         var cameraInPlayer = player.GetComponentInChildren<Camera>();
-//         if (cameraInPlayer == null)
-//             throw new InvalidOperationException("Player:Camera missing");
-//         playerCamera = cameraInPlayer.gameObject;
-//         _playerComponent = player.GetComponent<PlayerComponent>();
-//         //_underwaterEffect = playerCamera.GetComponent<UnderwaterEffect>();
-        return player!
+    func createPlayer(player: GameObject, position: Vector3, playerCamera: inout GameObject?) -> GameObject {
+//        let player = GameObject.find(withTag: "Player")
+//        if player == nil {
+////            player = GameObject.instantiate(playerPrefab)
+////            player!.name = "Player"
+//        }
+        player.position = position
+        playerCamera = player
+        return player
      }
     
-    public func spawnPlayer(playerPrefab: GameObject, gridId: Vector3Int, position: Vector3) {
-        _currentWorld = gridId.z
-        _currentCell = data.findCellRecord(gridId)
+    public func spawnPlayer(player: GameObject, position: Vector3) {
+        let cellId = cellManager.getCellId(point: position, world: _currentWorld)
+        _currentCell = data.findCellRecord(cellId)
         assert(_currentCell != nil)
-        createPlayer(playerPrefab: playerPrefab, position: position, playerCamera: &_playerCameraObj)
-        if let cellInfo = cellManager.startCreatingCell(cellId: gridId) {
+        createPlayer(player: player, position: position, playerCamera: &_playerCamera)
+        if let cellInfo = cellManager.startCreatingCell(cellId: cellId) {
             loadBalancer.waitForTask(taskCoroutine: cellInfo.objectsCreationCoroutine)
         }
-        if gridId.z != -1 { onExteriorCell(cell: _currentCell!) }
+        if cellId.z != -1 { onExteriorCell(cell: _currentCell!) }
+        else { onInteriorCell(cell: _currentCell!) }
+    }
+    
+    public func spawnPlayerAndUpdate(player: GameObject, position: Vector3) {
+        let cellId = cellManager.getCellId(point: position, world: _currentWorld)
+        _currentCell = data.findCellRecord(cellId)
+        assert(_currentCell != nil)
+        createPlayer(player: player, position: position, playerCamera: &_playerCamera)
+        cellManager.updateCells(currentPosition: _playerCamera!.position, world: _currentWorld, immediate: true, cellRadiusOverride: BaseEngine.cellRadiusOnLoad)
+        if cellId.z != -1 { onExteriorCell(cell: _currentCell!) }
         else { onInteriorCell(cell: _currentCell!) }
     }
 
@@ -79,7 +80,7 @@ public class BaseEngine {
     func update() {
          // The current cell can be null if the player is outside of the defined game world
         if _currentCell == nil || !_currentCell!.isInterior {
-            cellManager.updateCells(currentPosition: _playerCameraObj!.position, world: _currentWorld,
+            cellManager.updateCells(currentPosition: _playerCamera!.position, world: _currentWorld,
                 immediate: false, cellRadiusOverride: -1)
         }
         loadBalancer.runTasks(desiredWorkTime: BaseEngine.desiredWorkTimePerFrame)

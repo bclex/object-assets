@@ -8,6 +8,12 @@
 
 import SceneKit
 
+public typealias SplatPrototype = (
+    texture: Texture2D,
+    smoothness: Int,
+    metallic: Int,
+    tileSize: Vector2Int)
+
 public class GameObject: SCNNode {
     public static func find(withTag: String) -> GameObject? {
         return nil

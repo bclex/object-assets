@@ -15,7 +15,7 @@ public typealias Vector2Int = (x: Int, y: Int)
 
 // MARK Vector3
 
-public struct Vector3Int: Hashable {
+public struct Vector3Int: Hashable, CustomDebugStringConvertible, CustomStringConvertible {
     public let x: Int
     public let y: Int
     public let z: Int
@@ -26,6 +26,9 @@ public struct Vector3Int: Hashable {
         self.y = y
         self.z = z
     }
+    
+    public var description: String { return "[X:\(x) Y:\(y) Z:\(z)]" }
+    public var debugDescription: String { return description }
 }
 
 public typealias Vector3Float = (x: Float, y: Float, z: Float)

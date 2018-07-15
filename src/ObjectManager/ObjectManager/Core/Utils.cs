@@ -128,7 +128,7 @@ namespace OA.Core
             UnityEngine.Debug.Assert(min0 <= max0 && min1 <= max1 && x >= min0 && x <= max0);
             var range0 = max0 - min0;
             var range1 = max1 - min1;
-            var xPct = (x - min0) / range0;
+            var xPct = range0 != 0 ? (x - min0) / range0 : 0;
             return min1 + (xPct * range1);
         }
     }

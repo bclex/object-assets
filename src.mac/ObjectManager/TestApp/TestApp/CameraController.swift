@@ -16,7 +16,7 @@ class CameraController: NSObject {
     }
 
     let camera: SCNCamera
-    let cameraNode: SCNNode
+    let cameraNode: GameObject
 
     var lookNode: SCNNode = SCNNode()
     var lookPoint: Vector3 {
@@ -31,7 +31,7 @@ class CameraController: NSObject {
     init(scene: SCNScene) {
         camera = SCNCamera()
         camera.automaticallyAdjustsZRange = true
-        cameraNode = SCNNode()
+        cameraNode = GameObject()
         cameraNode.position = Vector3(x: 0, y: 50, z: 75)
         cameraNode.camera = camera
         cameraNode.constraints = [SCNLookAtConstraint(target: lookNode)]

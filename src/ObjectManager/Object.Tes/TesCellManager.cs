@@ -93,10 +93,10 @@ namespace OA.Tes
             // Update LODs.
             foreach (var x in _cellObjects)
             {
-                var cellIndices = x.Key;
+                var cellId = x.Key;
                 var cellInfo = x.Value;
-                var cellXDistance = Mathf.Abs(cameraCellId.x - cellIndices.x);
-                var cellYDistance = Mathf.Abs(cameraCellId.y - cellIndices.y);
+                var cellXDistance = Mathf.Abs(cameraCellId.x - cellId.x);
+                var cellYDistance = Mathf.Abs(cameraCellId.y - cellId.y);
                 var cellDistance = Mathf.Max(cellXDistance, cellYDistance);
                 if (cellDistance <= _detailRadius)
                 {
@@ -385,9 +385,9 @@ namespace OA.Tes
             for (var y = 0; y < LAND_SIDELENGTH_IN_SAMPLES; y++)
                 for (var x = 0; x < LAND_SIDELENGTH_IN_SAMPLES; x++)
                     heights[y, x] = Utils.ChangeRange(heights[y, x], minHeight, maxHeight, 0, 1);
+            
             // Texture the terrain.
             SplatPrototype[] splatPrototypes = null;
-            float[,,] alphaMap = null;
             const int LAND_TEXTUREINDICES = 256;
             var textureIndices = land.VTEX != null ? land.VTEX.Value.TextureIndices : new uint[LAND_TEXTUREINDICES];
             // Create splat prototypes.
@@ -425,9 +425,11 @@ namespace OA.Tes
                 }
             }
             splatPrototypes = splatPrototypeList.ToArray();
+
             // Create the alpha map.
             var VTEX_ROWS = 16;
             var VTEX_COLUMNS = VTEX_ROWS;
+            float[,,] alphaMap = null;
             alphaMap = new float[VTEX_ROWS, VTEX_COLUMNS, splatPrototypes.Length];
             for (var y = 0; y < VTEX_ROWS; y++)
             {
@@ -442,8 +444,10 @@ namespace OA.Tes
                     else alphaMap[y, x, 0] = 1;
                 }
             }
+
             // Yield before creating the terrain GameObject because it takes a while.
             yield return null;
+            
             // Create the terrain.
             var heightRange = maxHeight - minHeight;
             var terrainPosition = new Vector3(ConvertUtils.ExteriorCellSideLengthInMeters * land.GridId.x, minHeight / ConvertUtils.MeterInUnits, ConvertUtils.ExteriorCellSideLengthInMeters * land.GridId.y);

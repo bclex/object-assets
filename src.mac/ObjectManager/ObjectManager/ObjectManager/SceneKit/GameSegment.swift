@@ -7,7 +7,7 @@
 //
 
 public protocol GameSegment {
-    func start()
+    func start(player: GameObject)
     func onDestroy()
     func update()
 }

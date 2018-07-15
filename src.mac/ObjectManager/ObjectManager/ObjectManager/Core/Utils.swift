@@ -95,7 +95,7 @@ public class Utils {
         assert(min0 <= max0 && min1 <= max1 && x >= min0 && x <= max0)
         let range0 = max0 - min0
         let range1 = max1 - min1
-        let xpct = (x - min0) / range0
+        let xpct = range0 != 0 ? (x - min0) / range0 : 0
         return min1 + (xpct * range1)
     }
 }

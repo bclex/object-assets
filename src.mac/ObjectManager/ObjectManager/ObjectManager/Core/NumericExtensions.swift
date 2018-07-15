@@ -16,7 +16,7 @@ public extension UInt8 {
 
 public extension Float {
     public static let rad2Deg = 0.01745329
-
+    
     public func flooredAsInt() -> Int {
         return Int(self.rounded(.down))
     }
@@ -33,5 +33,9 @@ public extension FloatingPoint {
     
     public static func lerp(_ a: Self, _ b: Self, t: Self) -> Self {
         return a + ((b - a) * t.clamped())
+    }
+    
+    public static func approximately(_ a: Self, _ b: Self) -> Bool {
+        return true
     }
 }
