@@ -288,7 +288,7 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
                 continue
             }
             // HACK to limit cells loading
-            if recordHeader.type == "CELL" && RecordGroup.cellsLoaded > 10 {
+            if (recordHeader.type == "CELL" && RecordGroup.cellsLoaded > 20) {
                 _r.baseStream.position += UInt64(recordHeader.dataSize)
                 continue
             }
@@ -298,9 +298,7 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
             }
             readRecord(record, compressed: recordHeader.compressed)
             records.append(record)
-            if recordHeader.type == "CELL" {
-                RecordGroup.cellsLoaded += 1
-            }
+            if recordHeader.type == "CELL" { RecordGroup.cellsLoaded += 1 }
         }
     }
 

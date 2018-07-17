@@ -51,7 +51,7 @@ public enum GameId: Int, CustomStringConvertible {
 public class TesAssetManager: IAssetManager {    
     public func getAssetPack(_ url: URL?) -> IAssetPack? {
         guard let url = url, let scheme = url.scheme else {
-            fatalError("should not happen")
+            fatalError("url should not be nil")
         }
         debugPrint("\(url)")
         switch scheme {
@@ -70,7 +70,7 @@ public class TesAssetManager: IAssetManager {
     
     public func getDataPack(_ url: URL?) -> IDataPack? {
         guard let url = url, let scheme = url.scheme else {
-            fatalError("should not happen")
+            fatalError("url should not be nil")
         }
         debugPrint("\(url)")
         switch scheme {

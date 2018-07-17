@@ -253,7 +253,7 @@ public class TesCellManager: ICellManager {
         }
         var textureFilePaths = [String]()
         for i in Set(land.VTEX!.textureIndices) {
-            let textureIndex = Int64(i - 1)
+            let textureIndex = Int64(i) - 1
             if textureIndex < 0 {
                 textureFilePaths.append(_defaultLandTextureFilePath)
                 continue
@@ -279,7 +279,7 @@ public class TesCellManager: ICellManager {
             switch state {
             case 0:
                 // Don't create anything if the LAND doesn't have height data.
-                if land.VHGT == nil {
+                if land.VTEX == nil || land.VHGT == nil {
                     return nil
                 }
                 // Return before doing any work to provide an IEnumerator handle to the coroutine.
@@ -320,8 +320,8 @@ public class TesCellManager: ICellManager {
                     guard let i = textureIndicesEnumerator.next() else {
                         break
                     }
-                    let textureIndex = Int64(i - 1)
-                    guard texInd2SplatInd[textureIndex] != nil else {
+                    let textureIndex = Int64(i) - 1
+                    guard texInd2SplatInd[textureIndex] == nil else {
                         continue
                     }
                     // Load terrain texture.
@@ -372,8 +372,7 @@ public class TesCellManager: ICellManager {
                 let heightRange = extrema.max - extrema.min
                 let terrainPosition = Vector3(ConvertUtils.exteriorCellSideLengthInMeters * Float(land.gridId.x), extrema.min / ConvertUtils.meterInUnits, ConvertUtils.exteriorCellSideLengthInMeters * Float(land.gridId.y))
                 let heightSampleDistance = ConvertUtils.exteriorCellSideLengthInMeters / Float(LAND_SIDELENGTH_IN_SAMPLES - 1)
-                var terrain = GameObjectUtils.createTerrain(offset: -1, heightPercents: heights, maxHeight: heightRange / ConvertUtils.meterInUnits, heightSampleDistance: heightSampleDistance, splatPrototypes: splatPrototypes, alphaMap: alphaMap, position: terrainPosition)
-//                terrain.GetComponent<Terrain>().materialType = Terrain.MaterialType.BuiltInLegacyDiffuse;
+                _ = GameObjectUtils.createTerrain(offset: -1, heightPercents: heights, maxHeight: heightRange / ConvertUtils.meterInUnits, heightSampleDistance: heightSampleDistance, splatPrototypes: splatPrototypes, alphaMap: alphaMap, position: terrainPosition)
 //                terrain.transform.parent = parent.transform
 //                terrain.isStatic = true
                 return nil
