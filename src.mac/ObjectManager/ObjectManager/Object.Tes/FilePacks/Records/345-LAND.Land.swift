@@ -40,14 +40,14 @@ public class LANDRecord: Record {
 
     public struct VTEXField {
         public var textureIndicesT3: [UInt16]!
-        public var textureIndices: [UInt32]!
+        public var textureIndicesT4: [UInt32]!
 
         init(_ r: BinaryReader, _ dataSize: Int, _ format: GameFormatId) {
             guard format != .TES3 else {
                 textureIndicesT3 = r.readTArray(dataSize, count: dataSize >> 1)
                 return
             }
-            textureIndices = r.readTArray(dataSize, count: dataSize >> 2)
+            textureIndicesT4 = r.readTArray(dataSize, count: dataSize >> 2)
         }
     }
 

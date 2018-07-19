@@ -252,7 +252,7 @@ public class TesCellManager: ICellManager {
             return nil
         }
         var textureFilePaths = [String]()
-        for i in Set(land.VTEX!.textureIndices) {
+        for i in Set(land.VTEX!.textureIndicesT3) {
             let textureIndex = Int64(i) - 1
             if textureIndex < 0 {
                 textureFilePaths.append(_defaultLandTextureFilePath)
@@ -271,8 +271,8 @@ public class TesCellManager: ICellManager {
         var heights: [[Float]]!
         var extrema: (min: Float, max: Float)!
         var splatPrototypes: [SplatPrototype]!
-        var textureIndices: [UInt32]!
-        var textureIndicesEnumerator: IndexingIterator<[UInt32]>!
+        var textureIndicesT3: [UInt16]!
+        var textureIndicesT3Enumerator: IndexingIterator<[UInt16]>!
         var texInd2SplatInd: [Int64 : Int]!
         var alphaMap: [[[Float]]]!
         return CoTask(AnyIterator { ()->Int? in
@@ -310,14 +310,14 @@ public class TesCellManager: ICellManager {
                 // Texture the terrain.
                 splatPrototypes = [SplatPrototype]()
                 let LAND_TEXTUREINDICES = 256
-                textureIndices = land.VTEX?.textureIndices ?? Array(repeating: UInt32(0), count: LAND_TEXTUREINDICES)
-                textureIndicesEnumerator = textureIndices.makeIterator()
+                textureIndicesT3 = land.VTEX?.textureIndicesT3 ?? Array(repeating: UInt16(0), count: LAND_TEXTUREINDICES)
+                textureIndicesT3Enumerator = textureIndicesT3.makeIterator()
                 // Create splat prototypes.
                 texInd2SplatInd = [Int64 : Int]()
                 state += 1
             case 2:
                 while true {
-                    guard let i = textureIndicesEnumerator.next() else {
+                    guard let i = textureIndicesT3Enumerator.next() else {
                         break
                     }
                     let textureIndex = Int64(i) - 1
@@ -360,7 +360,7 @@ public class TesCellManager: ICellManager {
                     for x in 0..<VTEX_COLUMNS {
                         let xMajor = x / 4
                         let xMinor = x - (xMajor * 4)
-                        let texIndex = Int64(textureIndices[(yMajor * 64) + (xMajor * 16) + (yMinor * 4) + xMinor] - 1)
+                        let texIndex = Int64(textureIndicesT3[(yMajor * 64) + (xMajor * 16) + (yMinor * 4) + xMinor] - 1)
                         if texIndex >= 0 { let splatIndex = texInd2SplatInd![texIndex]!; alphaMap[y][x][splatIndex] = 1 }
                         else { alphaMap[y][x][0] = 1 }
                     }

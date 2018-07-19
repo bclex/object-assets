@@ -119,8 +119,7 @@ public struct DDSHeader { //: DDS_HEADER
         dwPitchOrLinearSize = r.readLEUInt32()
         dwDepth = r.readLEUInt32()
         dwMipMapCount = r.readLEUInt32()
-        dwReserved1 = [UInt32](); dwReserved1.reserveCapacity(11)
-        for _ in 0..<11 { dwReserved1.append(r.readLEUInt32()) }
+        dwReserved1 = r.readTArray(11 << 2, count: 11)
         ddspf = DDSPixelFormat(r)
         dwCaps = DDSCaps(rawValue: r.readLEUInt32())
         guard dwCaps.contains(.texture) else {

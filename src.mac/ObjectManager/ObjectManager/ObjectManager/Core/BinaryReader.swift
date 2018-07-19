@@ -54,7 +54,7 @@ public class DataBaseStream: BaseStream {
     
     public func readData(ofLength: Int) -> Data {
         let startIndex = Int(position)
-        //let endIndex = startIndex + ofLength
+        position += UInt64(ofLength)
         return data[startIndex..<(startIndex + ofLength)]
     }
 }

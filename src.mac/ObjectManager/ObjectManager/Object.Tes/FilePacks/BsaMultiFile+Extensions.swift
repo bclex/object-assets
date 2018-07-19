@@ -18,7 +18,7 @@ extension BsaMultiFile {
         var task = Task<Texture2DInfo?>()
         DispatchQueue.global().async {
             let fileExtension = URL(string: filePath)!.pathExtension
-            guard fileExtension.lowercased() == ".dds" else {
+            guard fileExtension.lowercased() == "dds" else {
                 fatalError("Unsupported texture type: \(fileExtension)")
             }
             let r = BinaryReader(DataBaseStream(data: fileData))

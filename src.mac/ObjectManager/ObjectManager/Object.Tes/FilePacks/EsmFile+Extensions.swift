@@ -30,6 +30,12 @@ extension EsmFile {
                 .map { (key: $0.gridId, value: $0) })
             _CELLsByName = Dictionary(uniqueKeysWithValues: cells.filter { $0.isInterior }
                 .map { (key: $0.EDID, value: $0) })
+//            for a in _CELLsById.keys {
+//                let b = _LANDsById[a]
+//                if b?.VTEX != nil {
+//                    debugPrint("\(a)")
+//                }
+//            }
             return
         }
         fatalError("NotImplemented")
