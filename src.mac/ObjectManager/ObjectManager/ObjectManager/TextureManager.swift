@@ -37,7 +37,7 @@ public class TextureManager {
     }
 
     func loadTextureInfo(_ texturePath: String) -> Texture2DInfo? {
-        assert(_cachedTextures[texturePath] != nil, "Invalid parameter")
+        assert(_cachedTextures[texturePath] == nil, "Invalid parameter")
         preloadTextureFileAsync(texturePath)
         let textureInfo = _textureFilePreloadTasks[texturePath]!.result
         _textureFilePreloadTasks.removeValue(forKey: texturePath)

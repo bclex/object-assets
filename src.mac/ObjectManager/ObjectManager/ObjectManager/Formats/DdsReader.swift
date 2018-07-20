@@ -262,11 +262,11 @@ public enum DXGIFormat: UInt8 { //: DXGI_FORMAT
 }
 
 public class DdsReader {
-    public static func loadDDSTexture(filePath: String, flipVertically: Bool = false) -> Texture2DInfo {
-        let r = BinaryReader(FileBaseStream(path: filePath)!)
-        defer { r.close() }
-        return loadDDSTexture(r, flipVertically: flipVertically)
-    }
+//    public static func loadDDSTexture(filePath: String, flipVertically: Bool = false) -> Texture2DInfo {
+//        let r = BinaryReader(FileBaseStream(path: filePath)!)
+//        defer { r.close() }
+//        return loadDDSTexture(r, flipVertically: flipVertically)
+//    }
 
     public static func loadDDSTexture(_ r: BinaryReader, flipVertically: Bool = false) -> Texture2DInfo {
         // Check the magic string.
@@ -277,24 +277,17 @@ public class DdsReader {
         // Deserialize the DDS file header.
         let header = DDSHeader(r)
         // Figure out the texture format and load the texture data.
-        var hasMipmaps = false
-        var ddsMipmapLevelCount = 0
-        var textureFormat = TextureFormat(rawValue: 0)
-        var bytesPerPixel = 0
-        var textureData = Data()
-        extractDDSTextureFormatAndData(
-            header, r,
-            hasMipmaps: &hasMipmaps, ddsMipmapLevelCount: &ddsMipmapLevelCount,
-            textureFormat: &textureFormat, bytesPerPixel: &bytesPerPixel, textureData: &textureData)
+        let dds = extractDDSTextureFormatAndData(header, r)
         // Post-process the texture to generate missing mipmaps and possibly flip it vertically.
+        var textureData = dds.textureData
         postProcessDDSTexture(
-            width: Int(header.dwWidth), height: Int(header.dwHeight), bytesPerPixel: bytesPerPixel,
-            hasMipmaps: hasMipmaps, ddsMipmapLevelCount: ddsMipmapLevelCount,
+            width: Int(header.dwWidth), height: Int(header.dwHeight), bytesPerPixel: dds.bytesPerPixel,
+            hasMipmaps: dds.hasMipmaps, ddsMipmapLevelCount: dds.ddsMipmapLevelCount,
             data: &textureData, flipVertically: flipVertically)
         return Texture2DInfo(
             width: Int(header.dwWidth), height: Int(header.dwHeight),
-            format: textureFormat, hasMipmaps: hasMipmaps,
-            bytesPerPixel: bytesPerPixel, rawData: textureData)
+            format: dds.textureFormat, hasMipmaps: dds.hasMipmaps,
+            bytesPerPixel: dds.bytesPerPixel, rawData: textureData)
     }
 
     static func decodeDXT1TexelBlock(_ r: BinaryReader, colorTable: [Color]) -> [Color32] {
@@ -473,12 +466,14 @@ public class DdsReader {
     static func decodeDXT5ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> Data {
         return decodeDXTToARGB(dxtVersion: 5, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
 
-    static func extractDDSTextureFormatAndData(_ header: DDSHeader, _ r: BinaryReader, hasMipmaps: inout Bool, ddsMipmapLevelCount: inout Int,
-                                               textureFormat: inout TextureFormat, bytesPerPixel: inout Int, textureData: inout Data) {
-        hasMipmaps = header.dwCaps.contains(.mipmap)
+    static func extractDDSTextureFormatAndData(_ header: DDSHeader, _ r: BinaryReader) -> (hasMipmaps: Bool, ddsMipmapLevelCount: Int, textureFormat: TextureFormat, bytesPerPixel: Int, textureData: Data) {
+        let hasMipmaps = header.dwCaps.contains(.mipmap)
         // Non-mipmapped textures still have one mipmap level: the texture itself.
-        ddsMipmapLevelCount = hasMipmaps ? Int(header.dwMipMapCount) : 1
+        let ddsMipmapLevelCount = hasMipmaps ? Int(header.dwMipMapCount) : 1
         // If the DDS file contains uncompressed data.
+        var textureFormat: TextureFormat
+        var bytesPerPixel: Int
+        var textureData: Data
         if header.ddspf.dwFlags.contains(.rgb) {
             // some permutation of RGB
             guard header.ddspf.dwFlags.contains(.alphaPixels) else {
@@ -498,7 +493,6 @@ public class DdsReader {
             else if header.ddspf.dwABitMask == 0x000000FF && header.ddspf.dwRBitMask == 0x0000FF00 &&
                 header.ddspf.dwGBitMask == 0x00FF0000 && header.ddspf.dwBBitMask == 0xFF000000 {
                 textureFormat = CIFormat.ARGB8
-                
                 bytesPerPixel = 4
             }
             else { fatalError("Unsupported DDS file pixel format.") }
@@ -527,6 +521,8 @@ public class DdsReader {
             textureData = decodeDXT5ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
         }
         else { fatalError("Unsupported DDS file pixel format.") }
+            
+        return (hasMipmaps: hasMipmaps, ddsMipmapLevelCount: ddsMipmapLevelCount, textureFormat: textureFormat, bytesPerPixel: bytesPerPixel, textureData: textureData)
     }
 
     static func postProcessDDSTexture(width: Int, height: Int, bytesPerPixel: Int, hasMipmaps: Bool, ddsMipmapLevelCount: Int, data: inout Data, flipVertically: Bool) {

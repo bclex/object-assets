@@ -360,7 +360,7 @@ public class TesCellManager: ICellManager {
                     for x in 0..<VTEX_COLUMNS {
                         let xMajor = x / 4
                         let xMinor = x - (xMajor * 4)
-                        let texIndex = Int64(textureIndicesT3[(yMajor * 64) + (xMajor * 16) + (yMinor * 4) + xMinor] - 1)
+                        let texIndex = Int64(textureIndicesT3[(yMajor * 64) + (xMajor * 16) + (yMinor * 4) + xMinor]) - 1
                         if texIndex >= 0 { let splatIndex = texInd2SplatInd![texIndex]!; alphaMap[y][x][splatIndex] = 1 }
                         else { alphaMap[y][x][0] = 1 }
                     }
