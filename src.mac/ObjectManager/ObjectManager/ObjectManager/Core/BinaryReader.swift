@@ -213,7 +213,6 @@ public class BinaryReader {
         }
     }
     
-    
     // MARK: A
     // https://stackoverflow.com/questions/41574498/how-to-use-unsafemutablerawpointer-to-fill-an-array
     // https://github.com/apple/swift-evolution/blob/master/proposals/0138-unsaferawbufferpointer.md

@@ -277,8 +277,8 @@ namespace OA.Formats
         {
             // Create the color table.
             var colorTable = new Color[4];
-            colorTable[0] = ColorUtils.B565ToColor(r.ReadLEUInt16());
-            colorTable[1] = ColorUtils.B565ToColor(r.ReadLEUInt16());
+            colorTable[0] = ColorEx.B565ToColor(r.ReadLEUInt16());
+            colorTable[1] = ColorEx.B565ToColor(r.ReadLEUInt16());
             if (!containsAlpha)
             {
                 colorTable[2] = Color.Lerp(colorTable[0], colorTable[1], 1.0f / 3);
@@ -317,8 +317,8 @@ namespace OA.Formats
             }
             // Create the color table.
             var colorTable = new Color[4];
-            colorTable[0] = ColorUtils.B565ToColor(r.ReadLEUInt16());
-            colorTable[1] = ColorUtils.B565ToColor(r.ReadLEUInt16());
+            colorTable[0] = ColorEx.B565ToColor(r.ReadLEUInt16());
+            colorTable[1] = ColorEx.B565ToColor(r.ReadLEUInt16());
             colorTable[2] = Color.Lerp(colorTable[0], colorTable[1], 1.0f / 3);
             colorTable[3] = Color.Lerp(colorTable[0], colorTable[1], 2.0f / 3);
             // Calculate pixel colors.
@@ -378,8 +378,8 @@ namespace OA.Formats
             alphaIndices[15] = (uint)Utils.GetBits(0, bitsPerAlphaIndex, alphaIndexBytesRow1);
             // Create the color table.
             var colorTable = new Color[4];
-            colorTable[0] = ColorUtils.B565ToColor(r.ReadLEUInt16());
-            colorTable[1] = ColorUtils.B565ToColor(r.ReadLEUInt16());
+            colorTable[0] = ColorEx.B565ToColor(r.ReadLEUInt16());
+            colorTable[1] = ColorEx.B565ToColor(r.ReadLEUInt16());
             colorTable[2] = Color.Lerp(colorTable[0], colorTable[1], 1.0f / 3);
             colorTable[3] = Color.Lerp(colorTable[0], colorTable[1], 2.0f / 3);
             // Calculate pixel colors.
@@ -550,7 +550,7 @@ namespace OA.Formats
                 var mipMapDataSize = mipMapLevelWidth * mipMapLevelHeight * bytesPerPixel;
                 // If the DDS file contains the current mipmap level, flip it vertically if necessary.
                 if (flipVertically && mipMapLevelIndex < DDSMipmapLevelCount)
-                    ArrayUtils.Flip2DSubArrayVertically(data, mipMapLevelDataOffset, mipMapLevelHeight, mipMapLevelWidth * bytesPerPixel);
+                    SequenceEx.Flip2DSubArrayVertically(data, mipMapLevelDataOffset, mipMapLevelHeight, mipMapLevelWidth * bytesPerPixel);
                 // Break after optionally flipping the first mipmap level if the DDS texture doesn't have mipmaps.
                 if (!hasMipmaps)
                     break;

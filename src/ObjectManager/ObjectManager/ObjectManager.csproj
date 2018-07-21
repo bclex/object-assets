@@ -72,10 +72,9 @@
     <Compile Include="Configuration\BaseSettings.cs" />
     <Compile Include="Configuration\SettingsFile.cs" />
     <Compile Include="Configuration\TextSettingsFileWriter.cs" />
-    <Compile Include="Core\ArrayRange.cs" />
-    <Compile Include="Core\ArrayUtils.cs" />
+    <Compile Include="Core\SequenceExtensions.cs" />
     <Compile Include="Core\AudioUtils.cs" />
-    <Compile Include="Core\ColorUtils.cs" />
+    <Compile Include="Core\ColorExtensions.cs" />
     <Compile Include="Core\Data\Pair.cs" />
     <Compile Include="Core\Diagnostics\Guard.cs" />
     <Compile Include="Core\Diagnostics\Metrics.cs" />

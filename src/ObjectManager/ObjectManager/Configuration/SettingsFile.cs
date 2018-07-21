@@ -58,7 +58,7 @@ namespace OA.Configuration
             }
         }
 
-        public void Load()
+        public SettingsFile Load()
         {
             try
             {
@@ -79,6 +79,7 @@ namespace OA.Configuration
             }
             catch (Exception e) { Utils.Exception(e); }
             _saveTimer.Enabled = true;
+            return this;
         }
 
         private bool LoadFromFile(string fileName)

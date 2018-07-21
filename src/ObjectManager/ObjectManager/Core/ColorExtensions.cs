@@ -2,7 +2,7 @@
 
 namespace OA.Core
 {
-    public static class ColorUtils
+    public static class ColorEx
     {
         //public static Color B8G8R8ToColor(uint B8G8R8)
         //{

@@ -76,8 +76,8 @@ namespace OA.Tes.FilePacks.Records
                 case "ICON":
                 case "ITEX": ICON = new FILEField(r, dataSize); return true;
                 case "INDX": INDXs.Add(new CLOTRecord.INDXFieldGroup { INDX = new INTVField(r, dataSize) }); return true;
-                case "BNAM": ArrayUtils.Last(INDXs).BNAM = new STRVField(r, dataSize); return true;
-                case "CNAM": ArrayUtils.Last(INDXs).CNAM = new STRVField(r, dataSize); return true;
+                case "BNAM": INDXs.Last().BNAM = new STRVField(r, dataSize); return true;
+                case "CNAM": INDXs.Last().CNAM = new STRVField(r, dataSize); return true;
                 case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
                 case "ENAM": ENAM = new FMIDField<ENCHRecord>(r, dataSize); return true;
                 case "BMDT": BMDT = new UI32Field(r, dataSize); return true;

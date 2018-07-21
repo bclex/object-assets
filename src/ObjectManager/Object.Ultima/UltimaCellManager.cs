@@ -369,7 +369,7 @@ namespace OA.Ultima
                     heights[y, x] = height * VHGTIncrementToUnits;
                 }
             // Change the heights to percentages.
-            ArrayUtils.GetExtrema(heights, out float minHeight, out float maxHeight);
+            heights.GetExtrema(out float minHeight, out float maxHeight);
             for (var y = 0; y < LAND_SIDELENGTH; y++)
                 for (var x = 0; x < LAND_SIDELENGTH; x++)
                     heights[y, x] = Utils.ChangeRange(heights[y, x], minHeight, maxHeight, 0, 1);

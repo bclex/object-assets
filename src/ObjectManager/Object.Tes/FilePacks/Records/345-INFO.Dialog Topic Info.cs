@@ -145,8 +145,8 @@ namespace OA.Tes.FilePacks.Records
                 case "TPIC": TES4.TPIC = new FMIDField<DIALRecord>(r, dataSize); return true;
                 case "NAME": TES4.NAMEs.Add(new FMIDField<DIALRecord>(r, dataSize)); return true;
                 case "TRDT": TES4.TRDTs.Add(new TRDTField(r, dataSize)); return true;
-                case "NAM1": ArrayUtils.Last(TES4.TRDTs).NAM1Field(r, dataSize); return true;
-                case "NAM2": ArrayUtils.Last(TES4.TRDTs).NAM2Field(r, dataSize); return true;
+                case "NAM1": TES4.TRDTs.Last().NAM1Field(r, dataSize); return true;
+                case "NAM2": TES4.TRDTs.Last().NAM2Field(r, dataSize); return true;
                 case "CTDA":
                 case "CTDT": TES4.CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, format)); return true;
                 case "TCLT": TES4.TCLTs.Add(new FMIDField<DIALRecord>(r, dataSize)); return true;

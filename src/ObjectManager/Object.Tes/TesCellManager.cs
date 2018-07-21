@@ -381,7 +381,7 @@ namespace OA.Tes
                 }
             }
             // Change the heights to percentages.
-            ArrayUtils.GetExtrema(heights, out float minHeight, out float maxHeight);
+            heights.GetExtrema(out var minHeight, out var maxHeight);
             for (var y = 0; y < LAND_SIDELENGTH_IN_SAMPLES; y++)
                 for (var x = 0; x < LAND_SIDELENGTH_IN_SAMPLES; x++)
                     heights[y, x] = Utils.ChangeRange(heights[y, x], minHeight, maxHeight, 0, 1);

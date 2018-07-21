@@ -104,7 +104,7 @@ namespace OA.Core
             {
                 case ASCIIFormat.Raw: return Encoding.ASCII.GetString(bytes);
                 case ASCIIFormat.PossiblyNullTerminated:
-                    var bytesIdx = ArrayUtils.Last(bytes) != 0 ? bytes.Length : bytes.Length - 1;
+                    var bytesIdx = bytes.Last() != 0 ? bytes.Length : bytes.Length - 1;
                     return Encoding.ASCII.GetString(bytes, 0, bytesIdx);
                 case ASCIIFormat.ZeroPadded:
                     var zeroIdx = bytes.Length - 1; for (; zeroIdx >= 0 && bytes[zeroIdx] == 0; zeroIdx--) { }
@@ -126,6 +126,34 @@ namespace OA.Core
             }
             return list.ToArray();
         }
+
+        public string ReadSTRV(int length, ASCIIFormat format = ASCIIFormat.PossiblyNullTerminated)
+        {
+            return ReadASCIIString(length, format);
+        }
+
+        public byte[] ReadBYTV(int length)
+        {
+            return ReadBytes(length);
+        }
+
+        public T ReadT<T>(int length)
+        {
+            return default(T);
+            //return baseStream.readData(ofLength: length).withUnsafeBytes { (ptr: UnsafePointer<T>) -> T in
+            //return ptr.pointee
+        }
+
+        //public T[] ReadTArray<T>(int length, int count)
+        //{
+        //    return default(T);
+        //    //return baseStream.readData(ofLength: length).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
+        //    //    let rawPtr = UnsafeRawPointer(ptr)
+        //    //    let typedPtr = rawPtr.bindMemory(to: T.self, capacity: count)
+        //    //    let buffer = UnsafeBufferPointer(start: typedPtr, count: count)
+        //    //    return Array(buffer)
+        //    //}
+        //}
 
         #region Little Endian
 

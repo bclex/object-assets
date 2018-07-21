@@ -11,7 +11,7 @@ namespace OA.Tes.FilePacks
     partial class EsmFile
     {
         // TES3
-        internal Dictionary<string, Record> _MANYsById;
+        internal Dictionary<string, IRecord> _MANYsById;
         Dictionary<long, LTEXRecord> _LTEXsById;
         Dictionary<Vector3Int, LANDRecord> _LANDsById;
         Dictionary<Vector3Int, CELLRecord> _CELLsById;
@@ -26,9 +26,12 @@ namespace OA.Tes.FilePacks
             if (Format == GameFormatId.TES3)
             {
                 var manyGroups = new List<Record>[] { Groups.ContainsKey("STAT") ? Groups["STAT"].Load() : null };
-                _MANYsById = manyGroups.SelectMany(x => x).Cast<IHaveEDID>().Where(x => x != null).ToDictionary(x => x.EDID.Value, x => (Record)x);
+                _MANYsById = manyGroups.SelectMany(x => x).Cast<IHaveEDID>().Where(x => x != null).ToDictionary(x => x.EDID.Value, x => (IRecord)x);
                 _LTEXsById = Groups["LTEX"].Load().Cast<LTEXRecord>().ToDictionary(x => x.INTV.Value);
-                _LANDsById = Groups["LAND"].Load().Cast<LANDRecord>().ToDictionary(x => x.GridId);
+                var lands = Groups["LAND"].Load().Cast<LANDRecord>().ToList();
+                foreach (var land in lands)
+                    land.GridId = new Vector3Int(land.INTV.CellX, land.INTV.CellY, 0);
+                _LANDsById = lands.ToDictionary(x => x.GridId);
                 var cells = Groups["CELL"].Load().Cast<CELLRecord>().ToList();
                 foreach (var cell in cells)
                     cell.GridId = new Vector3Int(cell.XCLC.Value.GridX, cell.XCLC.Value.GridY, !cell.IsInterior ? 0 : -1);

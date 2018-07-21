@@ -274,7 +274,7 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
         return records
     }
 
-    static var cellsLoaded = 0
+    static var _cellsLoaded = 0
     func readGroup(header: Header, loadAll: Bool) {
         _r.baseStream.position = header.position
         let endPosition = header.position + UInt64(header.dataSize)
@@ -288,7 +288,7 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
                 continue
             }
             // HACK to limit cells loading
-            if (recordHeader.type == "CELL" && RecordGroup.cellsLoaded > 20) {
+            if (recordHeader.type == "CELL" && RecordGroup._cellsLoaded > 20) {
                 _r.baseStream.position += UInt64(recordHeader.dataSize)
                 continue
             }
@@ -298,7 +298,7 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
             }
             readRecord(record, compressed: recordHeader.compressed)
             records.append(record)
-            if recordHeader.type == "CELL" { RecordGroup.cellsLoaded += 1 }
+            if recordHeader.type == "CELL" { RecordGroup._cellsLoaded += 1 }
         }
     }
 

@@ -30,7 +30,7 @@ namespace OA.Tes.FilePacks
         static FileManager()
         {
             var game = TesSettings.Game;
-            Utils.Log("TES Installation(s):");
+            //Utils.Log("TES Installation(s):");
             if (game.DataDirectory != null && Directory.Exists(game.DataDirectory))
             {
                 var gameId = (GameId)Enum.Parse(typeof(GameId), game.GameId);

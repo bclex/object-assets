@@ -121,8 +121,8 @@ namespace OA.Tes.FilePacks.Records
                 case "DATA": DATA = new DATAField(r, dataSize); return true;
                 case "XLOC": XLOC = new XLOCField(r, dataSize); return true;
                 case "XOWN": if (XOWNs == null) XOWNs = new List<CELLRecord.XOWNGroup>(); XOWNs.Add(new CELLRecord.XOWNGroup { XOWN = new FMIDField<Record>(r, dataSize) }); return true;
-                case "XRNK": ArrayUtils.Last(XOWNs).XRNK = new IN32Field(r, dataSize); return true;
-                case "XGLB": ArrayUtils.Last(XOWNs).XGLB = new FMIDField<Record>(r, dataSize); return true;
+                case "XRNK": XOWNs.Last().XRNK = new IN32Field(r, dataSize); return true;
+                case "XGLB": XOWNs.Last().XGLB = new FMIDField<Record>(r, dataSize); return true;
                 case "XESP": XESP = new XESPField(r, dataSize); return true;
                 case "XTRG": XTRG = new FMIDField<Record>(r, dataSize); return true;
                 case "XSED": XSED = new XSEDField(r, dataSize); return true;
@@ -132,7 +132,7 @@ namespace OA.Tes.FilePacks.Records
                 case "XPCI": XPCI = new FMIDField<CELLRecord>(r, dataSize); _nextFull = 1; return true;
                 case "FULL":
                     if (_nextFull == 1) XPCI.Value.AddName(r.ReadASCIIString(dataSize));
-                    else if (_nextFull == 2) ArrayUtils.Last(XMRKs).FULL = new STRVField(r, dataSize);
+                    else if (_nextFull == 2) XMRKs.Last().FULL = new STRVField(r, dataSize);
                     _nextFull = 0;
                     return true;
                 case "XLCM": XLCM = new IN32Field(r, dataSize); return true;
@@ -140,8 +140,8 @@ namespace OA.Tes.FilePacks.Records
                 case "XACT": XACT = new UI32Field(r, dataSize); return true;
                 case "XCNT": XCNT = new IN32Field(r, dataSize); return true;
                 case "XMRK": if (XMRKs == null) XMRKs = new List<XMRKGroup>(); XMRKs.Add(new XMRKGroup()); _nextFull = 2; return true;
-                case "FNAM": ArrayUtils.Last(XMRKs).FNAM = new BYTEField(r, dataSize); return true;
-                case "TNAM": ArrayUtils.Last(XMRKs).TNAM = new BYTEField(r, dataSize); r.ReadByte(); return true;
+                case "FNAM": XMRKs.Last().FNAM = new BYTEField(r, dataSize); return true;
+                case "TNAM": XMRKs.Last().TNAM = new BYTEField(r, dataSize); r.ReadByte(); return true;
                 case "ONAM": return true;
                 case "XRGD": XRGD = new BYTVField(r, dataSize); return true;
                 case "XSCL": XSCL = new FLTVField(r, dataSize); return true;

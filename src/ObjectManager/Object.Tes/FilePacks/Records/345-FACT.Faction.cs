@@ -73,9 +73,9 @@ namespace OA.Tes.FilePacks.Records
                 case "DATA": DATA = new INTVField(r, dataSize); return true;
                 case "CNAM": CNAM = new UI32Field(r, dataSize); return true;
                 case "RNAM": RNAMs.Add(new RNAMGroup { RNAM = new IN32Field(r, dataSize) }); return true;
-                case "MNAM": ArrayUtils.Last(RNAMs).MNAM = new STRVField(r, dataSize); return true;
-                case "FNAM": ArrayUtils.Last(RNAMs).FNAM = new STRVField(r, dataSize); return true;
-                case "INAM": ArrayUtils.Last(RNAMs).INAM = new STRVField(r, dataSize); return true;
+                case "MNAM": RNAMs.Last().MNAM = new STRVField(r, dataSize); return true;
+                case "FNAM": RNAMs.Last().FNAM = new STRVField(r, dataSize); return true;
+                case "INAM": RNAMs.Last().INAM = new STRVField(r, dataSize); return true;
                 default: return false;
             }
         }

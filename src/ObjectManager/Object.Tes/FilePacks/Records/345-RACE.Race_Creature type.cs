@@ -225,9 +225,9 @@ namespace OA.Tes.FilePacks.Records
                         switch (type)
                         {
                             case "INDX": FaceParts.Add(new FacePartGroup { INDX = new UI32Field(r, dataSize) }); return true;
-                            case "MODL": ArrayUtils.Last(FaceParts).MODL = new MODLGroup(r, dataSize); return true;
-                            case "ICON": ArrayUtils.Last(FaceParts).ICON = new FILEField(r, dataSize); return true;
-                            case "MODB": ArrayUtils.Last(FaceParts).MODL.MODBField(r, dataSize); return true;
+                            case "MODL": FaceParts.Last().MODL = new MODLGroup(r, dataSize); return true;
+                            case "ICON": FaceParts.Last().ICON = new FILEField(r, dataSize); return true;
+                            case "MODB": FaceParts.Last().MODL.MODBField(r, dataSize); return true;
                             case "NAM1": _nameState++; return true;
                             default: return false;
                         }
@@ -239,7 +239,7 @@ namespace OA.Tes.FilePacks.Records
                             case "MODL": Bodys[_genderState].MODL = new FILEField(r, dataSize); return true;
                             case "MODB": Bodys[_genderState].MODB = new FLTVField(r, dataSize); return true;
                             case "INDX": Bodys[_genderState].BodyParts.Add(new BodyPartGroup { INDX = new UI32Field(r, dataSize) }); return true;
-                            case "ICON": ArrayUtils.Last(Bodys[_genderState].BodyParts).ICON = new FILEField(r, dataSize); return true;
+                            case "ICON": Bodys[_genderState].BodyParts.Last().ICON = new FILEField(r, dataSize); return true;
                             case "HNAM": _nameState++; break;
                             default: return false;
                         }

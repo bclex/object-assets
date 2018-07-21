@@ -180,34 +180,34 @@ namespace OA.Tes.FilePacks.Records
                     case "XCCM": XCCM = new FMIDField<CLMTRecord>(r, dataSize); return true;
                     case "XCWT": XCWT = new FMIDField<WATRRecord>(r, dataSize); return true;
                     case "XOWN": XOWNs.Add(new XOWNGroup { XOWN = new FMIDField<Record>(r, dataSize) }); return true;
-                    case "XRNK": ArrayUtils.Last(XOWNs).XRNK = new IN32Field(r, dataSize); return true;
-                    case "XGLB": ArrayUtils.Last(XOWNs).XGLB = new FMIDField<Record>(r, dataSize); return true;
+                    case "XRNK": XOWNs.Last().XRNK = new IN32Field(r, dataSize); return true;
+                    case "XGLB": XOWNs.Last().XGLB = new FMIDField<Record>(r, dataSize); return true;
                     default: return false;
                 }
             // Referenced Object Data Grouping
             else switch (type)
                 {
                     // RefObjDataGroup sub-records
-                    case "FRMR": RefObjs.Add(new RefObj()); ArrayUtils.Last(RefObjs).FRMR = new UI32Field(r, dataSize); return true;
-                    case "NAME": ArrayUtils.Last(RefObjs).EDID = new STRVField(r, dataSize); return true;
-                    case "XSCL": ArrayUtils.Last(RefObjs).XSCL = new FLTVField(r, dataSize); return true;
-                    case "DODT": ArrayUtils.Last(RefObjs).DODT = new RefObj.XYZAField(r, dataSize); return true;
-                    case "DNAM": ArrayUtils.Last(RefObjs).DNAM = new STRVField(r, dataSize); return true;
-                    case "FLTV": ArrayUtils.Last(RefObjs).FLTV = new FLTVField(r, dataSize); return true;
-                    case "KNAM": ArrayUtils.Last(RefObjs).KNAM = new STRVField(r, dataSize); return true;
-                    case "TNAM": ArrayUtils.Last(RefObjs).TNAM = new STRVField(r, dataSize); return true;
-                    case "UNAM": ArrayUtils.Last(RefObjs).UNAM = new BYTEField(r, dataSize); return true;
-                    case "ANAM": ArrayUtils.Last(RefObjs).ANAM = new STRVField(r, dataSize); return true;
-                    case "BNAM": ArrayUtils.Last(RefObjs).BNAM = new STRVField(r, dataSize); return true;
-                    case "INTV": ArrayUtils.Last(RefObjs).INTV = new IN32Field(r, dataSize); return true;
-                    case "NAM9": ArrayUtils.Last(RefObjs).NAM9 = new UI32Field(r, dataSize); return true;
-                    case "XSOL": ArrayUtils.Last(RefObjs).XSOL = new STRVField(r, dataSize); return true;
-                    case "DATA": ArrayUtils.Last(RefObjs).DATA = new RefObj.XYZAField(r, dataSize); return true;
+                    case "FRMR": RefObjs.Add(new RefObj()); RefObjs.Last().FRMR = new UI32Field(r, dataSize); return true;
+                    case "NAME": RefObjs.Last().EDID = new STRVField(r, dataSize); return true;
+                    case "XSCL": RefObjs.Last().XSCL = new FLTVField(r, dataSize); return true;
+                    case "DODT": RefObjs.Last().DODT = new RefObj.XYZAField(r, dataSize); return true;
+                    case "DNAM": RefObjs.Last().DNAM = new STRVField(r, dataSize); return true;
+                    case "FLTV": RefObjs.Last().FLTV = new FLTVField(r, dataSize); return true;
+                    case "KNAM": RefObjs.Last().KNAM = new STRVField(r, dataSize); return true;
+                    case "TNAM": RefObjs.Last().TNAM = new STRVField(r, dataSize); return true;
+                    case "UNAM": RefObjs.Last().UNAM = new BYTEField(r, dataSize); return true;
+                    case "ANAM": RefObjs.Last().ANAM = new STRVField(r, dataSize); return true;
+                    case "BNAM": RefObjs.Last().BNAM = new STRVField(r, dataSize); return true;
+                    case "INTV": RefObjs.Last().INTV = new IN32Field(r, dataSize); return true;
+                    case "NAM9": RefObjs.Last().NAM9 = new UI32Field(r, dataSize); return true;
+                    case "XSOL": RefObjs.Last().XSOL = new STRVField(r, dataSize); return true;
+                    case "DATA": RefObjs.Last().DATA = new RefObj.XYZAField(r, dataSize); return true;
                     //
-                    case "CNAM": ArrayUtils.Last(RefObjs).CNAM = new STRVField(r, dataSize); return true;
-                    case "NAM0": ArrayUtils.Last(RefObjs).NAM0 = new UI32Field(r, dataSize); return true;
-                    case "XCHG": ArrayUtils.Last(RefObjs).XCHG = new IN32Field(r, dataSize); return true;
-                    case "INDX": ArrayUtils.Last(RefObjs).INDX = new IN32Field(r, dataSize); return true;
+                    case "CNAM": RefObjs.Last().CNAM = new STRVField(r, dataSize); return true;
+                    case "NAM0": RefObjs.Last().NAM0 = new UI32Field(r, dataSize); return true;
+                    case "XCHG": RefObjs.Last().XCHG = new IN32Field(r, dataSize); return true;
+                    case "INDX": RefObjs.Last().INDX = new IN32Field(r, dataSize); return true;
                     default: return false;
                 }
         }

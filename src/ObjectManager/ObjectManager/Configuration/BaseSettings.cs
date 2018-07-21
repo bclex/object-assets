@@ -19,13 +19,11 @@ namespace OA.Configuration
         public static GameSettings Game => _instance._game;
         public static XRSettings XR => _instance._xr;
 
-        static readonly BaseSettings _instance;
-        static readonly SettingsFile _file;
+        static readonly SettingsFile _file = new SettingsFile("settings.cfg");
+        static readonly BaseSettings _instance = new BaseSettings();
 
         static BaseSettings()
         {
-            _file = new SettingsFile("settings.cfg");
-            _instance = new BaseSettings();
             _file.Load();
         }
 

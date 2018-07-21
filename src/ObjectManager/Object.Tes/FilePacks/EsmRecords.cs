@@ -267,7 +267,7 @@ namespace OA.Tes.FilePacks
         {
             //Console.WriteLine($"Read: {header.Label}");
             Headers.AddLast(header);
-            if (header.GroupType == Header.HeaderGroupType.Top)
+            if (header.Label != null && header.GroupType == Header.HeaderGroupType.Top)
                 switch (Encoding.ASCII.GetString(header.Label))
                 {
                     case "CELL": case "WRLD": Load(); break; // "DIAL"
@@ -287,6 +287,7 @@ namespace OA.Tes.FilePacks
             }
         }
 
+        static int _cellsLoaded = 0;
         void ReadGroup(Header header, bool loadAll)
         {
             _r.BaseStream.Position = header.Position;
@@ -301,6 +302,12 @@ namespace OA.Tes.FilePacks
                         group.Load(loadAll);
                     continue;
                 }
+                // HACK to limit cells loading
+                if (recordHeader.Type == "CELL" && _cellsLoaded > 20)
+                {
+                    _r.BaseStream.Position += recordHeader.DataSize;
+                    continue;
+                }
                 var record = recordHeader.CreateRecord(_r.BaseStream.Position, _recordLevel);
                 if (record == null)
                 {
@@ -309,6 +316,7 @@ namespace OA.Tes.FilePacks
                 }
                 ReadRecord(record, recordHeader.Compressed);
                 Records.Add(record);
+                if (recordHeader.Type == "CELL") { _cellsLoaded++; }
             }
             GroupsByLabel = Groups?.GroupBy(x => x.Label, ByteArrayComparer.Default).ToDictionary(x => x.Key, x => x.ToArray(), ByteArrayComparer.Default);
         }
@@ -319,7 +327,7 @@ namespace OA.Tes.FilePacks
             if (Groups == null)
                 Groups = new List<RecordGroup>();
             var group = new RecordGroup(_r, _filePath, _formatId, _recordLevel);
-            group.AddHeader(recordHeader, 0);
+            group.AddHeader(recordHeader);
             Groups.Add(group);
             _r.BaseStream.Position = nextPosition;
             // print header path
