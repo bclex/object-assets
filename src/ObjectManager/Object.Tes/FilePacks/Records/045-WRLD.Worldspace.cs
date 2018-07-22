@@ -57,17 +57,17 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "FULL": FULL = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
+                case "FULL": FULL = r.ReadSTRV(dataSize); return true;
                 case "WNAM": WNAM = new FMIDField<WRLDRecord>(r, dataSize); return true;
                 case "CNAM": CNAM = new FMIDField<CLMTRecord>(r, dataSize); return true;
                 case "NAM2": NAM2 = new FMIDField<WATRRecord>(r, dataSize); return true;
-                case "ICON": ICON = new FILEField(r, dataSize); return true;
+                case "ICON": ICON = r.ReadFILE(dataSize); return true;
                 case "MNAM": MNAM = new MNAMField(r, dataSize); return true;
-                case "DATA": DATA = new BYTEField(r, dataSize); return true;
+                case "DATA": DATA = r.ReadT<BYTEField>(dataSize); return true;
                 case "NAM0": NAM0 = new NAM0Field(r, dataSize); return true;
                 case "NAM9": NAM0.NAM9Field(r, dataSize); return true;
-                case "SNAM": SNAM = new UI32Field(r, dataSize); return true;
+                case "SNAM": SNAM = r.ReadT<UI32Field>(dataSize); return true;
                 case "OFST": r.SkipBytes(dataSize); return true;
                 default: return false;
             }

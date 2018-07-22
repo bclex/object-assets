@@ -303,7 +303,7 @@ namespace OA.Tes.FilePacks
                     continue;
                 }
                 // HACK to limit cells loading
-                if (recordHeader.Type == "CELL" && _cellsLoaded > 20)
+                if (recordHeader.Type == "CELL" && _cellsLoaded > int.MaxValue)
                 {
                     _r.BaseStream.Position += recordHeader.DataSize;
                     continue;
@@ -345,7 +345,7 @@ namespace OA.Tes.FilePacks
 
         void ReadRecord(Record record, bool compressed)
         {
-            Console.WriteLine($"Recd: {record.Header.Type}");
+            //Console.WriteLine($"Recd: {record.Header.Type}");
             if (!compressed)
             {
                 record.Read(_r, _filePath, _formatId);

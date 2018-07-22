@@ -57,25 +57,25 @@ namespace OA.Tes.FilePacks.Records
             if (format == GameFormatId.TES3)
                 switch (type)
                 {
-                    case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "FNAM": FNAM = new STRVField(r, dataSize); return true;
-                    case "RNAM": RNAMs.Add(new RNAMGroup { MNAM = new STRVField(r, dataSize) }); return true;
+                    case "NAME": EDID = r.ReadSTRV(dataSize); return true;
+                    case "FNAM": FNAM = r.ReadSTRV(dataSize); return true;
+                    case "RNAM": RNAMs.Add(new RNAMGroup { MNAM = r.ReadSTRV(dataSize) }); return true;
                     case "FADT": FADT = new FADTField(r, dataSize); return true;
-                    case "ANAM": ANAMs.Add(new STRVField(r, dataSize)); return true;
-                    case "INTV": INTVs.Add(new INTVField(r, dataSize)); return true;
+                    case "ANAM": ANAMs.Add(r.ReadSTRV(dataSize)); return true;
+                    case "INTV": INTVs.Add(r.ReadINTV(dataSize)); return true;
                     default: return false;
                 }
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "FULL": FNAM = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
+                case "FULL": FNAM = r.ReadSTRV(dataSize); return true;
                 case "XNAM": XNAM = new XNAMField(r, dataSize, format); return true;
-                case "DATA": DATA = new INTVField(r, dataSize); return true;
-                case "CNAM": CNAM = new UI32Field(r, dataSize); return true;
-                case "RNAM": RNAMs.Add(new RNAMGroup { RNAM = new IN32Field(r, dataSize) }); return true;
-                case "MNAM": RNAMs.Last().MNAM = new STRVField(r, dataSize); return true;
-                case "FNAM": RNAMs.Last().FNAM = new STRVField(r, dataSize); return true;
-                case "INAM": RNAMs.Last().INAM = new STRVField(r, dataSize); return true;
+                case "DATA": DATA = r.ReadINTV(dataSize); return true;
+                case "CNAM": CNAM = r.ReadT<UI32Field>(dataSize); return true;
+                case "RNAM": RNAMs.Add(new RNAMGroup { RNAM = r.ReadT<IN32Field>(dataSize) }); return true;
+                case "MNAM": RNAMs.Last().MNAM = r.ReadSTRV(dataSize); return true;
+                case "FNAM": RNAMs.Last().FNAM = r.ReadSTRV(dataSize); return true;
+                case "INAM": RNAMs.Last().INAM = r.ReadSTRV(dataSize); return true;
                 default: return false;
             }
         }

@@ -138,30 +138,30 @@ namespace OA.Tes.FilePacks.Records
             switch (type)
             {
                 case "EDID":
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
+                case "NAME": EDID = r.ReadSTRV(dataSize); return true;
                 case "FULL":
-                case "FNAM": FULL = new STRVField(r, dataSize); return true;
+                case "FNAM": FULL = r.ReadSTRV(dataSize); return true;
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
-                case "RNAM": RNAM = new STRVField(r, dataSize); return true;
-                case "ANAM": ANAM = new STRVField(r, dataSize); return true;
-                case "BNAM": BNAM = new STRVField(r, dataSize); return true;
-                case "CNAM": CNAM = new STRVField(r, dataSize); return true;
-                case "KNAM": KNAM = new STRVField(r, dataSize); return true;
+                case "RNAM": RNAM = r.ReadSTRV(dataSize); return true;
+                case "ANAM": ANAM = r.ReadSTRV(dataSize); return true;
+                case "BNAM": BNAM = r.ReadSTRV(dataSize); return true;
+                case "CNAM": CNAM = r.ReadSTRV(dataSize); return true;
+                case "KNAM": KNAM = r.ReadSTRV(dataSize); return true;
                 case "NPDT": NPDT = new NPDTField(r, dataSize); return true;
-                case "FLAG": FLAG = new INTVField(r, dataSize); return true;
+                case "FLAG": FLAG = r.ReadINTV(dataSize); return true;
                 case "NPCO": NPCOs.Add(new CNTOField(r, dataSize, format)); return true;
-                case "NPCS": NPCSs.Add(new STRVField(r, dataSize, ASCIIFormat.ZeroPadded)); return true;
+                case "NPCS": NPCSs.Add(r.ReadSTRV(dataSize, ASCIIFormat.ZeroPadded)); return true;
                 case "AIDT": AIDT = new CREARecord.AIDTField(r, dataSize); return true;
                 case "AI_W": AI_W = new CREARecord.AI_WField(r, dataSize); return true;
                 case "AI_T": AI_T = new CREARecord.AI_TField(r, dataSize); return true;
                 case "AI_F": AI_F = new CREARecord.AI_FField(r, dataSize); return true;
                 case "AI_E": AI_E = new CREARecord.AI_FField(r, dataSize); return true;
-                case "CNDT": CNDT = new STRVField(r, dataSize); return true;
+                case "CNDT": CNDT = r.ReadSTRV(dataSize); return true;
                 case "AI_A": AI_A = new CREARecord.AI_AField(r, dataSize); return true;
                 case "DODT": DODT = new DODTField(r, dataSize); return true;
-                case "DNAM": DNAM = new STRVField(r, dataSize); return true;
-                case "XSCL": XSCL = new FLTVField(r, dataSize); return true;
+                case "DNAM": DNAM = r.ReadSTRV(dataSize); return true;
+                case "XSCL": XSCL = r.ReadT<FLTVField>(dataSize); return true;
                 case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
                 default: return false;
             }

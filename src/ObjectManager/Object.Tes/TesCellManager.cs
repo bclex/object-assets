@@ -293,8 +293,8 @@ namespace OA.Tes
             // Handle object transforms.
             if (refObj.XSCL != null)
                 gameObject.transform.localScale = Vector3.one * refObj.XSCL.Value.Value;
-            gameObject.transform.position += NifUtils.NifPointToUnityPoint(refObj.DATA.Position);
-            gameObject.transform.rotation *= NifUtils.NifEulerAnglesToUnityQuaternion(refObj.DATA.EulerAngles);
+            gameObject.transform.position += NifUtils.NifPointToUnityPoint(refObj.DATA.Position.ToVector3());
+            gameObject.transform.rotation *= NifUtils.NifEulerAnglesToUnityQuaternion(refObj.DATA.EulerAngles.ToVector3());
             var tagTarget = gameObject;
             var coll = gameObject.GetComponentInChildren<Collider>(); // if the collider is on a child object and not on the object with the component, we need to set that object's tag instead.
             if (coll != null)
@@ -337,7 +337,7 @@ namespace OA.Tes
             // Don't return anything if the LAND doesn't have height data or texture data.
             if (land.VTEX == null) return null;
             var textureFilePaths = new List<string>();
-            var distinctTextureIndices = land.VTEX.Value.TextureIndices.Distinct().ToList();
+            var distinctTextureIndices = land.VTEX.Value.TextureIndicesT3.Distinct().ToList();
             for (var i = 0; i < distinctTextureIndices.Count; i++)
             {
                 var textureIndex = ((short)distinctTextureIndices[i] - 1);
@@ -389,7 +389,7 @@ namespace OA.Tes
             // Texture the terrain.
             SplatPrototype[] splatPrototypes = null;
             const int LAND_TEXTUREINDICES = 256;
-            var textureIndices = land.VTEX != null ? land.VTEX.Value.TextureIndices : new uint[LAND_TEXTUREINDICES];
+            var textureIndices = land.VTEX != null ? land.VTEX.Value.TextureIndicesT3 : new ushort[LAND_TEXTUREINDICES];
             // Create splat prototypes.
             var splatPrototypeList = new List<SplatPrototype>();
             var texInd2SplatInd = new Dictionary<ushort, int>();

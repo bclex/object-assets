@@ -64,11 +64,11 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "MODT": MODL.MODTField(r, dataSize); return true;
-                case "ICON": ICON = new FILEField(r, dataSize); return true;
+                case "ICON": ICON = r.ReadFILE(dataSize); return true;
                 case "SNAM": SNAM = new SNAMField(r, dataSize); return true;
                 case "CNAM": CNAM = new CNAMField(r, dataSize); return true;
                 case "BNAM": BNAM = new BNAMField(r, dataSize); return true;

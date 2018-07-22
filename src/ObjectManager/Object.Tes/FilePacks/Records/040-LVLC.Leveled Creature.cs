@@ -17,9 +17,9 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "LVLD": LVLD = new BYTEField(r, dataSize); return true;
-                case "LVLF": LVLF = new BYTEField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
+                case "LVLD": LVLD = r.ReadT<BYTEField>(dataSize); return true;
+                case "LVLF": LVLF = r.ReadT<BYTEField>(dataSize); return true;
                 case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
                 case "TNAM": TNAM = new FMIDField<CREARecord>(r, dataSize); return true;
                 case "LVLO": LVLOs.Add(new LVLIRecord.LVLOField(r, dataSize)); return true;

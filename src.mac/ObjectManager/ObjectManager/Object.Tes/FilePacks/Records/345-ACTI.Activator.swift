@@ -10,8 +10,6 @@ public class ACTIRecord: Record, IHaveEDID, IHaveMODL {
     public override var description: String { return "ACTI: \(EDID)" }
     public var EDID: STRVField = STRVField_empty  // Editor ID
     public var MODL: MODLGroup? = nil // Model Name
-    public var MODB: FLTVField! // Model Bounds
-    public var MODT: BYTVField! // Texture Files Hashes
     public var FULL: STRVField! // Item Name
     public var SCRI: FMIDField<SCPTRecord>? = nil // Script (Optional)
     // TES4

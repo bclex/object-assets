@@ -192,11 +192,11 @@ namespace OA.Tes.FilePacks.Records
             if (format == GameFormatId.TES3)
                 switch (type)
                 {
-                    case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "FNAM": FULL = new STRVField(r, dataSize); return true;
+                    case "NAME": EDID = r.ReadSTRV(dataSize); return true;
+                    case "FNAM": FULL = r.ReadSTRV(dataSize); return true;
                     case "RADT": DATA = new DATAField(r, dataSize, format); return true;
-                    case "NPCS": SPLOs.Add(new STRVField(r, dataSize)); return true;
-                    case "DESC": DESC = new STRVField(r, dataSize); return true;
+                    case "NPCS": SPLOs.Add(r.ReadSTRV(dataSize)); return true;
+                    case "DESC": DESC = r.ReadSTRV(dataSize); return true;
                     default: return false;
                 }
             if (format == GameFormatId.TES4)
@@ -206,17 +206,17 @@ namespace OA.Tes.FilePacks.Records
                     case 0:
                         switch (type)
                         {
-                            case "EDID": EDID = new STRVField(r, dataSize); return true;
-                            case "FULL": FULL = new STRVField(r, dataSize); return true;
-                            case "DESC": DESC = new STRVField(r, dataSize); return true;
+                            case "EDID": EDID = r.ReadSTRV(dataSize); return true;
+                            case "FULL": FULL = r.ReadSTRV(dataSize); return true;
+                            case "DESC": DESC = r.ReadSTRV(dataSize); return true;
                             case "DATA": DATA = new DATAField(r, dataSize, format); return true;
-                            case "SPLO": SPLOs.Add(new STRVField(r, dataSize)); return true;
+                            case "SPLO": SPLOs.Add(r.ReadSTRV(dataSize)); return true;
                             case "VNAM": VNAM = new FMID2Field<RACERecord>(r, dataSize); return true;
                             case "DNAM": DNAM = new FMID2Field<HAIRRecord>(r, dataSize); return true;
-                            case "CNAM": CNAM = new BYTEField(r, dataSize); return true;
-                            case "PNAM": PNAM = new FLTVField(r, dataSize); return true;
-                            case "UNAM": UNAM = new FLTVField(r, dataSize); return true;
-                            case "XNAM": XNAM = new UNKNField(r, dataSize); return true;
+                            case "CNAM": CNAM = r.ReadT<BYTEField>(dataSize); return true;
+                            case "PNAM": PNAM = r.ReadT<FLTVField>(dataSize); return true;
+                            case "UNAM": UNAM = r.ReadT<FLTVField>(dataSize); return true;
+                            case "XNAM": XNAM = r.ReadUNKN(dataSize); return true;
                             case "ATTR": DATA.ATTRField(r, dataSize); return true;
                             case "NAM0": _nameState++; return true;
                             default: return false;
@@ -224,9 +224,9 @@ namespace OA.Tes.FilePacks.Records
                     case 1: // Face Data
                         switch (type)
                         {
-                            case "INDX": FaceParts.Add(new FacePartGroup { INDX = new UI32Field(r, dataSize) }); return true;
+                            case "INDX": FaceParts.Add(new FacePartGroup { INDX = r.ReadT<UI32Field>(dataSize) }); return true;
                             case "MODL": FaceParts.Last().MODL = new MODLGroup(r, dataSize); return true;
-                            case "ICON": FaceParts.Last().ICON = new FILEField(r, dataSize); return true;
+                            case "ICON": FaceParts.Last().ICON = r.ReadFILE(dataSize); return true;
                             case "MODB": FaceParts.Last().MODL.MODBField(r, dataSize); return true;
                             case "NAM1": _nameState++; return true;
                             default: return false;
@@ -236,10 +236,10 @@ namespace OA.Tes.FilePacks.Records
                         {
                             case "MNAM": _genderState = 0; return true;
                             case "FNAM": _genderState = 1; return true;
-                            case "MODL": Bodys[_genderState].MODL = new FILEField(r, dataSize); return true;
-                            case "MODB": Bodys[_genderState].MODB = new FLTVField(r, dataSize); return true;
-                            case "INDX": Bodys[_genderState].BodyParts.Add(new BodyPartGroup { INDX = new UI32Field(r, dataSize) }); return true;
-                            case "ICON": Bodys[_genderState].BodyParts.Last().ICON = new FILEField(r, dataSize); return true;
+                            case "MODL": Bodys[_genderState].MODL = r.ReadFILE(dataSize); return true;
+                            case "MODB": Bodys[_genderState].MODB = r.ReadT<FLTVField>(dataSize); return true;
+                            case "INDX": Bodys[_genderState].BodyParts.Add(new BodyPartGroup { INDX = r.ReadT<UI32Field>(dataSize) }); return true;
+                            case "ICON": Bodys[_genderState].BodyParts.Last().ICON = r.ReadFILE(dataSize); return true;
                             case "HNAM": _nameState++; break;
                             default: return false;
                         }
@@ -249,10 +249,10 @@ namespace OA.Tes.FilePacks.Records
                         {
                             case "HNAM": for (var i = 0; i < dataSize >> 2; i++) HNAMs.Add(new FMIDField<HAIRRecord>(r, 4)); return true;
                             case "ENAM": for (var i = 0; i < dataSize >> 2; i++) ENAMs.Add(new FMIDField<EYESRecord>(r, 4)); return true;
-                            case "FGGS": FGGS = new BYTVField(r, dataSize); return true;
-                            case "FGGA": FGGA = new BYTVField(r, dataSize); return true;
-                            case "FGTS": FGTS = new BYTVField(r, dataSize); return true;
-                            case "SNAM": SNAM = new UNKNField(r, dataSize); return true;
+                            case "FGGS": FGGS = r.ReadBYTV(dataSize); return true;
+                            case "FGGA": FGGA = r.ReadBYTV(dataSize); return true;
+                            case "FGTS": FGTS = r.ReadBYTV(dataSize); return true;
+                            case "SNAM": SNAM = r.ReadUNKN(dataSize); return true;
                             default: return false;
                         }
                     default: return false;

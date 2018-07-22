@@ -35,13 +35,13 @@ namespace OA.Tes.FilePacks.Records
                 case "HEDR": HEDR = new HEDRField(r, dataSize); return true;
                 case "OFST": r.SkipBytes(dataSize); return true;
                 case "DELE": r.SkipBytes(dataSize); return true;
-                case "CNAM": CNAM = new STRVField(r, dataSize); return true;
-                case "SNAM": SNAM = new STRVField(r, dataSize); return true;
-                case "MAST": if (MASTs == null) MASTs = new List<STRVField>(); MASTs.Add(new STRVField(r, dataSize)); return true;
-                case "DATA": if (DATAs == null) DATAs = new List<INTVField>(); DATAs.Add(new INTVField(r, dataSize)); return true;
-                case "ONAM": ONAM = new UNKNField(r, dataSize); return true;
-                case "INTV": INTV = new IN32Field(r, dataSize); return true;
-                case "INCC": INCC = new IN32Field(r, dataSize); return true;
+                case "CNAM": CNAM = r.ReadSTRV(dataSize); return true;
+                case "SNAM": SNAM = r.ReadSTRV(dataSize); return true;
+                case "MAST": if (MASTs == null) MASTs = new List<STRVField>(); MASTs.Add(r.ReadSTRV(dataSize)); return true;
+                case "DATA": if (DATAs == null) DATAs = new List<INTVField>(); DATAs.Add(r.ReadINTV(dataSize)); return true;
+                case "ONAM": ONAM = r.ReadUNKN(dataSize); return true;
+                case "INTV": INTV = r.ReadT<IN32Field>(dataSize); return true;
+                case "INCC": INCC = r.ReadT<IN32Field>(dataSize); return true;
                 default: return false;
             }
         }

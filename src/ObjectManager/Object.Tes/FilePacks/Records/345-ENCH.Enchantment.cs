@@ -107,8 +107,8 @@ namespace OA.Tes.FilePacks.Records
             switch (type)
             {
                 case "EDID":
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "FULL": if (SCITs.Count == 0) FULL = new STRVField(r, dataSize); else SCITs.Last().FULLField(r, dataSize); return true;
+                case "NAME": EDID = r.ReadSTRV(dataSize); return true;
+                case "FULL": if (SCITs.Count == 0) FULL = r.ReadSTRV(dataSize); else SCITs.Last().FULLField(r, dataSize); return true;
                 case "ENIT":
                 case "ENDT": ENIT = new ENITField(r, dataSize, format); return true;
                 case "EFID": r.SkipBytes(dataSize); return true;

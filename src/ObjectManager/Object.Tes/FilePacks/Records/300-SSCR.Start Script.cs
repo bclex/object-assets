@@ -13,8 +13,8 @@ namespace OA.Tes.FilePacks.Records
             if (format == GameFormatId.TES3)
                 switch (type)
                 {
-                    case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "DATA": DATA = new STRVField(r, dataSize); return true;
+                    case "NAME": EDID = r.ReadSTRV(dataSize); return true;
+                    case "DATA": DATA = r.ReadSTRV(dataSize); return true;
                     default: return false;
                 }
             return false;

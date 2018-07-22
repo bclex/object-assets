@@ -15,13 +15,13 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "MODT": MODL.MODTField(r, dataSize); return true;
-                case "FULL": FULL = new STRVField(r, dataSize); return true;
+                case "FULL": FULL = r.ReadSTRV(dataSize); return true;
                 case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
-                case "MNAM": MNAM = new IN32Field(r, dataSize); return true;
+                case "MNAM": MNAM = r.ReadT<IN32Field>(dataSize); return true;
                 default: return false;
             }
         }

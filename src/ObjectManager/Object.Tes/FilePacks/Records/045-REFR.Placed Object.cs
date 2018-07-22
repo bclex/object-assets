@@ -115,37 +115,37 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
                 case "NAME": NAME = new FMIDField<Record>(r, dataSize); return true;
                 case "XTEL": XTEL = new XTELField(r, dataSize); return true;
                 case "DATA": DATA = new DATAField(r, dataSize); return true;
                 case "XLOC": XLOC = new XLOCField(r, dataSize); return true;
                 case "XOWN": if (XOWNs == null) XOWNs = new List<CELLRecord.XOWNGroup>(); XOWNs.Add(new CELLRecord.XOWNGroup { XOWN = new FMIDField<Record>(r, dataSize) }); return true;
-                case "XRNK": XOWNs.Last().XRNK = new IN32Field(r, dataSize); return true;
+                case "XRNK": XOWNs.Last().XRNK = r.ReadT<IN32Field>(dataSize); return true;
                 case "XGLB": XOWNs.Last().XGLB = new FMIDField<Record>(r, dataSize); return true;
                 case "XESP": XESP = new XESPField(r, dataSize); return true;
                 case "XTRG": XTRG = new FMIDField<Record>(r, dataSize); return true;
                 case "XSED": XSED = new XSEDField(r, dataSize); return true;
-                case "XLOD": XLOD = new BYTVField(r, dataSize); return true;
-                case "XCHG": XCHG = new FLTVField(r, dataSize); return true;
-                case "XHLT": XCHG = new FLTVField(r, dataSize); return true;
+                case "XLOD": XLOD = r.ReadBYTV(dataSize); return true;
+                case "XCHG": XCHG = r.ReadT<FLTVField>(dataSize); return true;
+                case "XHLT": XCHG = r.ReadT<FLTVField>(dataSize); return true;
                 case "XPCI": XPCI = new FMIDField<CELLRecord>(r, dataSize); _nextFull = 1; return true;
                 case "FULL":
                     if (_nextFull == 1) XPCI.Value.AddName(r.ReadASCIIString(dataSize));
-                    else if (_nextFull == 2) XMRKs.Last().FULL = new STRVField(r, dataSize);
+                    else if (_nextFull == 2) XMRKs.Last().FULL = r.ReadSTRV(dataSize);
                     _nextFull = 0;
                     return true;
-                case "XLCM": XLCM = new IN32Field(r, dataSize); return true;
+                case "XLCM": XLCM = r.ReadT<IN32Field>(dataSize); return true;
                 case "XRTM": XRTM = new FMIDField<REFRRecord>(r, dataSize); return true;
-                case "XACT": XACT = new UI32Field(r, dataSize); return true;
-                case "XCNT": XCNT = new IN32Field(r, dataSize); return true;
+                case "XACT": XACT = r.ReadT<UI32Field>(dataSize); return true;
+                case "XCNT": XCNT = r.ReadT<IN32Field>(dataSize); return true;
                 case "XMRK": if (XMRKs == null) XMRKs = new List<XMRKGroup>(); XMRKs.Add(new XMRKGroup()); _nextFull = 2; return true;
-                case "FNAM": XMRKs.Last().FNAM = new BYTEField(r, dataSize); return true;
-                case "TNAM": XMRKs.Last().TNAM = new BYTEField(r, dataSize); r.ReadByte(); return true;
+                case "FNAM": XMRKs.Last().FNAM = r.ReadT<BYTEField>(dataSize); return true;
+                case "TNAM": XMRKs.Last().TNAM = r.ReadT<BYTEField>(dataSize); r.ReadByte(); return true;
                 case "ONAM": return true;
-                case "XRGD": XRGD = new BYTVField(r, dataSize); return true;
-                case "XSCL": XSCL = new FLTVField(r, dataSize); return true;
-                case "XSOL": XSOL = new BYTEField(r, dataSize); return true;
+                case "XRGD": XRGD = r.ReadBYTV(dataSize); return true;
+                case "XSCL": XSCL = r.ReadT<FLTVField>(dataSize); return true;
+                case "XSOL": XSOL = r.ReadT<BYTEField>(dataSize); return true;
                 default: return false;
             }
         }

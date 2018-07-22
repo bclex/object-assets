@@ -16,12 +16,12 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "CTDA":
                 case "CTDT": CTDAs.Add(new SCPTRecord.CTDAField(r, dataSize, format)); return true;
-                case "ANAM": ANAM = new BYTEField(r, dataSize); return true;
+                case "ANAM": ANAM = r.ReadT<BYTEField>(dataSize); return true;
                 case "DATA":
                     DATAs = new FMIDField<IDLERecord>[dataSize >> 2];
                     for (var i = 0; i < DATAs.Length; i++) DATAs[i] = new FMIDField<IDLERecord>(r, 4); return true;

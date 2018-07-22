@@ -215,11 +215,11 @@ namespace OA.Tes.FilePacks.Records
             if (format == GameFormatId.TES3)
                 switch (type)
                 {
-                    case "NAME": EDID = new STRVField(r, dataSize); return true;
+                    case "NAME": EDID = r.ReadSTRV(dataSize); return true;
                     case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-                    case "FNAM": FNAM = new STRVField(r, dataSize); return true;
+                    case "FNAM": FNAM = r.ReadSTRV(dataSize); return true;
                     case "NPDT": NPDT = new NPDTField(r, dataSize); return true;
-                    case "FLAG": FLAG = new IN32Field(r, dataSize); return true;
+                    case "FLAG": FLAG = r.ReadT<IN32Field>(dataSize); return true;
                     case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
                     case "NPCO": NPCO = new CNTOField(r, dataSize, format); return true;
                     case "AIDT": AIDT = new AIDTField(r, dataSize); return true;
@@ -228,9 +228,9 @@ namespace OA.Tes.FilePacks.Records
                     case "AI_F": AI_F = new AI_FField(r, dataSize); return true;
                     case "AI_E": AI_E = new AI_FField(r, dataSize); return true;
                     case "AI_A": AI_A = new AI_AField(r, dataSize); return true;
-                    case "XSCL": XSCL = new FLTVField(r, dataSize); return true;
-                    case "CNAM": CNAM = new STRVField(r, dataSize); return true;
-                    case "NPCS": NPCSs.Add(new STRVField(r, dataSize, ASCIIFormat.ZeroPadded)); return true;
+                    case "XSCL": XSCL = r.ReadT<FLTVField>(dataSize); return true;
+                    case "CNAM": CNAM = r.ReadSTRV(dataSize); return true;
+                    case "NPCS": NPCSs.Add(r.ReadSTRV(dataSize, ASCIIFormat.ZeroPadded)); return true;
                     default: return false;
                 }
             return false;

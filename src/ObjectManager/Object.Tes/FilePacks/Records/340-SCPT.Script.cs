@@ -147,12 +147,12 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
                 case "SCHD": SCHD = new SCHDField(r, dataSize); return true;
                 case "SCVR": if (format != GameFormatId.TES3) SLSDs.Last().SCVRField(r, dataSize); else SCHD.SCVRField(r, dataSize); return true;
                 case "SCDA":
-                case "SCDT": SCDA = new BYTVField(r, dataSize); return true;
-                case "SCTX": SCTX = new STRVField(r, dataSize); return true;
+                case "SCDT": SCDA = r.ReadBYTV(dataSize); return true;
+                case "SCTX": SCTX = r.ReadSTRV(dataSize); return true;
                 // TES4
                 case "SCHR": SCHR = new SCHRField(r, dataSize); return true;
                 case "SLSD": SLSDs.Add(new SLSDField(r, dataSize)); return true;

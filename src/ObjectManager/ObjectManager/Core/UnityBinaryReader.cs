@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine;
 
@@ -127,33 +128,43 @@ namespace OA.Core
             return list.ToArray();
         }
 
-        public string ReadSTRV(int length, ASCIIFormat format = ASCIIFormat.PossiblyNullTerminated)
+        public unsafe T ReadT<T>(int length)
         {
-            return ReadASCIIString(length, format);
+            var size = Marshal.SizeOf(typeof(T));
+            var bytes = ReadBytes(length);
+            if (size > length)
+                Array.Resize(ref bytes, size);
+            fixed (byte* src = bytes)
+            {
+                var r = (T)Marshal.PtrToStructure(new IntPtr(src), typeof(T));
+                return r;
+            }
+            //fixed (byte* src = bytes)
+            //{
+            //    var r = default(T);
+            //    var dstHandle = GCHandle.Alloc(r, GCHandleType.Pinned);
+            //    memcpy(dstHandle.AddrOfPinnedObject(), new IntPtr(src), new UIntPtr((uint)bytes.Length));
+            //    dstHandle.Free();
+            //    return r;
+            //}
         }
 
-        public byte[] ReadBYTV(int length)
-        {
-            return ReadBytes(length);
-        }
+        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+        static extern IntPtr memcpy(IntPtr dest, IntPtr src, UIntPtr count);
 
-        public T ReadT<T>(int length)
+        // http://frankniemeyer.blogspot.com/2014/07/methods-for-reading-structured-binary.html?m=1
+        public unsafe T[] ReadTArray<T>(int length, int count)
         {
-            return default(T);
-            //return baseStream.readData(ofLength: length).withUnsafeBytes { (ptr: UnsafePointer<T>) -> T in
-            //return ptr.pointee
+            var bytes = ReadBytes(length);
+            fixed (byte* src = bytes)
+            {
+                var r = new T[count];
+                var dstHandle = GCHandle.Alloc(r, GCHandleType.Pinned);
+                memcpy(dstHandle.AddrOfPinnedObject(), new IntPtr(src), new UIntPtr((uint)bytes.Length));
+                dstHandle.Free();
+                return r;
+            }
         }
-
-        //public T[] ReadTArray<T>(int length, int count)
-        //{
-        //    return default(T);
-        //    //return baseStream.readData(ofLength: length).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
-        //    //    let rawPtr = UnsafeRawPointer(ptr)
-        //    //    let typedPtr = rawPtr.bindMemory(to: T.self, capacity: count)
-        //    //    let buffer = UnsafeBufferPointer(start: typedPtr, count: count)
-        //    //    return Array(buffer)
-        //    //}
-        //}
 
         #region Little Endian
 

@@ -153,7 +153,7 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
                 case "CSTD": CSTD = new CSTDField(r, dataSize); return true;
                 case "CSAD": CSAD = new CSADField(r, dataSize); return true;
                 default: return false;

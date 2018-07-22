@@ -19,12 +19,12 @@ namespace OA.Tes.FilePacks.Records
             if (format == GameFormatId.TES3)
                 switch (type)
                 {
-                    case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "DATA": DATA = new IN32Field(r, dataSize); return true;
-                    case "NNAM": NNAM = new BYTEField(r, dataSize); return true;
-                    case "INDX": INDX = new IN32Field(r, dataSize); return true;
-                    case "CNAM": CNAMs.Add(new STRVField(r, dataSize)); return true;
-                    case "INTV": INTVs.Add(new IN16Field(r, dataSize)); return true;
+                    case "NAME": EDID = r.ReadSTRV(dataSize); return true;
+                    case "DATA": DATA = r.ReadT<IN32Field>(dataSize); return true;
+                    case "NNAM": NNAM = r.ReadT<BYTEField>(dataSize); return true;
+                    case "INDX": INDX = r.ReadT<IN32Field>(dataSize); return true;
+                    case "CNAM": CNAMs.Add(r.ReadSTRV(dataSize)); return true;
+                    case "INTV": INTVs.Add(r.ReadT<IN16Field>(dataSize)); return true;
                     default: return false;
                 }
             return false;

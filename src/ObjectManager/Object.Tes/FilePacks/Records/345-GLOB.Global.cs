@@ -14,9 +14,9 @@ namespace OA.Tes.FilePacks.Records
             switch (type)
             {
                 case "EDID":
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "FNAM": FNAM = new BYTEField(r, dataSize); return true;
-                case "FLTV": FLTV = new FLTVField(r, dataSize); return true;
+                case "NAME": EDID = r.ReadSTRV(dataSize); return true;
+                case "FNAM": FNAM = r.ReadT<BYTEField>(dataSize); return true;
+                case "FLTV": FLTV = r.ReadT<FLTVField>(dataSize); return true;
                 default: return false;
             }
         }

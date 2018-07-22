@@ -117,25 +117,25 @@ namespace OA.Tes.FilePacks.Records
             if (format == GameFormatId.TES3)
                 switch (type)
                 {
-                    case "INAM": EDID = new STRVField(r, dataSize); DIALRecord.LastRecord?.INFOs.Add(this); return true;
+                    case "INAM": EDID = r.ReadSTRV(dataSize); DIALRecord.LastRecord?.INFOs.Add(this); return true;
                     case "PNAM": PNAM = new FMIDField<INFORecord>(r, dataSize); return true;
-                    case "NNAM": TES3.NNAM = new STRVField(r, dataSize); return true;
+                    case "NNAM": TES3.NNAM = r.ReadSTRV(dataSize); return true;
                     case "DATA": TES3.DATA = new DATA3Field(r, dataSize); return true;
-                    case "ONAM": TES3.ONAM = new STRVField(r, dataSize); return true;
-                    case "RNAM": TES3.RNAM = new STRVField(r, dataSize); return true;
-                    case "CNAM": TES3.CNAM = new STRVField(r, dataSize); return true;
-                    case "FNAM": TES3.FNAM = new STRVField(r, dataSize); return true;
-                    case "ANAM": TES3.ANAM = new STRVField(r, dataSize); return true;
-                    case "DNAM": TES3.DNAM = new STRVField(r, dataSize); return true;
-                    case "NAME": TES3.NAME = new STRVField(r, dataSize); return true;
-                    case "SNAM": TES3.SNAM = new FILEField(r, dataSize); return true;
-                    case "QSTN": TES3.QSTN = new BYTEField(r, dataSize); return true;
-                    case "QSTF": TES3.QSTF = new BYTEField(r, dataSize); return true;
-                    case "QSTR": TES3.QSTR = new BYTEField(r, dataSize); return true;
+                    case "ONAM": TES3.ONAM = r.ReadSTRV(dataSize); return true;
+                    case "RNAM": TES3.RNAM = r.ReadSTRV(dataSize); return true;
+                    case "CNAM": TES3.CNAM = r.ReadSTRV(dataSize); return true;
+                    case "FNAM": TES3.FNAM = r.ReadSTRV(dataSize); return true;
+                    case "ANAM": TES3.ANAM = r.ReadSTRV(dataSize); return true;
+                    case "DNAM": TES3.DNAM = r.ReadSTRV(dataSize); return true;
+                    case "NAME": TES3.NAME = r.ReadSTRV(dataSize); return true;
+                    case "SNAM": TES3.SNAM = r.ReadFILE(dataSize); return true;
+                    case "QSTN": TES3.QSTN = r.ReadT<BYTEField>(dataSize); return true;
+                    case "QSTF": TES3.QSTF = r.ReadT<BYTEField>(dataSize); return true;
+                    case "QSTR": TES3.QSTR = r.ReadT<BYTEField>(dataSize); return true;
                     case "SCVR": TES3.SCVR = new SCPTRecord.CTDAField(r, dataSize, format); return true;
-                    case "INTV": TES3.INTV = new UNKNField(r, dataSize); return true;
-                    case "FLTV": TES3.FLTV = new UNKNField(r, dataSize); return true;
-                    case "BNAM": TES3.BNAM = new STRVField(r, dataSize); return true;
+                    case "INTV": TES3.INTV = r.ReadUNKN(dataSize); return true;
+                    case "FLTV": TES3.FLTV = r.ReadUNKN(dataSize); return true;
+                    case "BNAM": TES3.BNAM = r.ReadSTRV(dataSize); return true;
                     default: return false;
                 }
             switch (type)
@@ -153,8 +153,8 @@ namespace OA.Tes.FilePacks.Records
                 case "TCLF": TES4.TCLFs.Add(new FMIDField<DIALRecord>(r, dataSize)); return true;
                 case "SCHR":
                 case "SCHD": TES4.SCHR = new SCPTRecord.SCHRField(r, dataSize); return true;
-                case "SCDA": TES4.SCDA = new BYTVField(r, dataSize); return true;
-                case "SCTX": TES4.SCTX = new STRVField(r, dataSize); return true;
+                case "SCDA": TES4.SCDA = r.ReadBYTV(dataSize); return true;
+                case "SCTX": TES4.SCTX = r.ReadSTRV(dataSize); return true;
                 case "SCRO": TES4.SCROs.Add(new FMIDField<Record>(r, dataSize)); return true;
                 default: return false;
             }

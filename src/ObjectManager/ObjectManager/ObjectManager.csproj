@@ -50,6 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\VectorExtensions.cs" />
     <Compile Include="OAExtensions.cs" />
     <Compile Include="CellManager.cs" />
     <Compile Include="Components\DayNightCycle.cs" />

@@ -45,8 +45,8 @@ namespace OA.Tes.FilePacks.Components
             }
             if (refObjDataGroup.DODT != null)
             {
-                doorData.doorExitPos = NifUtils.NifPointToUnityPoint(refObjDataGroup.DODT.Value.Position);
-                doorData.doorExitOrientation = NifUtils.NifEulerAnglesToUnityQuaternion(refObjDataGroup.DODT.Value.EulerAngles);
+                doorData.doorExitPos = NifUtils.NifPointToUnityPoint(refObjDataGroup.DODT.Value.Position.ToVector3());
+                doorData.doorExitOrientation = NifUtils.NifEulerAnglesToUnityQuaternion(refObjDataGroup.DODT.Value.EulerAngles.ToVector3());
             }
             objData.name = doorData.leadsToAnotherCell ? doorData.doorExitName : "Use " + doorData.doorName;
         }

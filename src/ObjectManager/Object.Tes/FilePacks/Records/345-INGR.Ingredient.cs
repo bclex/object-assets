@@ -63,16 +63,16 @@ namespace OA.Tes.FilePacks.Records
             switch (type)
             {
                 case "EDID":
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
+                case "NAME": EDID = r.ReadSTRV(dataSize); return true;
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "MODT": MODL.MODTField(r, dataSize); return true;
-                case "FULL": if (SCITs.Count == 0) FULL = new STRVField(r, dataSize); else SCITs.Last().FULLField(r, dataSize); return true;
-                case "FNAM": FULL = new STRVField(r, dataSize); return true;
+                case "FULL": if (SCITs.Count == 0) FULL = r.ReadSTRV(dataSize); else SCITs.Last().FULLField(r, dataSize); return true;
+                case "FNAM": FULL = r.ReadSTRV(dataSize); return true;
                 case "DATA": DATA = new DATAField(r, dataSize); return true;
                 case "IRDT": IRDT = new IRDTField(r, dataSize); return true;
                 case "ICON":
-                case "ITEX": ICON = new FILEField(r, dataSize); return true;
+                case "ITEX": ICON = r.ReadFILE(dataSize); return true;
                 case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
                     //
                 case "ENIT": DATA.ENITField(r, dataSize); return true;

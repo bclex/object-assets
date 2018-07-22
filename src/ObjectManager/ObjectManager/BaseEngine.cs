@@ -100,17 +100,16 @@ namespace OA
         /// Spawns the player inside using the cell's grid coordinates.
         /// </summary>
         /// <param name="playerPrefab">The player prefab.</param>
-        /// <param name="gridId">The grid coordinates.</param>
         /// <param name="position">The target position of the player.</param>
-        public void SpawnPlayer(GameObject playerPrefab, Vector3Int gridId, Vector3 position)
+        public void SpawnPlayer(GameObject playerPrefab, Vector3 position)
         {
-            _currentWorld = gridId.z;
-            _currentCell = Data.FindCellRecord(gridId);
+            var cellId = CellManager.GetCellId(position, _currentWorld);
+            _currentCell = Data.FindCellRecord(cellId);
             Debug.Assert(_currentCell != null);
             CreatePlayer(playerPrefab, position, out _playerCameraObj);
-            var cellInfo = CellManager.StartCreatingCell(gridId);
+            var cellInfo = CellManager.StartCreatingCell(cellId);
             LoadBalancer.WaitForTask(cellInfo.ObjectsCreationCoroutine);
-            if (gridId.z != -1) OnExteriorCell(_currentCell);
+            if (cellId.z != -1) OnExteriorCell(_currentCell);
             else OnInteriorCell(_currentCell);
         }
 

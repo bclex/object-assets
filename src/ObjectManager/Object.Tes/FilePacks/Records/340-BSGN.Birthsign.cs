@@ -18,14 +18,14 @@ namespace OA.Tes.FilePacks.Records
             switch (type)
             {
                 case "EDID":
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
+                case "NAME": EDID = r.ReadSTRV(dataSize); return true;
                 case "FULL":
-                case "FNAM": FULL = new STRVField(r, dataSize); return true;
+                case "FNAM": FULL = r.ReadSTRV(dataSize); return true;
                 case "ICON":
-                case "TNAM": ICON = new FILEField(r, dataSize); return true;
-                case "DESC": DESC = new STRVField(r, dataSize); return true;
+                case "TNAM": ICON = r.ReadFILE(dataSize); return true;
+                case "DESC": DESC = r.ReadSTRV(dataSize); return true;
                 case "SPLO": if (SPLOs == null) SPLOs = new List<FMIDField<Record>>(); SPLOs.Add(new FMIDField<Record>(r, dataSize)); return true;
-                case "NPCS": if (NPCSs == null) NPCSs = new List<STRVField>(); NPCSs.Add(new STRVField(r, dataSize)); return true;
+                case "NPCS": if (NPCSs == null) NPCSs = new List<STRVField>(); NPCSs.Add(r.ReadSTRV(dataSize)); return true;
                 default: return false;
             }
         }

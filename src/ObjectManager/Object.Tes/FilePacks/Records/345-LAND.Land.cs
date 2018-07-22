@@ -1,4 +1,5 @@
 ﻿using OA.Core;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace OA.Tes.FilePacks.Records
@@ -8,12 +9,13 @@ namespace OA.Tes.FilePacks.Records
         // TESX
         public struct VNMLField
         {
-            public Vector3Int[] Vertexs; // XYZ 8 bit floats
+            public Vector3Int8[] Vertexs; // XYZ 8 bit floats
 
             public VNMLField(UnityBinaryReader r, int dataSize)
             {
-                Vertexs = new Vector3Int[dataSize / 3];
-                for (var i = 0; i < Vertexs.Length; i++) Vertexs[i] = new Vector3Int(r.ReadByte(), r.ReadByte(), r.ReadByte());
+                Vertexs = r.ReadTArray<Vector3Int8>(dataSize, dataSize / 3);
+                //Vertexs = new Vector3Int8[dataSize / 3];
+                //for (var i = 0; i < Vertexs.Length; i++) Vertexs[i] = new Vector3Int8 { X = r.ReadByte(), Y = r.ReadByte(), Z = r.ReadByte() };
             }
         }
 
@@ -25,51 +27,49 @@ namespace OA.Tes.FilePacks.Records
             public VHGTField(UnityBinaryReader r, int dataSize)
             {
                 ReferenceHeight = r.ReadLESingle();
-                HeightData = new sbyte[dataSize - 4 - 3];
-                for (var i = 0; i < HeightData.Length; i++) HeightData[i] = r.ReadSByte();
+                var count = dataSize - 4 - 3;
+                HeightData = r.ReadTArray<sbyte>(count, count);
+                //HeightData = new sbyte[count];
+                //for (var i = 0; i < HeightData.Length; i++) HeightData[i] = r.ReadSByte();
                 r.SkipBytes(3); // Unused
             }
         }
 
         public struct VCLRField
         {
-            public ColorRef[] Colors; // 24-bit RGB
+            public ColorRef3[] Colors; // 24-bit RGB
 
             public VCLRField(UnityBinaryReader r, int dataSize)
             {
-                Colors = new ColorRef[dataSize / 24];
-                for (var i = 0; i < Colors.Length; i++) Colors[i] = new ColorRef(r.ReadByte(), r.ReadByte(), r.ReadByte());
+                Colors = r.ReadTArray<ColorRef3>(dataSize, dataSize / 24);
             }
         }
 
         public struct VTEXField
         {
-            public uint[] TextureIndices;
+            public ushort[] TextureIndicesT3;
+            public uint[] TextureIndicesT4;
 
             public VTEXField(UnityBinaryReader r, int dataSize, GameFormatId format)
             {
                 if (format == GameFormatId.TES3)
                 {
-                    TextureIndices = new uint[dataSize >> 1];
-                    for (var i = 0; i < TextureIndices.Length; i++) TextureIndices[i] = r.ReadLEUInt16();
+                    TextureIndicesT3 = r.ReadTArray<ushort>(dataSize, dataSize >> 1);
+                    TextureIndicesT4 = null;
                     return;
                 }
-                TextureIndices = new uint[dataSize >> 2];
-                for (var i = 0; i < TextureIndices.Length; i++) TextureIndices[i] = r.ReadLEUInt32();
+                TextureIndicesT3 = null;
+                TextureIndicesT4 = r.ReadTArray<uint>(dataSize, dataSize >> 2);
             }
         }
 
         // TES3
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct CORDField
         {
-            public override string ToString() => $"{CellX}, {CellY}";
-            public int CellX, CellY;
-
-            public CORDField(UnityBinaryReader r, int dataSize)
-            {
-                CellX = r.ReadLEInt32();
-                CellY = r.ReadLEInt32();
-            }
+            public int CellX;
+            public int CellY;
+            public override string ToString() => $"{CellX},{CellY}";
         }
 
         public struct WNAMField
@@ -77,38 +77,28 @@ namespace OA.Tes.FilePacks.Records
             // Low-LOD heightmap (signed chars)
             public WNAMField(UnityBinaryReader r, int dataSize)
             {
-                var heightCount = dataSize;
-                for (var i = 0; i < heightCount; i++) { var height = r.ReadByte(); }
+                r.SkipBytes(dataSize);
+                //var heightCount = dataSize;
+                //for (var i = 0; i < heightCount; i++) { var height = r.ReadByte(); }
             }
         }
 
         // TES4
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct BTXTField
         {
             public uint Texture;
             public byte Quadrant;
+            public byte Pad01;
             public short Layer;
-
-            public BTXTField(UnityBinaryReader r, int dataSize)
-            {
-                Texture = r.ReadLEUInt32();
-                Quadrant = r.ReadByte();
-                r.ReadByte(); // Unused
-                Layer = r.ReadLEInt16();
-            }
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct VTXTField
         {
             public ushort Position;
+            public ushort Pad01;
             public float Opacity;
-
-            public VTXTField(UnityBinaryReader r, int dataSize)
-            {
-                Position = r.ReadLEUInt16();
-                r.SkipBytes(2); // Unused
-                Opacity = r.ReadLESingle();
-            }
         }
 
         public class ATXTGroup
@@ -141,22 +131,20 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "DATA": DATA = new IN32Field(r, dataSize); return true;
+                case "DATA": DATA = r.ReadT<IN32Field>(dataSize); return true;
                 case "VNML": VNML = new VNMLField(r, dataSize); return true;
                 case "VHGT": VHGT = new VHGTField(r, dataSize); return true;
                 case "VCLR": VCLR = new VNMLField(r, dataSize); return true;
                 case "VTEX": VTEX = new VTEXField(r, dataSize, format); return true;
                 // TES3
-                case "INTV": INTV = new CORDField(r, dataSize); return true;
+                case "INTV": INTV = r.ReadT<CORDField>(dataSize); return true;
                 case "WNAM": WNAM = new WNAMField(r, dataSize); return true;
                 // TES4
-                case "BTXT": var btxt = new BTXTField(r, dataSize); BTXTs[btxt.Quadrant] = btxt; return true;
+                case "BTXT": var btxt = r.ReadT<BTXTField>(dataSize); BTXTs[btxt.Quadrant] = btxt; return true;
                 case "ATXT":
                     if (ATXTs == null) ATXTs = new ATXTGroup[4];
-                    var atxt = new BTXTField(r, dataSize); _lastATXT = ATXTs[atxt.Quadrant] = new ATXTGroup { ATXT = atxt }; return true;
-                case "VTXT":
-                    var vtxt = new VTXTField[dataSize >> 3];
-                    for (var i = 0; i < vtxt.Length; i++) vtxt[i] = new VTXTField(r, dataSize); _lastATXT.VTXTs = vtxt; return true;
+                    var atxt = r.ReadT<BTXTField>(dataSize); _lastATXT = ATXTs[atxt.Quadrant] = new ATXTGroup { ATXT = atxt }; return true;
+                case "VTXT": _lastATXT.VTXTs = r.ReadTArray<VTXTField>(dataSize, dataSize >> 3); return true;
                 default: return false;
             }
         }

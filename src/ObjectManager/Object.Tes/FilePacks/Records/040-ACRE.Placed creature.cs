@@ -11,22 +11,22 @@ namespace OA.Tes.FilePacks.Records
         public REFRRecord.DATAField DATA; // Position/Rotation
         public List<CELLRecord.XOWNGroup> XOWNs; // Ownership (optional)
         public REFRRecord.XESPField? XESP; // Enable Parent (optional)
-        public FLTVField? XSCL; // Scale (optional)
+        public FLTVField XSCL; // Scale (optional)
         public BYTVField? XRGD; // Ragdoll Data (optional)
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
                 case "NAME": NAME = new FMIDField<Record>(r, dataSize); return true;
                 case "DATA": DATA = new REFRRecord.DATAField(r, dataSize); return true;
                 case "XOWN": if (XOWNs == null) XOWNs = new List<CELLRecord.XOWNGroup>(); XOWNs.Add(new CELLRecord.XOWNGroup { XOWN = new FMIDField<Record>(r, dataSize) }); return true;
-                case "XRNK": XOWNs.Last().XRNK = new IN32Field(r, dataSize); return true;
+                case "XRNK": XOWNs.Last().XRNK = r.ReadT<IN32Field>(dataSize); return true;
                 case "XGLB": XOWNs.Last().XGLB = new FMIDField<Record>(r, dataSize); return true;
                 case "XESP": XESP = new REFRRecord.XESPField(r, dataSize); return true;
-                case "XSCL": XSCL = new FLTVField(r, dataSize); return true;
-                case "XRGD": XRGD = new BYTVField(r, dataSize); return true;
+                case "XSCL": XSCL = r.ReadT<FLTVField>(dataSize); return true;
+                case "XRGD": XRGD = r.ReadBYTV(dataSize); return true;
                 default: return false;
             }
         }

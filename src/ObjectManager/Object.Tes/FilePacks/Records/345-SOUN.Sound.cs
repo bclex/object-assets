@@ -60,8 +60,8 @@ namespace OA.Tes.FilePacks.Records
             switch (type)
             {
                 case "EDID":
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "FNAM": FNAM = new FILEField(r, dataSize); return true;
+                case "NAME": EDID = r.ReadSTRV(dataSize); return true;
+                case "FNAM": FNAM = r.ReadFILE(dataSize); return true;
                 case "SNDX": DATA = new DATAField(r, dataSize, format); return true;
                 case "SNDD": DATA = new DATAField(r, dataSize, format); return true;
                 case "DATA": DATA = new DATAField(r, dataSize, format); return true;

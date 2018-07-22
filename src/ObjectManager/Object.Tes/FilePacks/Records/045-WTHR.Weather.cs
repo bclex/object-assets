@@ -71,7 +71,7 @@ namespace OA.Tes.FilePacks.Records
             public byte ThunderLightning_EndFadeOut;
             public byte ThunderLightning_Frequency;
             public byte WeatherClassification;
-            public ColorRef LightningColor;
+            public ColorRef4 LightningColor;
 
             public DATAField(UnityBinaryReader r, int dataSize)
             {
@@ -87,7 +87,7 @@ namespace OA.Tes.FilePacks.Records
                 ThunderLightning_EndFadeOut = r.ReadByte();
                 ThunderLightning_Frequency = r.ReadByte();
                 WeatherClassification = r.ReadByte();
-                LightningColor = new ColorRef { Red = r.ReadByte(), Green = r.ReadByte(), Blue = r.ReadByte(), NullByte = 255 };
+                LightningColor = new ColorRef4 { Red = r.ReadByte(), Green = r.ReadByte(), Blue = r.ReadByte(), Null = 255 };
             }
         }
 
@@ -118,12 +118,12 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
-                case "CNAM": CNAM = new FILEField(r, dataSize); return true;
-                case "DNAM": DNAM = new FILEField(r, dataSize); return true;
-                case "NAM0": NAM0 = new BYTVField(r, dataSize); return true;
+                case "CNAM": CNAM = r.ReadFILE(dataSize); return true;
+                case "DNAM": DNAM = r.ReadFILE(dataSize); return true;
+                case "NAM0": NAM0 = r.ReadBYTV(dataSize); return true;
                 case "FNAM": FNAM = new FNAMField(r, dataSize); return true;
                 case "HNAM": HNAM = new HNAMField(r, dataSize); return true;
                 case "DATA": DATA = new DATAField(r, dataSize); return true;

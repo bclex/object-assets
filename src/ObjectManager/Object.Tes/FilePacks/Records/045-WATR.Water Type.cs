@@ -17,9 +17,9 @@ namespace OA.Tes.FilePacks.Records
             public float ScrollYSpeed;
             public float FogDistance_NearPlane;
             public float FogDistance_FarPlane;
-            public ColorRef ShallowColor;
-            public ColorRef DeepColor;
-            public ColorRef ReflectionColor;
+            public ColorRef4 ShallowColor;
+            public ColorRef4 DeepColor;
+            public ColorRef4 ReflectionColor;
             public byte TextureBlend;
             public float RainSimulator_Force;
             public float RainSimulator_Velocity;
@@ -58,9 +58,9 @@ namespace OA.Tes.FilePacks.Records
                     return;
                 }
                 FogDistance_FarPlane = r.ReadLESingle();
-                ShallowColor = new ColorRef(r);
-                DeepColor = new ColorRef(r);
-                ReflectionColor = new ColorRef(r);
+                ShallowColor = r.ReadT<ColorRef4>(dataSize);
+                DeepColor = r.ReadT<ColorRef4>(dataSize);
+                ReflectionColor = r.ReadT<ColorRef4>(dataSize);
                 TextureBlend = r.ReadByte();
                 r.SkipBytes(3); // Unused
                 if (dataSize == 62)
@@ -116,11 +116,11 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "TNAM": TNAM = new STRVField(r, dataSize); return true;
-                case "ANAM": ANAM = new BYTEField(r, dataSize); return true;
-                case "FNAM": FNAM = new BYTEField(r, dataSize); return true;
-                case "MNAM": MNAM = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
+                case "TNAM": TNAM = r.ReadSTRV(dataSize); return true;
+                case "ANAM": ANAM = r.ReadT<BYTEField>(dataSize); return true;
+                case "FNAM": FNAM = r.ReadT<BYTEField>(dataSize); return true;
+                case "MNAM": MNAM = r.ReadSTRV(dataSize); return true;
                 case "SNAM": SNAM = new FMIDField<SOUNRecord>(r, dataSize); return true;
                 case "DATA": DATA = new DATAField(r, dataSize); return true;
                 case "GNAM": GNAM = new GNAMField(r, dataSize); return true;

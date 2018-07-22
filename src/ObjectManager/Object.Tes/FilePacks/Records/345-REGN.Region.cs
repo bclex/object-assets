@@ -53,7 +53,7 @@ namespace OA.Tes.FilePacks.Records
             public float SinkVariance;
             public float SizeVariance;
             public Vector3Int AngleVariance;
-            public ColorRef VertexShading; // RGB + Shading radius (0 - 200) %
+            public ColorRef4 VertexShading; // RGB + Shading radius (0 - 200) %
 
             public RDOTField(UnityBinaryReader r, int dataSize)
             {
@@ -74,7 +74,7 @@ namespace OA.Tes.FilePacks.Records
                 SizeVariance = r.ReadLESingle();
                 AngleVariance = new Vector3Int(r.ReadLEUInt16(), r.ReadLEUInt16(), r.ReadLEUInt16());
                 r.SkipBytes(2); // Unused
-                VertexShading = new ColorRef(r);
+                VertexShading = r.ReadT<ColorRef4>(dataSize);
             }
         }
 
@@ -190,14 +190,14 @@ namespace OA.Tes.FilePacks.Records
             switch (type)
             {
                 case "EDID":
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
+                case "NAME": EDID = r.ReadSTRV(dataSize); return true;
                 case "WNAM":
                 case "FNAM": WNAM = new FMIDField<WRLDRecord>(r, dataSize); return true;
                 case "WEAT": WEAT = new WEATField(r, dataSize); return true; //: TES3
                 case "ICON":
-                case "BNAM": ICON = new STRVField(r, dataSize); return true;
+                case "BNAM": ICON = r.ReadSTRV(dataSize); return true;
                 case "RCLR":
-                case "CNAM": RCLR = new CREFField(r, dataSize); return true;
+                case "CNAM": RCLR = r.ReadT<CREFField>(dataSize); return true;
                 case "SNAM": RDATs.Add(new RDATField { RDSDs = new[] { new RDSDField(r, dataSize, format) } }); return true;
                 case "RPLI": RPLIs.Add(new RPLIField(r, dataSize)); return true;
                 case "RPLD": RPLIs.Last().RPLDField(r, dataSize); return true;
@@ -205,11 +205,11 @@ namespace OA.Tes.FilePacks.Records
                 case "RDOT":
                     var rdot = RDATs.Last().RDOTs = new RDOTField[dataSize / 52];
                     for (var i = 0; i < rdot.Length; i++) rdot[i] = new RDOTField(r, dataSize); return true;
-                case "RDMP": RDATs.Last().RDMP = new STRVField(r, dataSize); return true;
+                case "RDMP": RDATs.Last().RDMP = r.ReadSTRV(dataSize); return true;
                 case "RDGS":
                     var rdgs = RDATs.Last().RDGSs = new RDGSField[dataSize / 8];
                     for (var i = 0; i < rdgs.Length; i++) rdgs[i] = new RDGSField(r, dataSize); return true;
-                case "RDMD": RDATs.Last().RDMD = new UI32Field(r, dataSize); return true;
+                case "RDMD": RDATs.Last().RDMD = r.ReadT<UI32Field>(dataSize); return true;
                 case "RDSD":
                     var rdsd = RDATs.Last().RDSDs = new RDSDField[dataSize / 12];
                     for (var i = 0; i < rdsd.Length; i++) rdsd[i] = new RDSDField(r, dataSize, format); return true;

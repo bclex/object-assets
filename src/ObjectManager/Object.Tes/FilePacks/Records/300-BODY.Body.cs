@@ -31,9 +31,9 @@ namespace OA.Tes.FilePacks.Records
             if (format == GameFormatId.TES3)
                 switch (type)
                 {
-                    case "NAME": EDID = new STRVField(r, dataSize); return true;
+                    case "NAME": EDID = r.ReadSTRV(dataSize); return true;
                     case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-                    case "FNAM": FNAM = new STRVField(r, dataSize); return true;
+                    case "FNAM": FNAM = r.ReadSTRV(dataSize); return true;
                     case "BYDT": BYDT = new BYDTField(r, dataSize); return true;
                     default: return false;
                 }

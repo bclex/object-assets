@@ -44,12 +44,12 @@ namespace OA.Tes.FilePacks.Records
             switch (type)
             {
                 case "EDID":
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
+                case "NAME": EDID = r.ReadSTRV(dataSize); return true;
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "MODT": MODL.MODTField(r, dataSize); return true;
                 case "FULL":
-                case "FNAM": FULL = new STRVField(r, dataSize); return true;
+                case "FNAM": FULL = r.ReadSTRV(dataSize); return true;
                 case "DATA":
                 case "CNDT": DATA = new DATAField(r, dataSize, format); return true;
                 case "FLAG": DATA.FLAGField(r, dataSize); return true;

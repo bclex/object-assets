@@ -99,13 +99,13 @@ namespace OA.Tes.FilePacks.Records
             switch (type)
             {
                 case "EDID":
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
+                case "NAME": EDID = r.ReadSTRV(dataSize); return true;
                 case "DATA": DATA = new DATAField(r, dataSize, format); return true;
                 case "PGRP":
                     PGRPs = new PGRPField[dataSize >> 4];
                     for (var i = 0; i < PGRPs.Length; i++) PGRPs[i] = new PGRPField(r, 16); return true;
-                case "PGRC": PGRC = new UNKNField(r, dataSize); return true;
-                case "PGAG": PGAG = new UNKNField(r, dataSize); return true;
+                case "PGRC": PGRC = r.ReadUNKN(dataSize); return true;
+                case "PGAG": PGAG = r.ReadUNKN(dataSize); return true;
                 case "PGRR":
                     PGRRs = new PGRRField[dataSize >> 2];
                     for (var i = 0; i < PGRRs.Length; i++) PGRRs[i] = new PGRRField(r, 4); r.SkipBytes(dataSize % 4); return true;

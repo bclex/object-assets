@@ -10,7 +10,7 @@ namespace OA.Tes.FilePacks.Records
             public uint MembraneShader_SourceBlendMode;
             public uint MembraneShader_BlendOperation;
             public uint MembraneShader_ZTestFunction;
-            public ColorRef FillTextureEffect_Color;
+            public ColorRef4 FillTextureEffect_Color;
             public float FillTextureEffect_AlphaFadeInTime;
             public float FillTextureEffect_FullAlphaTime;
             public float FillTextureEffect_AlphaFadeOutTime;
@@ -20,7 +20,7 @@ namespace OA.Tes.FilePacks.Records
             public float FillTextureEffect_TextureAnimationSpeed_U;
             public float FillTextureEffect_TextureAnimationSpeed_V;
             public float EdgeEffect_FallOff;
-            public ColorRef EdgeEffect_Color;
+            public ColorRef4 EdgeEffect_Color;
             public float EdgeEffect_AlphaFadeInTime;
             public float EdgeEffect_FullAlphaTime;
             public float EdgeEffect_AlphaFadeOutTime;
@@ -53,9 +53,9 @@ namespace OA.Tes.FilePacks.Records
             public float ParticleShader_ScaleKey2;
             public float ParticleShader_ScaleKey1Time;
             public float ParticleShader_ScaleKey2Time;
-            public ColorRef ColorKey1_Color;
-            public ColorRef ColorKey2_Color;
-            public ColorRef ColorKey3_Color;
+            public ColorRef4 ColorKey1_Color;
+            public ColorRef4 ColorKey2_Color;
+            public ColorRef4 ColorKey3_Color;
             public float ColorKey1_ColorAlpha;
             public float ColorKey2_ColorAlpha;
             public float ColorKey3_ColorAlpha;
@@ -72,7 +72,7 @@ namespace OA.Tes.FilePacks.Records
                 MembraneShader_SourceBlendMode = r.ReadLEUInt32();
                 MembraneShader_BlendOperation = r.ReadLEUInt32();
                 MembraneShader_ZTestFunction = r.ReadLEUInt32();
-                FillTextureEffect_Color = new ColorRef(r);
+                FillTextureEffect_Color = r.ReadT<ColorRef4>(dataSize);
                 FillTextureEffect_AlphaFadeInTime = r.ReadLESingle();
                 FillTextureEffect_FullAlphaTime = r.ReadLESingle();
                 FillTextureEffect_AlphaFadeOutTime = r.ReadLESingle();
@@ -82,7 +82,7 @@ namespace OA.Tes.FilePacks.Records
                 FillTextureEffect_TextureAnimationSpeed_U = r.ReadLESingle();
                 FillTextureEffect_TextureAnimationSpeed_V = r.ReadLESingle();
                 EdgeEffect_FallOff = r.ReadLESingle();
-                EdgeEffect_Color = new ColorRef(r);
+                EdgeEffect_Color = r.ReadT<ColorRef4>(dataSize);
                 EdgeEffect_AlphaFadeInTime = r.ReadLESingle();
                 EdgeEffect_FullAlphaTime = r.ReadLESingle();
                 EdgeEffect_AlphaFadeOutTime = r.ReadLESingle();
@@ -117,9 +117,9 @@ namespace OA.Tes.FilePacks.Records
                 ParticleShader_ScaleKey2 = r.ReadLESingle();
                 ParticleShader_ScaleKey1Time = r.ReadLESingle();
                 ParticleShader_ScaleKey2Time = r.ReadLESingle();
-                ColorKey1_Color = new ColorRef(r);
-                ColorKey2_Color = new ColorRef(r);
-                ColorKey3_Color = new ColorRef(r);
+                ColorKey1_Color = r.ReadT<ColorRef4>(dataSize);
+                ColorKey2_Color = r.ReadT<ColorRef4>(dataSize);
+                ColorKey3_Color = r.ReadT<ColorRef4>(dataSize);
                 ColorKey1_ColorAlpha = r.ReadLESingle();
                 ColorKey2_ColorAlpha = r.ReadLESingle();
                 ColorKey3_ColorAlpha = r.ReadLESingle();
@@ -139,9 +139,9 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "ICON": ICON = new FILEField(r, dataSize); return true;
-                case "ICO2": ICO2 = new FILEField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
+                case "ICON": ICON = r.ReadFILE(dataSize); return true;
+                case "ICO2": ICO2 = r.ReadFILE(dataSize); return true;
                 case "DATA": DATA = new DATAField(r, dataSize); return true;
                 default: return false;
             }

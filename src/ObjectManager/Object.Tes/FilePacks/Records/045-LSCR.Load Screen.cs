@@ -33,9 +33,9 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "ICON": ICON = new FILEField(r, dataSize); return true;
-                case "DESC": DESC = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
+                case "ICON": ICON = r.ReadFILE(dataSize); return true;
+                case "DESC": DESC = r.ReadSTRV(dataSize); return true;
                 case "LNAM": if (LNAMs == null) LNAMs = new List<LNAMField>(); LNAMs.Add(new LNAMField(r, dataSize)); return true;
                 default: return false;
             }

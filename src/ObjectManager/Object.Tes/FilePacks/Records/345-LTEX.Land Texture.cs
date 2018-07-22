@@ -34,13 +34,13 @@ namespace OA.Tes.FilePacks.Records
             switch (type)
             {
                 case "EDID":
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
-                case "INTV": INTV = new INTVField(r, dataSize); return true;
+                case "NAME": EDID = r.ReadSTRV(dataSize); return true;
+                case "INTV": INTV = r.ReadINTV(dataSize); return true;
                 case "ICON":
-                case "DATA": ICON = new FILEField(r, dataSize); return true;
+                case "DATA": ICON = r.ReadFILE(dataSize); return true;
                 // TES4
                 case "HNAM": HNAM = new HNAMField(r, dataSize); return true;
-                case "SNAM": SNAM = new BYTEField(r, dataSize); return true;
+                case "SNAM": SNAM = r.ReadT<BYTEField>(dataSize); return true;
                 case "GNAM": GNAMs.Add(new FMIDField<GRASRecord>(r, dataSize)); return true;
                 default: return false;
             }

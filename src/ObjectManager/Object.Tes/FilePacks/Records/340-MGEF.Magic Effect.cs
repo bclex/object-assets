@@ -12,7 +12,7 @@ namespace OA.Tes.FilePacks.Records
             public int SpellSchool; // 0 = Alteration, 1 = Conjuration, 2 = Destruction, 3 = Illusion, 4 = Mysticism, 5 = Restoration
             public float BaseCost;
             public int Flags; // 0x0200 = Spellmaking, 0x0400 = Enchanting, 0x0800 = Negative
-            public ColorRef Color;
+            public ColorRef4 Color;
             public float SpeedX;
             public float SizeX;
             public float SizeCap;
@@ -22,7 +22,7 @@ namespace OA.Tes.FilePacks.Records
                 SpellSchool = r.ReadLEInt32();
                 BaseCost = r.ReadLESingle();
                 Flags = r.ReadLEInt32();
-                Color = new ColorRef((byte)r.ReadLEInt32(), (byte)r.ReadLEInt32(), (byte)r.ReadLEInt32());
+                Color = new ColorRef4 { Red = (byte)r.ReadLEInt32(), Green = (byte)r.ReadLEInt32(), Blue = (byte)r.ReadLEInt32(), Null = 255 };
                 SpeedX = r.ReadLESingle();
                 SizeX = r.ReadLESingle();
                 SizeCap = r.ReadLESingle();
@@ -143,33 +143,33 @@ namespace OA.Tes.FilePacks.Records
             if (format == GameFormatId.TES3)
                 switch (type)
                 {
-                    case "INDX": INDX = new INTVField(r, dataSize); return true;
+                    case "INDX": INDX = r.ReadINTV(dataSize); return true;
                     case "MEDT": MEDT = new MEDTField(r, dataSize); return true;
-                    case "ITEX": ICON = new FILEField(r, dataSize); return true;
-                    case "PTEX": PTEX = new STRVField(r, dataSize); return true;
-                    case "CVFX": CVFX = new STRVField(r, dataSize); return true;
-                    case "BVFX": BVFX = new STRVField(r, dataSize); return true;
-                    case "HVFX": HVFX = new STRVField(r, dataSize); return true;
-                    case "AVFX": AVFX = new STRVField(r, dataSize); return true;
-                    case "DESC": DESC = new STRVField(r, dataSize); return true;
-                    case "CSND": CSND = new STRVField(r, dataSize); return true;
-                    case "BSND": BSND = new STRVField(r, dataSize); return true;
-                    case "HSND": HSND = new STRVField(r, dataSize); return true;
-                    case "ASND": ASND = new STRVField(r, dataSize); return true;
+                    case "ITEX": ICON = r.ReadFILE(dataSize); return true;
+                    case "PTEX": PTEX = r.ReadSTRV(dataSize); return true;
+                    case "CVFX": CVFX = r.ReadSTRV(dataSize); return true;
+                    case "BVFX": BVFX = r.ReadSTRV(dataSize); return true;
+                    case "HVFX": HVFX = r.ReadSTRV(dataSize); return true;
+                    case "AVFX": AVFX = r.ReadSTRV(dataSize); return true;
+                    case "DESC": DESC = r.ReadSTRV(dataSize); return true;
+                    case "CSND": CSND = r.ReadSTRV(dataSize); return true;
+                    case "BSND": BSND = r.ReadSTRV(dataSize); return true;
+                    case "HSND": HSND = r.ReadSTRV(dataSize); return true;
+                    case "ASND": ASND = r.ReadSTRV(dataSize); return true;
                     default: return false;
                 }
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "FULL": FULL = new STRVField(r, dataSize); return true;
-                case "DESC": DESC = new STRVField(r, dataSize); return true;
-                case "ICON": ICON = new FILEField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
+                case "FULL": FULL = r.ReadSTRV(dataSize); return true;
+                case "DESC": DESC = r.ReadSTRV(dataSize); return true;
+                case "ICON": ICON = r.ReadFILE(dataSize); return true;
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "DATA": DATA = new DATAField(r, dataSize); return true;
                 case "ESCE":
                     ESCEs = new STRVField[dataSize >> 2];
-                    for (var i = 0; i < ESCEs.Length; i++) ESCEs[i] = new STRVField(r, 4); return true;
+                    for (var i = 0; i < ESCEs.Length; i++) ESCEs[i] = r.ReadSTRV(4); return true;
                 default: return false;
             }
         }

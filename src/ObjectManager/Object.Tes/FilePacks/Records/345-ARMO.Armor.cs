@@ -65,22 +65,22 @@ namespace OA.Tes.FilePacks.Records
             switch (type)
             {
                 case "EDID":
-                case "NAME": EDID = new STRVField(r, dataSize); return true;
+                case "NAME": EDID = r.ReadSTRV(dataSize); return true;
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
                 case "MODT": MODL.MODTField(r, dataSize); return true;
                 case "FULL":
-                case "FNAM": FULL = new STRVField(r, dataSize); return true;
+                case "FNAM": FULL = r.ReadSTRV(dataSize); return true;
                 case "DATA":
                 case "AODT": DATA = new DATAField(r, dataSize, format); return true;
                 case "ICON":
-                case "ITEX": ICON = new FILEField(r, dataSize); return true;
-                case "INDX": INDXs.Add(new CLOTRecord.INDXFieldGroup { INDX = new INTVField(r, dataSize) }); return true;
-                case "BNAM": INDXs.Last().BNAM = new STRVField(r, dataSize); return true;
-                case "CNAM": INDXs.Last().CNAM = new STRVField(r, dataSize); return true;
+                case "ITEX": ICON = r.ReadFILE(dataSize); return true;
+                case "INDX": INDXs.Add(new CLOTRecord.INDXFieldGroup { INDX = r.ReadINTV(dataSize) }); return true;
+                case "BNAM": INDXs.Last().BNAM = r.ReadSTRV(dataSize); return true;
+                case "CNAM": INDXs.Last().CNAM = r.ReadSTRV(dataSize); return true;
                 case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
                 case "ENAM": ENAM = new FMIDField<ENCHRecord>(r, dataSize); return true;
-                case "BMDT": BMDT = new UI32Field(r, dataSize); return true;
+                case "BMDT": BMDT = r.ReadT<UI32Field>(dataSize); return true;
                 case "MOD2": MOD2 = new MODLGroup(r, dataSize); return true;
                 case "MO2B": MOD2.MODBField(r, dataSize); return true;
                 case "MO2T": MOD2.MODTField(r, dataSize); return true;
@@ -90,8 +90,8 @@ namespace OA.Tes.FilePacks.Records
                 case "MOD4": MOD4 = new MODLGroup(r, dataSize); return true;
                 case "MO4B": MOD4.MODBField(r, dataSize); return true;
                 case "MO4T": MOD4.MODTField(r, dataSize); return true;
-                case "ICO2": ICO2 = new FILEField(r, dataSize); return true;
-                case "ANAM": ANAM = new IN16Field(r, dataSize); return true;
+                case "ICO2": ICO2 = r.ReadFILE(dataSize); return true;
+                case "ANAM": ANAM = r.ReadT<IN16Field>(dataSize); return true;
                 default: return false;
             }
         }

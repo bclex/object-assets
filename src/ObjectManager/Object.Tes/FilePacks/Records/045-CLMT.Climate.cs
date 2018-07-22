@@ -49,11 +49,11 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
                 case "MODL": MODL = new MODLGroup(r, dataSize); return true;
                 case "MODB": MODL.MODBField(r, dataSize); return true;
-                case "FNAM": FNAM = new FILEField(r, dataSize); return true;
-                case "GNAM": GNAM = new FILEField(r, dataSize); return true;
+                case "FNAM": FNAM = r.ReadFILE(dataSize); return true;
+                case "GNAM": GNAM = r.ReadFILE(dataSize); return true;
                 case "WLST": for (var i = 0; i < dataSize >> 3; i++) WLSTs.Add(new WLSTField(r, dataSize)); return true;
                 case "TNAM": TNAM = new TNAMField(r, dataSize); return true;
                 default: return false;

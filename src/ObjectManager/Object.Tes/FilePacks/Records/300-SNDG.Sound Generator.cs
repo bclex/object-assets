@@ -27,10 +27,10 @@ namespace OA.Tes.FilePacks.Records
             if (format == GameFormatId.TES3)
                 switch (type)
                 {
-                    case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "DATA": DATA = new IN32Field(r, dataSize); return true;
-                    case "SNAM": SNAM = new STRVField(r, dataSize); return true;
-                    case "CNAM": CNAM = new STRVField(r, dataSize); return true;
+                    case "NAME": EDID = r.ReadSTRV(dataSize); return true;
+                    case "DATA": DATA = r.ReadT<IN32Field>(dataSize); return true;
+                    case "SNAM": SNAM = r.ReadSTRV(dataSize); return true;
+                    case "CNAM": CNAM = r.ReadSTRV(dataSize); return true;
                     default: return false;
                 }
             return false;

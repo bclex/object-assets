@@ -24,9 +24,9 @@ namespace OA.Tes.FilePacks.Records
             switch (type)
             {
                 case "EDID":
-                case "NAME": EDID = new STRVField(r, dataSize); LastRecord = this; return true;
-                case "FULL": FULL = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = new BYTEField(r, dataSize); return true;
+                case "NAME": EDID = r.ReadSTRV(dataSize); LastRecord = this; return true;
+                case "FULL": FULL = r.ReadSTRV(dataSize); return true;
+                case "DATA": DATA = r.ReadT<BYTEField>(dataSize); return true;
                 case "QSTI":
                 case "QSTR": if (QSTIs == null) QSTIs = new List<FMIDField<QUSTRecord>>(); QSTIs.Add(new FMIDField<QUSTRecord>(r, dataSize)); return true;
                 default: return false;

@@ -13,16 +13,16 @@ namespace OA.Tes.FilePacks.Records
             if (format == GameFormatId.TES3)
                 switch (type)
                 {
-                    case "NAME": EDID = new STRVField(r, dataSize); return true;
-                    case "STRV": DATA = new DATVField(r, dataSize, 's'); return true;
-                    case "INTV": DATA = new DATVField(r, dataSize, 'i'); return true;
-                    case "FLTV": DATA = new DATVField(r, dataSize, 'f'); return true;
+                    case "NAME": EDID = r.ReadSTRV(dataSize); return true;
+                    case "STRV": DATA = r.ReadDATV(dataSize, 's'); return true;
+                    case "INTV": DATA = r.ReadDATV(dataSize, 'i'); return true;
+                    case "FLTV": DATA = r.ReadDATV(dataSize, 'f'); return true;
                     default: return false;
                 }
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "DATA": DATA = new DATVField(r, dataSize, EDID.Value[0]); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
+                case "DATA": DATA = r.ReadDATV(dataSize, EDID.Value[0]); return true;
                 default: return false;
             }
         }

@@ -27,7 +27,7 @@ namespace OA.Tes.FilePacks
             var watch = new Stopwatch();
             watch.Start();
             Read(1);
-            Utils.Info($"Loading: {watch.Elapsed}");
+            Utils.Info($"Loading: {watch.ElapsedMilliseconds}");
             Process();
             watch.Stop();
             GameFormatId GetFormatId()

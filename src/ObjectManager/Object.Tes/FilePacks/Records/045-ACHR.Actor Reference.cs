@@ -20,17 +20,17 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
                 case "NAME": NAME = new FMIDField<Record>(r, dataSize); return true;
                 case "DATA": DATA = new REFRRecord.DATAField(r, dataSize); return true;
                 case "XPCI": XPCI = new FMIDField<CELLRecord>(r, dataSize); return true;
                 case "FULL": XPCI.Value.AddName(r.ReadASCIIString(dataSize)); return true;
-                case "XLOD": XLOD = new BYTVField(r, dataSize); return true;
+                case "XLOD": XLOD = r.ReadBYTV(dataSize); return true;
                 case "XESP": XESP = new REFRRecord.XESPField(r, dataSize); return true;
                 case "XMRC": XMRC = new FMIDField<REFRRecord>(r, dataSize); return true;
                 case "XHRS": XHRS = new FMIDField<ACRERecord>(r, dataSize); return true;
-                case "XSCL": XSCL = new FLTVField(r, dataSize); return true;
-                case "XRGD": XRGD = new BYTVField(r, dataSize); return true;
+                case "XSCL": XSCL = r.ReadT<FLTVField>(dataSize); return true;
+                case "XRGD": XRGD = r.ReadBYTV(dataSize); return true;
                 default: return false;
             }
         }

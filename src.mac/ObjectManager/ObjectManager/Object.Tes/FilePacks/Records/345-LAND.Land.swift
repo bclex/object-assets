@@ -116,16 +116,14 @@ public class LANDRecord: Record {
         switch type {
         case "DATA": DATA = r.readT(dataSize)
         case "VNML": VNML = VNMLField(r, dataSize)
-        case "VHGT":
-            VHGT = VHGTField(r, dataSize)
+        case "VHGT": VHGT = VHGTField(r, dataSize)
         case "VCLR": VCLR = VNMLField(r, dataSize)
         case "VTEX": VTEX = VTEXField(r, dataSize, format)
         // TES3
         case "INTV": INTV = r.readT(dataSize)
         case "WNAM": WNAM = WNAMField(r, dataSize)
         // TES4
-        case "BTXT":
-            let btxt: BTXTField = r.readT(dataSize); BTXTs[Int(btxt.quadrant)] = btxt
+        case "BTXT": let btxt: BTXTField = r.readT(dataSize); BTXTs[Int(btxt.quadrant)] = btxt
         case "ATXT":
             if ATXTs == nil { ATXTs = [ATXTGroup?](repeating: nil, count: 4) }
             let atxt: BTXTField = r.readT(dataSize); _lastATXT = ATXTGroup(ATXT: atxt); ATXTs![Int(atxt.quadrant)] = _lastATXT

@@ -38,16 +38,16 @@ namespace OA.Tes.FilePacks.Records
         {
             switch (type)
             {
-                case "EDID": EDID = new STRVField(r, dataSize); return true;
-                case "INDX": INDX = new IN32Field(r, dataSize); return true;
+                case "EDID": EDID = r.ReadSTRV(dataSize); return true;
+                case "INDX": INDX = r.ReadT<IN32Field>(dataSize); return true;
                 case "DATA":
                 case "SKDT": DATA = new DATAField(r, dataSize, format); return true;
-                case "DESC": DESC = new STRVField(r, dataSize); return true;
-                case "ICON": ICON = new FILEField(r, dataSize); return true;
-                case "ANAM": ANAM = new STRVField(r, dataSize); return true;
-                case "JNAM": JNAM = new STRVField(r, dataSize); return true;
-                case "ENAM": ENAM = new STRVField(r, dataSize); return true;
-                case "MNAM": MNAM = new STRVField(r, dataSize); return true;
+                case "DESC": DESC = r.ReadSTRV(dataSize); return true;
+                case "ICON": ICON = r.ReadFILE(dataSize); return true;
+                case "ANAM": ANAM = r.ReadSTRV(dataSize); return true;
+                case "JNAM": JNAM = r.ReadSTRV(dataSize); return true;
+                case "ENAM": ENAM = r.ReadSTRV(dataSize); return true;
+                case "MNAM": MNAM = r.ReadSTRV(dataSize); return true;
                 default: return false;
             }
         }

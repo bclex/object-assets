@@ -128,7 +128,7 @@ public class CELLRecord: Record, ICellRecord {
             case "FULL",
                  "RGNN": FULL = r.readSTRV(dataSize)
             case "DATA": DATA = UI16Field(r.readINTV(format == .TES3 ? 4 : dataSize)); if format == .TES3 { fallthrough }
-            case "XCLC": XCLC = r.readT(format != .TES3 ? dataSize : 8) //debugPrint("\(XCLC!)")
+            case "XCLC": XCLC = r.readT(format == .TES3 ? 8 : dataSize)
             case "XCLL",
                  "AMBI": XCLL = r.readT(dataSize)
             case "XCLW",

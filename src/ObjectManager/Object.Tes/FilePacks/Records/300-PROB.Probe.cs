@@ -33,11 +33,11 @@ namespace OA.Tes.FilePacks.Records
             if (format == GameFormatId.TES3)
                 switch (type)
                 {
-                    case "NAME": EDID = new STRVField(r, dataSize); return true;
+                    case "NAME": EDID = r.ReadSTRV(dataSize); return true;
                     case "MODL": MODL = new MODLGroup(r, dataSize); return true;
-                    case "FNAM": FNAM = new STRVField(r, dataSize); return true;
+                    case "FNAM": FNAM = r.ReadSTRV(dataSize); return true;
                     case "PBDT": PBDT = new PBDTField(r, dataSize); return true;
-                    case "ITEX": ICON = new FILEField(r, dataSize); return true;
+                    case "ITEX": ICON = r.ReadFILE(dataSize); return true;
                     case "SCRI": SCRI = new FMIDField<SCPTRecord>(r, dataSize); return true;
                     default: return false;
                 }
