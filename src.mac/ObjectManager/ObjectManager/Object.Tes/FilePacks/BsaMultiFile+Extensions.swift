@@ -29,19 +29,19 @@ extension BsaMultiFile {
         return task
     }
 
-//    public func loadObjectInfoAsync(filePath: String) -> Task<Any> {
-//        let fileUrl = URL(string: filePath)!
-//        let fileData = loadFileData(filePath)
-//        var task = Task<Any?>()
+    public func loadObjectInfoAsync(filePath: String) -> Task<Any> {
+        let fileUrl = URL(string: filePath)!
+        let fileData = loadFileData(filePath)
+        var task = Task<Any>()
 //        DispatchQueue.global().async {
-//            var file = NiFile(name: fileUrl.deletingPathExtension().lastPathComponent)
-//            let r = BinaryReader(DataBaseStream(data: fileData))
-//            defer { r.close() }
+            var file = NiFile(name: fileUrl.deletingPathExtension().lastPathComponent)
+            let r = BinaryReader(DataBaseStream(data: fileData))
+            defer { r.close() }
 //            file.read(r)
-//            task.callback(file)
+            task.callback(file)
 //        }
-//        return task
-//    }
+        return task
+    }
     
     func findTexture(_ texturePath: String) -> String? {
         let textureUrl = URL(string: texturePath)!

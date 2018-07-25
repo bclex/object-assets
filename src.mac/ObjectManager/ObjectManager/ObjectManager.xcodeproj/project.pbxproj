@@ -31,6 +31,10 @@
 		544683CA20D59BC200A057F8 /* TesAssetPack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F76520BC8B93008A8E78 /* TesAssetPack.swift */; };
 		544683CB20D59BE700A057F8 /* TesAssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F75020BC8AB0008A8E78 /* TesAssetManager.swift */; };
 		54664B0720D556B600947E34 /* NumericExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54664B0620D556B600947E34 /* NumericExtensions.swift */; };
+		54815C4E210578AF00F26130 /* NifUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A090A120CF862300C68B25 /* NifUtils.swift */; };
+		54815C50210578B300F26130 /* NifReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FFE20C79E0F00C68B25 /* NifReader.swift */; };
+		54815C51210578B600F26130 /* NifManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FFA20C780FA00C68B25 /* NifManager.swift */; };
+		54815C532107FD8E00F26130 /* NifObjectBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54815C522107FD8E00F26130 /* NifObjectBuilder.swift */; };
 		54A08FEC20C4FACD00C68B25 /* Texture2DInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FEA20C4FACD00C68B25 /* Texture2DInfo.swift */; };
 		54A08FEE20C61E1D00C68B25 /* MaterialManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FED20C61E1D00C68B25 /* MaterialManager.swift */; };
 		54A08FF020C61E2B00C68B25 /* TextureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FEF20C61E2B00C68B25 /* TextureManager.swift */; };
@@ -185,6 +189,7 @@
 		5435117F20D7181500BBD35C /* ASettingsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASettingsSection.swift; sourceTree = "<group>"; };
 		544683C120D59AB900A057F8 /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		54664B0620D556B600947E34 /* NumericExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericExtensions.swift; sourceTree = "<group>"; };
+		54815C522107FD8E00F26130 /* NifObjectBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NifObjectBuilder.swift; sourceTree = "<group>"; };
 		54996A5620D1EF640053C358 /* ConvertUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConvertUtils.swift; sourceTree = "<group>"; };
 		54A08FEA20C4FACD00C68B25 /* Texture2DInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Texture2DInfo.swift; sourceTree = "<group>"; };
 		54A08FED20C61E1D00C68B25 /* MaterialManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaterialManager.swift; sourceTree = "<group>"; };
@@ -509,9 +514,10 @@
 		5415F75820BC8B0D008A8E78 /* Formats */ = {
 			isa = PBXGroup;
 			children = (
-				54A090A120CF862300C68B25 /* NifUtils.swift */,
-				54A08FFE20C79E0F00C68B25 /* NifReader.swift */,
 				54A08FFA20C780FA00C68B25 /* NifManager.swift */,
+				54815C522107FD8E00F26130 /* NifObjectBuilder.swift */,
+				54A08FFE20C79E0F00C68B25 /* NifReader.swift */,
+				54A090A120CF862300C68B25 /* NifUtils.swift */,
 			);
 			path = Formats;
 			sourceTree = "<group>";
@@ -668,6 +674,7 @@
 				F3970C5420D5FAA000D8E205 /* 345-CELL.Cell.swift in Sources */,
 				F3970C5F20D5FF8500D8E205 /* 345-INFO.Dialog Topic Info.swift in Sources */,
 				F3970C5720D5FC3700D8E205 /* 345-CONT.Container.swift in Sources */,
+				54815C532107FD8E00F26130 /* NifObjectBuilder.swift in Sources */,
 				F3970C5820D5FC6C00D8E205 /* 345-CREA.Creature.swift in Sources */,
 				F3970C1B20D5EC1F00D8E205 /* 005-AACT.Action.swift in Sources */,
 				5435118020D7181500BBD35C /* ASettingsSection.swift in Sources */,
@@ -684,6 +691,7 @@
 				F3970C5020D5F97100D8E205 /* 345-ALCH.Potion.swift in Sources */,
 				544683C620D59BB100A057F8 /* BsaFile+Extensions.swift in Sources */,
 				F3970C4220D5F68F00D8E205 /* 045-WTHR.Weather.swift in Sources */,
+				54815C51210578B600F26130 /* NifManager.swift in Sources */,
 				F3970C4020D5F58800D8E205 /* 045-WATR.Water Type.swift in Sources */,
 				54A090A820CF875A00C68B25 /* DdsReader.swift in Sources */,
 				F3970C6220D6029D00D8E205 /* 345-LIGH.Light.swift in Sources */,
@@ -751,6 +759,7 @@
 				54FD3E5C20CF892A0010D58E /* SequenceExtensions.swift in Sources */,
 				5415F74920BC8906008A8E78 /* BinaryReader.swift in Sources */,
 				5426497D20FBE3C000228506 /* GameObjectUtils.swift in Sources */,
+				54815C4E210578AF00F26130 /* NifUtils.swift in Sources */,
 				54FD3E6120CF892A0010D58E /* BinaryWriter.swift in Sources */,
 				F3970C2B20D5EF9200D8E205 /* 040-LVLC.Leveled Creature.swift in Sources */,
 				F3970C2C20D5EFA900D8E205 /* 040-SBSP.Subspace.swift in Sources */,
@@ -783,6 +792,7 @@
 				54A1257320D719A1001AC968 /* BaseSettings.swift in Sources */,
 				F3970C2620D5EEEC00D8E205 /* 040-HAIR.Hair.swift in Sources */,
 				F3970C4820D5F7A900D8E205 /* 300-REPA.Repair item.swift in Sources */,
+				54815C50210578B300F26130 /* NifReader.swift in Sources */,
 				F3970C4720D5F79B00D8E205 /* 300-PROB.Probe.swift in Sources */,
 				F3970C6420D6034000D8E205 /* 345-LTEX.Land Texture.swift in Sources */,
 				54664B0720D556B600947E34 /* NumericExtensions.swift in Sources */,

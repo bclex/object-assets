@@ -8,6 +8,7 @@
 
 import Foundation
 import SceneKit
+import simd
 
 // MARK Vector2
 
@@ -35,6 +36,21 @@ public typealias Vector3Float = (x: Float, y: Float, z: Float)
 public typealias Vector3Int8 = (x: UInt8, y: UInt8, z: UInt8)
 
 public typealias Vector3 = SCNVector3
+
+public extension float3 {
+    static var zero: float3 { return float3(0, 0, 0) }
+    static var up: float3 { return float3(0, 1, 0) }
+    static var right: float3 { return float3(1, 0, 0) }
+    static var left: float3 { return float3(-1, 0, 0) }
+    static var down: float3 { return float3(0, -1, 0) }
+    static var forward: float3 { return float3(0, 0, 1) }
+    static var back: float3 { return float3(0, 0, -1) }
+    static var one: float3 { return float3(1, 1, 1) }
+}
+
+public extension simd_quatf {
+    static var identity: float4 { return simd_quatf(matrix_identity_float4x4) }
+}
 
 public extension SCNVector3 {
     static var up: SCNVector3 { return Vector3(x: 0, y: 1, z: 0) }
@@ -163,4 +179,12 @@ public func * (rotation: Vector4, point: Vector3) -> Vector3 {
                          y:(num7 + num12) * point.x + (1 - (num4 + num6)) * point.y + (num9 - num10) * point.z,
                          z:(num8 - num11) * point.x + (num9 + num10) * point.y + (1 - (num4 + num5)) * point.z)
     return result
+}
+
+// MARK Quadtrination
+
+public extension Quaternion {
+    public static func angleAxis(_ f: Float, _ v: Vector3) -> Vector3 {
+        return Vector3()
+    }
 }

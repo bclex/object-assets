@@ -128,7 +128,7 @@ public class NiFile {
         self.init(name: name)
         header = NiHeader(r)
         blocks = [NiObject](); let capacity = Int(header.numBlocks); blocks.reserveCapacity(capacity)
-        for _ in 0..<capacity { blocks.append(NiReaderUtils.readNiObject(r)) }
+        for _ in 0..<capacity { blocks.append(NiReaderUtils.readNiObject(r)!) }
         footer = NiFooter(r)
     }
 }
@@ -477,7 +477,7 @@ public class NiAVObject: NiObjectNET {
         }
     }
 
-    public let flags: UInt16
+    public let flags: NiFlags
     public let translation: Vector3
     public let rotation: Matrix4x4
     public let scale: Float
@@ -489,7 +489,7 @@ public class NiAVObject: NiObjectNET {
 
     override init(_ r: BinaryReader) {
         super.init(r)
-        flags = NiReaderUtils.readFlags(r)
+        flags = NiFlags(rawValue: NiReaderUtils.readFlags(r))
         translation = r.readLEVector3()
         rotation = NiReaderUtils.read3x3RotationMatrix(r)
         scale = r.readLESingle()
@@ -577,7 +577,8 @@ public class NiGeometryData: NiObject {
         hasUV = r.readLEBool32()
         if hasUV {
             let capacity2 = Int(numUVSets)
-            uvSets = [TexCoord](repeating: [TexCoord](repeating: TexCoord(), count: capacity), count: capacity2)
+            uvSets = [TexCoord](repeating: (repeating: TexCoord(),
+                                count: capacity), count: capacity2)
             for i in 0..<capacity2 {
                 for j in 0..<capacity {
                     uvSets[i][j] = TexCoord(r)
@@ -637,19 +638,19 @@ public class NiTexturingProperty: NiProperty {
     public let applyMode: ApplyMode
     public let textureCount: UInt32
     //public let hasBaseTexture: Bool
-    public let baseTexture: TexDesc
+    public let baseTexture: TexDesc?
     //public let hasDarkTexture: Bool
-    public let darkTexture: TexDesc
+    public let darkTexture: TexDesc?
     //public let hasDetailTexture: Bool
-    public let detailTexture: TexDesc
+    public let detailTexture: TexDesc?
     //public let hasGlossTexture: Bool
-    public let glossTexture: TexDesc
+    public let glossTexture: TexDesc?
     //public let hasGlowTexture: Bool
-    public let glowTexture: TexDesc
+    public let glowTexture: TexDesc?
     //public let hasBumpMapTexture: Bool
-    public let bumpMapTexture: TexDesc
+    public let bumpMapTexture: TexDesc?
     //public let hasDecal0Texture: Bool
-    public let decal0Texture: TexDesc
+    public let decal0Texture: TexDesc?
 
     override init(_ r: BinaryReader) {
         super.init(r)

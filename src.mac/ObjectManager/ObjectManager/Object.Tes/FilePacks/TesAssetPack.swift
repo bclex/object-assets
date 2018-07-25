@@ -12,7 +12,7 @@ import SceneKit
 public class TesAssetPack: BsaMultiFile, IAssetPack {
     var _textureManager: TextureManager? = nil
     var _materialManager: MaterialManager? = nil
-//    var _nifManager: NifManager? = nil
+    var _nifManager: NifManager? = nil
 
     convenience init(_ filePath: URL) {
         self.init([filePath])
@@ -21,7 +21,7 @@ public class TesAssetPack: BsaMultiFile, IAssetPack {
         super.init(filePaths)
         _textureManager = TextureManager(asset: self)
         _materialManager = MaterialManager(textureManager: _textureManager!)
-//        _nifManager = NifManager(asset: self, materialManager: _materialManager!, markerLayer: 0)
+        _nifManager = NifManager(asset: self, materialManager: _materialManager!, markerLayer: 0)
     }
 
     public func loadTexture(texturePath: String, method: Int = 0) -> Texture2D {
@@ -32,13 +32,13 @@ public class TesAssetPack: BsaMultiFile, IAssetPack {
         _textureManager!.preloadTextureFileAsync(texturePath)
     }
 
-//    public func createObject(filePath: String) -> GameObject {
-//        return _nifManager!.instantiateNif(filePath)
-//    }
-//
-//    public func preloadObjectAsync(filePath: String) {
-//        _nifManager!.preloadNifFileAsync(filePath)
-//    }
+    public func createObject(filePath: String) -> GameObject {
+        return _nifManager!.instantiateNif(filePath)
+    }
+
+    public func preloadObjectAsync(filePath: String) {
+        _nifManager!.preloadNifFileAsync(filePath)
+    }
 
     public override func containsFile(_ filePath: String) -> Bool {
         return super.containsFile(filePath)

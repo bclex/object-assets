@@ -30,12 +30,12 @@ public extension SCNNode {
     }
 }
 
-func degToRad(_ deg: CGFloat) -> CGFloat {
-    return (deg / 180.0) * CGFloat(Double.pi)
+func degToRad(_ deg: Float) -> Float {
+    return (deg / 180.0) * Float(Double.pi)
 }
 
-let rad2Deg = CGFloat(180.0 / .pi)
-let deg2Rad = CGFloat(.pi / 180.0)
+let rad2Deg = Float(180.0 / .pi)
+let deg2Rad = Float(.pi / 180.0)
 
 func clamp<T: Comparable>(_ val: T, min: T, max: T) -> T {
     return val < min ? min : (val > max ? max:val)

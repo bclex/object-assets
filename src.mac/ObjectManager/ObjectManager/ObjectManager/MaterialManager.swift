@@ -14,17 +14,21 @@ public enum MaterialType {
     case standard
 }
 
-public enum BlendMode: Int {
+public enum BlendMode: UInt8 {
+    case one
+}
+
+public enum MatTestMode: UInt8 {
     case one
 }
 
 public struct MaterialTextures {
-    public var mainFilePath: String
-    public var darkFilePath: String
-    public var detailFilePath: String
-    public var glossFilePath: String
-    public var glowFilePath: String
-    public var bumpFilePath: String
+    public var mainFilePath: String?
+    public var darkFilePath: String?
+    public var detailFilePath: String?
+    public var glossFilePath: String?
+    public var glowFilePath: String?
+    public var bumpFilePath: String?
 }
 
 public struct MaterialProps: Hashable {
@@ -32,15 +36,14 @@ public struct MaterialProps: Hashable {
         return lhs.textures.mainFilePath == rhs.textures.mainFilePath
     }
     
-    public var hashValue: Int
-    
-    public var textures: MaterialTextures
-    public var alphaBlended: Bool
-    public var srcBlendMode: BlendMode
-    public var dstBlendMode: BlendMode
-    public var alphaTest: Bool
-    public var alphaCutoff: Float
-    public var zwrite: Bool
+    public var hashValue: Int { return 0 }
+    public var textures: MaterialTextures!
+    public var alphaBlended: Bool!
+    public var srcBlendMode: BlendMode!
+    public var dstBlendMode: BlendMode!
+    public var alphaTest: Bool!
+    public var alphaCutoff: Float!
+    public var zwrite: Bool!
 }
 
 public class MaterialManager {

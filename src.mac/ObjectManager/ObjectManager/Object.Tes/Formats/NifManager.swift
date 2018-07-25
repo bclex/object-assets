@@ -26,7 +26,7 @@ public class NifManager {
         }
         ensurePrefabContainerObjectExists()
         // Load & cache the NIF prefab.
-        var prefab = loadNifPrefabDontAddToPrefabCache(filePath: filePath)
+        let prefab = loadNifPrefabDontAddToPrefabCache(filePath: filePath)
         _nifPrefabs[filePath] = prefab
         // Instantiate the prefab.
         return GameObject.instantiate(prefab)
@@ -34,30 +34,30 @@ public class NifManager {
 
     public func preloadNifFileAsync(_ filePath: String) {
         // If the NIF prefab has already been created we don't have to load the file again.
-        guard _nifPrefabs[texturePath] == nil else { return }
+        guard _nifPrefabs[filePath] == nil else { return }
         // Start loading the NIF asynchronously if we haven't already started.
         var nifFileLoadingTask = _nifFilePreloadTasks[filePath]
         if nifFileLoadingTask == nil {
-            nifFileLoadingTask = _asset.loadObjectInfoAsync(filePath)
+            nifFileLoadingTask = _asset.loadObjectInfoAsync(filePath: filePath)
             _nifFilePreloadTasks[filePath] = nifFileLoadingTask
         }
     }
 
     func ensurePrefabContainerObjectExists() {
         if _prefabContainerObj == nil {
-            _prefabContainerObj = GameObject("NIF Prefabs")
-            _prefabContainerObj.setActive(false)
+            _prefabContainerObj = GameObject(name: "NIF Prefabs")
+            _prefabContainerObj!.setActive(false)
         }
     }
 
     func loadNifPrefabDontAddToPrefabCache(filePath: String) -> GameObject {
         assert(_nifPrefabs[filePath] != nil, "Invalid parameter")
         preloadNifFileAsync(filePath)
-        let file = _nifFilePreloadTasks[filePath]
+        let file = _nifFilePreloadTasks[filePath] as! NiFile
         _nifFilePreloadTasks.removeValue(forKey: filePath)
         // Start pre-loading all the NIF's textures.
         for niObject in file.blocks {
-            guard let niSourceTexture = niObject as NiSourceTexture, !niSourceTexture.fileName.isEmpty else {
+            guard let niSourceTexture = niObject as? NiSourceTexture, !niSourceTexture.fileName.isEmpty else {
                 continue
             }
             _materialManager.textureManager.preloadTextureFileAsync(niSourceTexture.fileName)

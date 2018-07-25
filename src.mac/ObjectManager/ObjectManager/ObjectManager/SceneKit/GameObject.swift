@@ -29,4 +29,8 @@ public class GameObject: SCNNode {
     convenience init(name: String, tag: String? = nil) {
         self.init()
     }
+    
+    public static func instantiate(_ obj: GameObject) -> GameObject {
+        fatalError()
+    }
 }

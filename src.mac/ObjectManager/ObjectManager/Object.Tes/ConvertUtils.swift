@@ -6,6 +6,8 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
+import simd
+
 public class ConvertUtils {
     static let yardInUnits = 64
     static let meterInYards: Float = 1.09361
@@ -13,7 +15,7 @@ public class ConvertUtils {
     static let exteriorCellSideLengthInUnits = 128 * yardInUnits
     public static let exteriorCellSideLengthInMeters = Float(exteriorCellSideLengthInUnits) / meterInUnits
 
-    public static func rotationMatrixToQuaternion(_ matrix: Matrix4x4) -> Quaternion {
-        return Quaternion() // TODO .lookRotation(matrix.getColumn(2), matrix.getColumn(1))
+    public static func rotationMatrixToQuaternion(_ matrix: float4x4) -> simd_quatf {
+        fatalError()
     }
 }
