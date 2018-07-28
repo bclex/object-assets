@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import simd
 
 public enum ASCIIFormat {
     case raw, possibleNullTerminated, zeroPadded
@@ -289,129 +290,57 @@ public class BinaryReader {
     public func readLEVector3() -> Vector3 {
         return Vector3(readLESingle(), readLESingle(), readLESingle())
     }
-
-    public func readLEColumnMajorMatrix3x3() -> Matrix4x4 {
-        let m11 = readLESingle()
-        let m21 = readLESingle()
-        let m31 = readLESingle()
-        let m12 = readLESingle()
-        let m22 = readLESingle()
-        let m32 = readLESingle()
-        let m13 = readLESingle()
-        let m23 = readLESingle()
-        let m33 = readLESingle()
-        return Matrix4x4(
-            m11: CGFloat(m11),
-            m12: CGFloat(m12),
-            m13: CGFloat(m13),
-            m14: 0,
-            m21: CGFloat(m21),
-            m22: CGFloat(m22),
-            m23: CGFloat(m23),
-            m24: 0,
-            m31: CGFloat(m31),
-            m32: CGFloat(m32),
-            m33: CGFloat(m33),
-            m34: 0,
-            m41: 0,
-            m42: 0,
-            m43: 0,
-            m44: 1
-        )
+    
+    public func readLEFloat3() -> float3 {
+        return float3(readLESingle(), readLESingle(), readLESingle())
     }
 
-    public func readLERowMajorMatrix3x3() -> Matrix4x4 {
-        return Matrix4x4(
-            m11: CGFloat(readLESingle()),
-            m12: CGFloat(readLESingle()),
-            m13: CGFloat(readLESingle()),
-            m14: 0,
-            m21: CGFloat(readLESingle()),
-            m22: CGFloat(readLESingle()),
-            m23: CGFloat(readLESingle()),
-            m24: 0,
-            m31: CGFloat(readLESingle()),
-            m32: CGFloat(readLESingle()),
-            m33: CGFloat(readLESingle()),
-            m34: 0,
-            m41: 0,
-            m42: 0,
-            m43: 0,
-            m44: 1
-        )
+    public func readLEColumnMajorMatrix3x3() -> float4x4 {
+        let m11 = readLESingle(), m21 = readLESingle(), m31 = readLESingle()
+        let m12 = readLESingle(), m22 = readLESingle(), m32 = readLESingle()
+        let m13 = readLESingle(), m23 = readLESingle(), m33 = readLESingle()
+        return float4x4(
+            float4(m11, m12, m13, 0),
+            float4(m21, m22, m23, 0),
+            float4(m31, m32, m33, 0),
+            float4(0, 0, 0, 1))
     }
 
-    public func readLEColumnMajorMatrix4x4() -> Matrix4x4 {
-        let m11 = readLESingle()
-        let m21 = readLESingle()
-        let m31 = readLESingle()
-        let m41 = readLESingle()
-        let m12 = readLESingle()
-        let m22 = readLESingle()
-        let m32 = readLESingle()
-        let m42 = readLESingle()
-        let m13 = readLESingle()
-        let m23 = readLESingle()
-        let m33 = readLESingle()
-        let m43 = readLESingle()
-        let m14 = readLESingle()
-        let m24 = readLESingle()
-        let m34 = readLESingle()
-        let m44 = readLESingle()
-        return Matrix4x4(
-            m11: CGFloat(m11),
-            m12: CGFloat(m12),
-            m13: CGFloat(m13),
-            m14: CGFloat(m14),
-            m21: CGFloat(m21),
-            m22: CGFloat(m22),
-            m23: CGFloat(m23),
-            m24: CGFloat(m24),
-            m31: CGFloat(m31),
-            m32: CGFloat(m32),
-            m33: CGFloat(m33),
-            m34: CGFloat(m34),
-            m41: CGFloat(m41),
-            m42: CGFloat(m42),
-            m43: CGFloat(m43),
-            m44: CGFloat(m44)
-        )
+    public func readLERowMajorMatrix3x3() -> float4x4 {
+        return float4x4(
+            float4(readLESingle(), readLESingle(), readLESingle(), 0),
+            float4(readLESingle(), readLESingle(), readLESingle(), 0),
+            float4(readLESingle(), readLESingle(), readLESingle(), 0),
+            float4(0, 0, 0, 1))
     }
 
-    public func readLERowMajorMatrix4x4() -> Matrix4x4 {
-        return Matrix4x4(
-            m11: CGFloat(readLESingle()),
-            m12: CGFloat(readLESingle()),
-            m13: CGFloat(readLESingle()),
-            m14: CGFloat(readLESingle()),
-            m21: CGFloat(readLESingle()),
-            m22: CGFloat(readLESingle()),
-            m23: CGFloat(readLESingle()),
-            m24: CGFloat(readLESingle()),
-            m31: CGFloat(readLESingle()),
-            m32: CGFloat(readLESingle()),
-            m33: CGFloat(readLESingle()),
-            m34: CGFloat(readLESingle()),
-            m41: CGFloat(readLESingle()),
-            m42: CGFloat(readLESingle()),
-            m43: CGFloat(readLESingle()),
-            m44: CGFloat(readLESingle())
-        )
+    public func readLEColumnMajorMatrix4x4() -> float4x4 {
+        let m11 = readLESingle(), m21 = readLESingle(), m31 = readLESingle(), m41 = readLESingle()
+        let m12 = readLESingle(), m22 = readLESingle(), m32 = readLESingle(), m42 = readLESingle()
+        let m13 = readLESingle(), m23 = readLESingle(), m33 = readLESingle(), m43 = readLESingle()
+        let m14 = readLESingle(), m24 = readLESingle(), m34 = readLESingle(), m44 = readLESingle()
+        return float4x4(
+            float4(m11, m12, m13, m14),
+            float4(m21, m22, m23, m24),
+            float4(m31, m32, m33, m34),
+            float4(m41, m42, m43, m44))
     }
 
-    public func readLEQuaternionWFirst() -> Quaternion {
-        let w = readLESingle()
-        let x = readLESingle()
-        let y = readLESingle()
-        let z = readLESingle()
-        return Quaternion(x, y, z, w)
+    public func readLERowMajorMatrix4x4() -> float4x4 {
+        return float4x4(
+            float4(readLESingle(), readLESingle(), readLESingle(), readLESingle()),
+            float4(readLESingle(), readLESingle(), readLESingle(), readLESingle()),
+            float4(readLESingle(), readLESingle(), readLESingle(), readLESingle()),
+            float4(readLESingle(), readLESingle(), readLESingle(), readLESingle()))
     }
 
-    public func readLEQuaternionWLast() -> Quaternion {
-        let x = readLESingle()
-        let y = readLESingle()
-        let z = readLESingle()
-        let w = readLESingle()
-        return Quaternion(x, y, z, w)
+    public func readLEQuaternionWFirst() -> simd_quatf {
+        let w = readLESingle(), x = readLESingle(), y = readLESingle(), z = readLESingle()
+        return simd_quatf(ix: x, iy: y, iz: z, r: w)
+    }
+
+    public func readLEQuaternionWLast() -> simd_quatf {
+        let x = readLESingle(), y = readLESingle(), z = readLESingle(), w = readLESingle()
+        return simd_quatf(ix: x, iy: y, iz: z, r: w)
     }
 }

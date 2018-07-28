@@ -62,9 +62,9 @@ public class NifManager {
             }
             _materialManager.textureManager.preloadTextureFileAsync(niSourceTexture.fileName)
         }
-        let objBuilder = NifObjectBuilder(file, _materialManager, _markerLayer)
-        var prefab = objBuilder.BuildObject()
-        prefab.transform.parent = _prefabContainerObj.transform
+        let objBuilder = NifObjectBuilder(file: file, materialManager: _materialManager, markerLayer: _markerLayer)
+        let prefab = objBuilder.buildObject()
+        prefab.simdTransform = _prefabContainerObj!.simdTransform
         // Add LOD support to the prefab.
         // let lodComponent = prefab.addComponent<LODGroup>()
         // let lods = [LOD(0.015, prefab.getComponentsInChildren<Renderer>())]
