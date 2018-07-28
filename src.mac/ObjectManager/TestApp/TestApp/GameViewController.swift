@@ -10,10 +10,13 @@ import SceneKit
 import QuartzCore
 import ObjectManager
 
+//typealias Test = TesEngineTest
+typealias Test = TesPackTest
+
 class GameViewController: NSViewController {
 //    @IBOutlet weak var gameView: GameView!
     var game = Game()
-    var segments = [TesEngineTest()]
+    var segments = [Test()]
 
     override func viewDidLoad() {
         let world = SCNScene()

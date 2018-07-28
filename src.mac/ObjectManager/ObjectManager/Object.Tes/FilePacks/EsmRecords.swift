@@ -325,7 +325,7 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
     }
 
     func readRecord(_ record: Record, compressed: Bool) {
-//        debugPrint("Recd: \(record.header.type)")
+        debugPrint("Recd: \(record.header.type)")
         guard compressed else {
             record.read(_r, _filePath, for: _format)
             return

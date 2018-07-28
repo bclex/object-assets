@@ -31,7 +31,6 @@ public class TesEngineTest: GameSegment {
         let newX = 23 * ConvertUtils.exteriorCellSideLengthInMeters
         let newZ = (-5 * ConvertUtils.exteriorCellSideLengthInMeters) + 100
         Engine.spawnPlayer(player: player, position: Vector3(newX, 2.30, newZ))
-        
     }
     
     public func onDestroy() {
@@ -46,5 +45,6 @@ public class TesEngineTest: GameSegment {
     }
     
     public func update() {
+//        Engine.update()
     }
 }

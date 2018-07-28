@@ -7,35 +7,28 @@
 //
 
 import CoreGraphics
+import simd
 
 public class WRLDRecord: Record {
-    public struct MNAMField {
-        public let usableDimensions: Vector2Int
+    public typealias MNAMField = (
+        pusableDimensions: int2,
         // Cell Coordinates
-        public let nwCell_x: Int16
-        public let nwCell_y: Int16
-        public let seCell_x: Int16
-        public let seCell_y: Int16
-
-        init(_ r: BinaryReader, _ dataSize: Int) {
-            usableDimensions = Vector2Int(Int(r.readLEInt32()), Int(r.readLEInt32()))
-            nwCell_x = r.readLEInt16()
-            nwCell_y = r.readLEInt16()
-            seCell_x = r.readLEInt16()
-            seCell_y = r.readLEInt16()
-        }
-    }
+        nwCell_x: Int16,
+        nwCell_y: Int16,
+        seCell_x: Int16,
+        seCell_y: Int16
+    )
 
     public class NAM0Field {
-        public let min: Vector2 
-        public var max: Vector2!
+        public let min: float2
+        public var max: float2!
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            min = Vector2(dx: CGFloat(r.readLESingle()), dy: CGFloat(r.readLESingle()))
+            min = r.readT(dataSize)
         }
 
         func NAM9Field(_ r: BinaryReader, _ dataSize: Int) {
-            max = Vector2(dx: CGFloat(r.readLESingle()), dy: CGFloat(r.readLESingle()))
+            max = r.readT(dataSize)
         }
     }
 
@@ -59,7 +52,7 @@ public class WRLDRecord: Record {
         case "CNAM": CNAM = FMIDField<CLMTRecord>(r, dataSize)
         case "NAM2": NAM2 = FMIDField<WATRRecord>(r, dataSize)
         case "ICON": ICON = r.readSTRV(dataSize)
-        case "MNAM": MNAM = MNAMField(r, dataSize)
+        case "MNAM": MNAM = r.readT(dataSize)
         case "DATA": DATA = r.readT(dataSize)
         case "NAM0": NAM0 = NAM0Field(r, dataSize)
         case "NAM9": NAM0.NAM9Field(r, dataSize)
