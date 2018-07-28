@@ -15,8 +15,8 @@ public typealias Texture2D = NSImage
 public typealias TextureFormat = CIFormat
 public typealias Vector2 = CGVector
 //public typealias Vector3 = SCNVector3
-public typealias Matrix4x4 = SCNMatrix4
-public typealias Quaternion = SCNQuaternion
+//public typealias Matrix4x4 = SCNMatrix4
+//public typealias Quaternion = SCNQuaternion
 
 public class Utils {
     public static func bytes<T>(of value: T) -> [UInt8] {
@@ -55,11 +55,11 @@ public class Utils {
         return (bits & flagBits) == flagBits
     }
     
-//    public static func swap(_ a: inout CGFloat, _ b: inout CGFloat) {
-//        let temp = a
-//        a = b
-//        b = temp
-//    }
+    public static func swap(_ a: inout Float, _ b: inout Float) {
+        let temp = a
+        a = b
+        b = temp
+    }
 
     public static func getBits(_ bitOffset: Int, _ bitCount: Int, _ bytes: Data) -> UInt64 {
         assert(bitCount <= 64 && (bitOffset + bitCount) <= (8 * bytes.count))

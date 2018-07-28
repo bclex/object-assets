@@ -49,7 +49,7 @@ public extension float3 {
 }
 
 public extension simd_quatf {
-    static var identity: float4 { return simd_quatf(matrix_identity_float4x4) }
+    static var identity: float4 { return float4(0, 0, 0, 1) }
 }
 
 public extension SCNVector3 {
@@ -182,9 +182,9 @@ public func * (rotation: Vector4, point: Vector3) -> Vector3 {
 }
 
 // MARK Quadtrination
-
-public extension Quaternion {
-    public static func angleAxis(_ f: Float, _ v: Vector3) -> Vector3 {
-        return Vector3()
-    }
-}
+//
+//public extension Quaternion {
+//    public static func angleAxis(_ f: Float, _ v: Vector3) -> Vector3 {
+//        return Vector3()
+//    }
+//}

@@ -26,7 +26,7 @@ public class NifObjectBuilder {
         // If there is only one root, instantiate that directly.
         // If there are multiple roots, create a container GameObject and parent it to the roots.
         if _file.footer.roots.count == 1 {
-            var rootNiObject = _file.blocks[Int(_file.footer.roots[0])]
+            let rootNiObject = _file.blocks[Int(_file.footer.roots[0])]
             var gameObject = instantiateRootNiObject(rootNiObject)
             // If the file doesn't contain any NiObjects we are looking for, return an empty GameObject.
             if gameObject == nil {
@@ -43,9 +43,9 @@ public class NifObjectBuilder {
         }
         else {
             debugPrint("\(_file.name) has multiple roots.")
-            var gameObject = GameObject(name: _file.name)
+            let gameObject = GameObject(name: _file.name)
             for rootRef in _file.footer.roots {
-                var child = instantiateRootNiObject(_file.blocks[Int(rootRef)])
+                let child = instantiateRootNiObject(_file.blocks[Int(rootRef)])
                 if child != nil {
 //                        child.transform.SetParent(gameObject.transform, false)
                 }
@@ -55,11 +55,11 @@ public class NifObjectBuilder {
     }
 
     func instantiateRootNiObject(_ obj: NiObject) -> GameObject? {
-        var gameObject = instantiateNiObject(obj)
+        let gameObject = instantiateNiObject(obj)
         var shouldAddMissingColliders = false
         var isMarker = true
         processExtraData(obj, &shouldAddMissingColliders, &isMarker)
-        if _file.name != nil && NifObjectBuilder.isMarkerFileName(_file.name) {
+        if _file.name.count > 0 && NifObjectBuilder.isMarkerFileName(_file.name) {
             shouldAddMissingColliders = false
             isMarker = true
         }
@@ -164,7 +164,7 @@ public class NifObjectBuilder {
 
     func applyNiAVObject(_ niAVObject: NiAVObject, _ obj: GameObject) {
         obj.simdPosition = NifUtils.nifPointToUnityPoint(niAVObject.translation)
-        obj.simdRotation = NifUtils.nifRotationMatrixToUnityQuaternion(niAVObject.rotation)
+        obj.simdRotation = NifUtils.nifRotationMatrixToUnityQuaternion(niAVObject.rotation).vector
         obj.simdScale = niAVObject.scale * float3.one
     }
 

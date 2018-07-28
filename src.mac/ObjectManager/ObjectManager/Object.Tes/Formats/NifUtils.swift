@@ -11,7 +11,11 @@ import simd
 public class NifUtils {
     public static func nifVectorToUnityVector(_ vector: float3) -> float3 {
         var unity = vector
-        swap(&unity.y, &unity.z)
+        let y = unity.y
+        let z = unity.z
+        unity.z = y
+        unity.y = z
+//        Utils.swap(&unity.y, &unity.z)
         return unity
     }
 
