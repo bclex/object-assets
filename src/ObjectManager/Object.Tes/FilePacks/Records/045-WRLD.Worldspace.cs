@@ -8,21 +8,12 @@ namespace OA.Tes.FilePacks.Records
     {
         public struct MNAMField
         {
-            public Vector2Int UsableDimensions;
+            public Int2 UsableDimensions;
             // Cell Coordinates
             public short NWCell_X;
             public short NWCell_Y;
             public short SECell_X;
             public short SECell_Y;
-
-            public MNAMField(UnityBinaryReader r, int dataSize)
-            {
-                UsableDimensions = new Vector2Int(r.ReadLEInt32(), r.ReadLEInt32());
-                NWCell_X = r.ReadLEInt16();
-                NWCell_Y = r.ReadLEInt16();
-                SECell_X = r.ReadLEInt16();
-                SECell_Y = r.ReadLEInt16();
-            }
         }
 
         public struct NAM0Field
@@ -90,7 +81,7 @@ namespace OA.Tes.FilePacks.Records
                 case "CNAM": CNAM = new FMIDField<CLMTRecord>(r, dataSize); return true;
                 case "NAM2": NAM2 = new FMIDField<WATRRecord>(r, dataSize); return true;
                 case "ICON": ICON = r.ReadFILE(dataSize); return true;
-                case "MNAM": MNAM = new MNAMField(r, dataSize); return true;
+                case "MNAM": MNAM = r.ReadT<MNAMField>(dataSize); return true;
                 case "DATA": DATA = r.ReadT<BYTEField>(dataSize); return true;
                 case "NAM0": NAM0 = new NAM0Field(r, dataSize); return true;
                 case "NAM9": NAM0.NAM9Field(r, dataSize); return true;
