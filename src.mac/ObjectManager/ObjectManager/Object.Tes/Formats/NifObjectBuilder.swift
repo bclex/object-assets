@@ -252,16 +252,16 @@ public class NifObjectBuilder {
         // Create the material properties.
         var mp = MaterialProps()
         if alphaProperty != nil {
-            let flags = alphaProperty!.flags
+            let flags = UInt(alphaProperty!.flags)
             let srcbm = NifObjectBuilder.getBytes(value: flags >> 1)[0] & 15
             let dstbm = NifObjectBuilder.getBytes(value: flags >> 5)[0] & 15
             mp.zwrite = NifObjectBuilder.getBytes(value: flags >> 15)[0] == 1 // smush
-            if Utils.containsBitFlags(UInt(flags), 0x01) { // if flags contain the alpha blend flag at bit 0 in byte 0
+            if Utils.containsBitFlags(flags, 0x01) { // if flags contain the alpha blend flag at bit 0 in byte 0
                 mp.alphaBlended = true
                 mp.srcBlendMode = figureBlendMode(srcbm)
                 mp.dstBlendMode = figureBlendMode(dstbm)
             }
-            else if Utils.containsBitFlags(UInt(flags), 0x100) { // if flags contain the alpha test flag
+            else if Utils.containsBitFlags(flags, 0x100) { // if flags contain the alpha test flag
                 mp.alphaTest = true
                 mp.alphaCutoff = Float(alphaProperty!.threshold) / 255
             }

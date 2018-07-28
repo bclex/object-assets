@@ -29,24 +29,6 @@ public class NifUtils {
             float4(rotationMatrix[2].x, rotationMatrix[2].z, rotationMatrix[2].y, 0),
             float4(rotationMatrix[1].x, rotationMatrix[1].z, rotationMatrix[1].y, 0),
             float4(0, 0, 0, 1))
-//        return float4x4(
-//            m11: rotationMatrix.m11,
-//            m12: rotationMatrix.m13,
-//            m13: rotationMatrix.m12,
-//            m14: 0,
-//            m21: rotationMatrix.m31,
-//            m22: rotationMatrix.m33,
-//            m23: rotationMatrix.m32,
-//            m24: 0,
-//            m31: rotationMatrix.m21,
-//            m32: rotationMatrix.m23,
-//            m33: rotationMatrix.m22,
-//            m34: 0,
-//            m41: 0,
-//            m42: 0,
-//            m43: 0,
-//            m44: 1
-//        )
     }
 
     public static func nifRotationMatrixToUnityQuaternion(_ rotationMatrix: float4x4) -> simd_quatf {
