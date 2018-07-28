@@ -9,11 +9,11 @@ namespace OA.Tes.FilePacks.Records
         // TESX
         public struct VNMLField
         {
-            public Vector3Int8[] Vertexs; // XYZ 8 bit floats
+            public Byte3[] Vertexs; // XYZ 8 bit floats
 
             public VNMLField(UnityBinaryReader r, int dataSize)
             {
-                Vertexs = r.ReadTArray<Vector3Int8>(dataSize, dataSize / 3);
+                Vertexs = r.ReadTArray<Byte3>(dataSize, dataSize / 3);
                 //Vertexs = new Vector3Int8[dataSize / 3];
                 //for (var i = 0; i < Vertexs.Length; i++) Vertexs[i] = new Vector3Int8 { X = r.ReadByte(), Y = r.ReadByte(), Z = r.ReadByte() };
             }

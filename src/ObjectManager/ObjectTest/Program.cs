@@ -1,5 +1,6 @@
 ﻿using OA.Configuration;
-using OA.Tes;
+//using Test = OA.Tes.ObjectTestDataPack;
+using Test = OA.Tes.ObjectTestPack;
 
 namespace OA
 {
@@ -8,7 +9,7 @@ namespace OA
         public static void Main()
         {
             BaseSettings.Game.MaterialType = MaterialType.None;
-            ObjectTestDataPack.Start();
+            Test.Start();
         }
     }
 }

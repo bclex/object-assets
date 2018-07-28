@@ -10,13 +10,6 @@ namespace OA.Tes.FilePacks.Records
             public float Version;
             public int NumRecords; // Number of records and groups (not including TES4 record itself).
             public uint NextObjectId; // Next available object ID.
-
-            public HEDRField(UnityBinaryReader r, int dataSize)
-            {
-                Version = r.ReadLESingle();
-                NumRecords = r.ReadLEInt32();
-                NextObjectId = r.ReadLEUInt32();
-            }
         }
 
         public HEDRField HEDR;
@@ -27,12 +20,14 @@ namespace OA.Tes.FilePacks.Records
         public UNKNField? ONAM; // overrides (Optional)
         public IN32Field INTV; // unknown
         public IN32Field? INCC; // unknown (Optional)
+        // TES5
+        public UNKNField? TNAM; // overrides (Optional)
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
             switch (type)
             {
-                case "HEDR": HEDR = new HEDRField(r, dataSize); return true;
+                case "HEDR": HEDR = r.ReadT<HEDRField>(dataSize); return true;
                 case "OFST": r.SkipBytes(dataSize); return true;
                 case "DELE": r.SkipBytes(dataSize); return true;
                 case "CNAM": CNAM = r.ReadSTRV(dataSize); return true;
@@ -42,6 +37,8 @@ namespace OA.Tes.FilePacks.Records
                 case "ONAM": ONAM = r.ReadUNKN(dataSize); return true;
                 case "INTV": INTV = r.ReadT<IN32Field>(dataSize); return true;
                 case "INCC": INCC = r.ReadT<IN32Field>(dataSize); return true;
+                // TES5
+                case "TNAM": TNAM = r.ReadUNKN(dataSize); return true;
                 default: return false;
             }
         }

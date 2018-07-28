@@ -7,17 +7,11 @@
 //
 
 public class TES4Record: Record {
-    public struct HEDRField {
-        public let version: Float
-        public let numRecords: Int32 // Number of records and groups (not including TES4 record itself).
-        public let nextObjectId: UInt32 // Next available object ID.
-
-        init(_ r: BinaryReader, _ dataSize: Int) {
-            version = r.readLESingle()
-            numRecords = r.readLEInt32()
-            nextObjectId = r.readLEUInt32()
-        }
-    }
+    public typealias HEDRField = (
+        version: Float,
+        numRecords: Int32, // Number of records and groups (not including TES4 record itself).
+        nextObjectId: UInt32 // Next available object ID.
+    )
 
     public var HEDR: HEDRField!
     public var CNAM: STRVField? = nil// author (Optional)
@@ -27,10 +21,12 @@ public class TES4Record: Record {
     public var ONAM: UNKNField? = nil // overrides (Optional)
     public var INTV: IN32Field! // unknown
     public var INCC: IN32Field? = nil// unknown (Optional)
+    // TES5
+    public var TNAM: UNKNField? = nil // overrides (Optional)
 
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {
         switch type {
-        case "HEDR": HEDR = HEDRField(r, dataSize)
+        case "HEDR": HEDR = r.readT(dataSize)
         case "OFST": r.skipBytes(dataSize)
         case "DELE": r.skipBytes(dataSize)
         case "CNAM": CNAM = r.readSTRV(dataSize)
@@ -40,6 +36,8 @@ public class TES4Record: Record {
         case "ONAM": ONAM = r.readBYTV(dataSize)
         case "INTV": INTV = r.readT(dataSize)
         case "INCC": INCC = r.readT(dataSize)
+        // TES5
+        case "TNAM": TNAM = r.readBYTV(dataSize)
         default: return false
         }
         return true

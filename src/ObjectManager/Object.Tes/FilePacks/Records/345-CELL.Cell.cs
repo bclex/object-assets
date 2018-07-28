@@ -60,8 +60,8 @@ namespace OA.Tes.FilePacks.Records
             [StructLayout(LayoutKind.Sequential, Pack = 1)]
             public struct XYZAField
             {
-                public Vector3Float Position;
-                public Vector3Float EulerAngles;
+                public Float3 Position;
+                public Float3 EulerAngles;
             }
 
             public UI32Field? FRMR; // Object Index (starts at 1)

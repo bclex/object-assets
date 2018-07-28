@@ -17,9 +17,9 @@ namespace OA.Tes.FilePacks
             @"Bethesda Softworks\Fallout 3", GameId.Fallout3,
             @"Bethesda Softworks\Fallout NV", GameId.FalloutNV,
             @"Bethesda Softworks\Morrowind", GameId.Morrowind,
-            @"Bethesda Softworks\Fallout4", GameId.Fallout4,
+            @"Bethesda Softworks\Fallout 4", GameId.Fallout4,
             @"Bethesda Softworks\Skyrim SE", GameId.SkyrimSE,
-            @"Bethesda Softworks\Fallout4 VR", GameId.Fallout4VR,
+            @"Bethesda Softworks\Fallout 4 VR", GameId.Fallout4VR,
             @"Bethesda Softworks\Skyrim VR", GameId.SkyrimVR
         };
 

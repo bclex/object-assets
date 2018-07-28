@@ -1,4 +1,5 @@
 ﻿using OA.Core;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace OA.Tes.FilePacks.Records
@@ -41,6 +42,30 @@ namespace OA.Tes.FilePacks.Records
             }
         }
 
+        // TES5
+        public struct RNAMField
+        {
+            public struct Reference
+            {
+                public FormId32<REFRRecord> Ref;
+                public short X;
+                public short Y;
+            }
+            public short GridX;
+            public short GridY;
+            public Reference[] GridReferences;
+
+            public RNAMField(UnityBinaryReader r, int dataSize)
+            {
+                GridX = r.ReadLEInt16();
+                GridY = r.ReadLEInt16();
+                var referenceCount = r.ReadLEUInt32();
+                var referenceSize = dataSize - 8;
+                Debug.Assert(referenceSize >> 3 == referenceCount);
+                GridReferences = r.ReadTArray<Reference>(referenceSize, referenceSize >> 3);
+            }
+        }
+
         public override string ToString() => $"WRLD: {EDID.Value}";
         public STRVField EDID { get; set; } // Editor ID
         public STRVField FULL;
@@ -52,6 +77,8 @@ namespace OA.Tes.FilePacks.Records
         public BYTEField? DATA; // Flags
         public NAM0Field NAM0; // Object Bounds
         public UI32Field? SNAM; // Music
+        // TES5
+        public List<RNAMField> RNAMs = new List<RNAMField>(); // Large References
 
         public override bool CreateField(UnityBinaryReader r, GameFormatId format, string type, int dataSize)
         {
@@ -69,6 +96,8 @@ namespace OA.Tes.FilePacks.Records
                 case "NAM9": NAM0.NAM9Field(r, dataSize); return true;
                 case "SNAM": SNAM = r.ReadT<UI32Field>(dataSize); return true;
                 case "OFST": r.SkipBytes(dataSize); return true;
+                // TES5
+                case "RNAM": RNAMs.Add(new RNAMField(r, dataSize)); return true;
                 default: return false;
             }
         }
