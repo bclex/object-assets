@@ -5,27 +5,28 @@
 //  Created by Sky Morey on 5/28/18.
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
+import simd
 
 public class REFRRecord: Record {
     public struct XTELField {
         public let door: FormId<REFRRecord>
-        public let position: Vector3
-        public let rotation: Vector3
+        public let position: float3
+        public let rotation: float3
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             door = FormId<REFRRecord>(r.readLEUInt32())
-            position = Vector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
-            rotation = Vector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
+            position = float3(r.readLESingle(), r.readLESingle(), r.readLESingle())
+            rotation = float3(r.readLESingle(), r.readLESingle(), r.readLESingle())
         }
     }
 
     public struct DATAField {
-        public let position: Vector3
-        public let rotation: Vector3
+        public let position: float3
+        public let rotation: float3
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            position = Vector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
-            rotation = Vector3(r.readLESingle(), r.readLESingle(), r.readLESingle())
+            position = float3(r.readLESingle(), r.readLESingle(), r.readLESingle())
+            rotation = float3(r.readLESingle(), r.readLESingle(), r.readLESingle())
         }
     }
 

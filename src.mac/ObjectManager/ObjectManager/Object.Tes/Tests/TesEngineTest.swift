@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import simd
 
 public class TesEngineTest: GameSegment {
     
@@ -26,11 +27,11 @@ public class TesEngineTest: GameSegment {
         Data = assetManager.getDataPack(dataUrl)
         
         Engine = BaseEngine(assetManager: assetManager, asset: Asset!, data: Data!)
-//        Engine.spawnPlayer(player: player, position: Vector3(-137.94, 2.30, -1037.6)) // gridId: Vector3Int(-2, -9, 0), 
+//        Engine.spawnPlayer(player: player, position: float3(-137.94, 2.30, -1037.6)) // gridId: int3(-2, -9, 0), 
         
         let newX = 23 * ConvertUtils.exteriorCellSideLengthInMeters
         let newZ = (-5 * ConvertUtils.exteriorCellSideLengthInMeters) + 100
-        Engine.spawnPlayer(player: player, position: Vector3(newX, 2.30, newZ))
+        Engine.spawnPlayer(player: player, position: float3(newX, 2.30, newZ))
     }
     
     public func onDestroy() {

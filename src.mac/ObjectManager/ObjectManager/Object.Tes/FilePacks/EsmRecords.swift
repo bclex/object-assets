@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import simd
 
 public enum GameFormatId {
     case TES3, TES4, TES5
@@ -230,15 +231,20 @@ public class Header: CustomStringConvertible {
 public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String { return "\(headers.first?.description ?? "none")" }
     public var debugDescription: String { return description }
-    //public string Label => Headers.First.Value.Label
+    public var label: Data? { return headers.first!.label }
     public var headers = [Header]()
     public var records = [Record]()
     public var groups: [RecordGroup]?
+    public var groupsByLabel: [UInt32 : [RecordGroup]]?
     let _r: BinaryReader
     let _filePath: String
     let _format: GameFormatId
     let _recordLevel: Int
     var _headerSkip = 0
+    // Extension
+    var _ensureCELLsByLabel: Set<UInt32>!
+    var CELLsById: [int3 : CELLRecord]!
+    var LANDsById: [int3 : LANDRecord]!
 
     init(_ r: BinaryReader, _ filePath: String, for format: GameFormatId, recordLevel: Int) {
         _r = r
@@ -300,6 +306,9 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
             records.append(record)
             if recordHeader.type == "CELL" { RecordGroup._cellsLoaded += 1 }
         }
+        groupsByLabel = groups != nil ? Dictionary(uniqueKeysWithValues:
+            Dictionary(grouping: groups!) { x -> UInt32 in Utils.fromData(x.label!) }.map { x -> (key: UInt32, value: [RecordGroup]) in
+                (key: x.key, value: x.value) }) : nil
     }
 
     func readGRUP(header: Header, recordHeader: Header) -> RecordGroup {
@@ -346,6 +355,7 @@ public class Record: IRecord, CustomStringConvertible, CustomDebugStringConverti
     public var description: String { return "BASE" }
     public var debugDescription: String { return description }
     var header: Header
+    var id: UInt32 { return header.formId }
     
     init(_ header: Header) {
         self.header = header

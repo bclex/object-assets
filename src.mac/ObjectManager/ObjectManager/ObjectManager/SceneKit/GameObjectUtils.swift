@@ -6,9 +6,11 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
+import simd
+
 public class GameObjectUtils {
 
-//        public static GameObject CreateMainCamera(Vector3 position, Quaternion orientation)
+//        public static GameObject CreateMainCamera(float3 position, Quaternion orientation)
 //        {
 //            var cameraObject = new GameObject("Main Camera") { tag = "MainCamera" };
 //            cameraObject.AddComponent<Camera>();
@@ -19,7 +21,7 @@ public class GameObjectUtils {
 //            return cameraObject;
 //        }
 //
-//        public static GameObject CreateDirectionalLight(Vector3 position, Quaternion orientation)
+//        public static GameObject CreateDirectionalLight(float3 position, Quaternion orientation)
 //        {
 //            var light = new GameObject("Directional Light");
 //            var lightComponent = light.AddComponent<Light>();
@@ -31,7 +33,7 @@ public class GameObjectUtils {
     
     public class TerrainData {
         public let heightmapResolution: Int
-        public var size: Vector3!
+        public var size: float3!
         public var heights: [[Float]]!
         public var splatPrototypes: [SplatPrototype]!
         public var alphamaps: [[[Float]]]?
@@ -58,10 +60,10 @@ public class GameObjectUtils {
         let terrainWidth = Float(heightmapResolution + offset) * heightSampleDistance
         // If maxHeight is 0, leave all the heights in terrainData at 0 and make the vertical size of the terrain 1 to ensure valid AABBs.
         if !Float.approximately(maxHeight, 0) {
-            terrainData.size = Vector3(terrainWidth, maxHeight, terrainWidth)
+            terrainData.size = float3(terrainWidth, maxHeight, terrainWidth)
             terrainData.setHeights(0, 0, heightPercents)
         }
-        else { terrainData.size = Vector3(terrainWidth, 1, terrainWidth) }
+        else { terrainData.size = float3(terrainWidth, 1, terrainWidth) }
         terrainData.splatPrototypes = splatPrototypes
         if alphaMap != nil {
             assert(alphaMap!.count == alphaMap![0].count)
@@ -71,12 +73,12 @@ public class GameObjectUtils {
         return terrainData
     }
 
-    public static func createTerrain(offset: Int, heightPercents: [[Float]], maxHeight: Float, heightSampleDistance: Float, splatPrototypes: [SplatPrototype], alphaMap: [[[Float]]]?, position: Vector3) -> GameObject {
+    public static func createTerrain(offset: Int, heightPercents: [[Float]], maxHeight: Float, heightSampleDistance: Float, splatPrototypes: [SplatPrototype], alphaMap: [[[Float]]]?, position: float3) -> GameObject {
         let terrainData = createTerrainData(offset: offset, heightPercents: heightPercents, maxHeight: maxHeight, heightSampleDistance: heightSampleDistance, splatPrototypes: splatPrototypes, alphaMap: alphaMap)
         return createTerrainFromTerrainData(terrainData: terrainData, position: position)
     }
 
-    public static func createTerrainFromTerrainData(terrainData: TerrainData, position: Vector3) -> GameObject {
+    public static func createTerrainFromTerrainData(terrainData: TerrainData, position: float3) -> GameObject {
         // Create the terrain game object.
         let terrainObject = GameObject(name: "terrain") // { isStatic = true }
 //        var terrain = terrainObject.AddComponent<Terrain>()
@@ -103,7 +105,7 @@ public class GameObjectUtils {
 //                return visualBounds;
 //            }
 //            // If there are no renderers in the object or any of it's children, simply return a degenerate AABB where the object is.
-//            else return new Bounds(gameObject.transform.position, Vector3.zero);
+//            else return new Bounds(gameObject.transform.position, float3.zero);
 //        }
 //
 //        public static GameObject FindChildRecursively(GameObject parent, string name)

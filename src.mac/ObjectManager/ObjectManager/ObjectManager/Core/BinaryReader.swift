@@ -283,18 +283,14 @@ public class BinaryReader {
         return String(data: data, encoding: .ascii)!
     }
 
-    public func readLEVector2() -> Vector2 {
-        return Vector2(dx: CGFloat(readLESingle()), dy: CGFloat(readLESingle()))
+    public func readLEFloat2() -> float2 {
+        return float2(readLESingle(), readLESingle())
     }
 
-    public func readLEVector3() -> Vector3 {
-        return Vector3(readLESingle(), readLESingle(), readLESingle())
-    }
-    
     public func readLEFloat3() -> float3 {
         return float3(readLESingle(), readLESingle(), readLESingle())
     }
-
+    
     public func readLEColumnMajorMatrix3x3() -> float4x4 {
         let m11 = readLESingle(), m21 = readLESingle(), m31 = readLESingle()
         let m12 = readLESingle(), m22 = readLESingle(), m32 = readLESingle()

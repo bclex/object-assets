@@ -7,16 +7,17 @@
 //
 
 import Foundation
+import simd
 
 public class TesCellManager: ICellManager {
-    let _cellRadius = 1 //1 //4
+    let _cellRadius: Int32 = 1 //1 //4
     let _detailRadius = 1 //1 //3
     let _defaultLandTextureFilePath = "textures/_land_default.dds"
 
     let _asset: TesAssetPack
     let _data: TesDataPack
     let _loadBalancer: TemporalLoadBalancer
-    var _cellObjects = [Vector3Int : InRangeCellInfo]()
+    var _cellObjects = [int3 : InRangeCellInfo]()
 
     init(asset: TesAssetPack, data: TesDataPack, loadBalancer: TemporalLoadBalancer) {
         _asset = asset
@@ -24,23 +25,23 @@ public class TesCellManager: ICellManager {
         _loadBalancer = loadBalancer
     }
     
-    public func getCellId(point: Vector3, world: Int) -> Vector3Int {
-        return Vector3Int(
-            (Float(point.x) / ConvertUtils.exteriorCellSideLengthInMeters).flooredAsInt(),
-            (Float(point.z) / ConvertUtils.exteriorCellSideLengthInMeters).flooredAsInt(),
+    public func getCellId(point: float3, world: Int32) -> int3 {
+        return int3(
+            (Float(point.x) / ConvertUtils.exteriorCellSideLengthInMeters).flooredAsInt32(),
+            (Float(point.z) / ConvertUtils.exteriorCellSideLengthInMeters).flooredAsInt32(),
             world)
     }
     
-    public func startCreatingCell(cellId: Vector3Int) -> InRangeCellInfo? {
+    public func startCreatingCell(cellId: int3) -> InRangeCellInfo? {
         guard let cell = _data.findCellRecord(cellId: cellId) else {
             return nil
         }
         let cellInfo = startInstantiatingCell(cell: cell)
-        _cellObjects[cellId.z != -1 ? cellId : Vector3Int.zero] = cellInfo
+        _cellObjects[cellId.z != -1 ? cellId : int3.zero] = cellInfo
         return cellInfo
     }
     
-    public func startCreatingCellByName(world: Int, cellId: Int, cellName: String) -> InRangeCellInfo? {
+    public func startCreatingCellByName(world: Int32, cellId: Int, cellName: String) -> InRangeCellInfo? {
         if world != -1 {
             fatalError("world")
         }
@@ -48,11 +49,11 @@ public class TesCellManager: ICellManager {
             return nil
         }
         let cellInfo = startInstantiatingCell(cell: cell)
-        _cellObjects[Vector3Int.zero] = cellInfo
+        _cellObjects[int3.zero] = cellInfo
         return cellInfo
     }
     
-    public func updateCells(currentPosition: Vector3, world: Int, immediate: Bool = false, cellRadiusOverride: Int = -1) {
+    public func updateCells(currentPosition: float3, world: Int32, immediate: Bool = false, cellRadiusOverride: Int32 = -1) {
         let cameraCellId = getCellId(point: currentPosition, world: world)
         
         let cellRadius = cellRadiusOverride >= 0 ? cellRadiusOverride : _cellRadius
@@ -62,7 +63,7 @@ public class TesCellManager: ICellManager {
         let maxCellY = cameraCellId.y + cellRadius
     
         // Destroy out of range cells.
-        var outOfRangeCellIds = [Vector3Int]()
+        var outOfRangeCellIds = [int3]()
         for x in _cellObjects {
             if x.key.x < minCellX || x.key.x > maxCellX || x.key.y < minCellY || x.key.y > maxCellY {
                 outOfRangeCellIds.append(x.key)
@@ -76,7 +77,7 @@ public class TesCellManager: ICellManager {
         for r in 0..<cellRadius {
             for x in minCellX..<maxCellX {
                 for y in minCellY..<maxCellY {
-                    let cellId = Vector3Int(x, y, world)
+                    let cellId = int3(x, y, world)
                     let cellXDistance = abs(cameraCellId.x - cellId.x)
                     let cellYDistance = abs(cameraCellId.y - cellId.y)
                     let cellDistance = max(cellXDistance, cellYDistance)
@@ -126,7 +127,7 @@ public class TesCellManager: ICellManager {
         return InRangeCellInfo(gameObject: cellObj, objectsContainerGameObject: cellObjectsContainer, cellRecord: cell, objectsCreationCoroutine: cellObjectsCreationCoroutine)
     }
     
-    func destroyCell(cellId: Vector3Int) {
+    func destroyCell(cellId: int3) {
         guard let cellInfo = _cellObjects[cellId] else {
             debugPrint("Tried to destroy a cell that isn't created.")
             return
@@ -339,7 +340,7 @@ public class TesCellManager: ICellManager {
                         texture: texture,
                         smoothness: 0,
                         metallic: 0,
-                        tileSize: Vector2Int(6, 6))
+                        tileSize: int2(6, 6))
                     // Update collections.
                     let splatIndex = splatPrototypes.count
                     splatPrototypes.append(splat)
@@ -370,7 +371,7 @@ public class TesCellManager: ICellManager {
             case 4:
                 // Create the terrain.
                 let heightRange = extrema.max - extrema.min
-                let terrainPosition = Vector3(ConvertUtils.exteriorCellSideLengthInMeters * Float(land.gridId.x), extrema.min / ConvertUtils.meterInUnits, ConvertUtils.exteriorCellSideLengthInMeters * Float(land.gridId.y))
+                let terrainPosition = float3(ConvertUtils.exteriorCellSideLengthInMeters * Float(land.gridId.x), extrema.min / ConvertUtils.meterInUnits, ConvertUtils.exteriorCellSideLengthInMeters * Float(land.gridId.y))
                 let heightSampleDistance = ConvertUtils.exteriorCellSideLengthInMeters / Float(LAND_SIDELENGTH_IN_SAMPLES - 1)
                 _ = GameObjectUtils.createTerrain(offset: -1, heightPercents: heights, maxHeight: heightRange / ConvertUtils.meterInUnits, heightSampleDistance: heightSampleDistance, splatPrototypes: splatPrototypes, alphaMap: alphaMap, position: terrainPosition)
 //                terrain.transform.parent = parent.transform

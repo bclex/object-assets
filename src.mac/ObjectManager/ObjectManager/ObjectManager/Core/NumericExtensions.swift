@@ -17,8 +17,8 @@ public extension UInt8 {
 public extension Float {
 //    public static let rad2Deg = 0.01745329
     
-    public func flooredAsInt() -> Int {
-        return Int(self.rounded(.down))
+    public func flooredAsInt32() -> Int32 {
+        return Int32(self.rounded(.down))
     }
     
     public func roundedAsInt() -> Int {

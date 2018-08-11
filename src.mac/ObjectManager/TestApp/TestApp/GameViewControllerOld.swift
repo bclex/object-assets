@@ -28,13 +28,13 @@
 ////        scene.rootNode.addChildNode(cameraNode)
 ////
 ////        // place the camera
-////        cameraNode.position = SCNVector3(x: 0, y: 0, z: 15)
+////        cameraNode.position = SCNfloat3(x: 0, y: 0, z: 15)
 ////
 ////        // create and add a light to the scene
 ////        let lightNode = SCNNode()
 ////        lightNode.light = SCNLight()
 ////        lightNode.light!.type = .omni
-////        lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
+////        lightNode.position = SCNfloat3(x: 0, y: 10, z: 10)
 ////        scene.rootNode.addChildNode(lightNode)
 ////
 ////        // create and add an ambient light to the scene

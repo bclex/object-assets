@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import simd
 
 public class TesPackTest: GameSegment {
     
@@ -38,15 +39,15 @@ public class TesPackTest: GameSegment {
         
         let newX = 23 * ConvertUtils.exteriorCellSideLengthInMeters
         let newZ = (-5 * ConvertUtils.exteriorCellSideLengthInMeters) + 100
-        let cellId = getCellId(point: Vector3(newX, 2.30, newZ), world: 0)
+        let cellId = getCellId(point: float3(newX, 2.30, newZ), world: 0)
         let _currentCell = (Data as! TesDataPack).findCellRecord(cellId)!
         debugPrint("\(_currentCell)")
     }
     
-    public func getCellId(point: Vector3, world: Int) -> Vector3Int {
-        return Vector3Int(
-            (Float(point.x) / ConvertUtils.exteriorCellSideLengthInMeters).flooredAsInt(),
-            (Float(point.z) / ConvertUtils.exteriorCellSideLengthInMeters).flooredAsInt(),
+    public func getCellId(point: float3, world: Int32) -> int3 {
+        return int3(
+            (Float(point.x) / ConvertUtils.exteriorCellSideLengthInMeters).flooredAsInt32(),
+            (Float(point.z) / ConvertUtils.exteriorCellSideLengthInMeters).flooredAsInt32(),
             world)
     }
     

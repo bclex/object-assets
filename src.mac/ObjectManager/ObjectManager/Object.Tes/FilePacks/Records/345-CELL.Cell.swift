@@ -60,8 +60,8 @@ public class CELLRecord: Record, ICellRecord {
 
     public class RefObj: CustomStringConvertible {
         public typealias XYZAField = (
-            position: Vector3Float,
-            eulerAngles: Vector3Float
+            position: float3,
+            eulerAngles: float3
         )
 
         public var FRMR: UI32Field? = nil // Object Index (starts at 1)
@@ -114,7 +114,7 @@ public class CELLRecord: Record, ICellRecord {
     var _lastRef: RefObj!
 
     public var isInterior: Bool { return Utils.containsBitFlags(UInt(DATA), 0x01) }
-    public var gridId: Vector3Int!
+    public var gridId: int3!
     //public var ambientLight: CGColor? { return XCLL != nil ? XCLL!.ambientColor.toColor32 : nil }
     
     override func createField(_ r: BinaryReader, for format: GameFormatId, type: String, dataSize: Int) -> Bool {

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import simd
 
 public enum EngineId: Int {
     case tes = 0, unk
@@ -27,7 +28,7 @@ public protocol IAssetPack {
 
 public protocol IDataPack {
     func close()
-    func findCellRecord(_ cellId: Vector3Int) -> ICellRecord?
+    func findCellRecord(_ cellId: int3) -> ICellRecord?
 }
 
 public protocol IAssetManager {

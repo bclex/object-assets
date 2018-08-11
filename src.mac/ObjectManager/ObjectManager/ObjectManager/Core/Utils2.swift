@@ -8,25 +8,26 @@
 
 import Foundation
 import SceneKit
+import simd
 
 public extension SCNNode {
-    var forward: SCNVector3 {
-        return self.rotation * Vector3.forward
+    var forward: float3 {
+        return self.simdRotation * float3.forward
     }
-    var right: SCNVector3 {
-        return self.rotation * Vector3.right
+    var right: float3 {
+        return self.simdRotation * float3.right
     }
-    var left: SCNVector3 {
-        return self.rotation * Vector3.left
+    var left: float3 {
+        return self.simdRotation * float3.left
     }
-    var back: SCNVector3 {
-        return self.rotation * Vector3.back
+    var back: float3 {
+        return self.simdRotation * float3.back
     }
-    var up: SCNVector3 {
-        return self.rotation * Vector3.up
+    var up: float3 {
+        return self.simdRotation * float3.up
     }
-    var down: SCNVector3 {
-        return self.rotation * Vector3.down
+    var down: float3 {
+        return self.simdRotation * float3.down
     }
 }
 
@@ -41,32 +42,13 @@ func clamp<T: Comparable>(_ val: T, min: T, max: T) -> T {
     return val < min ? min : (val > max ? max:val)
 }
 
-public struct Float3: CustomDebugStringConvertible, CustomStringConvertible {
-    public init(x: GLfloat, y: GLfloat, z: GLfloat) {
-        self.x = x
-        self.y = y
-        self.z = z
-    }
-    public var x, y, z: GLfloat
-    public var description: String {
-        return "[X:\(x) Y:\(y) Z:\(z)]"
-    }
-    public var debugDescription: String {
-        return description
-    }
-}
-
-struct Float2 {
-    var s, t: GLfloat
-}
-
 struct Vertex {
-    var position: Float3
-    var normal: Float3
-//    var tcoord: Float2
-    var color: Float3
+    var position: float3
+    var normal: float3
+//    var tcoord: float2
+    var color: float3
 
-    mutating func setNormal(_ newNorm: Float3) {
+    mutating func setNormal(_ newNorm: float3) {
         normal = newNorm
     }
     mutating func setColor(_ newColor: NSColor) {
@@ -92,7 +74,7 @@ func createStripGeometry(_ vertices: [Vertex], triangles: [CInt]) -> SCNGeometry
         vectorCount: vertices.count,
         usesFloatComponents: true,
         componentsPerVector: 3,
-        bytesPerComponent: MemoryLayout<GLfloat>.size,
+        bytesPerComponent: MemoryLayout<Float>.size,
         dataOffset: 0, // position is first member in Vertex
         dataStride: MemoryLayout<Vertex>.size)
 
@@ -101,8 +83,8 @@ func createStripGeometry(_ vertices: [Vertex], triangles: [CInt]) -> SCNGeometry
         vectorCount: vertices.count,
         usesFloatComponents: true,
         componentsPerVector: 3,
-        bytesPerComponent: MemoryLayout<GLfloat>.size,
-        dataOffset: MemoryLayout<Float3>.size, // one Float3 before normal in Vertex
+        bytesPerComponent: MemoryLayout<Float>.size,
+        dataOffset: MemoryLayout<float3>.size, // one Float3 before normal in Vertex
         dataStride: MemoryLayout<Vertex>.size)
 
 //    let tcoordSource = SCNGeometrySource(data: data,
@@ -118,8 +100,8 @@ func createStripGeometry(_ vertices: [Vertex], triangles: [CInt]) -> SCNGeometry
         vectorCount: vertices.count,
         usesFloatComponents: true,
         componentsPerVector: 3,
-        bytesPerComponent: MemoryLayout<GLfloat>.size,
-        dataOffset: (2 * MemoryLayout<Float3>.size), // 2 Float3s before tcoord in Vertex
+        bytesPerComponent: MemoryLayout<Float>.size,
+        dataOffset: (2 * MemoryLayout<float3>.size), // 2 Float3s before tcoord in Vertex
         dataStride: MemoryLayout<Vertex>.size)
 
     let triData = Data(bytes: UnsafeRawPointer(triangles), count: MemoryLayout<CInt>.size*triangles.count)
@@ -138,7 +120,7 @@ func createTriangleGeometry(_ vertices: [Vertex], triangles: [CInt]) -> SCNGeome
         vectorCount: vertices.count,
         usesFloatComponents: true,
         componentsPerVector: 3,
-        bytesPerComponent: MemoryLayout<GLfloat>.size,
+        bytesPerComponent: MemoryLayout<Float>.size,
         dataOffset: 0, // position is first member in Vertex
         dataStride: MemoryLayout<Vertex>.size)
 
@@ -147,8 +129,8 @@ func createTriangleGeometry(_ vertices: [Vertex], triangles: [CInt]) -> SCNGeome
         vectorCount: vertices.count,
         usesFloatComponents: true,
         componentsPerVector: 3,
-        bytesPerComponent: MemoryLayout<GLfloat>.size,
-        dataOffset: MemoryLayout<Float3>.size, // one Float3 before normal in Vertex
+        bytesPerComponent: MemoryLayout<Float>.size,
+        dataOffset: MemoryLayout<float3>.size, // one Float3 before normal in Vertex
         dataStride: MemoryLayout<Vertex>.size)
 
     //    let tcoordSource = SCNGeometrySource(data: data,
@@ -156,16 +138,16 @@ func createTriangleGeometry(_ vertices: [Vertex], triangles: [CInt]) -> SCNGeome
     //        vectorCount: vertices.count,
     //        floatComponents: true,
     //        componentsPerVector: 2,
-    //        bytesPerComponent: sizeof(GLfloat),
-    //        dataOffset: 2 * sizeof(Float3), // 2 Float3s before tcoord in Vertex
+    //        bytesPerComponent: sizeof(Float),
+    //        dataOffset: 2 * sizeof(float3), // 2 Float3s before tcoord in Vertex
     //        dataStride: sizeof(Vertex))
     let colorSource = SCNGeometrySource(data: data,
         semantic: SCNGeometrySource.Semantic.color,
         vectorCount: vertices.count,
         usesFloatComponents: true,
         componentsPerVector: 3,
-        bytesPerComponent: MemoryLayout<GLfloat>.size,
-        dataOffset: (2 * MemoryLayout<Float3>.size), // 2 Float3s before tcoord in Vertex
+        bytesPerComponent: MemoryLayout<Float>.size,
+        dataOffset: (2 * MemoryLayout<float3>.size), // 2 Float3s before tcoord in Vertex
         dataStride: MemoryLayout<Vertex>.size)
 
     let triData = Data(bytes: UnsafeRawPointer(triangles), count: MemoryLayout<CInt>.size*triangles.count)
@@ -175,20 +157,10 @@ func createTriangleGeometry(_ vertices: [Vertex], triangles: [CInt]) -> SCNGeome
     return SCNGeometry(sources: [vertexSource, normalSource, /*tcoordSource,*/colorSource], elements: [geometryElement])
 }
 
-// swiftlint:disable variable_name
-public func calculateVectorNormal(_ A: SCNVector3, B: SCNVector3, C: SCNVector3) -> SCNVector3 {
+public func calculateVectorNormal(_ A: float3, B: float3, C: float3) -> float3 {
     let AB = A - B
     let CB = C - B
-    var cross = AB.cross(CB)
-    cross = cross.normalized
+    var cross = simd_cross(AB, CB)
+    cross = simd_normalize(cross)
     return cross
 }
-
-public func calculateVectorNormal(_ A: Float3, B: Float3, C: Float3) -> Float3 {
-    let AB =  Vector3(from:B, to:A)
-    let CB = Vector3(from: B, to:C)
-    var cross = AB.cross(CB)
-    cross = cross.normalized
-    return cross.toFloat3()
-}
-// swiftlint:enable variable_name

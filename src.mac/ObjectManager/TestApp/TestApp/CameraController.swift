@@ -19,51 +19,51 @@ class CameraController: NSObject {
     let cameraNode: GameObject
 
     var lookNode: SCNNode = SCNNode()
-    var lookPoint: Vector3 {
-        get { return lookNode.position }
-        set { lookNode.position = newValue }
+    var lookPoint: float3 {
+        get { return lookNode.simdPosition }
+        set { lookNode.simdPosition = newValue }
     }
 
-    var cameraPosition: Vector3 {
-        return cameraNode.position
+    var cameraPosition: float3 {
+        return cameraNode.simdPosition
     }
 
     init(scene: SCNScene) {
         camera = SCNCamera()
         camera.automaticallyAdjustsZRange = true
         cameraNode = GameObject()
-        cameraNode.position = Vector3(x: 0, y: 50, z: 75)
+        cameraNode.simdPosition = float3(x: 0, y: 50, z: 75)
         cameraNode.camera = camera
         cameraNode.constraints = [SCNLookAtConstraint(target: lookNode)]
         scene.rootNode.addChildNode(cameraNode)
         super.init()
-        lookPoint = Vector3(x: 0, y: 0, z: 0)
+        lookPoint = float3(x: 0, y: 0, z: 0)
     }
 
-    let minAngle: CGFloat = 10
-    let maxAngle: CGFloat = 85
-    let minZoom: CGFloat = 10
-    let maxZoom: CGFloat = 35000
+    let minAngle: Float = 10
+    let maxAngle: Float = 85
+    let minZoom: Float = 10
+    let maxZoom: Float = 35000
 
-    var angleFromFloorToCamera: CGFloat {
+    var angleFromFloorToCamera: Float {
         let cam = cameraNode.back
-        let camProjectionOntoFloor = Vector3(x: cam.x, y: cam.y, z: 0)
-        return Vector3.angle(camProjectionOntoFloor, to: cam)
+        let camProjectionOntoFloor = float3(x: cam.x, y: cam.y, z: 0)
+        return float3.angle(camProjectionOntoFloor, to: cam)
     }
 
-    func moveCamera(_ delta: Vector3) {
-        cameraNode.position = cameraNode.position + delta
+    func moveCamera(_ delta: float3) {
+        cameraNode.simdPosition = cameraNode.simdPosition + delta
     }
 
-    func distanceToPoint(_ point: Vector3) -> CGFloat {
-        return (cameraNode.position - point).magnitude
+    func distanceToPoint(_ point: float3) -> Float {
+        return (cameraNode.simdPosition - point).magnitude
     }
 
-    func distanceToLookPoint() -> CGFloat {
+    func distanceToLookPoint() -> Float {
         return distanceToPoint(lookPoint)
     }
 
-    func repositionCamera(_ newPosition: Vector3) {
-        moveCamera(newPosition - cameraNode.position)
+    func repositionCamera(_ newPosition: float3) {
+        moveCamera(newPosition - cameraNode.simdPosition)
     }
 }

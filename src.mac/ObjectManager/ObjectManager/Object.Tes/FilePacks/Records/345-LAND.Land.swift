@@ -7,11 +7,12 @@
 //
 
 import Foundation
+import simd
 
 public class LANDRecord: Record {
     // TESX
     public struct VNMLField {
-        public var vertexs: [Vector3Int8] // XYZ 8 bit floats
+        public var vertexs: [byte3] // XYZ 8 bit floats
         
         init(_ r: BinaryReader, _ dataSize: Int) {
             vertexs = r.readTArray(dataSize, count: dataSize / 3)
@@ -105,7 +106,7 @@ public class LANDRecord: Record {
     public var ATXTs: [ATXTGroup?]! // Alpha Layer
     var _lastATXT: ATXTGroup!
 
-    public var gridId: Vector3Int!
+    public var gridId: int3!
 
     override init(_ header: Header) {
         BTXTs.reserveCapacity(4)

@@ -7,10 +7,11 @@
 //
 
 import Foundation
+import simd
 
 public class BaseEngine {
     static let desiredWorkTimePerFrame = 1.0 / 200
-    static let cellRadiusOnLoad = 2
+    static let cellRadiusOnLoad: Int32 = 2
     public static var instance: BaseEngine? = nil
 
     public let assetManager: IAssetManager
@@ -32,23 +33,23 @@ public class BaseEngine {
 
     // MARK: Player Spawn
 
-    var _currentWorld = 0
+    var _currentWorld: Int32 = 0
     var _currentCell: ICellRecord? = nil
     var _playerCamera: GameObject? = nil
 
     @discardableResult
-    func createPlayer(player: GameObject, position: Vector3, playerCamera: inout GameObject?) -> GameObject {
+    func createPlayer(player: GameObject, position: float3, playerCamera: inout GameObject?) -> GameObject {
 //        let player = GameObject.find(withTag: "Player")
 //        if player == nil {
 ////            player = GameObject.instantiate(playerPrefab)
 ////            player!.name = "Player"
 //        }
-        player.position = position
+        player.simdPosition = position
         playerCamera = player
         return player
      }
     
-    public func spawnPlayer(player: GameObject, position: Vector3) {
+    public func spawnPlayer(player: GameObject, position: float3) {
         let cellId = cellManager.getCellId(point: position, world: _currentWorld)
         _currentCell = data.findCellRecord(cellId)
         assert(_currentCell != nil)
@@ -60,12 +61,12 @@ public class BaseEngine {
         else { onInteriorCell(cell: _currentCell!) }
     }
     
-    public func spawnPlayerAndUpdate(player: GameObject, position: Vector3) {
+    public func spawnPlayerAndUpdate(player: GameObject, position: float3) {
         let cellId = cellManager.getCellId(point: position, world: _currentWorld)
         _currentCell = data.findCellRecord(cellId)
         assert(_currentCell != nil)
         createPlayer(player: player, position: position, playerCamera: &_playerCamera)
-        cellManager.updateCells(currentPosition: _playerCamera!.position, world: _currentWorld, immediate: true, cellRadiusOverride: BaseEngine.cellRadiusOnLoad)
+        cellManager.updateCells(currentPosition: _playerCamera!.simdPosition, world: _currentWorld, immediate: true, cellRadiusOverride: BaseEngine.cellRadiusOnLoad)
         if cellId.z != -1 { onExteriorCell(cell: _currentCell!) }
         else { onInteriorCell(cell: _currentCell!) }
     }
@@ -80,7 +81,7 @@ public class BaseEngine {
     func update() {
          // The current cell can be null if the player is outside of the defined game world
         if _currentCell == nil || !_currentCell!.isInterior {
-            cellManager.updateCells(currentPosition: _playerCamera!.position, world: _currentWorld,
+            cellManager.updateCells(currentPosition: _playerCamera!.simdPosition, world: _currentWorld,
                 immediate: false, cellRadiusOverride: -1)
         }
         loadBalancer.runTasks(desiredWorkTime: BaseEngine.desiredWorkTimePerFrame)

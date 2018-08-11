@@ -7,6 +7,7 @@
 //
 
 import CoreGraphics
+import simd
 
 public class REGNRecord: Record, IHaveEDID {
     // TESX
@@ -53,7 +54,7 @@ public class REGNRecord: Record, IHaveEDID {
         public let sink: Float
         public let sinkVariance: Float
         public let sizeVariance: Float
-        public let angleVariance: Vector3Int
+        public let angleVariance: int3
         public let vertexShading: ColorRef4 // RGB + Shading radius (0 - 200) %
 
         init(_ r: BinaryReader, _ dataSize: Int) {
@@ -72,7 +73,7 @@ public class REGNRecord: Record, IHaveEDID {
             sink = r.readLESingle()
             sinkVariance = r.readLESingle()
             sizeVariance = r.readLESingle()
-            angleVariance = Vector3Int(Int(r.readLEUInt16()), Int(r.readLEUInt16()), Int(r.readLEUInt16()))
+            angleVariance = int3(Int32(r.readLEUInt16()), Int32(r.readLEUInt16()), Int32(r.readLEUInt16()))
             r.skipBytes(2) // Unused
             vertexShading = r.readT(dataSize)
         }
@@ -136,15 +137,14 @@ public class REGNRecord: Record, IHaveEDID {
     // TES4
     public class RPLIField {
         public let edgeFalloff: UInt32 // (World Units)
-        public var points: [Vector2]! // Region Point List Data
+        public var points: [float2]! // Region Point List Data
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             edgeFalloff = r.readLEUInt32()
         }
 
         func RPLDField(_ r: BinaryReader, _ dataSize: Int) {
-            points = [Vector2](); let capacity = dataSize >> 3; points.reserveCapacity(capacity)
-            for _ in 0..<capacity { points.append(Vector2(dx: CGFloat(r.readLESingle()), dy: CGFloat(r.readLESingle()))) }
+            points = r.readTArray(dataSize, count: dataSize >> 3)
         }
     }
 

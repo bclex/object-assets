@@ -28,7 +28,7 @@ public class PGRDRecord: Record {
     }
 
     public typealias PGRPField = (
-        point: Vector3Float,
+        point: float3,
         connections: UInt8,
         pad01: UInt8,
         pad02: UInt16
@@ -42,7 +42,7 @@ public class PGRDRecord: Record {
     public typealias PGRIField = (
         pointId: Int16,
         pad02: UInt16,
-        foreignNode: Vector3Float
+        foreignNode: float3
     )
 
     public struct PGRLField {

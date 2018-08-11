@@ -13,22 +13,34 @@ import AppKit
 public typealias Color = CGColor
 public typealias Texture2D = NSImage
 public typealias TextureFormat = CIFormat
-public typealias Vector2 = CGVector
-//public typealias Vector3 = SCNVector3
-//public typealias Matrix4x4 = SCNMatrix4
-//public typealias Quaternion = SCNQuaternion
 
 public class Utils {
-    public static func bytes<T>(of value: T) -> [UInt8] {
+//    public static func bytes<T>(of value: T) -> [UInt8] {
+//        var value = value
+//        let size = MemoryLayout<T>.size
+//        return withUnsafePointer(to: &value, {
+//            $0.withMemoryRebound(to: UInt8.self, capacity: size, { Array(UnsafeBufferPointer(start: $0, count: size)) })
+//        })
+//    }
+    
+    public static func toBytes<T>(_ value: T) -> [UInt8] {
         var value = value
-        let size = MemoryLayout<T>.size
-        return withUnsafePointer(to: &value, {
-            $0.withMemoryRebound(to: UInt8.self, capacity: size, { Array(UnsafeBufferPointer(start: $0, count: size)) })
-        })
+        return withUnsafeBytes(of: &value) { Array($0) }
+    }
+    
+    public static func fromBytes<T>(_ value: [UInt8], _: T.Type) -> T {
+        return value.withUnsafeBytes {
+            $0.baseAddress!.load(as: T.self)
+        }
+    }
+    public static func fromData<T>(_ value: Data) -> T {
+        return value.withUnsafeBytes { (ptr: UnsafePointer<T>) -> T in
+            return ptr.pointee
+        }
     }
     
     public static func hexString<T>(of value: T) -> String {
-        return hexString(bytes: bytes(of: value))
+        return hexString(bytes: toBytes(value))
     }
     public static func hexString<Seq: Sequence>(bytes: Seq, limit: Int? = nil, separator: String = " ") -> String
         where Seq.Iterator.Element == UInt8 {

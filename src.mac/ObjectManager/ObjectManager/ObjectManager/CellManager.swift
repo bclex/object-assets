@@ -42,9 +42,9 @@ public class RefCellObjInfo {
 }
 
 public protocol ICellManager {
-    func getCellId(point: Vector3, world: Int) -> Vector3Int
-    func startCreatingCell(cellId: Vector3Int) -> InRangeCellInfo?
-    func startCreatingCellByName(world: Int, cellId: Int, cellName: String) -> InRangeCellInfo?
-    func updateCells(currentPosition: Vector3, world: Int, immediate: Bool, cellRadiusOverride: Int)
+    func getCellId(point: float3, world: Int32) -> int3
+    func startCreatingCell(cellId: int3) -> InRangeCellInfo?
+    func startCreatingCellByName(world: Int32, cellId: Int, cellName: String) -> InRangeCellInfo?
+    func updateCells(currentPosition: float3, world: Int32, immediate: Bool, cellRadiusOverride: Int32)
     func destroyAllCells()
 }

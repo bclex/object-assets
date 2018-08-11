@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import simd
 
 public class EsmFile: CustomStringConvertible {
     static let recordHeaderSizeInBytes = 16
@@ -18,9 +19,12 @@ public class EsmFile: CustomStringConvertible {
     // TES3
     var _MANYsById: [String : Record]!
     var _LTEXsById: [Int64 : LTEXRecord]!
-    var _LANDsById: [Vector3Int : LANDRecord]!
-    var _CELLsById: [Vector3Int : CELLRecord]!
+    var _LANDsById: [int3 : LANDRecord]!
+    var _CELLsById: [int3 : CELLRecord]!
     var _CELLsByName: [String : CELLRecord]!
+    // TES4
+    var _WRLDsById: [UInt32 : (x: WRLDRecord, y: [RecordGroup])]!
+    var _LTEXsByEid: [String : LTEXRecord]!
 
     init(_ filePath: URL?, for game: GameId) {
         func getFormatId() -> GameFormatId {

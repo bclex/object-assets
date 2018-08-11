@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import simd
 
 public class TesDataPack: EsmFile, IDataPack {
     override init(_ filePath: URL?, for game: GameId) {
@@ -14,7 +15,7 @@ public class TesDataPack: EsmFile, IDataPack {
         super.init(filePath != nil && fileManager.fileExists(atPath: filePath!.path) ? filePath : nil, for: game)
     }
     
-    public func findCellRecord(_ cellId: Vector3Int) -> ICellRecord? {
+    public func findCellRecord(_ cellId: int3) -> ICellRecord? {
         return super.findCellRecord(cellId: cellId)
     }
 }

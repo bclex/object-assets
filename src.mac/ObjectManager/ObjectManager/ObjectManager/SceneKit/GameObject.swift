@@ -12,7 +12,7 @@ public typealias SplatPrototype = (
     texture: Texture2D,
     smoothness: Int,
     metallic: Int,
-    tileSize: Vector2Int)
+    tileSize: int2)
 
 public class GameObject: SCNNode {
     public static func find(withTag: String) -> GameObject? {
