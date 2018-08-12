@@ -60,18 +60,18 @@ namespace OA
                 TesAssetManagerType = TesAssembly.GetType("OA.Tes.TesAssetManager");
             }
             catch { }
-            try
-            {
-                ValveAssembly = Assembly.Load("Object.Valve");
-                ValveAssetManagerType = ValveAssembly.GetType("OA.Valve.ValveAssetManager");
-            }
-            catch { }
-            try
-            {
-                UltimaAssembly = Assembly.Load("Object.Ultima");
-                UltimaAssetManagerType = UltimaAssembly.GetType("OA.Ultima.UltimaAssetManager");
-            }
-            catch { }
+            //try
+            //{
+            //    ValveAssembly = Assembly.Load("Object.Valve");
+            //    ValveAssetManagerType = ValveAssembly.GetType("OA.Valve.ValveAssetManager");
+            //}
+            //catch { }
+            //try
+            //{
+            //    UltimaAssembly = Assembly.Load("Object.Ultima");
+            //    UltimaAssetManagerType = UltimaAssembly.GetType("OA.Ultima.UltimaAssetManager");
+            //}
+            //catch { }
         }
     }
 

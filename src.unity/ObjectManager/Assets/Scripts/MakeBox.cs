@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 //using Test = OA.Tes.ObjectTestEngine;
-using Test = OA.Tes.ObjectTestPack;
+//using Test = OA.Tes.ObjectTestPack;
+using Test = OA.Tes.ObjectTestObject;
 
 public class MakeBox : MonoBehaviour
 {

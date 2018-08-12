@@ -1,6 +1,6 @@
 ﻿using OA.Configuration;
 //using Test = OA.Tes.ObjectTestDataPack;
-using Test = OA.Tes.ObjectTestPack;
+using Test = OA.Tes.ObjectTestObject;
 
 namespace OA
 {

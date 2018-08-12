@@ -108,7 +108,7 @@
     <Compile Include="FilePacks\Records\345-RACE.Race_Creature type.cs" />
     <Compile Include="Tests\ObjectTestDataPack.cs" />
     <Compile Include="Tests\ObjectTestEngine.cs" />
-    <Compile Include="Tests\ObjectTestPack.cs" />
+    <Compile Include="Tests\ObjectTestObject.cs" />
     <Compile Include="TesCellManager.cs" />
     <Compile Include="FilePacks\Components\PlayerInventory.cs" />
     <Compile Include="FilePacks\Components\345-ACTI.Activator.cs" />
@@ -197,6 +197,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\..\src.unity\ObjectManager\Assets\Plugins\"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetDir)Object.Tes.*" "$(SolutionDir)..\..\src.unity\ObjectManager\Assets\Plugins\"</PostBuildEvent>
   </PropertyGroup>
 </Project>

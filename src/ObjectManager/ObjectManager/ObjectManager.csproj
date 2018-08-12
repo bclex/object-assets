@@ -117,6 +117,6 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\..\src.unity\ObjectManager\Assets\Plugins\"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetDir)ObjectManager.*" "$(SolutionDir)..\..\src.unity\ObjectManager\Assets\Plugins\"</PostBuildEvent>
   </PropertyGroup>
 </Project>

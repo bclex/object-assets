@@ -1,9 +1,8 @@
 ﻿using OA.Core;
-using UnityEngine;
 
 namespace OA.Tes
 {
-    public static class ObjectTestPack
+    public static class ObjectTestObject
     {
         static IAssetPack Asset;
         static IDataPack Data;
@@ -20,10 +19,10 @@ namespace OA.Tes
         //var file4Uri = "http://192.168.1.3/assets/Morrowind/Morrowind.bsa";
         public static void Start()
         {
-            //var assetUri = "game://Morrowind/Morrowind.bsa";
-            //var dataUri = "game://Morrowind/Morrowind.esm";
-            var assetUri = "game://SkyrimVR/Skyrim*";
-            var dataUri = "game://SkyrimVR/Skyrim.esm";
+            var assetUri = "game://Morrowind/Morrowind.bsa";
+            var dataUri = "game://Morrowind/Morrowind.esm";
+            //var assetUri = "game://SkyrimVR/Skyrim*";
+            //var dataUri = "game://SkyrimVR/Skyrim.esm";
             //var assetUri = "game://Fallout4VR/Fallout4*";
             //var dataUri = "game://Fallout4VR/Fallout4.esm";
 
