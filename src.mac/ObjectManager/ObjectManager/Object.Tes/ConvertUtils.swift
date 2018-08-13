@@ -14,8 +14,4 @@ public class ConvertUtils {
     public static let meterInUnits: Float = meterInYards * Float(yardInUnits)
     static let exteriorCellSideLengthInUnits = 128 * yardInUnits
     public static let exteriorCellSideLengthInMeters = Float(exteriorCellSideLengthInUnits) / meterInUnits
-
-    public static func rotationMatrixToQuaternion(_ matrix: float4x4) -> simd_quatf {
-        fatalError()
-    }
 }

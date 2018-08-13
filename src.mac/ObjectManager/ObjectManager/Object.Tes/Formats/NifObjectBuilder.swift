@@ -176,7 +176,7 @@ public class NifObjectBuilder {
         for i in 0..<verticesCount {
             vertices.append(NifUtils.nifPointToUnityPoint(data.vertices[i]))
         }
-        var geometrySources = [SCNGeometrySource(
+        let geometrySources = [SCNGeometrySource(
             data: Data(bytes: UnsafeRawPointer(vertices), count: verticesCount * MemoryLayout<float3>.size),
             semantic: SCNGeometrySource.Semantic.vertex,
             vectorCount: verticesCount,
@@ -185,6 +185,7 @@ public class NifObjectBuilder {
             bytesPerComponent: MemoryLayout<Float>.size,
             dataOffset: 0,
             dataStride: MemoryLayout<float3>.size)]
+        /*
         // vertex normals
         var normals: [float3]? = nil
         if data.hasNormals {
@@ -220,24 +221,27 @@ public class NifObjectBuilder {
                 dataOffset: 0,
                 dataStride: MemoryLayout<float2>.size))
         }
+        */
         // triangle vertex indices
         let trianglesCount = Int(data.numTrianglePoints)
-        var triangles = [CInt](); triangles.reserveCapacity(trianglesCount)
+        var triangles = [Int32](); triangles.reserveCapacity(trianglesCount)
         for i in 0..<data.triangles.count {
             // Reverse triangle winding order.
-            triangles.append(CInt(data.triangles[i].v1))
-            triangles.append(CInt(data.triangles[i].v3))
-            triangles.append(CInt(data.triangles[i].v2))
+            triangles.append(Int32(data.triangles[i].v1))
+            triangles.append(Int32(data.triangles[i].v3))
+            triangles.append(Int32(data.triangles[i].v2))
         }
         let geometryElements = [SCNGeometryElement(
-            data: Data(bytes: UnsafeRawPointer(triangles), count: MemoryLayout<CInt>.size * triangles.count),
+            data: Data(bytes: UnsafeRawPointer(triangles), count: triangles.count * MemoryLayout<Int32>.size),
             primitiveType: .triangleStrip,
-            primitiveCount: verticesCount * 2,
-            bytesPerIndex: MemoryLayout<CInt>.size)]
+            primitiveCount: verticesCount,
+            bytesPerIndex: MemoryLayout<Int32>.size)]
+
 //        if !data.hasNormals {
 //            mesh.recalculateNormals()
 //        }
 //        mesh.recalculateBounds()
+        
         return SCNGeometry(sources: geometrySources, elements: geometryElements)
     }
 

@@ -35,6 +35,6 @@ public class GameObject: SCNNode {
     }
     
     public static func instantiate(_ obj: GameObject) -> GameObject {
-        fatalError()
+        return obj.clone()
     }
 }

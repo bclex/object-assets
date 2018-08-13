@@ -6,8 +6,10 @@
 //  Copyright © 2018 Sky Morey. All rights reserved.
 //
 
+import SceneKit
+
 public protocol GameSegment {
-    func start(player: GameObject)
+    func start(rootNode: SCNNode, player: GameObject)
     func onDestroy()
     func update()
 }

@@ -104,7 +104,7 @@ public class NiReaderUtils
         else { debugPrint("Tried to read an unsupported NiObject type (\(nodeType))."); return nil }
     }
     
-    public static func read3x3RotationMatrix(_ r: BinaryReader) -> float4x4 {
+    public static func read3x3RotationMatrix(_ r: BinaryReader) -> simd_float4x4 {
         return r.readLERowMajorMatrix3x3()
     }
 }
@@ -189,7 +189,7 @@ public enum DecayType: UInt32 {
 public struct BoundingBox {
     public let unknownInt: UInt32
     public let translation: float3
-    public let rotation: float4x4
+    public let rotation: simd_float4x4
     public let radius: float3
 
     init(_ r: BinaryReader) {
@@ -339,7 +339,7 @@ public typealias SkinWeight = (
 
 
 public struct SkinTransform {
-    public let rotation: float4x4
+    public let rotation: simd_float4x4
     public let translation: float3
     public let scale: Float
 
@@ -427,7 +427,7 @@ public class NiAVObject: NiObjectNET {
 
     public var flags: NiFlags!
     public var translation: float3!
-    public var rotation: float4x4!
+    public var rotation: simd_float4x4!
     public var scale: Float!
     public var velocity: float3!
     //public var numProperties: uint!
@@ -1193,7 +1193,7 @@ public class NiDynamicEffect: NiAVObject {
 }
 
 public class NiTextureEffect: NiDynamicEffect {
-    public var modelProjectionMatrix: float4x4!
+    public var modelProjectionMatrix: simd_float4x4!
     public var modelProjectionTransform: float3!
     public var textureFiltering: TexFilterMode!
     public var textureClamping: TexClampMode!

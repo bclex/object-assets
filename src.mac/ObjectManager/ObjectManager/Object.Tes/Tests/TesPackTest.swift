@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SceneKit
 import simd
 
 public class TesPackTest: GameSegment {
@@ -17,7 +18,7 @@ public class TesPackTest: GameSegment {
     public init() {
     }
     
-    public func start(player: GameObject) {
+    public func start(rootNode: SCNNode, player: GameObject) {
 //        let assetUrl = URL(string: "game://Morrowind/Morrowind.bsa")
 //        let dataUrl = URL(string: "game://Morrowind/Morrowind.esm")
 //        let assetUrl = URL(string: "game://Oblivion/Oblivion*")

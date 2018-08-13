@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SceneKit
 import simd
 
 public class TesEngineTest: GameSegment {
@@ -18,7 +19,7 @@ public class TesEngineTest: GameSegment {
     public init() {
     }
     
-    public func start(player: GameObject) {
+    public func start(rootNode: SCNNode, player: GameObject) {
         let assetUrl = URL(string: "game://Morrowind/Morrowind.bsa")
         let dataUrl = URL(string: "game://Morrowind/Morrowind.esm")
     
