@@ -170,13 +170,21 @@ public class NifObjectBuilder {
     }
 
     func niTriShapeDataToMesh(_ data: NiTriShapeData) -> SCNGeometry {
+         let verticesCount = data.vertices.count
         // vertex positions
-        let verticesCount = data.vertices.count
+        var vertices = [SCNVector3]()
+        for i in 0..<verticesCount {
+            let v = NifUtils.nifPointToUnityPoint(data.vertices[i])
+            vertices.append(SCNVector3(v.x, v.y, v.z))
+        }
+        let geometrySources = [SCNGeometrySource(vertices: vertices)]
+        
+        /*
         var vertices = [float3](); vertices.reserveCapacity(verticesCount)
         for i in 0..<verticesCount {
             vertices.append(NifUtils.nifPointToUnityPoint(data.vertices[i]))
         }
-        let geometrySources = [SCNGeometrySource(
+        var geometrySources = [SCNGeometrySource(
             data: Data(bytes: UnsafeRawPointer(vertices), count: verticesCount * MemoryLayout<float3>.size),
             semantic: SCNGeometrySource.Semantic.vertex,
             vectorCount: verticesCount,
@@ -185,7 +193,6 @@ public class NifObjectBuilder {
             bytesPerComponent: MemoryLayout<Float>.size,
             dataOffset: 0,
             dataStride: MemoryLayout<float3>.size)]
-        /*
         // vertex normals
         var normals: [float3]? = nil
         if data.hasNormals {
@@ -221,7 +228,7 @@ public class NifObjectBuilder {
                 dataOffset: 0,
                 dataStride: MemoryLayout<float2>.size))
         }
-        */
+ */
         // triangle vertex indices
         let trianglesCount = Int(data.numTrianglePoints)
         var triangles = [Int32](); triangles.reserveCapacity(trianglesCount)
@@ -231,11 +238,12 @@ public class NifObjectBuilder {
             triangles.append(Int32(data.triangles[i].v3))
             triangles.append(Int32(data.triangles[i].v2))
         }
-        let geometryElements = [SCNGeometryElement(
-            data: Data(bytes: UnsafeRawPointer(triangles), count: triangles.count * MemoryLayout<Int32>.size),
-            primitiveType: .triangleStrip,
-            primitiveCount: verticesCount,
-            bytesPerIndex: MemoryLayout<Int32>.size)]
+        let geometryElements = [SCNGeometryElement(indices: triangles, primitiveType: .triangles)]
+//        let geometryElements = [SCNGeometryElement(
+//            data: Data(bytes: UnsafeRawPointer(triangles), count: triangles.count * MemoryLayout<Int32>.size),
+//            primitiveType: .triangles,
+//            primitiveCount: verticesCount,
+//            bytesPerIndex: MemoryLayout<Int32>.size)]
 
 //        if !data.hasNormals {
 //            mesh.recalculateNormals()

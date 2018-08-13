@@ -67,11 +67,11 @@ public class Utils {
         return (bits & flagBits) == flagBits
     }
     
-    public static func swap(_ a: inout Float, _ b: inout Float) {
-        let temp = a
-        a = b
-        b = temp
-    }
+//    public static func swap(_ a: inout Float, _ b: inout Float) {
+//        let temp = a
+//        a = b
+//        b = temp
+//    }
 
     public static func getBits(_ bitOffset: Int, _ bitCount: Int, _ bytes: Data) -> UInt64 {
         assert(bitCount <= 64 && (bitOffset + bitCount) <= (8 * bytes.count))

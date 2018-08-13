@@ -11,16 +11,14 @@ import simd
 public class NifUtils {
     public static func nifVectorToUnityVector(_ vector: float3) -> float3 {
         var unity = vector
-        let y = unity.y
         let z = unity.z
-        unity.z = y
+        unity.z = unity.y
         unity.y = z
-//        Utils.swap(&unity.y, &unity.z)
         return unity
     }
 
     public static func nifPointToUnityPoint(_ point: float3) -> float3 {
-        return nifVectorToUnityVector(point) / ConvertUtils.meterInUnits
+        return nifVectorToUnityVector(point) / 10 // / ConvertUtils.meterInUnits
     }
 
     public static func nifRotationMatrixToUnityRotationMatrix(_ rotationMatrix: simd_float4x4) -> simd_float4x4 {
