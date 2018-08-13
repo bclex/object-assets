@@ -33,6 +33,7 @@ namespace OA.Configuration
 
         public void Save()
         {
+            return;
             try
             {
                 lock (_syncRoot)

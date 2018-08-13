@@ -20,7 +20,7 @@ namespace OA.Tes
         public static void Start()
         {
             var assetUri = "game://Morrowind/Morrowind.bsa";
-            var dataUri = "game://Morrowind/Morrowind.esm";
+            //var dataUri = "game://Morrowind/Morrowind.esm";
             //var assetUri = "game://SkyrimVR/Skyrim*";
             //var dataUri = "game://SkyrimVR/Skyrim.esm";
             //var assetUri = "game://Fallout4VR/Fallout4*";
@@ -28,9 +28,10 @@ namespace OA.Tes
 
             var assetManager = AssetManager.GetAssetManager(EngineId.Tes);
             Asset = assetManager.GetAssetPack(assetUri).Result;
-            Data = assetManager.GetDataPack(dataUri).Result;
+            //Data = assetManager.GetDataPack(dataUri).Result;
 
-            MakeObject("meshes/x/ex_common_balcony_01.nif");
+            MakeObject("meshes/w/w_arrow01.nif");
+            //MakeObject("meshes/x/ex_common_balcony_01.nif");
         }
 
         static void MakeObject(string path)
