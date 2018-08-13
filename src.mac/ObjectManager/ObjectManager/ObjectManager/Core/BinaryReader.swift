@@ -291,39 +291,39 @@ public class BinaryReader {
         return float3(readLESingle(), readLESingle(), readLESingle())
     }
     
-    public func readLEColumnMajorMatrix3x3() -> float4x4 {
+    public func readLEColumnMajorMatrix3x3() -> simd_float4x4 {
         let m11 = readLESingle(), m21 = readLESingle(), m31 = readLESingle()
         let m12 = readLESingle(), m22 = readLESingle(), m32 = readLESingle()
         let m13 = readLESingle(), m23 = readLESingle(), m33 = readLESingle()
-        return float4x4(
+        return simd_float4x4(
             float4(m11, m12, m13, 0),
             float4(m21, m22, m23, 0),
             float4(m31, m32, m33, 0),
             float4(0, 0, 0, 1))
     }
 
-    public func readLERowMajorMatrix3x3() -> float4x4 {
-        return float4x4(
+    public func readLERowMajorMatrix3x3() -> simd_float4x4 {
+        return simd_float4x4(
             float4(readLESingle(), readLESingle(), readLESingle(), 0),
             float4(readLESingle(), readLESingle(), readLESingle(), 0),
             float4(readLESingle(), readLESingle(), readLESingle(), 0),
             float4(0, 0, 0, 1))
     }
 
-    public func readLEColumnMajorMatrix4x4() -> float4x4 {
+    public func readLEColumnMajorMatrix4x4() -> simd_float4x4 {
         let m11 = readLESingle(), m21 = readLESingle(), m31 = readLESingle(), m41 = readLESingle()
         let m12 = readLESingle(), m22 = readLESingle(), m32 = readLESingle(), m42 = readLESingle()
         let m13 = readLESingle(), m23 = readLESingle(), m33 = readLESingle(), m43 = readLESingle()
         let m14 = readLESingle(), m24 = readLESingle(), m34 = readLESingle(), m44 = readLESingle()
-        return float4x4(
+        return simd_float4x4(
             float4(m11, m12, m13, m14),
             float4(m21, m22, m23, m24),
             float4(m31, m32, m33, m34),
             float4(m41, m42, m43, m44))
     }
 
-    public func readLERowMajorMatrix4x4() -> float4x4 {
-        return float4x4(
+    public func readLERowMajorMatrix4x4() -> simd_float4x4 {
+        return simd_float4x4(
             float4(readLESingle(), readLESingle(), readLESingle(), readLESingle()),
             float4(readLESingle(), readLESingle(), readLESingle(), readLESingle()),
             float4(readLESingle(), readLESingle(), readLESingle(), readLESingle()),

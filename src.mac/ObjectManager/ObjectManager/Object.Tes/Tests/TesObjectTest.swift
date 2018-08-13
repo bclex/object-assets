@@ -7,9 +7,10 @@
 //
 
 import Foundation
+import SceneKit
 import simd
 
-public class TesPackTest: GameSegment {
+public class TesObjectTest: GameSegment {
     
     var Asset: IAssetPack? = nil
     var Data: IDataPack? = nil
@@ -17,9 +18,9 @@ public class TesPackTest: GameSegment {
     public init() {
     }
     
-    public func start(player: GameObject) {
+    public func start(rootNode: SCNNode, player: GameObject) {
         let assetUrl = URL(string: "game://Morrowind/Morrowind.bsa")
-        let dataUrl = URL(string: "game://Morrowind/Morrowind.esm")
+//        let dataUrl = URL(string: "game://Morrowind/Morrowind.esm")
 //        let assetUrl = URL(string: "game://Oblivion/Oblivion*")
 //        let dataUrl = URL(string: "game://Oblivion/Oblivion.esm")
 //        let assetUrl = URL(string: "game://SkyrimVR/Skyrim*")
@@ -31,14 +32,17 @@ public class TesPackTest: GameSegment {
         
         let assetManager = AssetManager.getAssetManager(.tes)
         Asset = assetManager.getAssetPack(assetUrl)
-        Data = assetManager.getDataPack(dataUrl)
+//        Data = assetManager.getDataPack(dataUrl)
         
-        makeObject("meshes/x/ex_common_balcony_01.nif")
+        let obj = makeObject("meshes/w/w_arrow01.nif")
+//        let obj = makeObject("meshes/x/ex_common_balcony_01.nif")
+        rootNode.addChildNode(obj)
     }
     
-    public func makeObject(_ path: String) {
-        let obj = Asset!.createObject(path: path)
+    public func makeObject(_ path: String) -> GameObject {
+        let obj = Asset!.createObject(filePath: path)
         debugPrint("obj: \(obj)")
+        return obj
     }
 
     public func onDestroy() {

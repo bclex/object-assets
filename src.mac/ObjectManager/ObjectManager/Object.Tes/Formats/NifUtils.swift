@@ -11,28 +11,26 @@ import simd
 public class NifUtils {
     public static func nifVectorToUnityVector(_ vector: float3) -> float3 {
         var unity = vector
-        let y = unity.y
         let z = unity.z
-        unity.z = y
+        unity.z = unity.y
         unity.y = z
-//        Utils.swap(&unity.y, &unity.z)
         return unity
     }
 
     public static func nifPointToUnityPoint(_ point: float3) -> float3 {
-        return nifVectorToUnityVector(point) / ConvertUtils.meterInUnits
+        return nifVectorToUnityVector(point) / 10 // / ConvertUtils.meterInUnits
     }
 
-    public static func nifRotationMatrixToUnityRotationMatrix(_ rotationMatrix: float4x4) -> float4x4 {
-        return float4x4(
+    public static func nifRotationMatrixToUnityRotationMatrix(_ rotationMatrix: simd_float4x4) -> simd_float4x4 {
+        return simd_float4x4(
             float4(rotationMatrix[0].x, rotationMatrix[0].z, rotationMatrix[0].y, 0),
             float4(rotationMatrix[2].x, rotationMatrix[2].z, rotationMatrix[2].y, 0),
             float4(rotationMatrix[1].x, rotationMatrix[1].z, rotationMatrix[1].y, 0),
             float4(0, 0, 0, 1))
     }
 
-    public static func nifRotationMatrixToUnityQuaternion(_ rotationMatrix: float4x4) -> simd_quatf {
-        return ConvertUtils.rotationMatrixToQuaternion(nifRotationMatrixToUnityRotationMatrix(rotationMatrix))
+    public static func nifRotationMatrixToUnityQuaternion(_ rotationMatrix: simd_float4x4) -> simd_quatf {
+        return simd_quatf(nifRotationMatrixToUnityRotationMatrix(rotationMatrix))
     }
 
     public static func nifEulerAnglesToUnityQuaternion(_ nifEulerAngles: float3) -> simd_quatf {

@@ -47,7 +47,7 @@ public class NifObjectBuilder {
             for rootRef in _file.footer.roots {
                 let child = instantiateRootNiObject(_file.blocks[Int(rootRef)])
                 if child != nil {
-//                        child.transform.SetParent(gameObject.transform, false)
+                    gameObject.addChildNode(child!)
                 }
             }
             return gameObject
@@ -118,7 +118,7 @@ public class NifObjectBuilder {
             if !childIndex.isNull {
                 let child = instantiateNiObject(_file.blocks[Int(childIndex.value)])
                 if child != nil {
-//                    child.transform.SetParent(obj.transform, false)
+                    obj.addChildNode(child!)
                 }
             }
         }
@@ -136,11 +136,12 @@ public class NifObjectBuilder {
             let materialProps = niAVObjectPropertiesToMaterialProperties(triShape)
             obj.geometry!.materials = [_materialManager.buildMaterialFromProperties(materialProps)]
             if triShape.flags.contains(.hidden) {
-//                meshRenderer.enabled = false
+                obj.isHidden = true
             }
 //            obj.isStatic = true
         }
         if collidable {
+            obj.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
 //            obj.AddComponent<MeshCollider>().sharedMesh = mesh
 //            if game.kinematicRigidbodies {
 //                obj.AddComponent<Rigidbody>().isKinematic = true
@@ -169,8 +170,16 @@ public class NifObjectBuilder {
     }
 
     func niTriShapeDataToMesh(_ data: NiTriShapeData) -> SCNGeometry {
+         let verticesCount = data.vertices.count
         // vertex positions
-        let verticesCount = data.vertices.count
+        var vertices = [SCNVector3]()
+        for i in 0..<verticesCount {
+            let v = NifUtils.nifPointToUnityPoint(data.vertices[i])
+            vertices.append(SCNVector3(v.x, v.y, v.z))
+        }
+        let geometrySources = [SCNGeometrySource(vertices: vertices)]
+        
+        /*
         var vertices = [float3](); vertices.reserveCapacity(verticesCount)
         for i in 0..<verticesCount {
             vertices.append(NifUtils.nifPointToUnityPoint(data.vertices[i]))
@@ -202,33 +211,45 @@ public class NifObjectBuilder {
                 dataStride: MemoryLayout<float3>.size))
         }
         // vertex UV coordinates
-//        var uvs: [Vector2]? = nil
-//        if data.hasUV {
-//            uvs = [Vector2](); uvs!.reserveCapacity(verticesCount)
-//            for i in 0..<verticesCount {
-//                var niTexCoord = data.uvSets[0][i]
-//                uvs!.append(Vector2(s: niTexCoord.u, niTexCoord.v))
-//            }
-//        }
+        var uvs: [float2]? = nil
+        if data.hasUV {
+            uvs = [float2](); uvs!.reserveCapacity(verticesCount)
+            for i in 0..<verticesCount {
+                let niTexCoord = data.uvSets[0][i]
+                uvs!.append(float2(niTexCoord.u, niTexCoord.v))
+            }
+            geometrySources.append(SCNGeometrySource(
+                data: Data(bytes: UnsafeRawPointer(uvs!), count: verticesCount * MemoryLayout<float2>.size),
+                semantic: SCNGeometrySource.Semantic.texcoord,
+                vectorCount: verticesCount,
+                usesFloatComponents: true,
+                componentsPerVector: 2,
+                bytesPerComponent: MemoryLayout<Float>.size,
+                dataOffset: 0,
+                dataStride: MemoryLayout<float2>.size))
+        }
+ */
         // triangle vertex indices
         let trianglesCount = Int(data.numTrianglePoints)
-        var triangles = [CInt](); triangles.reserveCapacity(trianglesCount)
+        var triangles = [Int32](); triangles.reserveCapacity(trianglesCount)
         for i in 0..<data.triangles.count {
             // Reverse triangle winding order.
-            triangles.append(CInt(data.triangles[i].v1))
-            triangles.append(CInt(data.triangles[i].v3))
-            triangles.append(CInt(data.triangles[i].v2))
+            triangles.append(Int32(data.triangles[i].v1))
+            triangles.append(Int32(data.triangles[i].v3))
+            triangles.append(Int32(data.triangles[i].v2))
         }
-        let geometryElements = [SCNGeometryElement(
-            data: Data(bytes: UnsafeRawPointer(triangles), count: MemoryLayout<CInt>.size * triangles.count),
-            primitiveType: .triangleStrip,
-            primitiveCount: verticesCount * 2,
-            bytesPerIndex: MemoryLayout<CInt>.size)]
-        
+        let geometryElements = [SCNGeometryElement(indices: triangles, primitiveType: .triangles)]
+//        let geometryElements = [SCNGeometryElement(
+//            data: Data(bytes: UnsafeRawPointer(triangles), count: triangles.count * MemoryLayout<Int32>.size),
+//            primitiveType: .triangles,
+//            primitiveCount: verticesCount,
+//            bytesPerIndex: MemoryLayout<Int32>.size)]
+
 //        if !data.hasNormals {
 //            mesh.recalculateNormals()
 //        }
 //        mesh.recalculateBounds()
+        
         return SCNGeometry(sources: geometrySources, elements: geometryElements)
     }
 

@@ -10,7 +10,7 @@ public class NifManager {
     let _asset: BsaMultiFile
     let _materialManager: MaterialManager 
     var _prefabContainerObj: GameObject? = nil
-    var _nifFilePreloadTasks = [String : Any]()
+    var _nifFilePreloadTasks = [String : Task<Any>]()
     var _nifPrefabs = [String : GameObject]()
     let _markerLayer: Int
 
@@ -51,9 +51,9 @@ public class NifManager {
     }
 
     func loadNifPrefabDontAddToPrefabCache(filePath: String) -> GameObject {
-        assert(_nifPrefabs[filePath] != nil, "Invalid parameter")
+        assert(_nifPrefabs[filePath] == nil, "Invalid parameter")
         preloadNifFileAsync(filePath)
-        let file = _nifFilePreloadTasks[filePath] as! NiFile
+        let file = _nifFilePreloadTasks[filePath]?.result as! NiFile
         _nifFilePreloadTasks.removeValue(forKey: filePath)
         // Start pre-loading all the NIF's textures.
         for niObject in file.blocks {

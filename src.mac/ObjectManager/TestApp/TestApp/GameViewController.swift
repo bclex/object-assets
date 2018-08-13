@@ -11,7 +11,8 @@ import QuartzCore
 import ObjectManager
 
 //typealias Test = TesEngineTest
-typealias Test = TesPackTest
+//typealias Test = TesPackTest
+typealias Test = TesObjectTest
 
 class GameViewController: NSViewController {
 //    @IBOutlet weak var gameView: GameView!
@@ -38,13 +39,13 @@ class GameViewController: NSViewController {
         // configure the view
         gameView.backgroundColor = NSColor(calibratedRed: 0, green: 0, blue: 1, alpha: 0)
         
-        game.createRandomMap()
-        let tNode = TerrainNode(map: game.map)
-        gameView.scene?.rootNode.addChildNode(tNode)
+//        game.createRandomMap()
+//        let tNode = TerrainNode(map: game.map)
+//        gameView.scene?.rootNode.addChildNode(tNode)
         
         let player = gameView.cameraNode!.cameraNode
         for segment in segments {
-            segment.start(player: player)
+            segment.start(rootNode: gameView.scene!.rootNode, player: player)
         }
     }
     
