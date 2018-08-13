@@ -9,7 +9,7 @@
 import Foundation
 import simd
 
-public class TesPackTest: GameSegment {
+public class TesObjectTest: GameSegment {
     
     var Asset: IAssetPack? = nil
     var Data: IDataPack? = nil
@@ -37,7 +37,7 @@ public class TesPackTest: GameSegment {
     }
     
     public func makeObject(_ path: String) {
-        let obj = Asset!.createObject(path: path)
+        let obj = Asset!.createObject(filePath: path)
         debugPrint("obj: \(obj)")
     }
 

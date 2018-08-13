@@ -15,6 +15,8 @@ public typealias SplatPrototype = (
     tileSize: int2)
 
 public class GameObject: SCNNode {
+    var tag: String? = nil
+    
     public static func find(withTag: String) -> GameObject? {
         return nil
     }
@@ -28,6 +30,8 @@ public class GameObject: SCNNode {
     
     convenience init(name: String, tag: String? = nil) {
         self.init()
+        self.name = name
+        self.tag = tag
     }
     
     public static func instantiate(_ obj: GameObject) -> GameObject {

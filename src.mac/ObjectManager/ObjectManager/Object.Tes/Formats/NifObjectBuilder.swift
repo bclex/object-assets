@@ -47,7 +47,7 @@ public class NifObjectBuilder {
             for rootRef in _file.footer.roots {
                 let child = instantiateRootNiObject(_file.blocks[Int(rootRef)])
                 if child != nil {
-//                        child.transform.SetParent(gameObject.transform, false)
+                    gameObject.addChildNode(child!)
                 }
             }
             return gameObject
@@ -118,7 +118,7 @@ public class NifObjectBuilder {
             if !childIndex.isNull {
                 let child = instantiateNiObject(_file.blocks[Int(childIndex.value)])
                 if child != nil {
-//                    child.transform.SetParent(obj.transform, false)
+                    obj.addChildNode(child!)
                 }
             }
         }
@@ -136,11 +136,12 @@ public class NifObjectBuilder {
             let materialProps = niAVObjectPropertiesToMaterialProperties(triShape)
             obj.geometry!.materials = [_materialManager.buildMaterialFromProperties(materialProps)]
             if triShape.flags.contains(.hidden) {
-//                meshRenderer.enabled = false
+                obj.isHidden = true
             }
 //            obj.isStatic = true
         }
         if collidable {
+            obj.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
 //            obj.AddComponent<MeshCollider>().sharedMesh = mesh
 //            if game.kinematicRigidbodies {
 //                obj.AddComponent<Rigidbody>().isKinematic = true
@@ -202,14 +203,23 @@ public class NifObjectBuilder {
                 dataStride: MemoryLayout<float3>.size))
         }
         // vertex UV coordinates
-//        var uvs: [Vector2]? = nil
-//        if data.hasUV {
-//            uvs = [Vector2](); uvs!.reserveCapacity(verticesCount)
-//            for i in 0..<verticesCount {
-//                var niTexCoord = data.uvSets[0][i]
-//                uvs!.append(Vector2(s: niTexCoord.u, niTexCoord.v))
-//            }
-//        }
+        var uvs: [float2]? = nil
+        if data.hasUV {
+            uvs = [float2](); uvs!.reserveCapacity(verticesCount)
+            for i in 0..<verticesCount {
+                let niTexCoord = data.uvSets[0][i]
+                uvs!.append(float2(niTexCoord.u, niTexCoord.v))
+            }
+            geometrySources.append(SCNGeometrySource(
+                data: Data(bytes: UnsafeRawPointer(uvs!), count: verticesCount * MemoryLayout<float2>.size),
+                semantic: SCNGeometrySource.Semantic.texcoord,
+                vectorCount: verticesCount,
+                usesFloatComponents: true,
+                componentsPerVector: 2,
+                bytesPerComponent: MemoryLayout<Float>.size,
+                dataOffset: 0,
+                dataStride: MemoryLayout<float2>.size))
+        }
         // triangle vertex indices
         let trianglesCount = Int(data.numTrianglePoints)
         var triangles = [CInt](); triangles.reserveCapacity(trianglesCount)
@@ -224,7 +234,6 @@ public class NifObjectBuilder {
             primitiveType: .triangleStrip,
             primitiveCount: verticesCount * 2,
             bytesPerIndex: MemoryLayout<CInt>.size)]
-        
 //        if !data.hasNormals {
 //            mesh.recalculateNormals()
 //        }

@@ -11,7 +11,8 @@ import QuartzCore
 import ObjectManager
 
 //typealias Test = TesEngineTest
-typealias Test = TesPackTest
+//typealias Test = TesPackTest
+typealias Test = TesObjectTest
 
 class GameViewController: NSViewController {
 //    @IBOutlet weak var gameView: GameView!
