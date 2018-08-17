@@ -30,7 +30,8 @@ namespace OA.Tes
             Asset = assetManager.GetAssetPack(assetUri).Result;
             //Data = assetManager.GetDataPack(dataUri).Result;
 
-            MakeObject("meshes/w/w_arrow01.nif");
+            MakeObject("meshes/i/in_dae_room_l_floor_01.nif");
+            //MakeObject("meshes/w/w_arrow01.nif");
             //MakeObject("meshes/x/ex_common_balcony_01.nif");
         }
 
