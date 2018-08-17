@@ -60,8 +60,8 @@ public class CELLRecord: Record, ICellRecord {
 
     public class RefObj: CustomStringConvertible {
         public typealias XYZAField = (
-            position: float3,
-            eulerAngles: float3
+            position: Float3,
+            eulerAngles: Float3
         )
 
         public var FRMR: UI32Field? = nil // Object Index (starts at 1)

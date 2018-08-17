@@ -31,7 +31,7 @@ class GameViewController: NSViewController {
         gameView.cameraNode = CameraController.createController(world)
         gameView.allowsCameraControl = true
         gameView.autoenablesDefaultLighting = true
-        gameView.allowsCameraControl = false
+        gameView.allowsCameraControl = true //false
         
         // show statistics such as fps and timing information
         gameView.showsStatistics = true

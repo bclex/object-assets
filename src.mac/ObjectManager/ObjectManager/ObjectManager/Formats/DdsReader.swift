@@ -317,11 +317,11 @@ public class DdsReader {
         colorTable.append(Color.color(b565: r.readLEUInt16()))
         colorTable.append(Color.color(b565: r.readLEUInt16()))
         if !containsAlpha {
-            colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)!)
-            colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)!)
+            colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3.0)!)
+            colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3.0)!)
         }
         else {
-            colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 2)!)
+            colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 2.0)!)
             colorTable.append(Color(red: 0, green: 0, blue: 0, alpha: 0))
         }
         // Calculate pixel colors.
@@ -348,8 +348,8 @@ public class DdsReader {
         var colorTable = [Color](); colorTable.reserveCapacity(4)
         colorTable.append(Color.color(b565: r.readLEUInt16()))
         colorTable.append(Color.color(b565: r.readLEUInt16()))
-        colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)!)
-        colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)!)
+        colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3.0)!)
+        colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3.0)!)
         // Calculate pixel colors.
         var colors = decodeDXT1TexelBlock(r, colorTable: colorTable)
         for i in 0..<16 { colors[i].alpha = alphas[i] }
@@ -363,12 +363,12 @@ public class DdsReader {
         alphaTable.append(Float(r.readByte()))
         if alphaTable[0] > alphaTable[1] {
             for i in 0..<6 {
-                alphaTable.append(Float.lerp(alphaTable[0], alphaTable[1], t: Float(1 + i) / 7))
+                alphaTable.append(Float.lerp(alphaTable[0], alphaTable[1], t: Float(1 + i) / 7.0))
             }
         }
         else {
             for i in 0..<4 {
-                alphaTable.append(Float.lerp(alphaTable[0], alphaTable[1], t: Float(1 + i) / 5))
+                alphaTable.append(Float.lerp(alphaTable[0], alphaTable[1], t: Float(1 + i) / 5.0))
             }
             alphaTable.append(0)
             alphaTable.append(255)
@@ -401,8 +401,8 @@ public class DdsReader {
         var colorTable = [Color](); colorTable.reserveCapacity(4)
         colorTable.append(Color.color(b565: r.readLEUInt16()))
         colorTable.append(Color.color(b565: r.readLEUInt16()))
-        colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3)!)
-        colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3)!)
+        colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 1.0 / 3.0)!)
+        colorTable.append(Color.lerp(colorTable[0], colorTable[1], fraction: 2.0 / 3.0)!)
         // Calculate pixel colors.
         var colors = decodeDXT1TexelBlock(r, colorTable: colorTable)
         for i in 0..<16 {
@@ -459,12 +459,12 @@ public class DdsReader {
         }
         return argb
     }
-    static func decodeDXT1ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> Data {
-        return decodeDXTToARGB(dxtVersion: 1, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
-    static func decodeDXT3ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> Data {
-        return decodeDXTToARGB(dxtVersion: 3, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
-    static func decodeDXT5ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> Data {
-        return decodeDXTToARGB(dxtVersion: 5, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
+//    static func decodeDXT1ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> Data {
+//        return decodeDXTToARGB(dxtVersion: 1, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
+//    static func decodeDXT3ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> Data {
+//        return decodeDXTToARGB(dxtVersion: 3, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
+//    static func decodeDXT5ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> Data {
+//        return decodeDXTToARGB(dxtVersion: 5, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
 
     static func extractDDSTextureFormatAndData(_ header: DDSHeader, _ r: BinaryReader) -> (hasMipmaps: Bool, ddsMipmapLevelCount: Int, textureFormat: TextureFormat, bytesPerPixel: Int, textureData: Data) {
         let hasMipmaps = header.dwCaps.contains(.mipmap)
@@ -506,19 +506,19 @@ public class DdsReader {
             textureFormat = CIFormat.ARGB8
             bytesPerPixel = 4
             let compressedTextureData = r.readRestOfBytes()
-            textureData = decodeDXT1ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
+            textureData = decodeDXTToARGB(dxtVersion: 1, compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
         }
         else if header.ddspf.dwFourCC == "DXT3" {
             textureFormat = CIFormat.ARGB8
             bytesPerPixel = 4
             let compressedTextureData = r.readRestOfBytes()
-            textureData = decodeDXT3ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
+            textureData = decodeDXTToARGB(dxtVersion: 3, compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
         }
         else if header.ddspf.dwFourCC == "DXT5" {
             textureFormat = CIFormat.ARGB8
             bytesPerPixel = 4
             let compressedTextureData = r.readRestOfBytes()
-            textureData = decodeDXT5ToARGB(compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
+            textureData = decodeDXTToARGB(dxtVersion: 5, compressedData: compressedTextureData, width: Int(header.dwWidth), height: Int(header.dwHeight), pixelFormat: header.ddspf, mipmapCount: ddsMipmapLevelCount)
         }
         else { fatalError("Unsupported DDS file pixel format.") }
             

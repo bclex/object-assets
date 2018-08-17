@@ -15,8 +15,8 @@ public class REFRRecord: Record {
 
         init(_ r: BinaryReader, _ dataSize: Int) {
             door = FormId<REFRRecord>(r.readLEUInt32())
-            position = float3(r.readLESingle(), r.readLESingle(), r.readLESingle())
-            rotation = float3(r.readLESingle(), r.readLESingle(), r.readLESingle())
+            position = r.readLEFloat3()
+            rotation = r.readLEFloat3()
         }
     }
 
@@ -25,8 +25,8 @@ public class REFRRecord: Record {
         public let rotation: float3
 
         init(_ r: BinaryReader, _ dataSize: Int) {
-            position = float3(r.readLESingle(), r.readLESingle(), r.readLESingle())
-            rotation = float3(r.readLESingle(), r.readLESingle(), r.readLESingle())
+            position = r.readLEFloat3()
+            rotation = r.readLEFloat3()
         }
     }
 

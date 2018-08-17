@@ -20,16 +20,11 @@ public struct Color32 {
         self.blue = blue
         self.alpha = alpha
     }
-    init(b565: UInt16) {
-        let r5 = (b565 >> 11) & 31
-        let g6 = (b565 >> 5) & 63
-        let b5 = b565 & 31
-        self.init(color: Color(red: CGFloat(r5 / 31), green: CGFloat(g6 / 63), blue: CGFloat(b5 / 31), alpha: 1))
-    }
     init(color: Color) {
         guard let comp = color.components else {
             fatalError("color must have componets")
         }
+//        debugPrint("\(comp[0]) \(comp[1]) \(comp[2]) \(comp[3])")
         let r = UInt8(comp[0].clamped() * 0xFF)
         let g = UInt8(comp[1].clamped() * 0xFF)
         let b = UInt8(comp[2].clamped() * 0xFF)
@@ -50,7 +45,7 @@ public extension Color {
         let r5 = (b565 >> 11) & 31
         let g6 = (b565 >> 5) & 63
         let b5 = b565 & 31
-        return Color(red: CGFloat(r5 / 31), green: CGFloat(g6 / 63), blue: CGFloat(b5 / 31), alpha: 1)
+        return Color(red: CGFloat(r5) / 31, green: CGFloat(g6) / 63, blue: CGFloat(b5) / 31, alpha: 1.0)
     }
     
     public static func lerp(_ a: Color, _ b: Color, fraction: Float) -> Color? {

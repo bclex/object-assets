@@ -29,6 +29,10 @@ public class BaseEngine {
         self.data = data
         loadBalancer = TemporalLoadBalancer()
         cellManager = assetManager.getCellManager(asset: asset, data: data, loadBalancer: loadBalancer)!
+        
+        // ambient
+        
+        // sun
     }
 
     // MARK: Player Spawn

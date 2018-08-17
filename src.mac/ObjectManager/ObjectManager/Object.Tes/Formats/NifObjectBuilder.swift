@@ -172,52 +172,34 @@ public class NifObjectBuilder {
     func niTriShapeDataToMesh(_ data: NiTriShapeData) -> SCNGeometry {
          let verticesCount = data.vertices.count
         // vertex positions
-        var vertices = [SCNVector3]()
-        for i in 0..<verticesCount {
-            let v = NifUtils.nifPointToUnityPoint(data.vertices[i])
-            vertices.append(SCNVector3(v.x, v.y, v.z))
-        }
-        let geometrySources = [SCNGeometrySource(vertices: vertices)]
-        
-        /*
-        var vertices = [float3](); vertices.reserveCapacity(verticesCount)
-        for i in 0..<verticesCount {
-            vertices.append(NifUtils.nifPointToUnityPoint(data.vertices[i]))
-        }
+        let vertices = data.vertices.map { NifUtils.nifPointToUnityPoint($0) }
         var geometrySources = [SCNGeometrySource(
-            data: Data(bytes: UnsafeRawPointer(vertices), count: verticesCount * MemoryLayout<float3>.size),
+            data: Data(bytes: UnsafeRawPointer(vertices), count: verticesCount * MemoryLayout<Float3>.size),
             semantic: SCNGeometrySource.Semantic.vertex,
             vectorCount: verticesCount,
             usesFloatComponents: true,
             componentsPerVector: 3,
             bytesPerComponent: MemoryLayout<Float>.size,
             dataOffset: 0,
-            dataStride: MemoryLayout<float3>.size)]
+            dataStride: MemoryLayout<Float3>.size)]
         // vertex normals
-        var normals: [float3]? = nil
+        var normals: [Float3]? = nil
         if data.hasNormals {
-            normals = [float3](); normals!.reserveCapacity(verticesCount)
-            for i in 0..<verticesCount {
-                normals!.append(NifUtils.nifVectorToUnityVector(data.normals[i]))
-            }
+            normals = data.normals.map { NifUtils.nifVectorToUnityVector($0) }
             geometrySources.append(SCNGeometrySource(
-                data: Data(bytes: UnsafeRawPointer(normals!), count: verticesCount * MemoryLayout<float3>.size),
+                data: Data(bytes: UnsafeRawPointer(normals!), count: verticesCount * MemoryLayout<Float3>.size),
                 semantic: SCNGeometrySource.Semantic.normal,
                 vectorCount: verticesCount,
                 usesFloatComponents: true,
                 componentsPerVector: 3,
                 bytesPerComponent: MemoryLayout<Float>.size,
                 dataOffset: 0,
-                dataStride: MemoryLayout<float3>.size))
+                dataStride: MemoryLayout<Float3>.size))
         }
         // vertex UV coordinates
         var uvs: [float2]? = nil
         if data.hasUV {
-            uvs = [float2](); uvs!.reserveCapacity(verticesCount)
-            for i in 0..<verticesCount {
-                let niTexCoord = data.uvSets[0][i]
-                uvs!.append(float2(niTexCoord.u, niTexCoord.v))
-            }
+            uvs = data.uvSets[0]
             geometrySources.append(SCNGeometrySource(
                 data: Data(bytes: UnsafeRawPointer(uvs!), count: verticesCount * MemoryLayout<float2>.size),
                 semantic: SCNGeometrySource.Semantic.texcoord,
@@ -228,7 +210,6 @@ public class NifObjectBuilder {
                 dataOffset: 0,
                 dataStride: MemoryLayout<float2>.size))
         }
- */
         // triangle vertex indices
         let trianglesCount = Int(data.numTrianglePoints)
         var triangles = [Int32](); triangles.reserveCapacity(trianglesCount)
@@ -249,7 +230,6 @@ public class NifObjectBuilder {
 //            mesh.recalculateNormals()
 //        }
 //        mesh.recalculateBounds()
-        
         return SCNGeometry(sources: geometrySources, elements: geometryElements)
     }
 

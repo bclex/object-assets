@@ -40,6 +40,7 @@ extension int3: Hashable {
 //    public var debugDescription: String { return description }
 //}
 
+public typealias Float3 = (x: Float, y: Float, z: Float)
 public typealias byte3 = (x: UInt8, y: UInt8, z: UInt8)
 
 public extension float3 {
@@ -157,26 +158,44 @@ extension SCNVector3: CustomDebugStringConvertible {
     }
 }
 
+public func + (left: Float3, right: Float3) -> Float3 {
+    return Float3(x: left.x + right.x, y: left.y + right.y, z: left.z + right.z)
+}
 public func + (left: SCNVector3, right: SCNVector3) -> SCNVector3 {
     return SCNVector3(x: left.x + right.x, y: left.y + right.y, z: left.z + right.z)
 }
 
+public func + (a: Float3, d: Float) -> Float3 {
+    return Float3(x: a.x + d, y: a.y + d, z: a.z + d)
+}
 public func + (a: SCNVector3, d: CGFloat) -> SCNVector3 {
     return SCNVector3(x: a.x + d, y: a.y + d, z: a.z + d)
 }
 
+public func - (left: Float3, right: Float3) -> Float3 {
+    return Float3(x: left.x-right.x, y: left.y-right.y, z: left.z-right.z)
+}
 public func - (left: SCNVector3, right: SCNVector3) -> SCNVector3 {
     return SCNVector3(x: left.x-right.x, y: left.y-right.y, z: left.z-right.z)
 }
 
+public func - (a: Float3, d: Float) -> Float3 {
+    return Float3(x: a.x - d, y: a.y - d, z: a.z - d)
+}
 public func - (a: SCNVector3, d: CGFloat) -> SCNVector3 {
     return SCNVector3(x: a.x - d, y: a.y - d, z: a.z - d)
 }
 
+public func * (a: Float3, d: Float) -> Float3 {
+    return Float3(x: a.x * d, y: a.y * d, z: a.z * d)
+}
 public func * (a: SCNVector3, d: CGFloat) -> SCNVector3 {
     return SCNVector3(x: a.x * d, y: a.y * d, z: a.z * d)
 }
 
+public func / (a: Float3, d: Float) -> Float3 {
+    return Float3(x: a.x / d, y: a.y / d, z: a.z / d)
+}
 public func / (a: SCNVector3, d: CGFloat) -> SCNVector3 {
     return SCNVector3(x: a.x / d, y: a.y / d, z: a.z / d)
 }

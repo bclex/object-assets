@@ -21,11 +21,12 @@ public class DefaultMaterial: BaseMaterial {
         else if mp.alphaTest { material = buildMaterialTested(cutoff: mp.alphaCutoff) }
         else { material = buildMaterial() }
         if mp.textures.mainFilePath != nil {
-            material.diffuse.contents = NSColor.red // _textureManager.loadTexture(mp.textures.mainFilePath!)
-            material.specular.contents = NSColor.white
+            material.diffuse.contents = _textureManager.loadTexture(mp.textures.mainFilePath!)
+//            material.diffuse.contents = NSColor.red // _textureManager.loadTexture(mp.textures.mainFilePath!)
+//            material.specular.contents = NSColor.white
         }
         if mp.textures.bumpFilePath != nil {
-//            material.normal.contents = _textureManager.loadTexture(mp.textures.bumpFilePath!)
+            material.normal.contents = _textureManager.loadTexture(mp.textures.bumpFilePath!)
         }
         _existingMaterials[mp] = material
         return material

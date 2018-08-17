@@ -233,16 +233,16 @@ public struct TexDesc {
     }
 }
 
-public struct TexCoord {
-    public let u: Float
-    public let v: Float
-
-    init() { u = 0; v = 0 }
-    init(_ r: BinaryReader) {
-        u = r.readLESingle()
-        v = r.readLESingle()
-    }
-}
+//public struct TexCoord {
+//    public let u: Float
+//    public let v: Float
+//
+//    init() { u = 0; v = 0 }
+//    init(_ r: BinaryReader) {
+//        u = r.readLESingle()
+//        v = r.readLESingle()
+//    }
+//}
 
 public typealias Triangle = (
     v1: UInt16,
@@ -351,8 +351,8 @@ public struct SkinTransform {
 }
 
 public typealias Particle = (
-    velocity: float3,
-    unknownVector: float3,
+    velocity: Float3,
+    unknownVector: Float3,
     lifetime: Float,
     lifespan: Float,
     timestamp: Float,
@@ -364,7 +364,7 @@ public struct Morph {
     public let numKeys: UInt32
     public let interpolation: KeyType
     public var keys: [Key<Float>]
-    public var vectors: [float3]
+    public var vectors: [Float3]
 
     init(_ r: BinaryReader, numVertices: UInt32) {
         numKeys = r.readLEUInt32(); var count = Int(numKeys)
@@ -489,16 +489,16 @@ public class NiGeometry: NiAVObject {
 public class NiGeometryData: NiObject {
     public let numVertices: UInt16
     public let hasVertices: Bool
-    public var vertices: [float3]!
+    public var vertices: [Float3]!
     public let hasNormals: Bool
-    public var normals: [float3]!
+    public var normals: [Float3]!
     public let center: float3
     public let radius: Float
     public let hasVertexColors: Bool
     public var vertexColors: [Color4]!
     public let numUVSets: UInt16
     public let hasUV: Bool
-    public var uvSets: [[TexCoord]]!
+    public var uvSets: [[float2]]!
 
     init(_ r: BinaryReader) {
         numVertices = r.readLEUInt16(); let count = Int(numVertices)
@@ -520,10 +520,10 @@ public class NiGeometryData: NiObject {
         hasUV = r.readLEBool32()
         if hasUV {
             let count2 = Int(numUVSets)
-            uvSets = Array(repeating: Array(repeating: TexCoord(), count: count), count: count2)
+            uvSets = Array(repeating: Array(repeating: float2(), count: count), count: count2)
             for i in 0..<count2 {
                 for j in 0..<count {
-                    uvSets[i][j] = TexCoord(r)
+                    uvSets[i][j] = float2(r.readLESingle(), r.readLESingle())
                 }
             }
         }
