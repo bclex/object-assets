@@ -286,6 +286,9 @@
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.0b2/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Assets/Plugins/ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="Object.Tes">
       <HintPath>Assets/Plugins/Object.Tes.dll</HintPath>
     </Reference>
@@ -294,6 +297,9 @@
     </Reference>
     <Reference Include="ObjectManager">
       <HintPath>Assets/Plugins/ObjectManager.dll</HintPath>
+    </Reference>
+    <Reference Include="ObjectManager.Editor">
+      <HintPath>Assets/Plugins/ObjectManager.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Advertisements">
       <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.4/UnityEngine.Advertisements.dll</HintPath>

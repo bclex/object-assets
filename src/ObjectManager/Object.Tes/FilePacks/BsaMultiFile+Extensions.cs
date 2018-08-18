@@ -17,6 +17,7 @@ namespace OA.Tes.FilePacks
                 var fileData = LoadFileData(filePath);
                 return Task.Run(() =>
                 {
+                    Utils.Info(filePath);
                     var fileExtension = Path.GetExtension(filePath);
                     if (fileExtension.ToLowerInvariant() == ".dds") return DdsReader.LoadDDSTexture(new MemoryStream(fileData));
                     else throw new NotSupportedException($"Unsupported texture type: {fileExtension}");
