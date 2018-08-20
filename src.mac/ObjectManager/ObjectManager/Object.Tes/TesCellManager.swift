@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SceneKit
 import simd
 
 public class TesCellManager: ICellManager {
@@ -14,12 +15,14 @@ public class TesCellManager: ICellManager {
     let _detailRadius = 1 //1 //3
     let _defaultLandTextureFilePath = "textures/_land_default.dds"
 
+    let _rootNode: SCNNode
     let _asset: TesAssetPack
     let _data: TesDataPack
     let _loadBalancer: TemporalLoadBalancer
     var _cellObjects = [int3 : InRangeCellInfo]()
 
-    init(asset: TesAssetPack, data: TesDataPack, loadBalancer: TemporalLoadBalancer) {
+    init(rootNode: SCNNode, asset: TesAssetPack, data: TesDataPack, loadBalancer: TemporalLoadBalancer) {
+        _rootNode = rootNode
         _asset = asset
         _data = data
         _loadBalancer = loadBalancer
@@ -120,8 +123,9 @@ public class TesCellManager: ICellManager {
         }
         else { cellObjName = cell.EDID }
         let cellObj = GameObject(name: cellObjName, tag: "Cell")
+        _rootNode.addChildNode(cellObj)
         let cellObjectsContainer = GameObject(name: "objects")
-        //cellObjectsContainer.transform.parent = cellObj.transform
+        cellObj.addChildNode(cellObjectsContainer)
         let cellObjectsCreationCoroutine = instantiateCellObjectsCoroutine(cell, land, cellObj, cellObjectsContainer)
         _loadBalancer.addTask(taskCoroutine: cellObjectsCreationCoroutine)
         return InRangeCellInfo(gameObject: cellObj, objectsContainerGameObject: cellObjectsContainer, cellRecord: cell, objectsCreationCoroutine: cellObjectsCreationCoroutine)
@@ -174,7 +178,7 @@ public class TesCellManager: ICellManager {
                 // Start pre-loading all required files for referenced objects. The NIF manager will load the textures as well.
                 for refCellObjInfo in refCellObjInfos {
                     if refCellObjInfo.modelFilePath != nil {
-//                        _asset.preloadObjectAsync(refCellObjInfo.modelFilePath)
+                        self._asset.preloadObjectAsync(filePath: refCellObjInfo.modelFilePath!)
                     }
                 }
                 state += 1
@@ -373,8 +377,8 @@ public class TesCellManager: ICellManager {
                 let heightRange = extrema.max - extrema.min
                 let terrainPosition = float3(ConvertUtils.exteriorCellSideLengthInMeters * Float(land.gridId.x), extrema.min / ConvertUtils.meterInUnits, ConvertUtils.exteriorCellSideLengthInMeters * Float(land.gridId.y))
                 let heightSampleDistance = ConvertUtils.exteriorCellSideLengthInMeters / Float(LAND_SIDELENGTH_IN_SAMPLES - 1)
-                _ = GameObjectUtils.createTerrain(offset: -1, heightPercents: heights, maxHeight: heightRange / ConvertUtils.meterInUnits, heightSampleDistance: heightSampleDistance, splatPrototypes: splatPrototypes, alphaMap: alphaMap, position: terrainPosition)
-//                terrain.transform.parent = parent.transform
+                let terrain = GameObjectUtils.createTerrain(offset: -1, heightPercents: heights, maxHeight: heightRange / ConvertUtils.meterInUnits, heightSampleDistance: heightSampleDistance, splatPrototypes: splatPrototypes, alphaMap: alphaMap, position: terrainPosition)
+                parent.addChildNode(terrain)
 //                terrain.isStatic = true
                 return nil
             default: return nil

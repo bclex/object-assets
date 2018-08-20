@@ -24,10 +24,8 @@ public enum MapDir: Int {
 
 @objc(Map)
 open class Map: NSObject {
-
     open var width: Int = 0
     open var height: Int = 0
-
     var nodes = [MapNode]()
 
     func indexOf(_ x: Int, _ y: Int) -> Int {
@@ -41,7 +39,7 @@ open class Map: NSObject {
     }
 
     func negate(_ val: UInt64) -> Int {
-        return (val == 0) ? 1 : 0
+        return val == 0 ? 1 : 0
     }
 
     func moveIndex(_ index: Int, dir: MapDir) -> (x: Int, y: Int) {
@@ -71,43 +69,24 @@ open class Map: NSObject {
     func movePoint(x xIn: Int, y yIn: Int, dir: MapDir) -> (x: Int, y: Int) {
         var x = UInt64(xIn)
         var y = UInt64(yIn)
-
         switch dir {
         case .upLeft, .left:
-            if x == 0 {
-                x = UInt64(width - 1)
-            } else {
-                x -= 1
-            }
+            if x == 0 { x = UInt64(width - 1) }
+            else { x -= 1 }
         case .downRight, .right:
-            if xIn == (width - 1) {
-                x =  0
-            } else {
-                x += 1
-            }
-        default:
-            x = UInt64(xIn)
+            if xIn == (width - 1) { x = 0 }
+            else { x += 1 }
+        default: x = UInt64(xIn)
         }
-
         switch dir {
         case .downLeft, .downRight:
-            if yIn == 0 {
-                y = UInt64(height - 1)
-            } else {
-                y -= 1
-            }
+            if yIn == 0 { y = UInt64(height - 1) }
+            else { y -= 1 }
         case .upRight, .upLeft:
-            if yIn == (height - 1) {
-                y =  0
-            } else {
-                y += 1
-            }
-
-        default:
-            y = UInt64(yIn)
+            if yIn == (height - 1) { y = 0 }
+            else { y += 1 }
+        default: y = UInt64(yIn)
         }
-
         return (Int(x), Int(y))
     }
-
 }

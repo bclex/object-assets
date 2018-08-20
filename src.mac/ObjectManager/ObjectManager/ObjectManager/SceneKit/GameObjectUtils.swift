@@ -31,26 +31,7 @@ public class GameObjectUtils {
 //            return light;
 //        }
     
-    public class TerrainData {
-        public let heightmapResolution: Int
-        public var size: float3!
-        public var heights: [[Float]]!
-        public var splatPrototypes: [SplatPrototype]!
-        public var alphamaps: [[[Float]]]?
-        public var alphamapResolution: Int?
-        
-        public init(heightmapResolution: Int) {
-            self.heightmapResolution = heightmapResolution
-        }
-        
-        public func setHeights(_ x: Int, _ y: Int, _ z: [[Float]]) {
-            heights = z
-        }
-        
-        public func setAlphamaps(_ x: Int, _ y: Int, _ z: [[[Float]]]) {
-            alphamaps = z
-        }
-    }
+  
     
     public static func createTerrainData(offset: Int, heightPercents: [[Float]], maxHeight: Float, heightSampleDistance: Float, splatPrototypes: [SplatPrototype], alphaMap: [[[Float]]]?) -> TerrainData {
         assert(heightPercents.count == heightPercents[0].count && maxHeight >= 0 && heightSampleDistance >= 0)
@@ -80,7 +61,7 @@ public class GameObjectUtils {
 
     public static func createTerrainFromTerrainData(terrainData: TerrainData, position: float3) -> GameObject {
         // Create the terrain game object.
-        let terrainObject = GameObject(name: "terrain") // { isStatic = true }
+        let terrainObject = TerrainObject(terrainData, name: "terrain") // { isStatic = true }
 //        var terrain = terrainObject.AddComponent<Terrain>()
 //        terrain.terrainData = terrainData
 //        terrainObject.AddComponent<TerrainCollider>().terrainData = terrainData

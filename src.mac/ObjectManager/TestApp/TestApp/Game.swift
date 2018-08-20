@@ -11,10 +11,10 @@ import ObjectManager
 
 @objc(Game)
 class Game: NSObject {
-    var map: Map = Map()
-
-    func createRandomMap() {
-        let generator = TerrainGenerator(size: 64)
-        generator.runAlgorithm(map)
-    }
+//    var map: Map = Map()
+//
+//    func createRandomMap() {
+//        let generator = TerrainGenerator(size: 64)
+//        generator.runAlgorithm(map)
+//    }
 }

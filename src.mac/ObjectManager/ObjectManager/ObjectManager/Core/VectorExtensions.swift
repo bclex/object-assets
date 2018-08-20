@@ -23,6 +23,11 @@ extension int3: Hashable {
         return x.hashValue ^ y.hashValue ^ z.hashValue
     }
 }
+extension int3: CustomStringConvertible {
+    public var description: String {
+        return "\(x),\(y),\(z)"
+    }
+}
 
 //public struct int3: Hashable, CustomDebugStringConvertible, CustomStringConvertible {
 //    public let x: Int

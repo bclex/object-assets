@@ -14,9 +14,7 @@
 		5426497A20F990DF00228506 /* TesEngineTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5426497920F990DF00228506 /* TesEngineTest.swift */; };
 		5426497B20F9934500228506 /* BaseEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FF120C61E3900C68B25 /* BaseEngine.swift */; };
 		5426497D20FBE3C000228506 /* GameObjectUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5426497C20FBE3C000228506 /* GameObjectUtils.swift */; };
-		542BBD7220F912E400B6466C /* TerrainGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542BBD6C20F912E400B6466C /* TerrainGenerator.swift */; };
 		542BBD7320F912E400B6466C /* Utils2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542BBD6D20F912E400B6466C /* Utils2.swift */; };
-		542BBD7420F912E400B6466C /* TerrainNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542BBD6E20F912E400B6466C /* TerrainNode.swift */; };
 		542BBD7620F912E400B6466C /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542BBD7020F912E400B6466C /* Map.swift */; };
 		542BBD7720F912E400B6466C /* MapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542BBD7120F912E400B6466C /* MapNode.swift */; };
 		5435117D20D7170C00BBD35C /* TesRenderSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5435117C20D7170C00BBD35C /* TesRenderSettings.swift */; };
@@ -32,6 +30,9 @@
 		544683CB20D59BE700A057F8 /* TesAssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5415F75020BC8AB0008A8E78 /* TesAssetManager.swift */; };
 		5462FE822120CEAB006055F7 /* TesObjectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5462FE802120CEAB006055F7 /* TesObjectTest.swift */; };
 		54664B0720D556B600947E34 /* NumericExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54664B0620D556B600947E34 /* NumericExtensions.swift */; };
+		5477D0682128E808007425B2 /* TesTerrainTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5477D0662128E808007425B2 /* TesTerrainTest.swift */; };
+		5477D06A212A47AC007425B2 /* TerrainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5477D069212A47AC007425B2 /* TerrainData.swift */; };
+		5477D06C212A5E24007425B2 /* TerrainObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5477D06B212A5E24007425B2 /* TerrainObject.swift */; };
 		54815C4E210578AF00F26130 /* NifUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A090A120CF862300C68B25 /* NifUtils.swift */; };
 		54815C50210578B300F26130 /* NifReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FFE20C79E0F00C68B25 /* NifReader.swift */; };
 		54815C51210578B600F26130 /* NifManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08FFA20C780FA00C68B25 /* NifManager.swift */; };
@@ -191,6 +192,9 @@
 		544683C120D59AB900A057F8 /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		5462FE802120CEAB006055F7 /* TesObjectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TesObjectTest.swift; sourceTree = "<group>"; };
 		54664B0620D556B600947E34 /* NumericExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericExtensions.swift; sourceTree = "<group>"; };
+		5477D0662128E808007425B2 /* TesTerrainTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesTerrainTest.swift; sourceTree = "<group>"; };
+		5477D069212A47AC007425B2 /* TerrainData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainData.swift; sourceTree = "<group>"; };
+		5477D06B212A5E24007425B2 /* TerrainObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainObject.swift; sourceTree = "<group>"; };
 		54815C522107FD8E00F26130 /* NifObjectBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NifObjectBuilder.swift; sourceTree = "<group>"; };
 		54996A5620D1EF640053C358 /* ConvertUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConvertUtils.swift; sourceTree = "<group>"; };
 		54A08FEA20C4FACD00C68B25 /* Texture2DInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Texture2DInfo.swift; sourceTree = "<group>"; };
@@ -409,6 +413,7 @@
 			isa = PBXGroup;
 			children = (
 				5462FE802120CEAB006055F7 /* TesObjectTest.swift */,
+				5477D0662128E808007425B2 /* TesTerrainTest.swift */,
 				5426497920F990DF00228506 /* TesEngineTest.swift */,
 				540B163520BC8E5E0058D516 /* TesPackTest.swift */,
 			);
@@ -528,6 +533,8 @@
 		542BBD6020F9105B00B6466C /* SceneKit */ = {
 			isa = PBXGroup;
 			children = (
+				5477D069212A47AC007425B2 /* TerrainData.swift */,
+				5477D06B212A5E24007425B2 /* TerrainObject.swift */,
 				5426497C20FBE3C000228506 /* GameObjectUtils.swift */,
 				54A08FFC20C7824C00C68B25 /* GameObject.swift */,
 				5426497620F9902F00228506 /* GameSegment.swift */,
@@ -672,6 +679,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3970C3720D5F23B00D8E205 /* 045-GRAS.Grass.swift in Sources */,
+				5477D0682128E808007425B2 /* TesTerrainTest.swift in Sources */,
 				54A08FEE20C61E1D00C68B25 /* MaterialManager.swift in Sources */,
 				F3970C4420D5F75F00D8E205 /* 300-LEVC.Leveled Creature.swift in Sources */,
 				F3970C5420D5FAA000D8E205 /* 345-CELL.Cell.swift in Sources */,
@@ -692,6 +700,7 @@
 				540B163320BC8CCF0058D516 /* TemporalLoadBalancer.swift in Sources */,
 				F3970C1D20D5EE6C00D8E205 /* 005-ARMA.Armature (Model).swift in Sources */,
 				F3970C5020D5F97100D8E205 /* 345-ALCH.Potion.swift in Sources */,
+				5477D06C212A5E24007425B2 /* TerrainObject.swift in Sources */,
 				544683C620D59BB100A057F8 /* BsaFile+Extensions.swift in Sources */,
 				F3970C4220D5F68F00D8E205 /* 045-WTHR.Weather.swift in Sources */,
 				54815C51210578B600F26130 /* NifManager.swift in Sources */,
@@ -708,6 +717,7 @@
 				544683C220D59AB900A057F8 /* Task.swift in Sources */,
 				544683C520D59BAE00A057F8 /* BsaFile.swift in Sources */,
 				5415F74B20BC8931008A8E78 /* AssetManager.swift in Sources */,
+				5477D06A212A47AC007425B2 /* TerrainData.swift in Sources */,
 				F3970C3E20D5F4E000D8E205 /* 045-TES4.Plugin info.swift in Sources */,
 				F3970C5E20D5FEF000D8E205 /* 345-GMST.Game Setting.swift in Sources */,
 				F3970C1820D5EB2500D8E205 /* TesCellManager.swift in Sources */,
@@ -746,7 +756,6 @@
 				54FD3E6020CF892A0010D58E /* ColorExtensions.swift in Sources */,
 				F3970C5520D5FB8700D8E205 /* 345-CLAS.Class.swift in Sources */,
 				5435117D20D7170C00BBD35C /* TesRenderSettings.swift in Sources */,
-				542BBD7420F912E400B6466C /* TerrainNode.swift in Sources */,
 				54A08FEC20C4FACD00C68B25 /* Texture2DInfo.swift in Sources */,
 				F3970C3120D5F03C00D8E205 /* 045-CLMT.Climate.swift in Sources */,
 				F3970C3C20D5F43900D8E205 /* 045-REFR.Placed Object.swift in Sources */,
@@ -809,7 +818,6 @@
 				5462FE822120CEAB006055F7 /* TesObjectTest.swift in Sources */,
 				54A1257120D719A1001AC968 /* SettingsFile.swift in Sources */,
 				F3970C6D20D6068900D8E205 /* 345-WEAP.Weapon.swift in Sources */,
-				542BBD7220F912E400B6466C /* TerrainGenerator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -28,7 +28,7 @@ public class GameObject: SCNNode {
     public func setActive(_ active: Bool) {
     }
     
-    convenience init(name: String, tag: String? = nil) {
+    public convenience init(name: String, tag: String? = nil) {
         self.init()
         self.name = name
         self.tag = tag

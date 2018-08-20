@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SceneKit
 
 public enum GameId: Int, CustomStringConvertible {
     // tes
@@ -84,8 +85,8 @@ public class TesAssetManager: IAssetManager {
         }
     }
 
-    public func getCellManager(asset: IAssetPack, data: IDataPack, loadBalancer: TemporalLoadBalancer) -> ICellManager? {
-        return TesCellManager(asset: asset as! TesAssetPack, data: data as! TesDataPack, loadBalancer: loadBalancer)
+    public func getCellManager(rootNode: SCNNode, asset: IAssetPack, data: IDataPack, loadBalancer: TemporalLoadBalancer) -> ICellManager? {
+        return TesCellManager(rootNode: rootNode, asset: asset as! TesAssetPack, data: data as! TesDataPack, loadBalancer: loadBalancer)
     }
 
     static func stringToGameId(_ key: String?) -> GameId {

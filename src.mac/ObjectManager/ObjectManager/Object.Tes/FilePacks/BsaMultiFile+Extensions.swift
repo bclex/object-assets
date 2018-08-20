@@ -16,8 +16,8 @@ extension BsaMultiFile {
         }
         let fileData = loadFileData(filePath)
         var task = Task<Texture2DInfo?>()
-//        DispatchQueue.global().async {
-        debugPrint("\(filePath)")
+        DispatchQueue.global().async {
+//          debugPrint("\(filePath)")
             let fileExtension = URL(string: filePath)!.pathExtension
             guard fileExtension.lowercased() == "dds" else {
                 fatalError("Unsupported texture type: \(fileExtension)")
@@ -26,7 +26,7 @@ extension BsaMultiFile {
             defer { r.close() }
             let texture = DdsReader.loadDDSTexture(r)
             task.callback(texture)
-//        }
+        }
         return task
     }
 
@@ -34,12 +34,12 @@ extension BsaMultiFile {
         let fileUrl = URL(string: filePath)!
         let fileData = loadFileData(filePath)
         var task = Task<Any>()
-//        DispatchQueue.global().async {
+        DispatchQueue.global().async {
             let r = BinaryReader(DataBaseStream(data: fileData))
             defer { r.close() }
             let file = NiFile(r, name: fileUrl.deletingPathExtension().lastPathComponent)
             task.callback(file)
-//        }
+        }
         return task
     }
     

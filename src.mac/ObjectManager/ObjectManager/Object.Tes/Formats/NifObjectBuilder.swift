@@ -39,7 +39,7 @@ public class NifObjectBuilder {
                 gameObject!.simdRotation = simd_quatf.identity
                 gameObject!.simdScale = float3.one
             }
-            return gameObject!
+            return gameObject! //.flattenedClone()
         }
         else {
             debugPrint("\(_file.name) has multiple roots.")

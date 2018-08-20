@@ -459,12 +459,6 @@ public class DdsReader {
         }
         return argb
     }
-//    static func decodeDXT1ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> Data {
-//        return decodeDXTToARGB(dxtVersion: 1, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
-//    static func decodeDXT3ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> Data {
-//        return decodeDXTToARGB(dxtVersion: 3, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
-//    static func decodeDXT5ToARGB(compressedData: Data, width: Int, height: Int, pixelFormat: DDSPixelFormat, mipmapCount: Int) -> Data {
-//        return decodeDXTToARGB(dxtVersion: 5, compressedData: compressedData, width: width, height: height, pixelFormat: pixelFormat, mipmapCount: mipmapCount) }
 
     static func extractDDSTextureFormatAndData(_ header: DDSHeader, _ r: BinaryReader) -> (hasMipmaps: Bool, ddsMipmapLevelCount: Int, textureFormat: TextureFormat, bytesPerPixel: Int, textureData: Data) {
         let hasMipmaps = header.dwCaps.contains(.mipmap)

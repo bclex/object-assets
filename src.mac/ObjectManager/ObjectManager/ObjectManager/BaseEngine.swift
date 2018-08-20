@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SceneKit
 import simd
 
 public class BaseEngine {
@@ -20,19 +21,30 @@ public class BaseEngine {
     public let cellManager: ICellManager
     public let loadBalancer: TemporalLoadBalancer
 
-    convenience init(assetManager: IAssetManager, asset: URL, data: URL) {
-        self.init(assetManager: assetManager, asset: assetManager.getAssetPack(asset)!, data: assetManager.getDataPack(data)!)
+    convenience init(rootNode: SCNNode, assetManager: IAssetManager, asset: URL, data: URL) {
+        self.init(rootNode: rootNode, assetManager: assetManager, asset: assetManager.getAssetPack(asset)!, data: assetManager.getDataPack(data)!)
     }
-    init(assetManager: IAssetManager, asset: IAssetPack, data: IDataPack) {
+    init(rootNode: SCNNode, assetManager: IAssetManager, asset: IAssetPack, data: IDataPack) {
         self.assetManager = assetManager
         self.asset = asset
         self.data = data
         loadBalancer = TemporalLoadBalancer()
-        cellManager = assetManager.getCellManager(asset: asset, data: data, loadBalancer: loadBalancer)!
+        cellManager = assetManager.getCellManager(rootNode: rootNode, asset: asset, data: data, loadBalancer: loadBalancer)!
         
         // ambient
+        //        let ambientLightNode = SCNNode()
+        //        ambientLightNode.light = SCNLight()
+        //        ambientLightNode.light!.type = .ambient
+        //        ambientLightNode.light!.color = NSColor(white: 0.67, alpha: 1.0)
+        //        rootNode.addChildNode(ambientLightNode)
         
         // sun
+        //        let omniLightNode = SCNNode()
+        //        omniLightNode.light = SCNLight()
+        //        omniLightNode.light!.type = .omni
+        //        omniLightNode.light!.color = NSColor(white: 0.75, alpha: 1.0)
+        //        omniLightNode.simdPosition = float3(0, 50, 50)
+        //        rootNode.addChildNode(omniLightNode)
     }
 
     // MARK: Player Spawn
@@ -83,7 +95,7 @@ public class BaseEngine {
 
     // MARK: Update
     func update() {
-         // The current cell can be null if the player is outside of the defined game world
+        // The current cell can be null if the player is outside of the defined game world
         if _currentCell == nil || !_currentCell!.isInterior {
             cellManager.updateCells(currentPosition: _playerCamera!.simdPosition, world: _currentWorld,
                 immediate: false, cellRadiusOverride: -1)
