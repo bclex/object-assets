@@ -23,6 +23,11 @@ public extension Float {
     public func roundedAsInt() -> Int {
         return Int(self.rounded())
     }
+    
+    public static func approximately(_ a: Float, _ b: Float) -> Bool {
+        let factor: Float = 1e-06
+        return abs(b - a) < max(factor * max(abs(a), abs(b)), .ulpOfOne * 8)
+    }
 }
 
 public extension FloatingPoint {
@@ -34,7 +39,8 @@ public extension FloatingPoint {
         return a + ((b - a) * t.clamped())
     }
     
-    public static func approximately(_ a: Self, _ b: Self) -> Bool {
-        return true
-    }
+//    public static func approximately(_ a: Self, _ b: Self) -> Bool {
+//        let factor: Self = 1e-06
+//        return abs(b - a) < max(factor * max(abs(a), abs(b)), .ulpOfOne * 8)
+//    }
 }
