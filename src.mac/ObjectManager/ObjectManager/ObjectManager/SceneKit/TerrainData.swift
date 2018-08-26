@@ -14,7 +14,7 @@ public class TerrainData {
     internal let map: Map = Map()
     public let heightmapResolution: Int
     public var size: float3!
-    public var heights: [Float]!
+    public var heights: [[Float]]!
     public var splatPrototypes: [SplatPrototype]!
     public var alphamaps: [[[Float]]]?
     public var alphamapResolution: Int?
@@ -25,23 +25,22 @@ public class TerrainData {
         self.heightmapResolution = heightmapResolution
         width = 64
         height = 64
-        heights = Array<Float>(repeating: 0, count: width*height)
+        heights = Array(repeating: Array(repeating: 0, count: width), count: height)
     }
     
-    public func setHeights(_ x: Int, _ y: Int, _ z: [Float]) {
-        print("HERE")
-        width = 64
-        height = 64
-        heights = z
-        saveToMap(map, scale: 15)
-    
+    public func setHeights(_ x: Int, _ y: Int, _ z: [[Float]]) {
+//        print("HERE")
+//        width = 64
+//        height = 64
+//        heights = z
+//        saveToMap(map, scale: 15)
     }
     func sample(_ x: Int, y: Int) -> Float {
-        return heights[(y & (height - 1)) * width + (x & (width - 1))]
+        return heights[y & (height - 1)][(x & (width - 1))]
     }
     
     func setSample(_ x: Int, y: Int, value: Float) {
-        heights[(y & (height - 1)) * width + (x & (width - 1))] = value
+        heights[(y & (height - 1))][(x & (width - 1))] = value
     }
 
 //    func adjustHeight(_ h1: Float, h2: Float, x: Int, y: Int) -> Bool {
@@ -75,15 +74,16 @@ public class TerrainData {
         map.width = self.width
         map.height = self.height
         var sortedTiles = [MapNode]()
-        for x in 0..<heights.count {
-            let val = heights[x]
-            let newTile = MapNode()
-            newTile.map = map
-            newTile.index = x
-            newTile.height = Int(val * scale)
-            sortedTiles.append(newTile)
+        for y in 0..<height {
+            for x in 0..<width {
+                let val = heights[y][x]
+                let newTile = MapNode()
+                newTile.map = map
+                newTile.index = x
+                newTile.height = Int(val * scale)
+                sortedTiles.append(newTile)
+            }
         }
-        
         for index in 0..<sortedTiles.count {
             let current = sortedTiles[index]
             let leftInds = map.moveIndex(index, dir: .left)

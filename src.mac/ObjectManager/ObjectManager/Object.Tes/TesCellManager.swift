@@ -273,7 +273,7 @@ public class TesCellManager: ICellManager {
     func instantiateLANDCoroutine(_ land: LANDRecord, _ parent: GameObject) -> CoTask {
         var state = 0
         let LAND_SIDELENGTH_IN_SAMPLES = 65
-        var heights: [Float]!
+        var heights: [[Float]]!
         var extrema: (min: Float, max: Float)!
         var splatPrototypes: [SplatPrototype]!
         var textureIndicesT3: [UInt16]!
@@ -290,24 +290,27 @@ public class TesCellManager: ICellManager {
                 // Return before doing any work to provide an IEnumerator handle to the coroutine.
                 state += 1
             case 1:
-                heights = Array(repeating: Float(0), count: LAND_SIDELENGTH_IN_SAMPLES*LAND_SIDELENGTH_IN_SAMPLES)
+                heights = Array(repeating: Array(repeating: Float(0),
+                    count: LAND_SIDELENGTH_IN_SAMPLES), count: LAND_SIDELENGTH_IN_SAMPLES)
                 // Read in the heights in Morrowind units.
                 let VHGTIncrementToUnits: Float = 8
                 var rowOffset = land.VHGT!.referenceHeight
                 for y in 0..<LAND_SIDELENGTH_IN_SAMPLES {
                     let idx = y * LAND_SIDELENGTH_IN_SAMPLES
                     rowOffset += Float(land.VHGT!.heightData[idx])
-                    heights[idx + 0] = rowOffset * VHGTIncrementToUnits
+                    heights[y][0] = rowOffset * VHGTIncrementToUnits
                     var colOffset = rowOffset
                     for x in 1..<LAND_SIDELENGTH_IN_SAMPLES {
                         colOffset += Float(land.VHGT!.heightData[idx + x])
-                        heights[idx + x] = colOffset * VHGTIncrementToUnits
+                        heights[y][x] = colOffset * VHGTIncrementToUnits
                     }
                 }
                 // Change the heights to percentages.
                 extrema = heights.getExtrema()
-                for x in 0..<LAND_SIDELENGTH_IN_SAMPLES*LAND_SIDELENGTH_IN_SAMPLES {
-                    heights[x] = Utils.changeRange(x: heights[x], min0: extrema.min, max0: extrema.max, min1: 0, max1: 1)
+                for y in 0..<LAND_SIDELENGTH_IN_SAMPLES {
+                    for x in 0..<LAND_SIDELENGTH_IN_SAMPLES {
+                        heights[y][x] = Utils.changeRange(x: heights[y][x], min0: extrema.min, max0: extrema.max, min1: 0, max1: 1)
+                    }
                 }
                 
                 // Texture the terrain.

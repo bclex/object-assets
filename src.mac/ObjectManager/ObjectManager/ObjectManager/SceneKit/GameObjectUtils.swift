@@ -33,8 +33,8 @@ public class GameObjectUtils {
     
   
     
-    public static func createTerrainData(offset: Int, heightPercents: [Float], maxHeight: Float, heightSampleDistance: Float, splatPrototypes: [SplatPrototype], alphaMap: [[[Float]]]?) -> TerrainData {
-        assert(heightPercents.count == heightPercents.count && maxHeight >= 0 && heightSampleDistance >= 0)
+    public static func createTerrainData(offset: Int, heightPercents: [[Float]], maxHeight: Float, heightSampleDistance: Float, splatPrototypes: [SplatPrototype], alphaMap: [[[Float]]]?) -> TerrainData {
+        assert(heightPercents.count == heightPercents[0].count && maxHeight >= 0 && heightSampleDistance >= 0)
         // Create the TerrainData.
         let heightmapResolution = heightPercents.count
         let terrainData = TerrainData(heightmapResolution: heightmapResolution)
@@ -54,7 +54,7 @@ public class GameObjectUtils {
         return terrainData
     }
 
-    public static func createTerrain(offset: Int, heightPercents: [Float], maxHeight: Float, heightSampleDistance: Float, splatPrototypes: [SplatPrototype], alphaMap: [[[Float]]]?, position: float3) -> GameObject {
+    public static func createTerrain(offset: Int, heightPercents: [[Float]], maxHeight: Float, heightSampleDistance: Float, splatPrototypes: [SplatPrototype], alphaMap: [[[Float]]]?, position: float3) -> GameObject {
         let terrainData = createTerrainData(offset: offset, heightPercents: heightPercents, maxHeight: maxHeight, heightSampleDistance: heightSampleDistance, splatPrototypes: splatPrototypes, alphaMap: alphaMap)
         return createTerrainFromTerrainData(terrainData: terrainData, position: position)
     }
