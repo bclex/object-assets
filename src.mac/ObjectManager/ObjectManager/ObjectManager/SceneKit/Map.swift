@@ -87,6 +87,8 @@ open class Map: NSObject {
             else { y += 1 }
         default: y = UInt64(yIn)
         }
+//        if x > 65 { x = 65 }
+//        if y > 65 { y = 65 }
         return (Int(x), Int(y))
     }
 }

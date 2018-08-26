@@ -280,7 +280,7 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
         return records
     }
 
-    static var _cellsLoaded = 0
+    static var _cellIdx = 0
     func readGroup(header: Header, loadAll: Bool) {
         _r.baseStream.position = header.position
         let endPosition = header.position + UInt64(header.dataSize)
@@ -293,8 +293,9 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
                 }
                 continue
             }
+            if recordHeader.type == "CELL" { RecordGroup._cellIdx += 1 }
             // HACK to limit cells loading
-            if (recordHeader.type == "CELL" && RecordGroup._cellsLoaded > 20) {
+            if (recordHeader.type == "CELL" && (RecordGroup._cellIdx < 20 || RecordGroup._cellIdx > 25)) {
                 _r.baseStream.position += UInt64(recordHeader.dataSize)
                 continue
             }
@@ -304,7 +305,6 @@ public class RecordGroup: CustomStringConvertible, CustomDebugStringConvertible 
             }
             readRecord(record, compressed: recordHeader.compressed)
             records.append(record)
-            if recordHeader.type == "CELL" { RecordGroup._cellsLoaded += 1 }
         }
         groupsByLabel = groups != nil ? Dictionary(uniqueKeysWithValues:
             Dictionary(grouping: groups!) { x -> UInt32 in Utils.fromData(x.label!) }.map { x -> (key: UInt32, value: [RecordGroup]) in

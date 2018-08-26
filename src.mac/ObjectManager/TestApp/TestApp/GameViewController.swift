@@ -12,8 +12,8 @@ import ObjectManager
 
 //typealias Test = TesEngineTest
 //typealias Test = TesPackTest
-typealias Test = TesObjectTest
-//typealias Test = TesTerrainTest
+//typealias Test = TesObjectTest
+typealias Test = TesTerrainTest
 
 class GameViewController: NSViewController {
 //    @IBOutlet weak var gameView: GameView!

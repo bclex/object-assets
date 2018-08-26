@@ -31,8 +31,8 @@ public class TesTerrainTest: GameSegment {
         loadBalancer = TemporalLoadBalancer()
         cellManager = assetManager.getCellManager(rootNode: rootNode, asset: Asset!, data: Data!, loadBalancer: loadBalancer)!
         
-        let newX = 23 * ConvertUtils.exteriorCellSideLengthInMeters
-        let newZ = (-5 * ConvertUtils.exteriorCellSideLengthInMeters) + 100
+        let newX = 22 * ConvertUtils.exteriorCellSideLengthInMeters // 23
+        let newZ = (4 * ConvertUtils.exteriorCellSideLengthInMeters) + 10 // -9
         spawnLand(position: float3(newX, 2.30, newZ))
     }
     

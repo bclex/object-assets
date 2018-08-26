@@ -17,7 +17,7 @@ extension BsaMultiFile {
         let fileData = loadFileData(filePath)
         var task = Task<Texture2DInfo?>()
         DispatchQueue.global().async {
-//          debugPrint("\(filePath)")
+            debugPrint("\(filePath)")
             let fileExtension = URL(string: filePath)!.pathExtension
             guard fileExtension.lowercased() == "dds" else {
                 fatalError("Unsupported texture type: \(fileExtension)")
@@ -31,10 +31,12 @@ extension BsaMultiFile {
     }
 
     public func loadObjectInfoAsync(filePath: String) -> Task<Any> {
-        let fileUrl = URL(string: filePath)!
+        
         let fileData = loadFileData(filePath)
         var task = Task<Any>()
         DispatchQueue.global().async {
+            debugPrint("\(filePath)")
+            let fileUrl = URL(string: filePath.replacingOccurrences(of: "\\", with: "/"))!
             let r = BinaryReader(DataBaseStream(data: fileData))
             defer { r.close() }
             let file = NiFile(r, name: fileUrl.deletingPathExtension().lastPathComponent)

@@ -10,7 +10,6 @@ import SceneKit
 
 public class TerrainObject: GameObject {
     let data: TerrainData
-//    let map: Map = Map()
     var nodes: SCNNode? = nil
     
     enum RenderType {
@@ -21,7 +20,7 @@ public class TerrainObject: GameObject {
         self.data = data
         super.init()
         data.runAlgorithm()
-        reloadGeometry()
+//        reloadGeometry()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -38,10 +37,9 @@ public class TerrainObject: GameObject {
         }
     }
     
-    func reloadGeometry() {
+    public func reloadGeometry() {
         nodes = nil
         loadGeometry(.flattened)
-//        loadGeometry(.triangles)
     }
     
     func loadGeometry(_ type: RenderType) {

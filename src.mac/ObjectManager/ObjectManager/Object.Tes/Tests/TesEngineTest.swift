@@ -30,8 +30,8 @@ public class TesEngineTest: GameSegment {
         Engine = BaseEngine(rootNode: rootNode, assetManager: assetManager, asset: Asset!, data: Data!)
 //        Engine.spawnPlayer(player: player, position: float3(-137.94, 2.30, -1037.6)) // gridId: int3(-2, -9, 0), 
         
-        let newX = 23 * ConvertUtils.exteriorCellSideLengthInMeters
-        let newZ = (-5 * ConvertUtils.exteriorCellSideLengthInMeters) + 100
+        let newX = 22 * ConvertUtils.exteriorCellSideLengthInMeters   // 22
+        let newZ = (5 * ConvertUtils.exteriorCellSideLengthInMeters) + 10 // 5
         Engine.spawnPlayer(player: player, position: float3(newX, 2.30, newZ))
     }
     
