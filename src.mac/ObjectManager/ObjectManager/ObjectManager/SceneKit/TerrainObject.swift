@@ -73,6 +73,7 @@ public class TerrainObject: GameObject {
             rootNode = rootNode?.flattenedClone()
         }
         if let root = rootNode {
+            root.name = "terrain"
             self.addChildNode(root)
         }
     }
@@ -83,7 +84,7 @@ public class TerrainObject: GameObject {
         let nodes = map.nodes
         for tile in nodes {
             let pos = map.translateIndex(tile.index)
-            if pos.x < (map.width - 1) && pos.y>0 {
+            if pos.x < (map.width - 1) && pos.y > 0 {
                 var verts = tile.upTriangle
                 var triangles: [CInt] = [0, 2, 1]
                 

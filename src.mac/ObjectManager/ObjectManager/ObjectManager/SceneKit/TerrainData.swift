@@ -36,11 +36,11 @@ public class TerrainData {
 //        saveToMap(map, scale: 15)
     }
     func sample(_ x: Int, y: Int) -> Float {
-        return heights[y & (height - 1)][(x & (width - 1))]
+        return heights[y & (height-1)][x & (width-1)]
     }
     
     func setSample(_ x: Int, y: Int, value: Float) {
-        heights[(y & (height - 1))][(x & (width - 1))] = value
+        heights[y & (height-1)][x & (width-1)] = value
     }
 
 //    func adjustHeight(_ h1: Float, h2: Float, x: Int, y: Int) -> Bool {
@@ -129,7 +129,7 @@ extension TerrainData {
         setSample(x, y: y, value: ((a + b + c + d) / 4.0) + value)
     }
     
-    func sampleDiamond( _ x: Int, y: Int, size: Int, value: Float) {
+    func sampleDiamond(_ x: Int, y: Int, size: Int, value: Float) {
         let hs = size / 2
         let a = sample(x - hs, y: y)
         let b = sample(x + hs, y: y)
