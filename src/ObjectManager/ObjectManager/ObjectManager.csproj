@@ -40,13 +40,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\Program Files\Unity\Hub\Editor\2018.2.0f2\Editor\Data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.SpatialTracking">
-      <HintPath>..\..\..\..\..\Program Files\Unity\Hub\Editor\2018.2.0f2\Editor\Data\UnityExtensions\Unity\UnitySpatialTracking\Runtime\UnityEngine.SpatialTracking.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files\Unity\Hub\Editor\2019.1.0a11\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\..\Program Files\Unity\Hub\Editor\2018.2.0f2\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files\Unity\Hub\Editor\2019.1.0a11\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -55,8 +52,6 @@
     <Compile Include="CellManager.cs" />
     <Compile Include="Components\DayNightCycle.cs" />
     <Compile Include="Components\PlayerComponent.cs" />
-    <Compile Include="Components\XR\PlayerXR.cs" />
-    <Compile Include="Components\XR\XRGazeUI.cs" />
     <Compile Include="Configuration\GameSettings.cs" />
     <Compile Include="Configuration\XRSettings.cs" />
     <Compile Include="Core\Audio\ASound.cs" />

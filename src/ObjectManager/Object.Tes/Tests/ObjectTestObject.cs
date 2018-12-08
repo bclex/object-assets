@@ -19,9 +19,9 @@ namespace OA.Tes
         //var file4Uri = "http://192.168.1.3/assets/Morrowind/Morrowind.bsa";
         public static void Start()
         {
-            var assetUri = "game://Morrowind/Morrowind.bsa";
+            //var assetUri = "game://Morrowind/Morrowind.bsa";
             //var dataUri = "game://Morrowind/Morrowind.esm";
-            //var assetUri = "game://SkyrimVR/Skyrim*";
+            var assetUri = "game://SkyrimVR/Skyrim*";
             //var dataUri = "game://SkyrimVR/Skyrim.esm";
             //var assetUri = "game://Fallout4VR/Fallout4*";
             //var dataUri = "game://Fallout4VR/Fallout4.esm";
@@ -30,9 +30,17 @@ namespace OA.Tes
             Asset = assetManager.GetAssetPack(assetUri).Result;
             //Data = assetManager.GetDataPack(dataUri).Result;
 
-            MakeObject("meshes/i/in_dae_room_l_floor_01.nif");
+            // Morrowind
+            //MakeObject("meshes/i/in_dae_room_l_floor_01.nif");
             //MakeObject("meshes/w/w_arrow01.nif");
             //MakeObject("meshes/x/ex_common_balcony_01.nif");
+
+            // Skyrim
+            var nifFileLoadingTask = Asset.LoadObjectInfoAsync("meshes/actors/alduin/alduin.nif").Result;
+            MakeObject("meshes/markerx.nif");
+            //MakeObject("meshes/w/w_arrow01.nif");
+            //MakeObject("meshes/x/ex_common_balcony_01.nif");
+
         }
 
         static void MakeObject(string path)

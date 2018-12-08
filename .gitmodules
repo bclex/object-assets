@@ -1,0 +1,3 @@
+[submodule "lib/nifxml"]
+	path = lib/nifxml
+	url = git@github.com:niftools/nifxml.git
